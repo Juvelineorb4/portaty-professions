@@ -18,6 +18,7 @@ const Navigation = () => {
     mediumItalic: require("../assets/fonts/Montserrat-MediumItalic.ttf"),
     lightItalic: require("../assets/fonts/Montserrat-LightItalic.ttf"),
     boldItalic: require("../assets/fonts/Montserrat-BoldItalic.ttf"),
+    name: require("../assets/fonts/ConeriaScript.ttf"),
   });
 
   const onLayoutRootView = useCallback(async () => {
@@ -31,10 +32,11 @@ const Navigation = () => {
   }
 
   return (
-    <Stack screenOptions={{ headerShown: false }} initialRouteName={`login`}>
-      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-    </Stack>
+      <Stack screenOptions={{ headerShown: false }} initialRouteName={`index`}>
+        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      </Stack>
   );
 };
 

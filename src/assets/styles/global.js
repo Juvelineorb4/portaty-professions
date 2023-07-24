@@ -44,9 +44,9 @@ module.exports = StyleSheet.create({
     backgroundColor: '#1f1f1f'
   },
   mainColor: {
-    color: '#ff8811'
+    color: '#5E2129'
   },
   mainBgColor: {
-    backgroundColor: '#ff8811'
+    backgroundColor: '#5E2129'
   },
 });
