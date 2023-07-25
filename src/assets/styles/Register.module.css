@@ -1,0 +1,72 @@
+.container {
+  flex: 1;
+  padding: 0px 20px 20px;
+}
+.scroll {
+  flex: 1;
+}
+.content {
+  flex: 1;
+
+}
+.title {
+  font-family: "name";
+  margin: 10% 10px 0%;
+  text-align: center;
+  font-size: 42px;
+  color: #5E2129;
+}
+.inputContainer {
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: #fafafa;
+  padding: 15px 10px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+}
+
+.labelInput {
+  font-style: normal;
+  font-family: 'light';
+  /* font-weight: 500; */
+  font-size: 14px;
+  color: #404040;
+  margin-bottom: 5px;
+}
+
+.textInput {
+  font-family: 'light';
+  margin-left: 5px;
+  width: 75%;
+}
+.placeholder {
+  text-align: left;
+  font-family: 'light';
+  width: 75%;
+  margin-left: 5px;
+}
+
+.errorInput {
+  font-family: 'light';
+  color: red;
+  font-size: 12px;
+  position: relative;
+  top: -15px;
+}
+
+.continue {
+  text-align: center;
+  width: 100%;
+  padding: 20px;
+  height: 60px;
+  background-color: #ffa424;
+  border-radius: 16px;
+}
+
+.textContinue {
+  text-align: center;
+  font-family: 'medium';
+  color: white;
+  font-size: 14px;
+}
+
