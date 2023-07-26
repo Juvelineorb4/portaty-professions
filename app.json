@@ -1,12 +1,13 @@
 {
   "expo": {
-    "name": "portaty",
-    "slug": "portaty",
-    "version": "1.0.0",
+    "scheme": "portaty",
+    "name": "portaty-professions",
+    "slug": "portaty-professions",
+    "owner": "portaty",
+    "version": "0.0.1",
     "orientation": "portrait",
     "icon": "./src/assets/images/icon.png",
     "userInterfaceStyle": "light",
-    "scheme": "portaty",
     "splash": {
       "image": "./src/assets/images/splash.png",
       "resizeMode": "contain",
@@ -33,6 +34,20 @@
     },
     "plugins": [
       "expo-router"
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "b378d102-5cf7-49fc-93f0-b5df7f83d8ad"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/b378d102-5cf7-49fc-93f0-b5df7f83d8ad"
+    }
   }
 }
