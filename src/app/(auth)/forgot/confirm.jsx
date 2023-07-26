@@ -36,9 +36,7 @@ const Confirm = () => {
             style={[styles.scroll, global.bgWhite]}
             showsVerticalScrollIndicator={false}
           >
-            <Text style={styles.title}>
-              {es.authentication.account.entercode.title}
-            </Text>
+            <Text style={styles.title}>{es.authentication.forgot.title}</Text>
             <EnterCode
               title={es.authentication.account.code.title}
               subtitle={es.authentication.account.code.subtitle}
@@ -47,7 +45,7 @@ const Confirm = () => {
           </ScrollView>
           <View style={{ height: 60 }}>
             <CustomButton
-              text={es.authentication.account.button}
+              text={`Confirmar contraseña`}
               handlePress={() => router.replace(`/(tabs)/home`)}
               textStyles={[styles.textContinue, global.white]}
               buttonStyles={[styles.continue, global.mainBgColor]}

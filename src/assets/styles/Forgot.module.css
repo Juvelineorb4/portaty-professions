@@ -1,0 +1,109 @@
+.container {
+  flex: 1;
+  padding: 5px 20px 20px;
+}
+.content {
+  flex: 1;
+}
+.inputContainer {
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: #fafafa;
+  padding: 15px 10px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+}
+.labelInput {
+  font-style: normal;
+  font-family: 'light';
+  /* font-weight: 500; */
+  font-size: 15px;
+  color: #404040;
+  margin-bottom: 5px;
+}
+.textInput {
+  font-family: 'light';
+  margin-left: 5px;
+  width: 70%;
+}
+.placeholder {
+  text-align: left;
+  font-family: 'light';
+  width: 70%;
+  margin-left: 5px;
+  font-size: 15px;
+}
+.errorInput {
+  font-family: 'light';
+  color: red;
+  font-size: 12px;
+  position: relative;
+  top: -15px;
+}
+
+/* Buttons */
+.continue {
+  flex: 1;
+  text-align: center;
+  width: 100%;
+  padding: 20px;
+  height: 60px;
+  background-color: #ffa424;
+  border-radius: 16px;
+}
+
+.textContinue {
+  text-align: center;
+  font-family: 'medium';
+  /* font-weight: 700; */
+  color: white;
+  font-size: 14px;
+}
+
+
+.extras {
+  flex-direction: row;
+  justify-content: center;
+  padding: 15px 10px;
+  border: 1px solid #efeded;
+  border-radius: 16px;
+}
+
+.title {
+  font-family: "name";
+  margin: 10% 10px 10%;
+  text-align: center;
+  font-size: 42px;
+  color: #5E2129;
+}
+.enterCode {
+  margin-bottom: 15px;
+}
+.subtitle,
+.timer,
+.code {
+  /* font-weight: 400; */
+  font-family: 'light';
+  font-size: 16px;
+  text-align: center;
+  color: #404040;
+}
+.subtitle {
+  margin-bottom: 40px;
+}
+.code,
+.textRules {
+  margin: 0px 0px 40px;
+}
+.textRules {
+  /* font-weight: 400; */
+  font-family: 'regular';
+  font-size: 14px;
+  color: #9d9d9d;
+}
+.emailText,
+.timer {
+  font-family: 'medium';
+  color: #1f1f1f;
+  /* font-weight: 700; */
+}
