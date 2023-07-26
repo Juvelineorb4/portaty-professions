@@ -1,6 +1,6 @@
 {
   "expo": {
-    "scheme": "portaty",
+    "scheme": "portaty2",
     "name": "portaty-professions",
     "slug": "portaty-professions",
     "owner": "portaty",
@@ -24,7 +24,7 @@
         "foregroundImage": "./src/assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.portaty.portatyprofessions"
+      "package": "com.portaty.professions"
     },
     "web": {
       "bundler": "metro",
