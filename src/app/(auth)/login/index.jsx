@@ -19,11 +19,13 @@ import CustomButton from "@/components/CustomButton";
 import { useForm } from "react-hook-form";
 
 const Login = () => {
+  
   const router = useRouter();
   const { control } = useForm();
   const global = require("@/assets/styles/global.js");
   const EMAIL_REGEX = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
   const [errorActive, setErrorActive] = useState(false);
+  
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -50,8 +52,8 @@ const Login = () => {
             )}
             <CustomInput
               control={control}
-              name={`email`}
-              placeholder={`ejemplo@email.com`}
+              name={`phone`}
+              placeholder={`+58 123 4567`}
               styled={{
                 text: styles.textInput,
                 label: [styles.labelInput, global.topGray],
@@ -59,14 +61,10 @@ const Login = () => {
                 placeholder: styles.placeholder,
                 input: [styles.inputContainer, global.bgWhiteSoft],
               }}
-              icon={require(`../../../assets/images/email.png`)}
-              text={`Correo electrónico`}
+              icon={require(`../../../assets/images/phone.png`)}
+              text={`Número de teléfono`}
               rules={{
                 required: "Correo electrónico requerido",
-                pattern: {
-                  value: EMAIL_REGEX,
-                  message: "Correo electrónico invalido",
-                },
               }}
             />
             <CustomInput

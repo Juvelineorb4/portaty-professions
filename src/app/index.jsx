@@ -24,6 +24,7 @@ const App = () => {
   const global = require("@/assets/styles/global.js");
   const EMAIL_REGEX = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
   const [errorActive, setErrorActive] = useState(false);
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -39,7 +40,6 @@ const App = () => {
           }}
           automaticallyAdjustContentInsets={false}
         >
-
           <View style={styles.content}>
             <Text style={styles.title}>{es.authentication.login.title}</Text>
             <Text style={styles.name}>{es.authentication.login.name}</Text>
@@ -51,7 +51,7 @@ const App = () => {
             <CustomInput
               control={control}
               name={`email`}
-              placeholder={`ejemplo@email.com`}
+              placeholder={`+58 123 4567`}
               styled={{
                 text: styles.textInput,
                 label: [styles.labelInput, global.topGray],
@@ -59,14 +59,10 @@ const App = () => {
                 placeholder: styles.placeholder,
                 input: [styles.inputContainer, global.bgWhiteSoft],
               }}
-              icon={require(`../assets/images/email.png`)}
-              text={`Correo electrónico`}
+              icon={require(`../assets/images/phone.png`)}
+              text={`Número de teléfono`}
               rules={{
-                required: "Correo electrónico requerido",
-                pattern: {
-                  value: EMAIL_REGEX,
-                  message: "Correo electrónico invalido",
-                },
+                required: "Número de teléfono requerido",
               }}
             />
             <CustomInput
@@ -92,42 +88,32 @@ const App = () => {
               }}
             />
           </View>
-          
-
         </ScrollView>
       </TouchableWithoutFeedback>
       <View style={styles.panel}>
-            <View style={{ height: 60 }}>
-              <CustomButton
-                text={es.authentication.login.button}
-                handlePress={() => router.replace("/(tabs)/home")}
-                textStyles={[styles.textLogin, global.white]}
-                buttonStyles={[styles.login, global.mainBgColor]}
-              />
-            </View>
+        <View style={{ height: 60 }}>
+          <CustomButton
+            text={es.authentication.login.button}
+            handlePress={() => router.replace("/(tabs)/home")}
+            textStyles={[styles.textLogin, global.white]}
+            buttonStyles={[styles.login, global.mainBgColor]}
+          />
+        </View>
 
-            <View style={styles.options}>
-              <TouchableOpacity
-                onPress={() => router.replace("/(auth)/forgot")}
-              >
-                <Text style={styles.forgot}>
-                  {es.authentication.login.forgot}
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.signup}>
-              <Text style={styles.dont}>
-                {es.authentication.login.question}
-              </Text>
-              <TouchableOpacity
-                onPress={() => router.replace("/(auth)/register")}
-              >
-                <Text style={styles.signupBtn}>
-                  {es.authentication.login.register}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+        <View style={styles.options}>
+          <TouchableOpacity onPress={() => router.replace("/(auth)/forgot")}>
+            <Text style={styles.forgot}>{es.authentication.login.forgot}</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.signup}>
+          <Text style={styles.dont}>{es.authentication.login.question}</Text>
+          <TouchableOpacity onPress={() => router.replace("/(auth)/register")}>
+            <Text style={styles.signupBtn}>
+              {es.authentication.login.register}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </KeyboardAvoidingView>
   );
 };

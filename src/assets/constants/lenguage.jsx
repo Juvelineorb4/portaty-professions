@@ -2,9 +2,9 @@ export const es = {
   authentication: {
     login: {
       title: "Bienvenido a",
-      name: 'Portaty',
-      email: {
-        placeholder: "Correo electrónico",
+      name: "Portaty",
+      phone: {
+        placeholder: "+58 123 4567",
       },
       password: {
         placeholder: "Contraseña",
@@ -40,8 +40,7 @@ export const es = {
     account: {
       entercode: {
         title: "Confirmar la cuenta",
-        subtitle:
-          "Le hemos enviado un código de confirmación",
+        subtitle: "Le hemos enviado un código de confirmación",
       },
       code: {
         title: "¿No recibiste tu código?",
@@ -49,6 +48,13 @@ export const es = {
       },
       button: "Confirmar cuenta",
     },
+    forgot: {
+      title: "Restablecer contraseña",
+      email: {
+        placeholder: "Tu número de teléfono",
+      },
+      code: "Te enviaremos un código de seguridad de 6 dígitos a tu número de teléfono",
+      button: "Confirmar código",
+    },
   },
-
 };
