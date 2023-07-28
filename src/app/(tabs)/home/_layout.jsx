@@ -1,9 +1,12 @@
+import HomeHeader from "@/components/Header/HomeHeader";
 import { Stack } from "expo-router";
 
 const HomeNavigation = () => {
   return (
     <Stack>
-      <Stack.Screen name="index" options={{headerShown: false}} />
+      <Stack.Screen name="index" options={{
+          header: () => <HomeHeader/>,
+        }}/>
     </Stack>
   );
 };
