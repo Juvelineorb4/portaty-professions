@@ -23,7 +23,15 @@ export const es = {
         rules: "Requerido",
       },
       phone: {
-        placeholder: "+58 123 45678",
+        placeholder: "+57000000000",
+        rules: "Requerido",
+      },
+      email: {
+        placeholder: "example@example.com",
+        rules: "Requerido",
+      },
+      birthday: {
+        placeholder: "dd/mm/aaaa",
         rules: "Requerido",
       },
       password: {
@@ -51,10 +59,24 @@ export const es = {
     forgot: {
       title: "Restablecer contraseña",
       email: {
-        placeholder: "Tu número de teléfono",
+        title: "Correo Electronico",
+        placeholder: "example@example.com",
       },
-      code: "Te enviaremos un código de seguridad de 6 dígitos a tu número de teléfono",
+      phone: {
+        placeholder: "+58 00000000",
+      },
+      code: "Te enviaremos un código de seguridad de 6 dígitos a tu correo",
       button: "Confirmar código",
+      password: {
+        title: "Nueva Contraseña",
+        placeholder: "***********",
+        rules: "Requerido",
+      },
+      repeat: {
+        title: "Repita Nueva Contraseña",
+        placeholder: "***********",
+        rules: "Requerido",
+      },
     },
   },
 };

@@ -1,24 +1,9 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  Image,
-  ActivityIndicator,
-  Platform,
-  KeyboardAvoidingView,
-  TouchableWithoutFeedback,
-  Keyboard,
-} from "react-native";
-import { useFocusEffect, useRouter } from "expo-router";
-import styles from "@/assets/styles/Login.module.css";
-import { es } from "@/assets/constants/lenguage";
-import CustomInput from "@/components/CustomInput";
-import CustomButton from "@/components/CustomButton";
-import { useForm } from "react-hook-form";
+import React, { useEffect } from "react";
+import { Auth } from "aws-amplify";
+import Login from "./(auth)/login/index";
 
 const App = () => {
+<<<<<<< HEAD
   const router = useRouter();
   const { control } = useForm();
   const global = require("@/assets/styles/global.js");
@@ -119,5 +104,8 @@ const App = () => {
       </View>
     </KeyboardAvoidingView>
   );
+=======
+  return <Login />;
+>>>>>>> 87d88912c5186da2ef6945775fa97bd9bd871205
 };
 export default App;
