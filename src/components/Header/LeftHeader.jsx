@@ -3,8 +3,9 @@ import React from "react";
 import styles from "@/assets/styles/Header.module.css";
 
 const LeftHeader = ({handle}) => {
+  const global = require("@/assets/styles/global.js");
   return (
-    <View style={styles.left}>
+    <View style={[styles.left, global.bgWhite]}>
         <TouchableOpacity onPress={handle} style={styles.back}>
           <Image
             style={{

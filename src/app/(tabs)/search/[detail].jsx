@@ -5,7 +5,7 @@ import { Stack, useSearchParams } from 'expo-router'
 const SeachDetail = () => {
   const { detail } = useSearchParams()
   return (
-    <View>
+    <View style={{backgroundColor: '#FFFFFF', flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Stack.Screen options={{ headerTitle: `Details #${detail}`}} />
       <Text>My search details is: {detail}</Text>
     </View>
