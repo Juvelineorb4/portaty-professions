@@ -14,13 +14,6 @@ import EnterCode from "@/components/EnterCode";
 import CustomButton from "@/components/CustomButton";
 import CustomInput from "@/components/CustomInput";
 import { es } from "@/assets/constants/lenguage";
-<<<<<<< HEAD
-import { useLocalSearchParams, useRouter } from "expo-router";
-
-const Confirm = () => {
-  const router = useRouter();
-  const { email, password } = useLocalSearchParams()
-=======
 import { useRouter, useLocalSearchParams } from "expo-router";
 // amplify
 import { Auth } from "aws-amplify";
@@ -28,7 +21,6 @@ import { Auth } from "aws-amplify";
 const Confirm = () => {
   const router = useRouter();
   const params = useLocalSearchParams();
->>>>>>> 87d88912c5186da2ef6945775fa97bd9bd871205
   const global = require("@/assets/styles/global.js");
   const { control, handleSubmit } = useForm({
     defaultValues: {
@@ -37,9 +29,6 @@ const Confirm = () => {
       code: ["", "", "", "", "", ""],
     },
   });
-<<<<<<< HEAD
-  console.log(email, password)
-=======
   console.log("PARSM: ", params);
   const onHandleConfirmCodeNewPassword = async (data) => {
     console.log(data);
@@ -72,7 +61,6 @@ const Confirm = () => {
   //   }
   // };
 
->>>>>>> 87d88912c5186da2ef6945775fa97bd9bd871205
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}

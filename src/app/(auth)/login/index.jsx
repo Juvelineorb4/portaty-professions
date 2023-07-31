@@ -126,19 +126,6 @@ const App = () => {
         </ScrollView>
       </TouchableWithoutFeedback>
       <View style={styles.panel}>
-<<<<<<< HEAD
-            <View style={{ height: 60 }}>
-              <CustomButton
-                text={es.authentication.login.button}
-                handlePress={() => router.replace({pathname: "/(tabs)/home", params: {
-                  email: 'ejemplo.com',
-                  password: '123'
-                }})}
-                textStyles={[styles.textLogin, global.white]}
-                buttonStyles={[styles.login, global.mainBgColor]}
-              />
-            </View>
-=======
         <View style={{ height: 60 }}>
           <CustomButton
             text={es.authentication.login.button}
@@ -147,7 +134,6 @@ const App = () => {
             buttonStyles={[styles.login, global.mainBgColor]}
           />
         </View>
->>>>>>> 87d88912c5186da2ef6945775fa97bd9bd871205
 
         <View style={styles.options}>
           <TouchableOpacity onPress={() => router.replace("/(auth)/forgot")}>

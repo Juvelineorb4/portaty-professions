@@ -130,14 +130,7 @@ const Forgot = () => {
           <View style={{ height: 60 }}>
             <CustomButton
               text={es.authentication.forgot.button}
-<<<<<<< HEAD
-              handlePress={() => router.replace({pathname: "/(auth)/forgot/confirm", params: {
-                email: 'ejemplo email',
-                password: 'ejemplo password'
-              }})}
-=======
               handlePress={handleSubmit(onHandleSendCodeEmail)}
->>>>>>> 87d88912c5186da2ef6945775fa97bd9bd871205
               textStyles={[styles.textContinue, global.white]}
               buttonStyles={[styles.continue, global.mainBgColor]}
             />
