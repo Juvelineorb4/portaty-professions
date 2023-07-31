@@ -16,11 +16,11 @@ const ProfileHeader = () => {
         </Text>
         <Image
           style={{
-            width: 50,
-            height: 50,
+            width: 45,
+            height: 45,
             resizeMode: "cover",
           }}
-          source={require("@/assets/images/profile_default.png")}
+          source={require("@/assets/images/gear.png")}
         />
       </View>
     </View>

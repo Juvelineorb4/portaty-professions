@@ -94,7 +94,10 @@ const App = () => {
         <View style={{ height: 60 }}>
           <CustomButton
             text={es.authentication.login.button}
-            handlePress={() => router.replace("/(tabs)/home")}
+            handlePress={() => router.replace({pathname: "/(tabs)/home", params: {
+              email: 'ejemplo.com',
+              password: '123'
+            }})}
             textStyles={[styles.textLogin, global.white]}
             buttonStyles={[styles.login, global.mainBgColor]}
           />

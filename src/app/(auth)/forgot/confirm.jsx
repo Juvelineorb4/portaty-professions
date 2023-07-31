@@ -13,17 +13,18 @@ import styles from "@/assets/styles/Confirm.module.css";
 import EnterCode from "@/components/EnterCode";
 import CustomButton from "@/components/CustomButton";
 import { es } from "@/assets/constants/lenguage";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
 const Confirm = () => {
   const router = useRouter();
+  const { email, password } = useLocalSearchParams()
   const global = require("@/assets/styles/global.js");
   const { control } = useForm({
     defaultValues: {
       code: ["", "", "", "", "", ""],
     },
   });
-
+  console.log(email, password)
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
