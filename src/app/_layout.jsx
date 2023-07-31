@@ -1,7 +1,10 @@
 import { Slot, Stack } from "expo-router";
 import { useFonts } from "expo-font";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import * as SplashScreen from "expo-splash-screen";
+import { Amplify, Hub } from "aws-amplify";
+import awsExports from "@/aws-exports";
+Amplify.configure(awsExports);
 import { Platform, SafeAreaView as SafeAreaIOS } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import {
@@ -27,6 +30,29 @@ const Navigation = () => {
     boldItalic: require("../assets/fonts/Montserrat-BoldItalic.ttf"),
     name: require("../assets/fonts/ConeriaScript.ttf"),
   });
+  console.log("HOLA")
+
+  useEffect(() => {
+    // crear subscripcion
+    const unsubscribe = Hub.listen("auth", ({ payload: { event, data } }) => {
+      console.log("HUB: ", event);
+      switch (event) {
+        case "signIn":
+          break;
+        case "signOut":
+          break;
+        case "confirmSignUp":
+          break;
+        case "autoSignIn":
+          break;
+        case "updateUserAttributes":
+          break;
+      }
+    });
+    // Preguntar si el usuario existe
+
+    return unsubscribe;
+  }, []);
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {

@@ -12,17 +12,66 @@ import styles from "@/assets/styles/Register.module.css";
 import { useForm } from "react-hook-form";
 import CustomInput from "@/components/CustomInput";
 import CustomButton from "@/components/CustomButton";
+import CustomCalendarInput from "@/components/CustomCalendarInput";
 import { es } from "@/assets/constants/lenguage";
 import { router, useRouter } from "expo-router";
 const EMAIL_REGEX = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
 
+// amplify import library
+import { Auth } from "aws-amplify";
+
 const Register = () => {
   const global = require("@/assets/styles/global.js");
-  const { control, handleSubmit } = useForm();
-  const router = useRouter()
-  const onHandleRegister = () => {
-    router.replace('/register/confirm')
-  }
+  const { control, handleSubmit, watch, setValue } = useForm({
+    defaultValues: {
+      name: "",
+      email: "",
+      birthday: "",
+      password: "",
+      "password-repeat": "",
+    },
+  });
+  const pwd = watch("password");
+  const router = useRouter();
+
+  const convertirFechaADateISO8601 = (date) => {
+    // Separamos la fecha en día, mes y año
+    const [dia, mes, anio] = date.split("/");
+    // Creamos un nuevo objeto Date utilizando el formato "AAAA-MM-DD"
+    const fechaISO8601 = new Date(`${anio}-${mes}-${dia}`);
+    // Verificamos que la fecha sea válida
+    if (isNaN(fechaISO8601)) {
+      return null; // Si la fecha no es válida, retornamos null
+    }
+    // Convertimos la fecha a string en formato "AAAA-MM-DD"
+    return fechaISO8601.toISOString().split("T")[0];
+  };
+
+  const onHandleRegister = async (data) => {
+    const { name, email, password, birthdate } = data;
+    const fechaISO8601 = convertirFechaADateISO8601(birthdate);
+    console.log("FECHA: ", fechaISO8601);
+    try {
+      const result = await Auth.signUp({
+        username: email.trim(),
+        password: password.trim(),
+        attributes: {
+          email: email.trim(),
+          name: name.trim(),
+          birthdate: fechaISO8601,
+        },
+      });
+      router.replace({
+        pathname: "/register/confirm",
+        params: {
+          email,
+        },
+      });
+    } catch (error) {
+      console.log("ERROR AL REGISTAR: ", error);
+    }
+  };
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -35,7 +84,7 @@ const Register = () => {
           showsVerticalScrollIndicator={false}
         >
           <View style={[styles.content]}>
-          <Text style={styles.title}>{es.authentication.register.title}</Text>
+            <Text style={styles.title}>{es.authentication.register.title}</Text>
             <CustomInput
               control={control}
               name={`name`}
@@ -55,8 +104,8 @@ const Register = () => {
             />
             <CustomInput
               control={control}
-              name={`phone`}
-              placeholder={es.authentication.register.phone.placeholder}
+              name={`email`}
+              placeholder={es.authentication.register.email.placeholder}
               styled={{
                 text: styles.textInput,
                 label: styles.labelInput,
@@ -64,10 +113,28 @@ const Register = () => {
                 placeholder: styles.placeholder,
                 input: [styles.inputContainer, global.bgWhiteSoft],
               }}
-              text={`Número de teléfono`}
-              icon={require(`../../../assets/images/phone.png`)}
+              text={`Correo Electronico`}
+              icon={require(`../../../assets/images/email.png`)}
               rules={{
-                required: es.authentication.register.phone.rules,
+                required: es.authentication.register.email.rules,
+              }}
+            />
+            <CustomCalendarInput
+              control={control}
+              setValue={setValue}
+              name={`birthdate`}
+              placeholder={es.authentication.register.birthday.placeholder}
+              styled={{
+                text: styles.textInput,
+                label: styles.labelInput,
+                error: styles.errorInput,
+                placeholder: styles.placeholder,
+                input: [styles.inputContainer, global.bgWhiteSoft],
+              }}
+              text={`Fecha de Nacimiento`}
+              icon={require(`../../../assets/images/calendar.png`)}
+              rules={{
+                required: es.authentication.register.birthday.rules,
               }}
             />
             <CustomInput
@@ -115,10 +182,8 @@ const Register = () => {
         </ScrollView>
         <View style={{ height: 60 }}>
           <CustomButton
-            text={
-                es.authentication.register.button
-            }
-            handlePress={onHandleRegister}
+            text={es.authentication.register.button}
+            handlePress={handleSubmit(onHandleRegister)}
             textStyles={[styles.textContinue, global.white]}
             buttonStyles={[styles.continue, global.mainBgColor]}
           />
