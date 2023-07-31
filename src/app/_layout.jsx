@@ -2,10 +2,16 @@ import { Slot, Stack } from "expo-router";
 import { useFonts } from "expo-font";
 import { useCallback, useEffect } from "react";
 import * as SplashScreen from "expo-splash-screen";
-// amplify
 import { Amplify, Hub } from "aws-amplify";
 import awsExports from "@/aws-exports";
 Amplify.configure(awsExports);
+import { Platform, SafeAreaView as SafeAreaIOS } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import {
+  SafeAreaProvider,
+  SafeAreaView as SafeAreaAndroid,
+} from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
 
 SplashScreen.preventAutoHideAsync();
 const Navigation = () => {
@@ -58,13 +64,36 @@ const Navigation = () => {
     return null;
   }
 
+  if (Platform.OS === "ios")
+    return (
+      <SafeAreaIOS style={{ flex: 1 }}>
+        <SafeAreaProvider>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <Slot>
+              <Stack screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              </Stack>
+            </Slot>
+          </GestureHandlerRootView>
+        </SafeAreaProvider>
+      </SafeAreaIOS>
+    );
+
   return (
-    <Slot>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      </Stack>
-    </Slot>
+    <SafeAreaAndroid style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <StatusBar style="dark" backgroundColor="#fff" />
+          <Slot>
+            <Stack screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            </Stack>
+          </Slot>
+        </GestureHandlerRootView>
+      </SafeAreaProvider>
+    </SafeAreaAndroid>
   );
 };
 

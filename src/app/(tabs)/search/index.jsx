@@ -4,7 +4,7 @@ import { Link } from "expo-router";
 
 const Search = () => {
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: '#FFFFFF' }}>
       <Text>search je</Text>
       <Link href={`/search/1`}>
         Search 1

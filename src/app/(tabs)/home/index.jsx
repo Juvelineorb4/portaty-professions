@@ -5,7 +5,7 @@ import { Link, useRouter } from "expo-router";
 const Home = () => {
   const router = useRouter()
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: '#FFFFFF' }}>
       <Text onPress={() => {
         router.replace("/(auth)/login")
       }}>
