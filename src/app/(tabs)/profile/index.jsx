@@ -2,8 +2,10 @@ import { View, Text, Image } from "react-native";
 import React from "react";
 import styles from "@/assets/styles/Profile.module.css";
 import CustomButton from "@/components/CustomButton";
+import { router, useRouter } from "expo-router";
 const Profile = () => {
   const global = require("@/assets/styles/global.js");
+  const router = useRouter()
   return (
     <View style={[styles.container, global.bgWhite]}>
       <View style={styles.header}>
@@ -36,11 +38,6 @@ const Profile = () => {
             }}
             source={require("@/assets/images/edit.png")}
           />
-            {/* <CustomButton
-              text={`Editar`}
-              textStyles={[styles.textEdit, global.white]}
-              buttonStyles={[styles.edit, global.mainBgColor]}
-            /> */}
           </View>
           <View
             style={{
@@ -67,10 +64,11 @@ const Profile = () => {
           ¿Tienes un negocio?
         </Text>
         <CustomButton
-          text={`Regístralo`}
-          textStyles={[styles.textRegister, global.white]}
-          buttonStyles={[styles.register, global.mainBgColor]}
-        />
+            text={`Regístralo`}
+            handlePress={() => router.replace(`/profile/form`)}
+            textStyles={[styles.textRegister, global.white]}
+            buttonStyles={[styles.register, global.mainBgColor]}
+          />
       </View>
     </View>
   );

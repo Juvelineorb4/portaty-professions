@@ -34,6 +34,7 @@ const App = () => {
     try {
       const result = await Auth.signIn(email.trim(), password.trim());
       console.log(result);
+      router.replace("/(tabs)/home");
     } catch (error) {
       const response = new Error(error);
       const { message } = response;
@@ -57,7 +58,6 @@ const App = () => {
       }
       console.log("ERROR AL LOGEARSE: ", message);
     }
-    // router.replace("/(tabs)/home")
   };
 
   return (

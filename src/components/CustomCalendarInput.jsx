@@ -58,16 +58,6 @@ const CustomCalendarInput = ({
                 maxLength={10}
               />
             </View>
-            <TouchableOpacity>
-              <Image
-                style={{
-                  width: 30,
-                  height: 30,
-                  resizeMode: "contain",
-                }}
-                source={require("@/assets/images/calendar.png")}
-              />
-            </TouchableOpacity>
           </View>
           {error && (
             <Text style={styled.error}>{error.message || "Requerido"}</Text>
