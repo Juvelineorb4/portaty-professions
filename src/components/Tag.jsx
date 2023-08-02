@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { tagsList } from "@/atoms";
 import { useRecoilState } from "recoil";
 import { useState } from "react";
@@ -8,7 +8,15 @@ const Tag = ({ item }) => {
   const global = require("@/assets/styles/global.js");
   const [active, setActive] = useState(false);
   const [selectTagsList, setSelectTagsList] = useRecoilState(tagsList);
-  console.log(active)
+  const onHandleCheckActive = () => {
+    selectTagsList.map((tag, index) => {
+      if (tag === item.name) setActive(true);
+    });
+  };
+  useEffect(() => {
+    onHandleCheckActive();
+  }, [selectTagsList]);
+
   return (
     <TouchableOpacity
       style={[
@@ -25,11 +33,27 @@ const Tag = ({ item }) => {
         active && global.mainBgColor,
       ]}
       onPress={() => {
-        setActive(!active);
-        if (active === false ) setSelectTagsList([...selectTagsList, item.name]);
+        if (active === false) {
+          setSelectTagsList([...selectTagsList, item.name]);
+          setActive(true);
+        }
+        if (active) {
+          const tagsFilter = selectTagsList.filter((tag, index) => {
+            return selectTagsList.indexOf(item.name) !== index;
+          });
+          setSelectTagsList(tagsFilter);
+          setActive(false);
+        }
       }}
     >
-      <Text style={[{ fontFamily: active ? 'light' : "thin", fontSize: 12 }, active ? global.white : global.black]}>{item.name}</Text>
+      <Text
+        style={[
+          { fontFamily: active ? "light" : "thin", fontSize: 12 },
+          active ? global.white : global.black,
+        ]}
+      >
+        {item.name}
+      </Text>
     </TouchableOpacity>
   );
 };
