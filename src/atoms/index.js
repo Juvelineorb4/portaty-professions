@@ -4,3 +4,7 @@ export const authSession = atom({
   key: "authSessionValue",
   default: false,
 });
+export const tagsList = atom({
+  key: "tagsListValue",
+  default: [],
+});

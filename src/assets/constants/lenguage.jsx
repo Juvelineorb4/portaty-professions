@@ -27,7 +27,7 @@ export const es = {
         rules: "Requerido",
       },
       email: {
-        placeholder: "example@example.com",
+        placeholder: "ejemplo@email.com",
         rules: "Requerido",
       },
       birthday: {
@@ -60,7 +60,7 @@ export const es = {
       title: "Restablecer contraseña",
       email: {
         title: "Correo Electronico",
-        placeholder: "example@example.com",
+        placeholder: "ejemplo@email.com",
       },
       phone: {
         placeholder: "+58 00000000",
