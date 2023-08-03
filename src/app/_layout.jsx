@@ -2,9 +2,9 @@ import { Slot, Stack, useRouter } from "expo-router";
 import { useFonts } from "expo-font";
 import { useCallback, useEffect } from "react";
 import * as SplashScreen from "expo-splash-screen";
-import { Amplify, Hub } from "aws-amplify";
+import { Amplify, Hub, Logger } from "aws-amplify";
 import awsExports from "@/aws-exports";
-Amplify.configure(awsExports);
+
 import { Platform, SafeAreaView as SafeAreaIOS } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import {
@@ -14,6 +14,9 @@ import {
 import { StatusBar } from "expo-status-bar";
 import { RecoilRoot } from "recoil";
 
+const logger = new Logger("My-Logger");
+
+Amplify.configure(awsExports);
 SplashScreen.preventAutoHideAsync();
 const Navigation = () => {
   const router = useRouter();
@@ -32,13 +35,16 @@ const Navigation = () => {
     boldItalic: require("../assets/fonts/Montserrat-BoldItalic.ttf"),
     name: require("../assets/fonts/ConeriaScript.ttf"),
   });
-  console.log("HOLA");
+  
 
   useEffect(() => {
     // crear subscripcion
     const unsubscribe = Hub.listen("auth", ({ payload: { event, data } }) => {
       console.log("HUB: ", event);
       switch (event) {
+        case "configured":
+          logger.info("the Auth module is configured");
+          break;
         case "signIn":
           router.replace("/(tabs)/home");
           break;
@@ -94,9 +100,8 @@ const Navigation = () => {
     <SafeAreaAndroid style={{ flex: 1 }}>
       <SafeAreaProvider>
         <GestureHandlerRootView style={{ flex: 1 }}>
-        <RecoilRoot>
-
-          <StatusBar style="dark" backgroundColor="#fff" />
+          <RecoilRoot>
+            <StatusBar style="dark" backgroundColor="#fff" />
             <Slot>
               <Stack screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="(auth)" options={{ headerShown: false }} />
