@@ -1,4 +1,4 @@
-import { Slot, Stack } from "expo-router";
+import { Slot, Stack, useRouter } from "expo-router";
 import { useFonts } from "expo-font";
 import { useCallback, useEffect } from "react";
 import * as SplashScreen from "expo-splash-screen";
@@ -15,6 +15,7 @@ import { StatusBar } from "expo-status-bar";
 
 SplashScreen.preventAutoHideAsync();
 const Navigation = () => {
+  const router = useRouter();
   const [fontsLoaded] = useFonts({
     thin: require("../assets/fonts/Montserrat-Thin.ttf"),
     regular: require("../assets/fonts/Montserrat-Regular.ttf"),
@@ -30,7 +31,6 @@ const Navigation = () => {
     boldItalic: require("../assets/fonts/Montserrat-BoldItalic.ttf"),
     name: require("../assets/fonts/ConeriaScript.ttf"),
   });
-  console.log("HOLA")
 
   useEffect(() => {
     // crear subscripcion
@@ -38,6 +38,7 @@ const Navigation = () => {
       console.log("HUB: ", event);
       switch (event) {
         case "signIn":
+          router.replace("/(tabs)/home");
           break;
         case "signOut":
           break;
@@ -49,7 +50,6 @@ const Navigation = () => {
           break;
       }
     });
-    // Preguntar si el usuario existe
 
     return unsubscribe;
   }, []);
@@ -70,10 +70,18 @@ const Navigation = () => {
         <SafeAreaProvider>
           <GestureHandlerRootView style={{ flex: 1 }}>
             <Slot>
-              <Stack screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              </Stack>
+              <RecoilRoot>
+                <Stack screenOptions={{ headerShown: false }}>
+                  <Stack.Screen
+                    name="(auth)"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="(tabs)"
+                    options={{ headerShown: false }}
+                  />
+                </Stack>
+              </RecoilRoot>
             </Slot>
           </GestureHandlerRootView>
         </SafeAreaProvider>

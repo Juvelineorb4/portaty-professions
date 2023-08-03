@@ -29,11 +29,10 @@ const App = () => {
   const [errorActive, setErrorActive] = useState(false);
 
   const onHandleLogin = async (data) => {
-    console.log(data);
     const { email, password } = data;
     try {
       const result = await Auth.signIn(email.trim(), password.trim());
-      console.log(result);
+      
     } catch (error) {
       const response = new Error(error);
       const { message } = response;
@@ -57,7 +56,6 @@ const App = () => {
       }
       console.log("ERROR AL LOGEARSE: ", message);
     }
-    // router.replace("/(tabs)/home")
   };
 
   return (
