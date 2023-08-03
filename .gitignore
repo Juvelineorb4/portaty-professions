@@ -34,8 +34,8 @@ next-env.d.ts
 
 #amplify-do-not-edit-begin
 credentials.json
-amplify/
-android/
+amplify/*
+android/*
 amplify/\#current-cloud-backend
 amplify/.config/local-*
 amplify/logs
