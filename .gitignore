@@ -35,7 +35,6 @@ yarn-error.*
 *.tsbuildinfo
 
 #amplify-do-not-edit-begin
-amplify
 amplify/\#current-cloud-backend
 amplify/.config/local-*
 amplify/logs
@@ -46,6 +45,7 @@ amplify/backend/.temp
 build/
 dist/
 node_modules/
+aws-exports.js
 awsconfiguration.json
 amplifyconfiguration.json
 amplifyconfiguration.dart
