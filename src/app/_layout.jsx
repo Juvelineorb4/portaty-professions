@@ -12,6 +12,7 @@ import {
   SafeAreaView as SafeAreaAndroid,
 } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
+import { RecoilRoot } from "recoil";
 
 SplashScreen.preventAutoHideAsync();
 const Navigation = () => {
@@ -31,6 +32,7 @@ const Navigation = () => {
     boldItalic: require("../assets/fonts/Montserrat-BoldItalic.ttf"),
     name: require("../assets/fonts/ConeriaScript.ttf"),
   });
+  console.log("HOLA");
 
   useEffect(() => {
     // crear subscripcion
@@ -69,8 +71,8 @@ const Navigation = () => {
       <SafeAreaIOS style={{ flex: 1 }}>
         <SafeAreaProvider>
           <GestureHandlerRootView style={{ flex: 1 }}>
-            <Slot>
-              <RecoilRoot>
+            <RecoilRoot>
+              <Slot>
                 <Stack screenOptions={{ headerShown: false }}>
                   <Stack.Screen
                     name="(auth)"
@@ -81,8 +83,8 @@ const Navigation = () => {
                     options={{ headerShown: false }}
                   />
                 </Stack>
-              </RecoilRoot>
-            </Slot>
+              </Slot>
+            </RecoilRoot>
           </GestureHandlerRootView>
         </SafeAreaProvider>
       </SafeAreaIOS>
@@ -92,13 +94,16 @@ const Navigation = () => {
     <SafeAreaAndroid style={{ flex: 1 }}>
       <SafeAreaProvider>
         <GestureHandlerRootView style={{ flex: 1 }}>
+        <RecoilRoot>
+
           <StatusBar style="dark" backgroundColor="#fff" />
-          <Slot>
-            <Stack screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            </Stack>
-          </Slot>
+            <Slot>
+              <Stack screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              </Stack>
+            </Slot>
+          </RecoilRoot>
         </GestureHandlerRootView>
       </SafeAreaProvider>
     </SafeAreaAndroid>
