@@ -13,6 +13,10 @@ const ProfileNavigation = () => {
           header: () => <LeftHeader handle={() => router.replace('/profile')} />,
           animation: 'slide_from_right'
         }} />
+        <Stack.Screen name="[post]" options={{
+          header: () => <LeftHeader handle={() => router.replace('/profile')} />,
+          animation: 'slide_from_right'
+        }} />
     </Stack>
   );
 };

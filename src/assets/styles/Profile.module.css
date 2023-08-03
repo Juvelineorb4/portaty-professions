@@ -1,6 +1,5 @@
 .container {
   flex: 1;
-  padding: 20px;
 }
 .header {
   flex-direction: row;
@@ -8,7 +7,6 @@
   align-items: center;
 }
 .headerImage {
-  /* border: 0.5px solid #555; */
   align-items: center;
   justify-content: center;
   border-radius: 50px;
@@ -16,19 +14,15 @@
   height: 80px;
 }
 .contentHeader {
-  /* padding: 0 20px; */
-  /* flex: 1; */
   margin-left: 20px;
   justify-content: center;
   align-items: center;
 
 }
 .line {
-  width: 150%;
+  width: 100%;
   height: 0.3px;
   position: relative;
-  left: -10%;
-  bottom: -3%;
 }
 .edit {
   height: 35px;
