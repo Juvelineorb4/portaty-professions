@@ -114,7 +114,7 @@ const Register = () => {
               <CustomInput
                 control={control}
                 name={`lastName`}
-                placeholder={es.authentication.register.name.placeholder}
+                placeholder={es.authentication.register.lastName.placeholder}
                 styled={{
                   text: styles.textInputRow,
                   label: styles.labelInput,
@@ -129,7 +129,7 @@ const Register = () => {
                 text={`Apellido`}
                 icon={require(`../../../assets/images/profile_default.png`)}
                 rules={{
-                  required: es.authentication.register.name.rules,
+                  required: es.authentication.register.lastName.rules,
                 }}
               />
             </View>
