@@ -7,6 +7,7 @@ type Users @model @auth(rules: [{ allow: owner }]) {
   email: String!
     @auth(rules: [{ allow: owner }])
     @index(name: "byEmailUser", queryField: "userByEmail")
+  identityID: ID
   favorites: [Favorites] @hasMany(indexName: "byUsersFavorites", fields: ["id"])
   business: [Business] @hasMany(indexName: "byUsersBusiness", fields: ["id"])
   owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }])
@@ -32,14 +33,7 @@ type Business
         { allow: groups, groups: ["sp"], operations: [read] }
       ]
     )
-  image: String!
-    @auth(
-      rules: [
-        { allow: owner }
-        { allow: private, provider: iam, operations: [read] }
-        { allow: groups, groups: ["sp"], operations: [read] }
-      ]
-    )
+  image: String
   email: String!
     @auth(
       rules: [
@@ -53,15 +47,9 @@ type Business
   instagram: String
   facebook: String
   page: String
-  coordinates: String!
-    @auth(
-      rules: [
-        { allow: owner }
-        { allow: private, provider: iam, operations: [read] }
-        { allow: groups, groups: ["sp"], operations: [read] }
-      ]
-    )
-  object: String!
+  latitude: String
+  length: String
+  activity: String!
     @auth(
       rules: [
         { allow: owner }
@@ -91,13 +79,13 @@ type Business
 type Tags @model @auth(rules: [{ allow: private, provider: iam }]) {
   id: ID!
   name: String!
-  objects: [Objects] @manyToMany(relationName: "ObjectTags")
+  objects: [Activity] @manyToMany(relationName: "ActivityTags")
 }
 
-type Objects @model @auth(rules: [{ allow: private, provider: iam }]) {
+type Activity @model @auth(rules: [{ allow: private, provider: iam }]) {
   id: ID!
   name: String!
-  tags: [Tags] @manyToMany(relationName: "ObjectTags")
+  tags: [Tags] @manyToMany(relationName: "ActivityTags")
 }
 
 type Favorites

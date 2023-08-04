@@ -31,9 +31,9 @@ export const listTags = /* GraphQL */ `
     }
   }
 `;
-export const getObjects = /* GraphQL */ `
-  query GetObjects($id: ID!) {
-    getObjects(id: $id) {
+export const getActivity = /* GraphQL */ `
+  query GetActivity($id: ID!) {
+    getActivity(id: $id) {
       id
       name
       tags {
@@ -44,13 +44,13 @@ export const getObjects = /* GraphQL */ `
     }
   }
 `;
-export const listObjects = /* GraphQL */ `
-  query ListObjects(
-    $filter: ModelObjectsFilterInput
+export const listActivities = /* GraphQL */ `
+  query ListActivities(
+    $filter: ModelActivityFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listObjects(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listActivities(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         name
@@ -61,19 +61,19 @@ export const listObjects = /* GraphQL */ `
     }
   }
 `;
-export const getObjectTags = /* GraphQL */ `
-  query GetObjectTags($id: ID!) {
-    getObjectTags(id: $id) {
+export const getActivityTags = /* GraphQL */ `
+  query GetActivityTags($id: ID!) {
+    getActivityTags(id: $id) {
       id
       tagsId
-      objectsId
+      activityId
       tags {
         id
         name
         createdAt
         updatedAt
       }
-      objects {
+      activity {
         id
         name
         createdAt
@@ -84,17 +84,17 @@ export const getObjectTags = /* GraphQL */ `
     }
   }
 `;
-export const listObjectTags = /* GraphQL */ `
-  query ListObjectTags(
-    $filter: ModelObjectTagsFilterInput
+export const listActivityTags = /* GraphQL */ `
+  query ListActivityTags(
+    $filter: ModelActivityTagsFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listObjectTags(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listActivityTags(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         tagsId
-        objectsId
+        activityId
         createdAt
         updatedAt
       }
@@ -102,15 +102,15 @@ export const listObjectTags = /* GraphQL */ `
     }
   }
 `;
-export const objectTagsByTagsId = /* GraphQL */ `
-  query ObjectTagsByTagsId(
+export const activityTagsByTagsId = /* GraphQL */ `
+  query ActivityTagsByTagsId(
     $tagsId: ID!
     $sortDirection: ModelSortDirection
-    $filter: ModelObjectTagsFilterInput
+    $filter: ModelActivityTagsFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    objectTagsByTagsId(
+    activityTagsByTagsId(
       tagsId: $tagsId
       sortDirection: $sortDirection
       filter: $filter
@@ -120,7 +120,7 @@ export const objectTagsByTagsId = /* GraphQL */ `
       items {
         id
         tagsId
-        objectsId
+        activityId
         createdAt
         updatedAt
       }
@@ -128,16 +128,16 @@ export const objectTagsByTagsId = /* GraphQL */ `
     }
   }
 `;
-export const objectTagsByObjectsId = /* GraphQL */ `
-  query ObjectTagsByObjectsId(
-    $objectsId: ID!
+export const activityTagsByActivityId = /* GraphQL */ `
+  query ActivityTagsByActivityId(
+    $activityId: ID!
     $sortDirection: ModelSortDirection
-    $filter: ModelObjectTagsFilterInput
+    $filter: ModelActivityTagsFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    objectTagsByObjectsId(
-      objectsId: $objectsId
+    activityTagsByActivityId(
+      activityId: $activityId
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
@@ -146,7 +146,7 @@ export const objectTagsByObjectsId = /* GraphQL */ `
       items {
         id
         tagsId
-        objectsId
+        activityId
         createdAt
         updatedAt
       }
@@ -162,6 +162,7 @@ export const getUsers = /* GraphQL */ `
       name
       lastName
       email
+      identityID
       favorites {
         nextToken
       }
@@ -187,6 +188,7 @@ export const listUsers = /* GraphQL */ `
         name
         lastName
         email
+        identityID
         owner
         createdAt
         updatedAt
@@ -216,6 +218,7 @@ export const userByEmail = /* GraphQL */ `
         name
         lastName
         email
+        identityID
         owner
         createdAt
         updatedAt
@@ -235,6 +238,7 @@ export const getBusiness = /* GraphQL */ `
         name
         lastName
         email
+        identityID
         owner
         createdAt
         updatedAt
@@ -247,8 +251,9 @@ export const getBusiness = /* GraphQL */ `
       instagram
       facebook
       page
-      coordinates
-      object
+      latitude
+      length
+      activity
       tags
       favorites {
         nextToken
@@ -277,8 +282,9 @@ export const listBusinesses = /* GraphQL */ `
         instagram
         facebook
         page
-        coordinates
-        object
+        latitude
+        length
+        activity
         tags
         owner
         createdAt
@@ -314,8 +320,9 @@ export const businessesByUserID = /* GraphQL */ `
         instagram
         facebook
         page
-        coordinates
-        object
+        latitude
+        length
+        activity
         tags
         owner
         createdAt
@@ -341,8 +348,9 @@ export const getFavorites = /* GraphQL */ `
         instagram
         facebook
         page
-        coordinates
-        object
+        latitude
+        length
+        activity
         tags
         owner
         createdAt
@@ -355,6 +363,7 @@ export const getFavorites = /* GraphQL */ `
         name
         lastName
         email
+        identityID
         owner
         createdAt
         updatedAt

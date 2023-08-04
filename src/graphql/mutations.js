@@ -49,12 +49,12 @@ export const deleteTags = /* GraphQL */ `
     }
   }
 `;
-export const createObjects = /* GraphQL */ `
-  mutation CreateObjects(
-    $input: CreateObjectsInput!
-    $condition: ModelObjectsConditionInput
+export const createActivity = /* GraphQL */ `
+  mutation CreateActivity(
+    $input: CreateActivityInput!
+    $condition: ModelActivityConditionInput
   ) {
-    createObjects(input: $input, condition: $condition) {
+    createActivity(input: $input, condition: $condition) {
       id
       name
       tags {
@@ -65,12 +65,12 @@ export const createObjects = /* GraphQL */ `
     }
   }
 `;
-export const updateObjects = /* GraphQL */ `
-  mutation UpdateObjects(
-    $input: UpdateObjectsInput!
-    $condition: ModelObjectsConditionInput
+export const updateActivity = /* GraphQL */ `
+  mutation UpdateActivity(
+    $input: UpdateActivityInput!
+    $condition: ModelActivityConditionInput
   ) {
-    updateObjects(input: $input, condition: $condition) {
+    updateActivity(input: $input, condition: $condition) {
       id
       name
       tags {
@@ -81,12 +81,12 @@ export const updateObjects = /* GraphQL */ `
     }
   }
 `;
-export const deleteObjects = /* GraphQL */ `
-  mutation DeleteObjects(
-    $input: DeleteObjectsInput!
-    $condition: ModelObjectsConditionInput
+export const deleteActivity = /* GraphQL */ `
+  mutation DeleteActivity(
+    $input: DeleteActivityInput!
+    $condition: ModelActivityConditionInput
   ) {
-    deleteObjects(input: $input, condition: $condition) {
+    deleteActivity(input: $input, condition: $condition) {
       id
       name
       tags {
@@ -97,22 +97,22 @@ export const deleteObjects = /* GraphQL */ `
     }
   }
 `;
-export const createObjectTags = /* GraphQL */ `
-  mutation CreateObjectTags(
-    $input: CreateObjectTagsInput!
-    $condition: ModelObjectTagsConditionInput
+export const createActivityTags = /* GraphQL */ `
+  mutation CreateActivityTags(
+    $input: CreateActivityTagsInput!
+    $condition: ModelActivityTagsConditionInput
   ) {
-    createObjectTags(input: $input, condition: $condition) {
+    createActivityTags(input: $input, condition: $condition) {
       id
       tagsId
-      objectsId
+      activityId
       tags {
         id
         name
         createdAt
         updatedAt
       }
-      objects {
+      activity {
         id
         name
         createdAt
@@ -123,22 +123,22 @@ export const createObjectTags = /* GraphQL */ `
     }
   }
 `;
-export const updateObjectTags = /* GraphQL */ `
-  mutation UpdateObjectTags(
-    $input: UpdateObjectTagsInput!
-    $condition: ModelObjectTagsConditionInput
+export const updateActivityTags = /* GraphQL */ `
+  mutation UpdateActivityTags(
+    $input: UpdateActivityTagsInput!
+    $condition: ModelActivityTagsConditionInput
   ) {
-    updateObjectTags(input: $input, condition: $condition) {
+    updateActivityTags(input: $input, condition: $condition) {
       id
       tagsId
-      objectsId
+      activityId
       tags {
         id
         name
         createdAt
         updatedAt
       }
-      objects {
+      activity {
         id
         name
         createdAt
@@ -149,22 +149,22 @@ export const updateObjectTags = /* GraphQL */ `
     }
   }
 `;
-export const deleteObjectTags = /* GraphQL */ `
-  mutation DeleteObjectTags(
-    $input: DeleteObjectTagsInput!
-    $condition: ModelObjectTagsConditionInput
+export const deleteActivityTags = /* GraphQL */ `
+  mutation DeleteActivityTags(
+    $input: DeleteActivityTagsInput!
+    $condition: ModelActivityTagsConditionInput
   ) {
-    deleteObjectTags(input: $input, condition: $condition) {
+    deleteActivityTags(input: $input, condition: $condition) {
       id
       tagsId
-      objectsId
+      activityId
       tags {
         id
         name
         createdAt
         updatedAt
       }
-      objects {
+      activity {
         id
         name
         createdAt
@@ -186,6 +186,7 @@ export const createUsers = /* GraphQL */ `
       name
       lastName
       email
+      identityID
       favorites {
         nextToken
       }
@@ -209,6 +210,7 @@ export const updateUsers = /* GraphQL */ `
       name
       lastName
       email
+      identityID
       favorites {
         nextToken
       }
@@ -232,6 +234,7 @@ export const deleteUsers = /* GraphQL */ `
       name
       lastName
       email
+      identityID
       favorites {
         nextToken
       }
@@ -258,6 +261,7 @@ export const createBusiness = /* GraphQL */ `
         name
         lastName
         email
+        identityID
         owner
         createdAt
         updatedAt
@@ -270,8 +274,9 @@ export const createBusiness = /* GraphQL */ `
       instagram
       facebook
       page
-      coordinates
-      object
+      latitude
+      length
+      activity
       tags
       favorites {
         nextToken
@@ -296,6 +301,7 @@ export const updateBusiness = /* GraphQL */ `
         name
         lastName
         email
+        identityID
         owner
         createdAt
         updatedAt
@@ -308,8 +314,9 @@ export const updateBusiness = /* GraphQL */ `
       instagram
       facebook
       page
-      coordinates
-      object
+      latitude
+      length
+      activity
       tags
       favorites {
         nextToken
@@ -334,6 +341,7 @@ export const deleteBusiness = /* GraphQL */ `
         name
         lastName
         email
+        identityID
         owner
         createdAt
         updatedAt
@@ -346,8 +354,9 @@ export const deleteBusiness = /* GraphQL */ `
       instagram
       facebook
       page
-      coordinates
-      object
+      latitude
+      length
+      activity
       tags
       favorites {
         nextToken
@@ -377,8 +386,9 @@ export const createFavorites = /* GraphQL */ `
         instagram
         facebook
         page
-        coordinates
-        object
+        latitude
+        length
+        activity
         tags
         owner
         createdAt
@@ -391,6 +401,7 @@ export const createFavorites = /* GraphQL */ `
         name
         lastName
         email
+        identityID
         owner
         createdAt
         updatedAt
@@ -421,8 +432,9 @@ export const updateFavorites = /* GraphQL */ `
         instagram
         facebook
         page
-        coordinates
-        object
+        latitude
+        length
+        activity
         tags
         owner
         createdAt
@@ -435,6 +447,7 @@ export const updateFavorites = /* GraphQL */ `
         name
         lastName
         email
+        identityID
         owner
         createdAt
         updatedAt
@@ -465,8 +478,9 @@ export const deleteFavorites = /* GraphQL */ `
         instagram
         facebook
         page
-        coordinates
-        object
+        latitude
+        length
+        activity
         tags
         owner
         createdAt
@@ -479,6 +493,7 @@ export const deleteFavorites = /* GraphQL */ `
         name
         lastName
         email
+        identityID
         owner
         createdAt
         updatedAt
