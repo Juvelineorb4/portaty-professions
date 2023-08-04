@@ -1,6 +1,6 @@
 {
   "expo": {
-    "scheme": "portaty2",
+    "scheme": "portaty",
     "name": "portaty-professions",
     "slug": "portaty-professions",
     "owner": "portaty",
@@ -14,13 +14,16 @@
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": ["**/*"],
+    "runtimeVersion": "exposdk:49.0.0",
     "ios": {
+      "buildNumber": "1",
       "supportsTablet": true,
       "infoPlist": {
-        "NSContactsUsageDescription": "Allow Portaty to access"
+        "NSContactsUsageDescription": "Allow Portaty to access your contacts."
       }
     },
     "android": {
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -54,9 +57,6 @@
       "eas": {
         "projectId": "b378d102-5cf7-49fc-93f0-b5df7f83d8ad"
       }
-    },
-    "runtimeVersion": {
-      "policy": "sdkVersion"
     },
     "updates": {
       "url": "https://u.expo.dev/b378d102-5cf7-49fc-93f0-b5df7f83d8ad"

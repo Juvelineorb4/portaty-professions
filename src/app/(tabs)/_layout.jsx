@@ -10,7 +10,8 @@ import {
 } from "react-native";
 import { Tabs } from "expo-router";
 import styles from "@/assets/styles/Tabs.module.css";
-
+import { Auth, API } from "aws-amplify";
+import { userByEmail } from "@/graphql/queries";
 const global = require("@/assets/styles/global.js");
 const { width } = Dimensions.get("window");
 const MARGIN = 0;
@@ -132,7 +133,7 @@ const TabIcon = ({ isFocused, tabIcon, label, index }) => {
             width: 33,
             height: 33,
             resizeMode: "contain",
-            marginTop: isFocused ? -2 : 0
+            marginTop: isFocused ? -2 : 0,
           }}
           source={isFocused ? tabIcon.activeIcon : tabIcon.inActiveIcon}
         />
@@ -142,7 +143,7 @@ const TabIcon = ({ isFocused, tabIcon, label, index }) => {
           color: isFocused ? "#5E2129" : "#5E2129",
           fontSize: 13,
           fontFamily: "regular",
-          marginTop: isFocused ? 0 : -3
+          marginTop: isFocused ? 0 : -3,
         }}
       >
         {label}
@@ -151,6 +152,24 @@ const TabIcon = ({ isFocused, tabIcon, label, index }) => {
   );
 };
 const TabsLayout = () => {
+  useEffect(() => {
+    // checkUser();
+  }, []);
+
+  // const checkUser = async () => {
+  //   const { attributes } = await Auth.currentAuthenticatedUser();
+  //   const { email } = attributes;
+  //   const result = await API.graphql({
+  //     query: userByEmail,
+  //     authMode: "AMAZON_COGNITO_USER_POOLS",
+  //     variables: {
+  //       email: email,
+  //     },
+  //   });
+  //   console.log(result.data.userByEmail.items[0]);
+  // };
+
+
   return (
     <Tabs
       tabBar={(props) => <MyTabBar {...props} />}

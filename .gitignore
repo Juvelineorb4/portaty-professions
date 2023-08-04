@@ -1,7 +1,5 @@
 # dependencies
-/node_modules
-/.pnp
-.pnp.js
+node_modules/
 
 # testing
 /coverage
@@ -35,6 +33,7 @@ yarn-error.log*
 next-env.d.ts
 
 #amplify-do-not-edit-begin
+amplify/
 amplify/\#current-cloud-backend
 amplify/.config/local-*
 amplify/logs
@@ -45,6 +44,7 @@ amplify/backend/.temp
 build/
 dist/
 node_modules/
+aws-exports.js
 awsconfiguration.json
 amplifyconfiguration.json
 amplifyconfiguration.dart
@@ -53,6 +53,4 @@ amplify-gradle-config.json
 amplifytools.xcconfig
 .secret-*
 **.sample
-/amplify
-aws-exports.js
 #amplify-do-not-edit-end

@@ -26,7 +26,7 @@ const Register = () => {
     defaultValues: {
       name: "",
       email: "",
-      birthday: "",
+      birthdate: "",
       password: "",
       "password-repeat": "",
     },
@@ -48,9 +48,10 @@ const Register = () => {
   };
 
   const onHandleRegister = async (data) => {
-    const { name, email, password, birthdate } = data;
+    const { name, lastName, email, password, birthdate } = data;
+    const fullName = `${name.trim()} ${lastName.trim()}`;
     const fechaISO8601 = convertirFechaADateISO8601(birthdate);
-    console.log("FECHA: ", fechaISO8601);
+    console.log("DATA: ", fullName);
     try {
       const result = await Auth.signUp({
         username: email.trim(),
@@ -59,6 +60,7 @@ const Register = () => {
           email: email.trim(),
           name: name.trim(),
           birthdate: fechaISO8601,
+          "custom:lastName": lastName.trim(),
         },
       });
       router.replace({
@@ -85,23 +87,53 @@ const Register = () => {
         >
           <View style={[styles.content]}>
             <Text style={styles.title}>{es.authentication.register.title}</Text>
-            <CustomInput
-              control={control}
-              name={`name`}
-              placeholder={es.authentication.register.name.placeholder}
-              styled={{
-                text: styles.textInput,
-                label: styles.labelInput,
-                error: styles.errorInput,
-                placeholder: styles.placeholder,
-                input: [styles.inputContainer, global.bgWhiteSoft],
-              }}
-              text={`Nombre`}
-              icon={require(`../../../assets/images/profile_default.png`)}
-              rules={{
-                required: es.authentication.register.name.rules,
-              }}
-            />
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <CustomInput
+                control={control}
+                name={`name`}
+                placeholder={es.authentication.register.name.placeholder}
+                styled={{
+                  text: styles.textInputRow,
+                  label: styles.labelInput,
+                  error: styles.errorInput,
+                  placeholder: styles.placeholderRow,
+                  input: [
+                    styles.inputContainer,
+                    global.bgWhiteSoft,
+                    styles.inputContainerRow,
+                  ],
+                }}
+                text={`Nombre`}
+                icon={require(`../../../assets/images/profile_default.png`)}
+                rules={{
+                  required: es.authentication.register.name.rules,
+                }}
+              />
+              <CustomInput
+                control={control}
+                name={`lastName`}
+                placeholder={es.authentication.register.lastName.placeholder}
+                styled={{
+                  text: styles.textInputRow,
+                  label: styles.labelInput,
+                  error: styles.errorInput,
+                  placeholder: styles.placeholderRow,
+                  input: [
+                    styles.inputContainer,
+                    global.bgWhiteSoft,
+                    styles.inputContainerRow,
+                  ],
+                }}
+                text={`Apellido`}
+                icon={require(`../../../assets/images/profile_default.png`)}
+                rules={{
+                  required: es.authentication.register.lastName.rules,
+                }}
+              />
+            </View>
+
             <CustomInput
               control={control}
               name={`email`}
