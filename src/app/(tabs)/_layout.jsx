@@ -153,21 +153,22 @@ const TabIcon = ({ isFocused, tabIcon, label, index }) => {
 };
 const TabsLayout = () => {
   useEffect(() => {
-    checkUser();
+    // checkUser();
   }, []);
 
-  const checkUser = async () => {
-    const { attributes } = await Auth.currentAuthenticatedUser();
-    const { email } = attributes;
-    const result = await API.graphql({
-      query: userByEmail,
-      authMode: "AMAZON_COGNITO_USER_POOLS",
-      variables: {
-        email: email,
-      },
-    });
-    console.log(result.data.userByEmail.items[0]);
-  };
+  // const checkUser = async () => {
+  //   const { attributes } = await Auth.currentAuthenticatedUser();
+  //   const { email } = attributes;
+  //   const result = await API.graphql({
+  //     query: userByEmail,
+  //     authMode: "AMAZON_COGNITO_USER_POOLS",
+  //     variables: {
+  //       email: email,
+  //     },
+  //   });
+  //   console.log(result.data.userByEmail.items[0]);
+  // };
+
 
   return (
     <Tabs

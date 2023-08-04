@@ -7,14 +7,6 @@ export const onCreateTags = /* GraphQL */ `
       id
       name
       objects {
-        items {
-          id
-          tagsId
-          objectsId
-          createdAt
-          updatedAt
-          __typename
-        }
         nextToken
         __typename
       }
@@ -30,14 +22,6 @@ export const onUpdateTags = /* GraphQL */ `
       id
       name
       objects {
-        items {
-          id
-          tagsId
-          objectsId
-          createdAt
-          updatedAt
-          __typename
-        }
         nextToken
         __typename
       }
@@ -53,14 +37,6 @@ export const onDeleteTags = /* GraphQL */ `
       id
       name
       objects {
-        items {
-          id
-          tagsId
-          objectsId
-          createdAt
-          updatedAt
-          __typename
-        }
         nextToken
         __typename
       }
@@ -70,20 +46,12 @@ export const onDeleteTags = /* GraphQL */ `
     }
   }
 `;
-export const onCreateObjects = /* GraphQL */ `
-  subscription OnCreateObjects($filter: ModelSubscriptionObjectsFilterInput) {
-    onCreateObjects(filter: $filter) {
+export const onCreateActivity = /* GraphQL */ `
+  subscription OnCreateActivity($filter: ModelSubscriptionActivityFilterInput) {
+    onCreateActivity(filter: $filter) {
       id
       name
       tags {
-        items {
-          id
-          tagsId
-          objectsId
-          createdAt
-          updatedAt
-          __typename
-        }
         nextToken
         __typename
       }
@@ -93,20 +61,12 @@ export const onCreateObjects = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateObjects = /* GraphQL */ `
-  subscription OnUpdateObjects($filter: ModelSubscriptionObjectsFilterInput) {
-    onUpdateObjects(filter: $filter) {
+export const onUpdateActivity = /* GraphQL */ `
+  subscription OnUpdateActivity($filter: ModelSubscriptionActivityFilterInput) {
+    onUpdateActivity(filter: $filter) {
       id
       name
       tags {
-        items {
-          id
-          tagsId
-          objectsId
-          createdAt
-          updatedAt
-          __typename
-        }
         nextToken
         __typename
       }
@@ -116,20 +76,12 @@ export const onUpdateObjects = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteObjects = /* GraphQL */ `
-  subscription OnDeleteObjects($filter: ModelSubscriptionObjectsFilterInput) {
-    onDeleteObjects(filter: $filter) {
+export const onDeleteActivity = /* GraphQL */ `
+  subscription OnDeleteActivity($filter: ModelSubscriptionActivityFilterInput) {
+    onDeleteActivity(filter: $filter) {
       id
       name
       tags {
-        items {
-          id
-          tagsId
-          objectsId
-          createdAt
-          updatedAt
-          __typename
-        }
         nextToken
         __typename
       }
@@ -139,32 +91,24 @@ export const onDeleteObjects = /* GraphQL */ `
     }
   }
 `;
-export const onCreateObjectTags = /* GraphQL */ `
-  subscription OnCreateObjectTags(
-    $filter: ModelSubscriptionObjectTagsFilterInput
+export const onCreateActivityTags = /* GraphQL */ `
+  subscription OnCreateActivityTags(
+    $filter: ModelSubscriptionActivityTagsFilterInput
   ) {
-    onCreateObjectTags(filter: $filter) {
+    onCreateActivityTags(filter: $filter) {
       id
       tagsId
-      objectsId
+      activityId
       tags {
         id
         name
-        objects {
-          nextToken
-          __typename
-        }
         createdAt
         updatedAt
         __typename
       }
-      objects {
+      activity {
         id
         name
-        tags {
-          nextToken
-          __typename
-        }
         createdAt
         updatedAt
         __typename
@@ -175,32 +119,24 @@ export const onCreateObjectTags = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateObjectTags = /* GraphQL */ `
-  subscription OnUpdateObjectTags(
-    $filter: ModelSubscriptionObjectTagsFilterInput
+export const onUpdateActivityTags = /* GraphQL */ `
+  subscription OnUpdateActivityTags(
+    $filter: ModelSubscriptionActivityTagsFilterInput
   ) {
-    onUpdateObjectTags(filter: $filter) {
+    onUpdateActivityTags(filter: $filter) {
       id
       tagsId
-      objectsId
+      activityId
       tags {
         id
         name
-        objects {
-          nextToken
-          __typename
-        }
         createdAt
         updatedAt
         __typename
       }
-      objects {
+      activity {
         id
         name
-        tags {
-          nextToken
-          __typename
-        }
         createdAt
         updatedAt
         __typename
@@ -211,32 +147,24 @@ export const onUpdateObjectTags = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteObjectTags = /* GraphQL */ `
-  subscription OnDeleteObjectTags(
-    $filter: ModelSubscriptionObjectTagsFilterInput
+export const onDeleteActivityTags = /* GraphQL */ `
+  subscription OnDeleteActivityTags(
+    $filter: ModelSubscriptionActivityTagsFilterInput
   ) {
-    onDeleteObjectTags(filter: $filter) {
+    onDeleteActivityTags(filter: $filter) {
       id
       tagsId
-      objectsId
+      activityId
       tags {
         id
         name
-        objects {
-          nextToken
-          __typename
-        }
         createdAt
         updatedAt
         __typename
       }
-      objects {
+      activity {
         id
         name
-        tags {
-          nextToken
-          __typename
-        }
         createdAt
         updatedAt
         __typename
@@ -258,40 +186,12 @@ export const onCreateUsers = /* GraphQL */ `
       name
       lastName
       email
+      identityID
       favorites {
-        items {
-          id
-          businessID
-          userID
-          position
-          owner
-          createdAt
-          updatedAt
-          __typename
-        }
         nextToken
         __typename
       }
       business {
-        items {
-          id
-          userID
-          name
-          image
-          email
-          phone
-          whatsapp
-          instagram
-          facebook
-          page
-          coordinates
-          object
-          tags
-          owner
-          createdAt
-          updatedAt
-          __typename
-        }
         nextToken
         __typename
       }
@@ -313,40 +213,12 @@ export const onUpdateUsers = /* GraphQL */ `
       name
       lastName
       email
+      identityID
       favorites {
-        items {
-          id
-          businessID
-          userID
-          position
-          owner
-          createdAt
-          updatedAt
-          __typename
-        }
         nextToken
         __typename
       }
       business {
-        items {
-          id
-          userID
-          name
-          image
-          email
-          phone
-          whatsapp
-          instagram
-          facebook
-          page
-          coordinates
-          object
-          tags
-          owner
-          createdAt
-          updatedAt
-          __typename
-        }
         nextToken
         __typename
       }
@@ -368,40 +240,12 @@ export const onDeleteUsers = /* GraphQL */ `
       name
       lastName
       email
+      identityID
       favorites {
-        items {
-          id
-          businessID
-          userID
-          position
-          owner
-          createdAt
-          updatedAt
-          __typename
-        }
         nextToken
         __typename
       }
       business {
-        items {
-          id
-          userID
-          name
-          image
-          email
-          phone
-          whatsapp
-          instagram
-          facebook
-          page
-          coordinates
-          object
-          tags
-          owner
-          createdAt
-          updatedAt
-          __typename
-        }
         nextToken
         __typename
       }
@@ -426,14 +270,7 @@ export const onCreateBusiness = /* GraphQL */ `
         name
         lastName
         email
-        favorites {
-          nextToken
-          __typename
-        }
-        business {
-          nextToken
-          __typename
-        }
+        identityID
         owner
         createdAt
         updatedAt
@@ -447,20 +284,11 @@ export const onCreateBusiness = /* GraphQL */ `
       instagram
       facebook
       page
-      coordinates
-      object
+      latitude
+      length
+      activity
       tags
       favorites {
-        items {
-          id
-          businessID
-          userID
-          position
-          owner
-          createdAt
-          updatedAt
-          __typename
-        }
         nextToken
         __typename
       }
@@ -485,14 +313,7 @@ export const onUpdateBusiness = /* GraphQL */ `
         name
         lastName
         email
-        favorites {
-          nextToken
-          __typename
-        }
-        business {
-          nextToken
-          __typename
-        }
+        identityID
         owner
         createdAt
         updatedAt
@@ -506,20 +327,11 @@ export const onUpdateBusiness = /* GraphQL */ `
       instagram
       facebook
       page
-      coordinates
-      object
+      latitude
+      length
+      activity
       tags
       favorites {
-        items {
-          id
-          businessID
-          userID
-          position
-          owner
-          createdAt
-          updatedAt
-          __typename
-        }
         nextToken
         __typename
       }
@@ -544,14 +356,7 @@ export const onDeleteBusiness = /* GraphQL */ `
         name
         lastName
         email
-        favorites {
-          nextToken
-          __typename
-        }
-        business {
-          nextToken
-          __typename
-        }
+        identityID
         owner
         createdAt
         updatedAt
@@ -565,20 +370,11 @@ export const onDeleteBusiness = /* GraphQL */ `
       instagram
       facebook
       page
-      coordinates
-      object
+      latitude
+      length
+      activity
       tags
       favorites {
-        items {
-          id
-          businessID
-          userID
-          position
-          owner
-          createdAt
-          updatedAt
-          __typename
-        }
         nextToken
         __typename
       }
@@ -600,17 +396,6 @@ export const onCreateFavorites = /* GraphQL */ `
       business {
         id
         userID
-        user {
-          id
-          cognitoID
-          name
-          lastName
-          email
-          owner
-          createdAt
-          updatedAt
-          __typename
-        }
         name
         image
         email
@@ -619,13 +404,10 @@ export const onCreateFavorites = /* GraphQL */ `
         instagram
         facebook
         page
-        coordinates
-        object
+        latitude
+        length
+        activity
         tags
-        favorites {
-          nextToken
-          __typename
-        }
         owner
         createdAt
         updatedAt
@@ -638,14 +420,7 @@ export const onCreateFavorites = /* GraphQL */ `
         name
         lastName
         email
-        favorites {
-          nextToken
-          __typename
-        }
-        business {
-          nextToken
-          __typename
-        }
+        identityID
         owner
         createdAt
         updatedAt
@@ -670,17 +445,6 @@ export const onUpdateFavorites = /* GraphQL */ `
       business {
         id
         userID
-        user {
-          id
-          cognitoID
-          name
-          lastName
-          email
-          owner
-          createdAt
-          updatedAt
-          __typename
-        }
         name
         image
         email
@@ -689,13 +453,10 @@ export const onUpdateFavorites = /* GraphQL */ `
         instagram
         facebook
         page
-        coordinates
-        object
+        latitude
+        length
+        activity
         tags
-        favorites {
-          nextToken
-          __typename
-        }
         owner
         createdAt
         updatedAt
@@ -708,14 +469,7 @@ export const onUpdateFavorites = /* GraphQL */ `
         name
         lastName
         email
-        favorites {
-          nextToken
-          __typename
-        }
-        business {
-          nextToken
-          __typename
-        }
+        identityID
         owner
         createdAt
         updatedAt
@@ -740,17 +494,6 @@ export const onDeleteFavorites = /* GraphQL */ `
       business {
         id
         userID
-        user {
-          id
-          cognitoID
-          name
-          lastName
-          email
-          owner
-          createdAt
-          updatedAt
-          __typename
-        }
         name
         image
         email
@@ -759,13 +502,10 @@ export const onDeleteFavorites = /* GraphQL */ `
         instagram
         facebook
         page
-        coordinates
-        object
+        latitude
+        length
+        activity
         tags
-        favorites {
-          nextToken
-          __typename
-        }
         owner
         createdAt
         updatedAt
@@ -778,14 +518,7 @@ export const onDeleteFavorites = /* GraphQL */ `
         name
         lastName
         email
-        favorites {
-          nextToken
-          __typename
-        }
-        business {
-          nextToken
-          __typename
-        }
+        identityID
         owner
         createdAt
         updatedAt

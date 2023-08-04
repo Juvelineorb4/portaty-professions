@@ -1,8 +1,14 @@
-import { Slot, Stack, useRouter } from "expo-router";
+import {
+  Slot,
+  Stack,
+  useRouter,
+  useRootNavigationState,
+  useRootNavigation,
+} from "expo-router";
 import { useFonts } from "expo-font";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import * as SplashScreen from "expo-splash-screen";
-import { Amplify, Hub, Logger } from "aws-amplify";
+import { Amplify, Hub, Logger, Auth } from "aws-amplify";
 import awsExports from "@/aws-exports";
 
 import { Platform, SafeAreaView as SafeAreaIOS } from "react-native";
@@ -14,12 +20,12 @@ import {
 import { StatusBar } from "expo-status-bar";
 import { RecoilRoot } from "recoil";
 
-const logger = new Logger("My-Logger");
-
 Amplify.configure(awsExports);
 SplashScreen.preventAutoHideAsync();
 const Navigation = () => {
+  const [isLogin, setIsLogin] = useState(false);
   const router = useRouter();
+  const rootNavigationState = useRootNavigationState();
   const [fontsLoaded] = useFonts({
     thin: require("../assets/fonts/Montserrat-Thin.ttf"),
     regular: require("../assets/fonts/Montserrat-Regular.ttf"),
@@ -35,7 +41,6 @@ const Navigation = () => {
     boldItalic: require("../assets/fonts/Montserrat-BoldItalic.ttf"),
     name: require("../assets/fonts/ConeriaScript.ttf"),
   });
-  
 
   useEffect(() => {
     // crear subscripcion
@@ -43,7 +48,6 @@ const Navigation = () => {
       console.log("HUB: ", event);
       switch (event) {
         case "configured":
-          logger.info("the Auth module is configured");
           break;
         case "signIn":
           router.replace("/(tabs)/home");
@@ -58,9 +62,20 @@ const Navigation = () => {
           break;
       }
     });
-
+    // onHandleLogin();
     return unsubscribe;
   }, []);
+  useEffect(() => {
+    // console.log("NAVIGATION: ", rootNavigationState);
+    if (isLogin === false && rootNavigationState?.key) onHandleLogin();
+  }, [rootNavigationState]);
+
+  const onHandleLogin = () => {
+    Auth.currentAuthenticatedUser().then((data) => {
+      setIsLogin(true);
+      router.replace("/(tabs)/home");
+    });
+  };
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
