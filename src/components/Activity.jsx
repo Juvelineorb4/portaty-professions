@@ -1,21 +1,23 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React, { useEffect } from "react";
-import { tagsList } from "@/atoms";
+import { activitySelect, tagsList } from "@/atoms";
 import { useRecoilState } from "recoil";
 import { useState } from "react";
 
-const Tag = ({ item }) => {
+const Activity = ({ item }) => {
   const global = require("@/assets/styles/global.js");
   const [active, setActive] = useState(false);
-  const [selectTagsList, setSelectTagsList] = useRecoilState(tagsList);
+  const [selectActivity, setSelectActivity] = useRecoilState(activitySelect);
   const onHandleCheckActive = () => {
-    selectTagsList.map((tag, index) => {
-      if (tag === item.tags.name) setActive(true);
-    });
+      if (selectActivity.id === item.id) {
+        setActive(true)
+    } else {
+        setActive(false)
+    }
   };
   useEffect(() => {
-    onHandleCheckActive();
-  }, [selectTagsList]);
+    onHandleCheckActive()
+  }, [selectActivity]);
 
   return (
     <TouchableOpacity
@@ -34,15 +36,8 @@ const Tag = ({ item }) => {
       ]}
       onPress={() => {
         if (active === false) {
-          setSelectTagsList([...selectTagsList, item.tags.name]);
+            setSelectActivity(item);
           setActive(true);
-        }
-        if (active) {
-          const tagsFilter = selectTagsList.filter((tag, index) => {
-            return selectTagsList.indexOf(item.name) !== index;
-          });
-          setSelectTagsList(tagsFilter);
-          setActive(false);
         }
       }}
     >
@@ -52,10 +47,10 @@ const Tag = ({ item }) => {
           active ? global.white : global.black,
         ]}
       >
-        {item.tags.name}
+        {item.name}
       </Text>
     </TouchableOpacity>
   );
 };
 
-export default Tag;
+export default Activity;
