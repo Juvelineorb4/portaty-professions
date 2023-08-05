@@ -8,3 +8,7 @@ export const tagsList = atom({
   key: "tagsListValue",
   default: [],
 });
+export const activitySelect = atom({
+  key: "activitySelectValue",
+  default: {},
+});

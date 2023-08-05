@@ -8,23 +8,20 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import styles from "@/assets/styles/Tags.module.css";
+import styles from "@/assets/styles/Activity.module.css";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { es } from "@/assets/constants/lenguage";
 import { useRecoilValue } from "recoil";
-import { tagsList } from "@/atoms";
-import Tag from "./Tag";
-import CustomInput from "./CustomInput";
+import { activitySelect, tagsList } from "@/atoms";
+import Activity from "./Activity";
 
-const CustomTags = ({ data }) => {
+const CustomActivities = ({ data }) => {
   const global = require("@/assets/styles/global.js");
   const [modalVisible, setModalVisible] = useState(false);
   const { control } = useForm();
-  const tags = useRecoilValue(tagsList);
-
+  const activity = useRecoilValue(activitySelect);
   useEffect(() => {
-
   }, []);
 
   return (
@@ -33,20 +30,20 @@ const CustomTags = ({ data }) => {
       showsVerticalScrollIndicator={false}
     >
       <View>
-        <Text style={styles.labelInputTag}>Tags</Text>
+        <Text style={styles.labelInputTag}>Actividad Laboral</Text>
         <TouchableOpacity
           style={[styles.inputContainerTag]}
           onPress={() => setModalVisible(!modalVisible)}
         >
           <View style={{ flex: 1, flexDirection: "row" }}>
-            {tags.length !== 0 ? (
-              tags.map((item, index) => (
-                <View key={index} style={styles.containerTag}>
-                  <Text style={styles.textTag}>{item}</Text>
+            {activity.name ? (
+                <View style={styles.containerTag}>
+                  <Text style={styles.textTag}>{activity.name}</Text>
                 </View>
-              ))
             ) : (
-              <Text style={styles.textInputTag}>Selecciona tus tags</Text>
+              <Text style={styles.textInputTag}>
+                Selecciona tu actividad laboral
+              </Text>
             )}
           </View>
 
@@ -75,63 +72,22 @@ const CustomTags = ({ data }) => {
                       source={require("@/assets/images/arrow_back.png")}
                     />
                   </Pressable>
-                  {/* <Text style={styles.modalText}>{`Selecciona tus tags`}</Text> */}
                 </View>
                 <View style={{ flex: 1 }}>
                   <Text style={styles.titleTag}>
-                    Tags predeterminados - 10 max
+                    Elige una actividad laboral
                   </Text>
 
                   <View style={[{ flex: 1 }]}>
                     <FlatList
-                      data={data?.tags?.items}
-                      renderItem={({ item }) => <Tag item={item} />}
+                      data={data}
+                      renderItem={({ item }) => <Activity item={item} />}
                       numColumns={3}
                       keyExtractor={(item, index) => index}
                       showsVerticalScrollIndicator={false}
                       columnWrapperStyle={{ justifyContent: "space-between" }}
                     />
                   </View>
-                  <View style={[styles.line, global.bgMidGray]} />
-                  <CustomInput
-                    control={control}
-                    name={`personalizado`}
-                    placeholder={`Agrega tags personalizados - 3 max`}
-                    styled={{
-                      text: styles.textInput,
-                      label: [styles.labelInput],
-                      error: styles.errorInput,
-                      input: [styles.inputContainer],
-                      placeholder: styles.placeholder,
-                    }}
-                    // text={`Personalizado`}
-                  />
-                  <TouchableOpacity
-                    style={[
-                      global.mainBgColor,
-                      {
-                        borderRadius: 8,
-                        // flex: 1,
-                        width: 100,
-                        justifyContent: "center",
-                        alignItems: "center",
-                        height: 49,
-                        marginTop: 10,
-                      },
-                    ]}
-                    onPress={() => {
-                      setModalVisible(!modalVisible);
-                    }}
-                  >
-                    <Text
-                      style={[
-                        global.white,
-                        { fontFamily: "medium", fontSize: 12 },
-                      ]}
-                    >
-                      {`Agregar tag`}
-                    </Text>
-                  </TouchableOpacity>
                 </View>
               </View>
             </View>
@@ -142,4 +98,4 @@ const CustomTags = ({ data }) => {
   );
 };
 
-export default CustomTags;
+export default CustomActivities;
