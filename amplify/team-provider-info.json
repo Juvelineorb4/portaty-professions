@@ -17,6 +17,9 @@
       },
       "api": {
         "professionsGraphql": {}
+      },
+      "storage": {
+        "s3portatyprofessions": {}
       }
     }
   }

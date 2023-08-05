@@ -79,7 +79,7 @@ const Profile = () => {
           borderColor: "#eee",
         }}
       >
-        {/* <Text style={[{ fontFamily: "light", fontSize: 24 }, global.mainColor]}>
+        <Text style={[{ fontFamily: "light", fontSize: 24 }, global.mainColor]}>
           ¿Tienes un negocio?
         </Text>
         <CustomButton
@@ -87,7 +87,7 @@ const Profile = () => {
             handlePress={() => router.replace(`/profile/form`)}
             textStyles={[styles.textRegister, global.white]}
             buttonStyles={[styles.register, global.mainBgColor]}
-          /> */}
+          />
         <GridProfile />
       </View>
     </View>
