@@ -8,9 +8,9 @@ export const listActivities = /* GraphQL */ `
       items {
         id
         name
-        tags{
-          items{
-            tags{
+        tags {
+          items {
+            tags {
               name
             }
           }
@@ -22,3 +22,52 @@ export const listActivities = /* GraphQL */ `
     }
   }
 `;
+export const userByEmail = /* GraphQL */ `
+  query UserByEmail(
+    $email: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelUsersFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    userByEmail(
+      email: $email
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        cognitoID
+        name
+        lastName
+        email
+        identityID
+        business {
+          items {
+            id
+            userID
+            name
+            image
+            email
+            phone
+            whatsapp
+            instagram
+            facebook
+            page
+            latitude
+            length
+            activity
+            tags
+          }
+        }
+        owner
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
