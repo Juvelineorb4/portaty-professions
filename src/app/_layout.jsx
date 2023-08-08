@@ -1,16 +1,9 @@
-import {
-  Slot,
-  Stack,
-  useRouter,
-  useRootNavigationState,
-  useRootNavigation,
-} from "expo-router";
+import { Slot, Stack } from "expo-router";
 import { useFonts } from "expo-font";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import * as SplashScreen from "expo-splash-screen";
-import { Amplify, Hub, Logger, Auth } from "aws-amplify";
+import { Amplify, Hub } from "aws-amplify";
 import awsExports from "@/aws-exports";
-
 import { Platform, SafeAreaView as SafeAreaIOS } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import {
@@ -19,13 +12,12 @@ import {
 } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { RecoilRoot } from "recoil";
+import { useUserManagement } from "@/hooks";
 
 Amplify.configure(awsExports);
 SplashScreen.preventAutoHideAsync();
+
 const Navigation = () => {
-  const [isLogin, setIsLogin] = useState(false);
-  const router = useRouter();
-  const rootNavigationState = useRootNavigationState();
   const [fontsLoaded] = useFonts({
     thin: require("../assets/fonts/Montserrat-Thin.ttf"),
     regular: require("../assets/fonts/Montserrat-Regular.ttf"),
@@ -41,41 +33,6 @@ const Navigation = () => {
     boldItalic: require("../assets/fonts/Montserrat-BoldItalic.ttf"),
     name: require("../assets/fonts/ConeriaScript.ttf"),
   });
-
-  useEffect(() => {
-    // crear subscripcion
-    const unsubscribe = Hub.listen("auth", ({ payload: { event, data } }) => {
-      console.log("HUB: ", event);
-      switch (event) {
-        case "configured":
-          break;
-        case "signIn":
-          router.replace("/(tabs)/home");
-          break;
-        case "signOut":
-          break;
-        case "confirmSignUp":
-          break;
-        case "autoSignIn":
-          break;
-        case "updateUserAttributes":
-          break;
-      }
-    });
-    // onHandleLogin();
-    return unsubscribe;
-  }, []);
-  useEffect(() => {
-    // console.log("NAVIGATION: ", rootNavigationState);
-    if (isLogin === false && rootNavigationState?.key) onHandleLogin();
-  }, [rootNavigationState]);
-
-  const onHandleLogin = () => {
-    Auth.currentAuthenticatedUser().then((data) => {
-      setIsLogin(true);
-      router.replace("/(tabs)/home");
-    });
-  };
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
@@ -93,6 +50,7 @@ const Navigation = () => {
         <SafeAreaProvider>
           <GestureHandlerRootView style={{ flex: 1 }}>
             <RecoilRoot>
+              <ConfigureNavigation />
               <Slot>
                 <Stack screenOptions={{ headerShown: false }}>
                   <Stack.Screen
@@ -117,6 +75,7 @@ const Navigation = () => {
         <GestureHandlerRootView style={{ flex: 1 }}>
           <RecoilRoot>
             <StatusBar style="dark" backgroundColor="#fff" />
+            <ConfigureNavigation />
             <Slot>
               <Stack screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="(auth)" options={{ headerShown: false }} />
@@ -128,6 +87,35 @@ const Navigation = () => {
       </SafeAreaProvider>
     </SafeAreaAndroid>
   );
+};
+
+const ConfigureNavigation = () => {
+  const { checkUser, userSignIn, userSignOut } = useUserManagement();
+  useEffect(() => {
+    // crear subscripcion
+    const unsubscribe = Hub.listen("auth", ({ payload: { event, data } }) => {
+      console.log("HUB: ", event);
+      switch (event) {
+        case "configured":
+          break;
+        case "signIn":
+          userSignIn(data);
+          break;
+        case "signOut":
+          userSignOut();
+          break;
+        case "confirmSignUp":
+          break;
+        case "autoSignIn":
+          break;
+        case "updateUserAttributes":
+          console.log("UPDATE USER ATTRIBUTES: ", data);
+          break;
+      }
+    });
+    checkUser();
+    return unsubscribe;
+  }, []);
 };
 
 export default Navigation;

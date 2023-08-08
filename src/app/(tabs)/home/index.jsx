@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { Auth } from "aws-amplify";
 
 const Home = () => {
   const data = [
@@ -25,7 +26,7 @@ const Home = () => {
           flex: 1,
           alignItems: "center",
           justifyContent: "center",
-          padding: 20
+          padding: 20,
         }}
       >
         <View style={styles.container}>
@@ -37,13 +38,13 @@ const Home = () => {
         </View>
       </View>
 
-      {/* <Text
+      <Text
         onPress={() => {
-          router.replace("/(auth)/login");
+          Auth.signOut();
         }}
       >
         Logout
-      </Text> */}
+      </Text>
     </ScrollView>
   );
 };

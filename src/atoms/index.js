@@ -16,6 +16,16 @@ export const activitySelect = atom({
   key: "activitySelectValue",
   default: {},
 });
+
+export const userAuthenticated = atom({
+  key: "userAuthenticatedValue",
+  default: null,
+});
+export const userTable = atom({
+  key: "userTableValue",
+  default: null,
+});
+=======
 export const userProfile = atom({
   key: "userProfileValue",
   default: {},
@@ -24,3 +34,4 @@ export const businessProfile = atom({
   key: "businessProfileValue",
   default: {},
 });
+
