@@ -48,7 +48,7 @@ type Business
   facebook: String
   page: String
   latitude: String
-  length: String
+  longitude: String
   activity: String!
     @auth(
       rules: [
