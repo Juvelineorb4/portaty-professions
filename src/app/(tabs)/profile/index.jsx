@@ -43,9 +43,12 @@ const Profile = () => {
   };
   useEffect(() => {
     console.log(Object.keys(user).length !== 0, Boolean(business))
-    if (Object.keys(user).length === 0  && Object.keys(business).length === 0 ) User();
-    if (Object.keys(business).length === 0 ) getImage();
-  }, [user, business]);
+    if (Object.keys(user).length === 0  && Object.keys(business).length === 0 ) {
+      User()
+      getImage()
+    };
+    console.log(selectKey)
+  }, [user, business, selectKey]);
 
   if (Object.keys(user).length !== 0 || Object.keys(business).length !== 0) return  (
     <ScrollView style={[styles.container, global.bgWhite]}>
@@ -60,7 +63,7 @@ const Profile = () => {
           ]}
         >
           <View style={styles.headerImage}>
-            {Object.keys(business).length !== 0 && selectKey ? (
+            {selectKey ? (
               <Image
                 style={{
                   width: 90,
