@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
-import { Auth } from "aws-amplify";
 import Login from "./(auth)/login/index";
+import MapMarketBusiness from "@/components/MapMarketBusiness";
 
 const App = () => {
-  return <Login />;
+  return <MapMarketBusiness />;
 };
 export default App;
