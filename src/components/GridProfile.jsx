@@ -3,41 +3,43 @@ import React from "react";
 import styles from "@/assets/styles/GridProfile.module.css";
 import { useRouter } from "expo-router";
 
-const GridProfile = () => {
+const GridProfile = ({business}) => {
   const router = useRouter();
+  const {item, image} = business
   const data = [
     {
       id: 1,
-      text: "Chris C.A.",
-      image: require("@/assets/images/negocio.jpg"),
-      link: `/profile/mypost`,
+      text: item.name,
+      image: image,
+      link: `/profile/${item.name}`,
+      data: item
     },
-    { id: 2, text: "Elemento 2" },
-    { id: 3, text: "Elemento 3" },
-    { id: 4, text: "Elemento 4" },
-    { id: 5, text: "Elemento 5" },
-    { id: 6, text: "Elemento 6" },
-    { id: 7, text: "Elemento 7" },
-    { id: 8, text: "Elemento 8" },
-    { id: 9, text: "Elemento 9" },
+    { id: 2, text: "" },
+    { id: 3, text: "" },
+    { id: 4, text: "" },
+    { id: 5, text: "" },
+    { id: 6, text: "" },
+    { id: 7, text: "" },
+    { id: 8, text: "" },
+    { id: 9, text: "" },
   ];
   return (
     <View style={styles.container}>
-      {data.map((item) => (
+      {data.map((post) => (
         <TouchableOpacity
-          key={item.id}
+          key={post.id}
           style={styles.column}
           onPress={() =>
             router.push({
-              pathname: item.link,
+              pathname: post.link,
               params: {
-                data: item,
+                data: data,
               },
             })
           }
         >
-          {item.image ? "" : <Text>{item.text}</Text>}
-          {item.image && (
+          {post.image ? "" : <Text>{post.text}</Text>}
+          {post.image && (
             <Image
               style={{
                 width: "100%",
@@ -46,7 +48,7 @@ const GridProfile = () => {
                 // marginLeft: 5,
                 borderRadius: 2,
               }}
-              source={item.image}
+              source={{uri: post.image}}
             />
           )}
         </TouchableOpacity>
