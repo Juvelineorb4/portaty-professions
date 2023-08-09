@@ -1,9 +1,9 @@
 import { View, Text, Image } from "react-native";
 import React from "react";
-import styles from "@/assets/styles/Header.module.css";
+import styles from "@/utils/styles/Header.module.css";
 
 const ProfileHeader = () => {
-  const global = require("@/assets/styles/global.js");
+  const global = require("@/utils/styles/global.js");
   return (
     <View style={[styles.home, global.bgWhite]}>
       <View style={{
@@ -20,7 +20,7 @@ const ProfileHeader = () => {
             height: 45,
             resizeMode: "cover",
           }}
-          source={require("@/assets/images/gear.png")}
+          source={require("@/utils/images/gear.png")}
         />
       </View>
     </View>

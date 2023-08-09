@@ -23,6 +23,36 @@ const App = () => {
   const [initalMarketLocation, setInitialMarketLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   let mapRef = useRef(null);
+
+
+  // const onHandleMarketMove = (e) => {
+  //   let {
+  //     nativeEvent: { coordinate },
+  //   } = e;
+  //   // comentar para pruebas
+  //   // const isInsideColombiaRegion =
+  //   //   coordinate.latitude >=
+  //   //     COUNTRY_REGION.latitude - COUNTRY_REGION.latitudeDelta / 2 &&
+  //   //   coordinate.latitude <=
+  //   //     COUNTRY_REGION.latitude + COUNTRY_REGION.latitudeDelta / 2 &&
+  //   //   coordinate.longitude >=
+  //   //     COUNTRY_REGION.longitude - COUNTRY_REGION.longitudeDelta / 2 &&
+  //   //   coordinate.longitude <=
+  //   //     COUNTRY_REGION.longitude + COUNTRY_REGION.longitudeDelta / 2;
+  //   setMarketLocation(coordinate);
+  // };
+
+  const onHandleMarkerDragStart = (e) => {
+    let {
+      nativeEvent: { coordinate },
+    } = e;
+    setInitialMarketLocation(coordinate);
+  };
+
+  const onHandleConfirm = () => {
+    console.log(marketLocation);
+  };
+  
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -41,41 +71,6 @@ const App = () => {
       });
     })();
   }, []);
-
-  const onHandleMarketMove = (e) => {
-    let {
-      nativeEvent: { coordinate },
-    } = e;
-    // comentar para pruebas
-    const isInsideColombiaRegion =
-      coordinate.latitude >=
-        COUNTRY_REGION.latitude - COUNTRY_REGION.latitudeDelta / 2 &&
-      coordinate.latitude <=
-        COUNTRY_REGION.latitude + COUNTRY_REGION.latitudeDelta / 2 &&
-      coordinate.longitude >=
-        COUNTRY_REGION.longitude - COUNTRY_REGION.longitudeDelta / 2 &&
-      coordinate.longitude <=
-        COUNTRY_REGION.longitude + COUNTRY_REGION.longitudeDelta / 2;
-
-    if (isInsideColombiaRegion) {
-      console.log("ESTA EN COLOMBIA");
-      setMarketLocation(coordinate);
-    } else {
-      console.log("NO ESTA EN COLOMBIA");
-      setMarketLocation(initalMarketLocation);
-    }
-  };
-
-  const onHandleMarkerDragStart = (e) => {
-    let {
-      nativeEvent: { coordinate },
-    } = e;
-    setInitialMarketLocation(coordinate);
-  };
-
-  const onHandleConfirm = () => {
-    console.log(marketLocation);
-  };
   return (
     <View style={styles.container}>
       {userLocation && (

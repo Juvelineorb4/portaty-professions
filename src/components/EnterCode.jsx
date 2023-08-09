@@ -1,10 +1,10 @@
 import { View, TextInput, Text } from "react-native";
 import React, { useRef } from "react";
-import styles from "@/assets/styles/EnterCode.module.css";
+import styles from "@/utils/styles/EnterCode.module.css";
 import { Controller } from "react-hook-form";
 
 const EnterCode = ({ title, subtitle, control }) => {
-  const global = require("@/assets/styles/global.js");
+  const global = require("@/utils/styles/global.js");
 
   const one = useRef();
   const two = useRef();

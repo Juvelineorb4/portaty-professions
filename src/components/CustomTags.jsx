@@ -8,17 +8,17 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import styles from "@/assets/styles/Tags.module.css";
+import styles from "@/utils/styles/Tags.module.css";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { es } from "@/assets/constants/lenguage";
+import { es } from "@/utils/constants/lenguage";
 import { useRecoilValue } from "recoil";
 import { tagsList } from "@/atoms";
 import Tag from "./Tag";
 import CustomInput from "./CustomInput";
 
 const CustomTags = ({ data }) => {
-  const global = require("@/assets/styles/global.js");
+  const global = require("@/utils/styles/global.js");
   const [modalVisible, setModalVisible] = useState(false);
   const { control } = useForm();
   const tags = useRecoilValue(tagsList);
@@ -72,7 +72,7 @@ const CustomTags = ({ data }) => {
                         height: 25,
                         resizeMode: "contain",
                       }}
-                      source={require("@/assets/images/arrow_back.png")}
+                      source={require("@/utils/images/arrow_back.png")}
                     />
                   </Pressable>
                   {/* <Text style={styles.modalText}>{`Selecciona tus tags`}</Text> */}
