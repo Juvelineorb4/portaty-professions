@@ -1,9 +1,9 @@
 import { View, Text, TouchableOpacity, Image, TextInput } from "react-native";
 import React from "react";
-import styles from "@/assets/styles/Header.module.css";
+import styles from "@/utils/styles/Header.module.css";
 
 const SearchHeader = () => {
-  const global = require("@/assets/styles/global.js");
+  const global = require("@/utils/styles/global.js");
   return (
     <View style={[styles.home, global.bgWhite]}>
       <TouchableOpacity
@@ -16,7 +16,7 @@ const SearchHeader = () => {
             height: 30,
             resizeMode: "cover",
           }}
-          source={require("@/assets/images/search.png")}
+          source={require("@/utils/images/search.png")}
         />
         <TextInput placeholder={"Buscar"} style={styles.input} />
       </TouchableOpacity>

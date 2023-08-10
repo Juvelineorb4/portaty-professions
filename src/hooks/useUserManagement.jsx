@@ -6,28 +6,30 @@ import { updateUsers } from "@/graphql/CustomMutations/Navigation";
 // recpil
 import { useRecoilState } from "recoil";
 import { userAuthenticated, userTable } from "@/atoms/index";
-// router
-import { useRouter } from "expo-router";
+
+import { useNavigation } from "@react-navigation/native";
 
 const useUserManagement = () => {
+  const navigation = useNavigation();
+
   const [userAuth, setUserAuth] = useRecoilState(userAuthenticated);
-  const router = useRouter();
+
   const userSignIn = (data) => {
     setUserAuth(data);
     checkAttributes(data);
-    router.replace("/(tabs)/home");
+    navigation.navigate("Tabs_Navigation");
   };
 
   const userSignOut = () => {
     setUserAuth(null);
-    router.replace("/(auth)/login");
+    navigation.navigate("Login_Welcome");
   };
   const checkUser = async () => {
     try {
       const data = await Auth.currentAuthenticatedUser();
       setUserAuth(data);
       checkAttributes(data);
-      router.replace("/(tabs)/home");
+      navigation.navigate("Tabs_Navigation");
     } catch (error) {
       const { message } = new Error(error);
       console.log("ERROR USER: ", message);

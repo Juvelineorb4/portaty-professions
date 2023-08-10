@@ -1,17 +1,15 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
-import styles from "@/assets/styles/GridProfile.module.css";
-import { useRouter } from "expo-router";
+import styles from "@/utils/styles/GridProfile.module.css";
 
-const GridProfile = ({business}) => {
-  const router = useRouter();
+const GridProfile = ({business, navigation}) => {
   const {item, image} = business
   const data = [
     {
       id: 1,
       text: item.name,
       image: image,
-      link: `/profile/${item.name}`,
+      link: `Post`,
       data: item
     },
     { id: 2, text: "" },
@@ -30,11 +28,8 @@ const GridProfile = ({business}) => {
           key={post.id}
           style={styles.column}
           onPress={() =>
-            router.push({
-              pathname: post.link,
-              params: {
-                data: data,
-              },
+            navigation.navigate(post.link, {
+              data: data
             })
           }
         >

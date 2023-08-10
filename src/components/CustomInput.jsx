@@ -73,14 +73,14 @@ const CustomInput = ({
                         height: 30,
                         resizeMode: "contain",
                       }}
-                      source={require("@/assets/images/eye_yes.png")}
+                      source={require("@/utils/images/eye_yes.png")}
                     /> : <Image
                     style={{
                       width: 30,
                       height: 30,
                       resizeMode: "contain",
                     }}
-                    source={require("@/assets/images/eye_no.png")}
+                    source={require("@/utils/images/eye_no.png")}
                   />
                     }
                   </TouchableOpacity>

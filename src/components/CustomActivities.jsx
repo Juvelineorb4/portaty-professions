@@ -8,16 +8,16 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import styles from "@/assets/styles/Activity.module.css";
+import styles from "@/utils/styles/Activity.module.css";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { es } from "@/assets/constants/lenguage";
+import { es } from "@/utils/constants/lenguage";
 import { useRecoilValue } from "recoil";
 import { activitySelect, tagsList } from "@/atoms";
 import Activity from "./Activity";
 
 const CustomActivities = ({ data }) => {
-  const global = require("@/assets/styles/global.js");
+  const global = require("@/utils/styles/global.js");
   const [modalVisible, setModalVisible] = useState(false);
   const { control } = useForm();
   const activity = useRecoilValue(activitySelect);
@@ -69,7 +69,7 @@ const CustomActivities = ({ data }) => {
                         height: 25,
                         resizeMode: "contain",
                       }}
-                      source={require("@/assets/images/arrow_back.png")}
+                      source={require("@/utils/images/arrow_back.png")}
                     />
                   </Pressable>
                 </View>

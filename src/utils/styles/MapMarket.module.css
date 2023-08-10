@@ -1,0 +1,32 @@
+.contaienr {
+    flex: 1
+}
+.textInput {
+    flex: 1;
+    font-family: "light";
+    margin-left: 9px;
+    color: #8c9199cb;
+  }
+  .inputContainer {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: #fafafa;
+    border: none;
+    /* width: 50%; */
+    padding: 14px 10px 14px 0px;
+    border-radius: 8px;
+    margin: 3px 0px 10px;
+  }
+  .placeholder {
+    flex: 1;
+    margin-left: 10px;
+    color: #8c9199cb;
+    font-size: 12px;
+    font-family: "light";
+  }
+  .labelInput {
+    font-family: "regular";
+    font-size: 14px;
+    color: #404040;
+  }

@@ -1,12 +1,8 @@
-import React, { useEffect, useState, useRef } from "react";
+import "react-native-gesture-handler";
+import React, { useEffect, useRef, useState } from "react";
+import { View, Text } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import {
-  Platform,
-  Text,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import * as Location from "expo-location";
 
 const COUNTRY_REGION = {
@@ -17,12 +13,24 @@ const COUNTRY_REGION = {
   longitudeDelta: 10, // Ajusta este valor según tus necesidades
 };
 
-const App = () => {
+const MAP_SETTINGS = [
+  {
+    featureType: "poi.business",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+];
+
+const MapMarketBusiness = () => {
   const [userLocation, setUserLocation] = useState(null);
   const [marketLocation, setMarketLocation] = useState(null);
   const [initalMarketLocation, setInitialMarketLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   let mapRef = useRef(null);
+
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -33,7 +41,6 @@ const App = () => {
       let location = await Location.getCurrentPositionAsync({
         accuracy: Location.Accuracy.BestForNavigation,
       });
-      console.log(location.coords);
       setUserLocation(location.coords);
       setMarketLocation({
         latitude: location.coords.latitude,
@@ -47,17 +54,17 @@ const App = () => {
       nativeEvent: { coordinate },
     } = e;
     // comentar para pruebas
-    const isInsideColombiaRegion =
-      coordinate.latitude >=
-        COUNTRY_REGION.latitude - COUNTRY_REGION.latitudeDelta / 2 &&
-      coordinate.latitude <=
-        COUNTRY_REGION.latitude + COUNTRY_REGION.latitudeDelta / 2 &&
-      coordinate.longitude >=
-        COUNTRY_REGION.longitude - COUNTRY_REGION.longitudeDelta / 2 &&
-      coordinate.longitude <=
-        COUNTRY_REGION.longitude + COUNTRY_REGION.longitudeDelta / 2;
+    // const isInsideColombiaRegion =
+    //   coordinate.latitude >=
+    //     COUNTRY_REGION.latitude - COUNTRY_REGION.latitudeDelta / 2 &&
+    //   coordinate.latitude <=
+    //     COUNTRY_REGION.latitude + COUNTRY_REGION.latitudeDelta / 2 &&
+    //   coordinate.longitude >=
+    //     COUNTRY_REGION.longitude - COUNTRY_REGION.longitudeDelta / 2 &&
+    //   coordinate.longitude <=
+    //     COUNTRY_REGION.longitude + COUNTRY_REGION.longitudeDelta / 2;
 
-    if (isInsideColombiaRegion) {
+    if (true) {
       console.log("ESTA EN COLOMBIA");
       setMarketLocation(coordinate);
     } else {
@@ -73,16 +80,26 @@ const App = () => {
     setInitialMarketLocation(coordinate);
   };
 
+  const onHandlePress = (e) => {
+    const {
+      nativeEvent: { coordinate },
+    } = e;
+    console.log(coordinate);
+    setMarketLocation(coordinate);
+  };
+
   const onHandleConfirm = () => {
     console.log(marketLocation);
   };
+
   return (
     <View style={styles.container}>
       {userLocation && (
         <>
           <MapView
-            ref={mapRef}
             style={{ flex: 1 }}
+            showsUserLocation={true}
+            ref={mapRef}
             initialRegion={{
               latitude: userLocation.latitude,
               longitude: userLocation.longitude,
@@ -90,18 +107,9 @@ const App = () => {
               longitudeDelta: 0.001,
             }}
             showsPointsOfInterest={false}
-            onPress={(e) => {}}
-            customMapStyle={[
-              {
-                featureType: "poi.business",
-                stylers: [
-                  {
-                    visibility: "off",
-                  },
-                ],
-              },
-            ]}
-            showsUserLocation={true}
+            onDoublePress={onHandlePress}
+            customMapStyle={MAP_SETTINGS}
+             
           >
             {marketLocation && (
               <Marker
@@ -124,14 +132,14 @@ const App = () => {
             }}
             onPress={onHandleConfirm}
           >
-            <Text style={{ color: "black" }}>{`Confirmar >`}</Text>
+            <Text style={{ color: "black" }}>{`Confirmar`}</Text>
           </TouchableOpacity>
         </>
       )}
     </View>
   );
 };
-export default App;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -141,3 +149,5 @@ const styles = StyleSheet.create({
     height: "100%",
   },
 });
+
+export default MapMarketBusiness;

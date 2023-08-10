@@ -26,9 +26,9 @@ export const userTable = atom({
 });
 export const userProfile = atom({
   key: "userProfileValue",
-  default: {},
+  default: [],
 });
 export const businessProfile = atom({
   key: "businessProfileValue",
-  default: {},
+  default: [],
 });

@@ -57,7 +57,7 @@ export const userByEmail = /* GraphQL */ `
             facebook
             page
             latitude
-            length
+            longitude
             activity
             tags
           }

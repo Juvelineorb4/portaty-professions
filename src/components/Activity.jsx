@@ -5,7 +5,7 @@ import { useRecoilState } from "recoil";
 import { useState } from "react";
 
 const Activity = ({ item }) => {
-  const global = require("@/assets/styles/global.js");
+  const global = require("@/utils/styles/global.js");
   const [active, setActive] = useState(false);
   const [selectActivity, setSelectActivity] = useRecoilState(activitySelect);
   const onHandleCheckActive = () => {

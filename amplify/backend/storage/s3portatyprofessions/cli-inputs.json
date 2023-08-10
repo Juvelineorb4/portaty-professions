@@ -1,0 +1,16 @@
+{
+  "resourceName": "s3portatyprofessions",
+  "policyUUID": "eb751fdf",
+  "bucketName": "s3portatyprofessions",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "READ"
+  ],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}
