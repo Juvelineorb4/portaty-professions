@@ -24,10 +24,10 @@ const Profile = ({navigation, router}) => {
         email: attributes.email,
       },
     });
-    console.log(result.data.userByEmail.items[0])
-    if (result.data.userByEmail.items[0].business.items.length !== undefined)
-      setBusiness(result.data.userByEmail.items[0].business.items[0]);
-    setUser(result.data.userByEmail.items[0]);
+    console.log(result.data.userByEmail.items[0].business.items.length)
+    if (result.data.userByEmail.items[0].business.items.length !== 0)
+      setBusiness([result.data.userByEmail.items[0].business.items[0]]);
+    setUser([result.data.userByEmail.items[0]]);
   };
   const getImage = async () => {
     try {
@@ -40,13 +40,13 @@ const Profile = ({navigation, router}) => {
     }
   };
   useEffect(() => {
-    if (Object.keys(user).length === undefined  && Object.keys(business).length === undefined ) {
-      User()
-      getImage()
-    };
-  }, [user, business, selectKey]);
+    if(user.length === 0) User()
+    console.log(user.length)
+    console.log(business)
+    if (user.length !== 0 && business.length !== 0) getImage() 
+  }, []);
 
-  if (Object.keys(user).length !== undefined || Object.keys(business).length !== undefined) return  (
+  if (user.length !== 0 || business.length !== 0) return  (
     <ScrollView style={[styles.container, global.bgWhite]}>
       <View style={{ flex: 0.5 }}>
         <View
@@ -86,10 +86,10 @@ const Profile = ({navigation, router}) => {
               <Text
                 style={[{ fontFamily: "light", fontSize: 14 }, global.black]}
               >
-                {Object.keys(business).length !== undefined 
-                  ? `${business.name}`
-                  : Object.keys(user).length !== undefined 
-                  ? `${user.name} ${user.lastName}`
+                {business.length !== 0
+                  ? `${business[0].name}`
+                  : user.length !== 0 
+                  ? `${user[0].name} ${user[0].lastName}`
                   : ""}
               </Text>
               <Image
@@ -109,7 +109,7 @@ const Profile = ({navigation, router}) => {
                 columnGap: 10,
               }}
             >
-              {Object.keys(business).length !== undefined  ? (
+              {business.length !== 0  ? (
                 <View style={{ alignItems: "center" }}>
                   <Text style={{ fontFamily: "thin", fontSize: 22 }}>0</Text>
                   <Text style={{ fontFamily: "light" }}>Seguidores</Text>
@@ -124,7 +124,7 @@ const Profile = ({navigation, router}) => {
             </View>
           </View>
         </View>
-        {Object.keys(business).length !== undefined ? (
+        {business.length !== 0 ? (
           <View>
             <Text
               style={{
@@ -143,7 +143,7 @@ const Profile = ({navigation, router}) => {
                 textAlign: "center",
               }}
             >
-              {Object.keys(business).length !== undefined ? business.activity : ""}
+              {business.length !== 0 ? business[0].activity : ""}
             </Text>
             <Text
               style={{
@@ -162,7 +162,7 @@ const Profile = ({navigation, router}) => {
                 textAlign: "center",
               }}
             >
-              {Object.keys(business).length !== undefined  ? business.email : ""}
+              {business.length !== 0  ? business[0].email : ""}
             </Text>
             <View
               style={{
@@ -191,7 +191,7 @@ const Profile = ({navigation, router}) => {
                     textAlign: "center",
                   }}
                 >
-                  {Object.keys(business).length !== undefined  ? business.phone : ""}
+                  {business.length !== 0  ? business[0].phone : ""}
                 </Text>
               </View>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -251,9 +251,10 @@ const Profile = ({navigation, router}) => {
                 fontFamily: "light",
                 fontSize: 14,
                 textAlign: "center",
+                marginBottom: 20
               }}
             >
-              {Object.keys(business).length !== undefined  ? business.email : ""}
+              {user.length !== 0  ? user[0].email : ""}
             </Text>
           </View>
         )}
@@ -268,7 +269,7 @@ const Profile = ({navigation, router}) => {
           marginTop: 15,
         }}
       >
-        {Object.keys(business).length !== undefined ? (
+        {business.length !== 0 ? (
           <GridProfile
             business={{
               item: business,
@@ -281,6 +282,7 @@ const Profile = ({navigation, router}) => {
               padding: 20,
               alignItems: "center",
               justifyContent: "center",
+              marginTop: '33%'
             }}
           >
             <Text
@@ -291,8 +293,8 @@ const Profile = ({navigation, router}) => {
             <CustomButton
               text={`Regístralo`}
               handlePress={() => {
-                if (user.id) navigation.navigate('Form', {
-                    user: user.id
+                if (user[0].id) navigation.navigate('Form', {
+                    user: user[0].id
                 })
               }}
               textStyles={[styles.textRegister, global.white]}

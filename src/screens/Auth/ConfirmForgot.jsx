@@ -17,7 +17,7 @@ import {
   
   const ConfirmForgot = ({navigation, router}) => {
     const global = require("@/utils/styles/global.js");
-    const {email, password} = router.params
+    const {email, password} = route.params
     const { control, handleSubmit } = useForm({
       defaultValues: {
         email: email,

@@ -8,39 +8,15 @@ import {
   TouchableOpacity,
 } from "react-native";
 import * as Location from "expo-location";
+import styles from "@/utils/styles/MapMarket.module.css";
 
-const COUNTRY_REGION = {
-  // colombia
-  latitude: 4.5709,
-  longitude: -74.2973,
-  latitudeDelta: 10, // Ajusta este valor según tus necesidades
-  longitudeDelta: 10, // Ajusta este valor según tus necesidades
-};
-
-const App = () => {
+const MapMarketBusiness = () => {
   const [userLocation, setUserLocation] = useState(null);
+  const [activeMap, setActiveMap] = useState(false);
   const [marketLocation, setMarketLocation] = useState(null);
   const [initalMarketLocation, setInitialMarketLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   let mapRef = useRef(null);
-
-
-  // const onHandleMarketMove = (e) => {
-  //   let {
-  //     nativeEvent: { coordinate },
-  //   } = e;
-  //   // comentar para pruebas
-  //   // const isInsideColombiaRegion =
-  //   //   coordinate.latitude >=
-  //   //     COUNTRY_REGION.latitude - COUNTRY_REGION.latitudeDelta / 2 &&
-  //   //   coordinate.latitude <=
-  //   //     COUNTRY_REGION.latitude + COUNTRY_REGION.latitudeDelta / 2 &&
-  //   //   coordinate.longitude >=
-  //   //     COUNTRY_REGION.longitude - COUNTRY_REGION.longitudeDelta / 2 &&
-  //   //   coordinate.longitude <=
-  //   //     COUNTRY_REGION.longitude + COUNTRY_REGION.longitudeDelta / 2;
-  //   setMarketLocation(coordinate);
-  // };
 
   const onHandleMarkerDragStart = (e) => {
     let {
@@ -51,29 +27,42 @@ const App = () => {
 
   const onHandleConfirm = () => {
     console.log(marketLocation);
+    setActiveMap(false)
   };
-  
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-        return;
-      }
-      let location = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.BestForNavigation,
-      });
-      console.log(location.coords);
-      setUserLocation(location.coords);
-      setMarketLocation({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-      });
-    })();
-  }, []);
+  const onMapMarket = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      setErrorMsg("Permission to access location was denied");
+      return;
+    }
+    let location = await Location.getCurrentPositionAsync({
+      accuracy: Location.Accuracy.BestForNavigation,
+    });
+    console.log(location.coords);
+    setUserLocation(location.coords);
+    setMarketLocation({
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+    });
+    setActiveMap(true)
+  }
+
   return (
     <View style={styles.container}>
-      {userLocation && (
+      <View>
+        <Text style={styles.labelInput}>Direccion</Text>
+        <TouchableOpacity
+          style={[styles.inputContainer]}
+          onPress={onMapMarket}
+        >
+          <View style={{ flex: 1, flexDirection: "row" }}>
+            <Text style={styles.textInput}>
+              Av. Bolivar - Calle 1
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+      {activeMap && (
         <>
           <MapView
             ref={mapRef}
@@ -104,7 +93,6 @@ const App = () => {
                 coordinate={marketLocation}
                 draggable
                 onDragStart={(e) => onHandleMarkerDragStart(e)}
-                onDragEnd={onHandleMarketMove}
               />
             )}
           </MapView>
@@ -119,20 +107,11 @@ const App = () => {
             }}
             onPress={onHandleConfirm}
           >
-            <Text style={{ color: "black" }}>{`Confirmar >`}</Text>
+            <Text style={{ color: "black" }}>{`Confirmar`}</Text>
           </TouchableOpacity>
         </>
       )}
     </View>
   );
 };
-export default App;
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  map: {
-    width: "100%",
-    height: "100%",
-  },
-});
+export default MapMarketBusiness;

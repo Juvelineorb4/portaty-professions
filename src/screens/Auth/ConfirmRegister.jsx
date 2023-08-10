@@ -17,7 +17,7 @@ import {
   import { Alert } from "react-native";
   
   const ConfirmRegister = ({navigation, router}) => {
-    const {email} = router.params
+    const {email} = route.params
     const global = require("@/utils/styles/global.js");
     const { control, handleSubmit } = useForm({
       defaultValues: {
