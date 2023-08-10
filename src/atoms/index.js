@@ -10,7 +10,7 @@ export const tagsList = atom({
 });
 export const keyImage = atom({
   key: "keyImageValue",
-  default: '',
+  default: "",
 });
 export const activitySelect = atom({
   key: "activitySelectValue",
@@ -32,4 +32,3 @@ export const businessProfile = atom({
   key: "businessProfileValue",
   default: [],
 });
-

@@ -17,7 +17,7 @@ import CustomButton from "@/components/CustomButton";
 import { useForm } from "react-hook-form";
 import { Alert } from "react-native";
 
-const Login = ({navigation}) => {
+const Login = ({ navigation }) => {
   const { control, handleSubmit } = useForm();
   const global = require("@/utils/styles/global.js");
   const EMAIL_REGEX = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
@@ -27,16 +27,16 @@ const Login = ({navigation}) => {
     const { email, password } = data;
     try {
       const result = await Auth.signIn(email.trim(), password.trim());
-      navigation.navigate('Tabs_Navigation')
     } catch (error) {
       const response = new Error(error);
       const { message } = response;
       switch (message) {
         case "UserNotConfirmedException: User is not confirmed.":
           Alert.alert(`Usuario: ${email} no confirmado`, "por favor confirmar");
-          navigation.navigate('ConfirmRegister', {
-            email: email
-          })
+          navigation.navigate("Register_App", {
+            screen: "ConfirmRegister",
+            params: { email: email },
+          });
           break;
 
         case "UserNotFoundException: User does not exist.":

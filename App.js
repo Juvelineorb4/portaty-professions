@@ -7,32 +7,14 @@ import {
 import { RecoilRoot } from "recoil";
 import { useFonts } from "expo-font";
 import { Platform, SafeAreaView as SafeAreaIOS } from "react-native";
-
 import Navigation from "@/routes/Navigation";
 // amplify
 import { Amplify } from "aws-amplify";
 import awsconfig from "./src/aws-exports.js";
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet } from "react-native";
 
-// stripe
-import { StripeProvider } from '@stripe/stripe-react-native'
-
-
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-
-Amplify.configure({
-  ...awsconfig,
-  API: {
-    endpoints: [
-      {
-        name: "api-gateway-dev",
-        endpoint: "https://h5920e8h3l.execute-api.us-east-1.amazonaws.com/dev"
-      },
-    ]
-  }
-});
-
-const STRIPE_KEY = 'pk_test_51Mr0b4ATCZIkEkhB3Rt0AOz9zZ0UaseZRy9CCEomDtT0pxfoX0o64fYlwHxRJszj5OoqHXfb3lX8NQvGcQmRQgws00vTrph7XJ'
+Amplify.configure(awsconfig);
 
 export default function App() {
   const global = require("@/utils/styles/global.js");
@@ -62,41 +44,38 @@ export default function App() {
     return null;
   }
 
-  if (Platform.OS === "ios") return (
-      <SafeAreaIOS style={{flex: 1}}>
+  if (Platform.OS === "ios")
+    return (
+      <SafeAreaIOS style={{ flex: 1 }}>
         <SafeAreaProvider>
           <GestureHandlerRootView style={{ flex: 1 }}>
             <RecoilRoot>
-              <StripeProvider publishableKey={STRIPE_KEY}>
-                <Navigation />
-              </StripeProvider>
+              <Navigation />
             </RecoilRoot>
           </GestureHandlerRootView>
         </SafeAreaProvider>
       </SafeAreaIOS>
     );
 
-    return (
-      <SafeAreaAndroid style={{flex: 1}}>
-        <SafeAreaProvider>
-          <GestureHandlerRootView style={{ flex: 1 }}>
-            <RecoilRoot>
-              <StripeProvider publishableKey={STRIPE_KEY}>
-                <StatusBar style="dark" backgroundColor="#fff" />
-                <Navigation />
-              </StripeProvider>
-            </RecoilRoot>
-          </GestureHandlerRootView>
-        </SafeAreaProvider>
-      </SafeAreaAndroid>
-    );
+  return (
+    <SafeAreaAndroid style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <RecoilRoot>
+            <StatusBar style="dark" backgroundColor="#fff" />
+            <Navigation />
+          </RecoilRoot>
+        </GestureHandlerRootView>
+      </SafeAreaProvider>
+    </SafeAreaAndroid>
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
