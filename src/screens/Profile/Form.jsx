@@ -11,7 +11,7 @@ import * as customProfile from "@/graphql/CustomQueries/Profile";
 import * as mutations from "@/graphql/mutations";
 import CustomActivities from "@/components/CustomActivities";
 import { useRecoilValue } from "recoil";
-import { activitySelect, tagsList } from "@/atoms";
+import { activitySelect, mapBusiness, tagsList } from "@/atoms";
 import * as MediaLibrary from "expo-media-library";
 import MapMarketBusiness from "@/components/MapMarketBusiness";
 
@@ -24,6 +24,7 @@ const Form = ({ navigation, route }) => {
   const [activitiesList, setActivitiesList] = useState([]);
   const activity = useRecoilValue(activitySelect);
   const tags = useRecoilValue(tagsList);
+  const map = useRecoilValue(mapBusiness);
 
   function urlToBlob(url) {
     return new Promise((resolve, reject) => {
@@ -78,12 +79,15 @@ const Form = ({ navigation, route }) => {
           phone: phone,
           whatsapp: wsme,
           image: key,
+          latitude: map.latitude,
+          longitude: map.longitude,
           activity: activity.name,
           tags: tags.toString(),
         },
       },
     });
     console.log(business);
+    navigation.goBack()
   };
   const MultipleData = async () => {
     const activities = await API.graphql({
@@ -110,7 +114,6 @@ const Form = ({ navigation, route }) => {
         }}
         text={`Razon social`}
       />
-      <MapMarketBusiness />
       <CustomInput
         control={control}
         name={`email`}
@@ -193,6 +196,8 @@ const Form = ({ navigation, route }) => {
           text={`Tags`}
         />
       )}
+      <MapMarketBusiness />
+
       <TouchableOpacity
         style={{
           flex: 1,
