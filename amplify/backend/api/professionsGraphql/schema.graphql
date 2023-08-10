@@ -188,4 +188,30 @@ enum TypeLogs {
   BUSINESS_VIEW
   FAVORITE
 }
+
+type Testing @model @searchable @auth(rules: [{ allow: private }]) {
+  id: ID!
+  name: String
+  coordinates: Coordinates!
+}
+
+type Coordinates {
+  lat: Float!
+  lon: Float!
+}
+
+type Query {
+  searchByDistance(location: LocationInput, km: Int): TestingConnection
+}
+
+input LocationInput {
+  lat: Float!
+  lon: Float
+}
+
+type TestingConnection {
+  items: [Testing]
+  total: Int
+  nextToken: String
+}
 # custom queries and mutations

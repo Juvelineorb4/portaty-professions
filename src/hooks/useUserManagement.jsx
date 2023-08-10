@@ -41,7 +41,6 @@ const useUserManagement = () => {
       attributes["custom:identityID"] === ""
     )
       updateIdentityID(data);
-
     if (
       !attributes["custom:userTableID"] ||
       attributes["custom:userTableID"] === ""

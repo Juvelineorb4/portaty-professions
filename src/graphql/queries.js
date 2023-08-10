@@ -1,6 +1,22 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const searchByDistance = /* GraphQL */ `
+  query SearchByDistance($location: LocationInput, $km: Int) {
+    searchByDistance(location: $location, km: $km) {
+      items {
+        id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
+      total
+      nextToken
+      __typename
+    }
+  }
+`;
 export const getTags = /* GraphQL */ `
   query GetTags($id: ID!) {
     getTags(id: $id) {
@@ -567,6 +583,87 @@ export const listLogs = /* GraphQL */ `
         __typename
       }
       nextToken
+      __typename
+    }
+  }
+`;
+export const getTesting = /* GraphQL */ `
+  query GetTesting($id: ID!) {
+    getTesting(id: $id) {
+      id
+      name
+      coordinates {
+        lat
+        lon
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listTestings = /* GraphQL */ `
+  query ListTestings(
+    $filter: ModelTestingFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listTestings(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const searchTestings = /* GraphQL */ `
+  query SearchTestings(
+    $filter: SearchableTestingFilterInput
+    $sort: [SearchableTestingSortInput]
+    $limit: Int
+    $nextToken: String
+    $from: Int
+    $aggregates: [SearchableTestingAggregationInput]
+  ) {
+    searchTestings(
+      filter: $filter
+      sort: $sort
+      limit: $limit
+      nextToken: $nextToken
+      from: $from
+      aggregates: $aggregates
+    ) {
+      items {
+        id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      total
+      aggregateItems {
+        name
+        result {
+          ... on SearchableAggregateScalarResult {
+            value
+          }
+          ... on SearchableAggregateBucketResult {
+            buckets {
+              key
+              doc_count
+              __typename
+            }
+          }
+        }
+        __typename
+      }
       __typename
     }
   }

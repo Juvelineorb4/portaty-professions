@@ -667,3 +667,60 @@ export const deleteLogs = /* GraphQL */ `
     }
   }
 `;
+export const createTesting = /* GraphQL */ `
+  mutation CreateTesting(
+    $input: CreateTestingInput!
+    $condition: ModelTestingConditionInput
+  ) {
+    createTesting(input: $input, condition: $condition) {
+      id
+      name
+      coordinates {
+        lat
+        lon
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateTesting = /* GraphQL */ `
+  mutation UpdateTesting(
+    $input: UpdateTestingInput!
+    $condition: ModelTestingConditionInput
+  ) {
+    updateTesting(input: $input, condition: $condition) {
+      id
+      name
+      coordinates {
+        lat
+        lon
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteTesting = /* GraphQL */ `
+  mutation DeleteTesting(
+    $input: DeleteTestingInput!
+    $condition: ModelTestingConditionInput
+  ) {
+    deleteTesting(input: $input, condition: $condition) {
+      id
+      name
+      coordinates {
+        lat
+        lon
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
