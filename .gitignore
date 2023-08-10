@@ -17,6 +17,8 @@ web-build/
 .metro-health-check*
 
 #amplify-do-not-edit-begin
+android/
+amplify/
 amplify/\#current-cloud-backend
 amplify/.config/local-*
 amplify/logs
@@ -27,7 +29,6 @@ amplify/backend/.temp
 build/
 dist/
 node_modules/
-aws-exports.js
 awsconfiguration.json
 amplifyconfiguration.json
 amplifyconfiguration.dart
