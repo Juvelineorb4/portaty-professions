@@ -43,7 +43,7 @@ const Profile = ({navigation, router}) => {
     User()
     getImage() 
   }, []);
-
+/*  */
   if (user.length !== 0 || business.length !== 0) return  (
     <ScrollView style={[styles.container, global.bgWhite]}>
       <View style={{ flex: 0.5 }}>

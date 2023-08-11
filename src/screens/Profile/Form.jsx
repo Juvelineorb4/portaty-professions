@@ -98,7 +98,7 @@ const Form = ({ navigation, route }) => {
   useEffect(() => {
     MultipleData();
   }, []);
-
+/*  */
   return (
     <ScrollView style={[global.bgWhite, styles.container]}>
       <CustomInput

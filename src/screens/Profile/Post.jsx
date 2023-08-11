@@ -2,6 +2,7 @@ import { View, Text, Image } from "react-native";
 import React from "react";
 
 const Post = ({ route }) => {
+  /*  */
   const {
     data: { item, image },
   } = route.params;
