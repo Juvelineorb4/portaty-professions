@@ -1,7 +1,7 @@
 {
   "version": 1,
   "serviceConfiguration": {
-    "apiName": "professionsGraphql",
+    "apiName": "professionGraphql",
     "serviceName": "AppSync",
     "defaultAuthType": {
       "mode": "AWS_IAM"
