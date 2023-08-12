@@ -1,4 +1,4 @@
-import { View, Text, Image, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, Image, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
 import styles from "@/utils/styles/RegisterForm.module.css";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -14,6 +14,7 @@ import { useRecoilValue } from "recoil";
 import { activitySelect, mapBusiness, tagsList } from "@/atoms";
 import * as MediaLibrary from "expo-media-library";
 import MapMarketBusiness from "@/components/MapMarketBusiness";
+import * as Location from "expo-location";
 
 const Form = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
@@ -25,6 +26,7 @@ const Form = ({ navigation, route }) => {
   const activity = useRecoilValue(activitySelect);
   const tags = useRecoilValue(tagsList);
   const map = useRecoilValue(mapBusiness);
+  const [userLocation, setUserLocation] = useState(null);
 
   function urlToBlob(url) {
     return new Promise((resolve, reject) => {
@@ -58,6 +60,7 @@ const Form = ({ navigation, route }) => {
 
   const onRegisterBusiness = async (data) => {
     const { company, email, phone, wsme } = data;
+
     const storageFolder = company.replace(/ /g, "");
 
     const { key } = await Storage.put(
@@ -96,7 +99,20 @@ const Form = ({ navigation, route }) => {
     setActivitiesList(activities.data.listActivities.items);
   };
   useEffect(() => {
-    MultipleData();
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
+      let location = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.BestForNavigation,
+      });
+      console.log(location.coords);
+      setUserLocation(location.coords);
+    })();
+  MultipleData();
+
   }, []);
 /*  */
   return (
@@ -196,7 +212,7 @@ const Form = ({ navigation, route }) => {
           text={`Tags`}
         />
       )}
-      <MapMarketBusiness />
+      {userLocation ? <MapMarketBusiness initialLocation={userLocation} /> : <ActivityIndicator/> }
 
       <TouchableOpacity
         style={{

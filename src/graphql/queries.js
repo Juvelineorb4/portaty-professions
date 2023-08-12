@@ -14,11 +14,9 @@ export const searchByDistance = /* GraphQL */ `
         }
         createdAt
         updatedAt
-        __typename
       }
       total
       nextToken
-      __typename
     }
   }
 `;
@@ -37,11 +35,9 @@ export const getTags = /* GraphQL */ `
           __typename
         }
         nextToken
-        __typename
       }
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -61,10 +57,8 @@ export const listTags = /* GraphQL */ `
         }
         createdAt
         updatedAt
-        __typename
       }
       nextToken
-      __typename
     }
   }
 `;
@@ -83,11 +77,9 @@ export const getActivity = /* GraphQL */ `
           __typename
         }
         nextToken
-        __typename
       }
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -107,10 +99,8 @@ export const listActivities = /* GraphQL */ `
         }
         createdAt
         updatedAt
-        __typename
       }
       nextToken
-      __typename
     }
   }
 `;
@@ -129,7 +119,6 @@ export const getActivityTags = /* GraphQL */ `
         }
         createdAt
         updatedAt
-        __typename
       }
       activity {
         id
@@ -140,11 +129,9 @@ export const getActivityTags = /* GraphQL */ `
         }
         createdAt
         updatedAt
-        __typename
       }
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -175,10 +162,8 @@ export const listActivityTags = /* GraphQL */ `
         }
         createdAt
         updatedAt
-        __typename
       }
       nextToken
-      __typename
     }
   }
 `;
@@ -217,10 +202,8 @@ export const activityTagsByTagsId = /* GraphQL */ `
         }
         createdAt
         updatedAt
-        __typename
       }
       nextToken
-      __typename
     }
   }
 `;
@@ -259,10 +242,8 @@ export const activityTagsByActivityId = /* GraphQL */ `
         }
         createdAt
         updatedAt
-        __typename
       }
       nextToken
-      __typename
     }
   }
 `;
@@ -287,7 +268,6 @@ export const getUsers = /* GraphQL */ `
           __typename
         }
         nextToken
-        __typename
       }
       business {
         items {
@@ -311,12 +291,10 @@ export const getUsers = /* GraphQL */ `
           __typename
         }
         nextToken
-        __typename
       }
       owner
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -345,10 +323,8 @@ export const listUsers = /* GraphQL */ `
         owner
         createdAt
         updatedAt
-        __typename
       }
       nextToken
-      __typename
     }
   }
 `;
@@ -385,10 +361,8 @@ export const userByEmail = /* GraphQL */ `
         owner
         createdAt
         updatedAt
-        __typename
       }
       nextToken
-      __typename
     }
   }
 `;
@@ -415,7 +389,6 @@ export const getBusiness = /* GraphQL */ `
         owner
         createdAt
         updatedAt
-        __typename
       }
       name
       image
@@ -441,12 +414,10 @@ export const getBusiness = /* GraphQL */ `
           __typename
         }
         nextToken
-        __typename
       }
       owner
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -491,10 +462,8 @@ export const listBusinesses = /* GraphQL */ `
         owner
         createdAt
         updatedAt
-        __typename
       }
       nextToken
-      __typename
     }
   }
 `;
@@ -547,10 +516,8 @@ export const businessesByUserID = /* GraphQL */ `
         owner
         createdAt
         updatedAt
-        __typename
       }
       nextToken
-      __typename
     }
   }
 `;
@@ -593,7 +560,6 @@ export const getFavorites = /* GraphQL */ `
         owner
         createdAt
         updatedAt
-        __typename
       }
       userID
       user {
@@ -614,13 +580,11 @@ export const getFavorites = /* GraphQL */ `
         owner
         createdAt
         updatedAt
-        __typename
       }
       position
       owner
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -671,10 +635,8 @@ export const listFavorites = /* GraphQL */ `
         owner
         createdAt
         updatedAt
-        __typename
       }
       nextToken
-      __typename
     }
   }
 `;
@@ -733,10 +695,8 @@ export const favoritesByBusinessID = /* GraphQL */ `
         owner
         createdAt
         updatedAt
-        __typename
       }
       nextToken
-      __typename
     }
   }
 `;
@@ -795,10 +755,8 @@ export const favoritesByUserID = /* GraphQL */ `
         owner
         createdAt
         updatedAt
-        __typename
       }
       nextToken
-      __typename
     }
   }
 `;
@@ -813,7 +771,6 @@ export const getComplaints = /* GraphQL */ `
       createdAt
       updatedAt
       owner
-      __typename
     }
   }
 `;
@@ -833,10 +790,8 @@ export const listComplaints = /* GraphQL */ `
         createdAt
         updatedAt
         owner
-        __typename
       }
       nextToken
-      __typename
     }
   }
 `;
@@ -853,7 +808,6 @@ export const getLogs = /* GraphQL */ `
       name
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -875,10 +829,8 @@ export const listLogs = /* GraphQL */ `
         name
         createdAt
         updatedAt
-        __typename
       }
       nextToken
-      __typename
     }
   }
 `;
@@ -890,11 +842,9 @@ export const getTesting = /* GraphQL */ `
       coordinates {
         lat
         lon
-        __typename
       }
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -915,10 +865,8 @@ export const listTestings = /* GraphQL */ `
         }
         createdAt
         updatedAt
-        __typename
       }
       nextToken
-      __typename
     }
   }
 `;
@@ -949,7 +897,6 @@ export const searchTestings = /* GraphQL */ `
         }
         createdAt
         updatedAt
-        __typename
       }
       nextToken
       total
@@ -963,13 +910,10 @@ export const searchTestings = /* GraphQL */ `
             buckets {
               key
               doc_count
-              __typename
             }
           }
         }
-        __typename
       }
-      __typename
     }
   }
 `;
