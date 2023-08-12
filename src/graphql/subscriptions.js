@@ -7,6 +7,14 @@ export const onCreateTags = /* GraphQL */ `
       id
       name
       objects {
+        items {
+          id
+          tagsId
+          activityId
+          createdAt
+          updatedAt
+          __typename
+        }
         nextToken
         __typename
       }
@@ -22,6 +30,14 @@ export const onUpdateTags = /* GraphQL */ `
       id
       name
       objects {
+        items {
+          id
+          tagsId
+          activityId
+          createdAt
+          updatedAt
+          __typename
+        }
         nextToken
         __typename
       }
@@ -37,6 +53,14 @@ export const onDeleteTags = /* GraphQL */ `
       id
       name
       objects {
+        items {
+          id
+          tagsId
+          activityId
+          createdAt
+          updatedAt
+          __typename
+        }
         nextToken
         __typename
       }
@@ -52,6 +76,14 @@ export const onCreateActivity = /* GraphQL */ `
       id
       name
       tags {
+        items {
+          id
+          tagsId
+          activityId
+          createdAt
+          updatedAt
+          __typename
+        }
         nextToken
         __typename
       }
@@ -67,6 +99,14 @@ export const onUpdateActivity = /* GraphQL */ `
       id
       name
       tags {
+        items {
+          id
+          tagsId
+          activityId
+          createdAt
+          updatedAt
+          __typename
+        }
         nextToken
         __typename
       }
@@ -82,6 +122,14 @@ export const onDeleteActivity = /* GraphQL */ `
       id
       name
       tags {
+        items {
+          id
+          tagsId
+          activityId
+          createdAt
+          updatedAt
+          __typename
+        }
         nextToken
         __typename
       }
@@ -102,6 +150,10 @@ export const onCreateActivityTags = /* GraphQL */ `
       tags {
         id
         name
+        objects {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -109,6 +161,10 @@ export const onCreateActivityTags = /* GraphQL */ `
       activity {
         id
         name
+        tags {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -130,6 +186,10 @@ export const onUpdateActivityTags = /* GraphQL */ `
       tags {
         id
         name
+        objects {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -137,6 +197,10 @@ export const onUpdateActivityTags = /* GraphQL */ `
       activity {
         id
         name
+        tags {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -158,6 +222,10 @@ export const onDeleteActivityTags = /* GraphQL */ `
       tags {
         id
         name
+        objects {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -165,6 +233,10 @@ export const onDeleteActivityTags = /* GraphQL */ `
       activity {
         id
         name
+        tags {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -188,10 +260,40 @@ export const onCreateUsers = /* GraphQL */ `
       email
       identityID
       favorites {
+        items {
+          id
+          businessID
+          userID
+          position
+          owner
+          createdAt
+          updatedAt
+          __typename
+        }
         nextToken
         __typename
       }
       business {
+        items {
+          id
+          userID
+          name
+          image
+          email
+          phone
+          whatsapp
+          instagram
+          facebook
+          page
+          latitude
+          longitude
+          activity
+          tags
+          owner
+          createdAt
+          updatedAt
+          __typename
+        }
         nextToken
         __typename
       }
@@ -215,10 +317,40 @@ export const onUpdateUsers = /* GraphQL */ `
       email
       identityID
       favorites {
+        items {
+          id
+          businessID
+          userID
+          position
+          owner
+          createdAt
+          updatedAt
+          __typename
+        }
         nextToken
         __typename
       }
       business {
+        items {
+          id
+          userID
+          name
+          image
+          email
+          phone
+          whatsapp
+          instagram
+          facebook
+          page
+          latitude
+          longitude
+          activity
+          tags
+          owner
+          createdAt
+          updatedAt
+          __typename
+        }
         nextToken
         __typename
       }
@@ -242,10 +374,40 @@ export const onDeleteUsers = /* GraphQL */ `
       email
       identityID
       favorites {
+        items {
+          id
+          businessID
+          userID
+          position
+          owner
+          createdAt
+          updatedAt
+          __typename
+        }
         nextToken
         __typename
       }
       business {
+        items {
+          id
+          userID
+          name
+          image
+          email
+          phone
+          whatsapp
+          instagram
+          facebook
+          page
+          latitude
+          longitude
+          activity
+          tags
+          owner
+          createdAt
+          updatedAt
+          __typename
+        }
         nextToken
         __typename
       }
@@ -271,6 +433,14 @@ export const onCreateBusiness = /* GraphQL */ `
         lastName
         email
         identityID
+        favorites {
+          nextToken
+          __typename
+        }
+        business {
+          nextToken
+          __typename
+        }
         owner
         createdAt
         updatedAt
@@ -289,6 +459,16 @@ export const onCreateBusiness = /* GraphQL */ `
       activity
       tags
       favorites {
+        items {
+          id
+          businessID
+          userID
+          position
+          owner
+          createdAt
+          updatedAt
+          __typename
+        }
         nextToken
         __typename
       }
@@ -314,6 +494,14 @@ export const onUpdateBusiness = /* GraphQL */ `
         lastName
         email
         identityID
+        favorites {
+          nextToken
+          __typename
+        }
+        business {
+          nextToken
+          __typename
+        }
         owner
         createdAt
         updatedAt
@@ -332,6 +520,16 @@ export const onUpdateBusiness = /* GraphQL */ `
       activity
       tags
       favorites {
+        items {
+          id
+          businessID
+          userID
+          position
+          owner
+          createdAt
+          updatedAt
+          __typename
+        }
         nextToken
         __typename
       }
@@ -357,6 +555,14 @@ export const onDeleteBusiness = /* GraphQL */ `
         lastName
         email
         identityID
+        favorites {
+          nextToken
+          __typename
+        }
+        business {
+          nextToken
+          __typename
+        }
         owner
         createdAt
         updatedAt
@@ -375,6 +581,16 @@ export const onDeleteBusiness = /* GraphQL */ `
       activity
       tags
       favorites {
+        items {
+          id
+          businessID
+          userID
+          position
+          owner
+          createdAt
+          updatedAt
+          __typename
+        }
         nextToken
         __typename
       }
@@ -396,6 +612,18 @@ export const onCreateFavorites = /* GraphQL */ `
       business {
         id
         userID
+        user {
+          id
+          cognitoID
+          name
+          lastName
+          email
+          identityID
+          owner
+          createdAt
+          updatedAt
+          __typename
+        }
         name
         image
         email
@@ -408,6 +636,10 @@ export const onCreateFavorites = /* GraphQL */ `
         longitude
         activity
         tags
+        favorites {
+          nextToken
+          __typename
+        }
         owner
         createdAt
         updatedAt
@@ -421,6 +653,14 @@ export const onCreateFavorites = /* GraphQL */ `
         lastName
         email
         identityID
+        favorites {
+          nextToken
+          __typename
+        }
+        business {
+          nextToken
+          __typename
+        }
         owner
         createdAt
         updatedAt
@@ -445,6 +685,18 @@ export const onUpdateFavorites = /* GraphQL */ `
       business {
         id
         userID
+        user {
+          id
+          cognitoID
+          name
+          lastName
+          email
+          identityID
+          owner
+          createdAt
+          updatedAt
+          __typename
+        }
         name
         image
         email
@@ -457,6 +709,10 @@ export const onUpdateFavorites = /* GraphQL */ `
         longitude
         activity
         tags
+        favorites {
+          nextToken
+          __typename
+        }
         owner
         createdAt
         updatedAt
@@ -470,6 +726,14 @@ export const onUpdateFavorites = /* GraphQL */ `
         lastName
         email
         identityID
+        favorites {
+          nextToken
+          __typename
+        }
+        business {
+          nextToken
+          __typename
+        }
         owner
         createdAt
         updatedAt
@@ -494,6 +758,18 @@ export const onDeleteFavorites = /* GraphQL */ `
       business {
         id
         userID
+        user {
+          id
+          cognitoID
+          name
+          lastName
+          email
+          identityID
+          owner
+          createdAt
+          updatedAt
+          __typename
+        }
         name
         image
         email
@@ -506,6 +782,10 @@ export const onDeleteFavorites = /* GraphQL */ `
         longitude
         activity
         tags
+        favorites {
+          nextToken
+          __typename
+        }
         owner
         createdAt
         updatedAt
@@ -519,6 +799,14 @@ export const onDeleteFavorites = /* GraphQL */ `
         lastName
         email
         identityID
+        favorites {
+          nextToken
+          __typename
+        }
+        business {
+          nextToken
+          __typename
+        }
         owner
         createdAt
         updatedAt

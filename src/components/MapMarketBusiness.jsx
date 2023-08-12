@@ -31,22 +31,24 @@ const MapMarketBusiness = () => {
   const [errorMsg, setErrorMsg] = useState(null);
   let mapRef = useRef(null);
 
+  const fetchLocation = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      setErrorMsg("Permission to access location was denied");
+      return;
+    }
+    let location = await Location.getCurrentPositionAsync({
+      accuracy: Location.Accuracy.BestForNavigation,
+    });
+    setUserLocation(location.coords);
+    setMarketLocation({
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+    });
+  };
+
   useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-        return;
-      }
-      let location = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.BestForNavigation,
-      });
-      setUserLocation(location.coords);
-      setMarketLocation({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-      });
-    })();
+    fetchLocation();
   }, []);
 
   const onHandleMarketMove = (e) => {
@@ -109,7 +111,6 @@ const MapMarketBusiness = () => {
             showsPointsOfInterest={false}
             onDoublePress={onHandlePress}
             customMapStyle={MAP_SETTINGS}
-             
           >
             {marketLocation && (
               <Marker

@@ -191,7 +191,7 @@ enum TypeLogs {
 
 type Testing @model @searchable @auth(rules: [{ allow: private }]) {
   id: ID!
-  name: String
+  name: [String!]!
   coordinates: Coordinates!
 }
 
@@ -201,12 +201,12 @@ type Coordinates {
 }
 
 type Query {
-  searchByDistance(location: LocationInput, km: Int): TestingConnection
+  searchByDistance(location: LocationInput!, km: Int): TestingConnection
 }
 
 input LocationInput {
   lat: Float!
-  lon: Float
+  lon: Float!
 }
 
 type TestingConnection {
