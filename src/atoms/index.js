@@ -16,6 +16,10 @@ export const activitySelect = atom({
   key: "activitySelectValue",
   default: {},
 });
+export const mapBusiness = atom({
+  key: "mapBusinessValue",
+  default: {},
+});
 export const userAuthenticated = atom({
   key: "userAuthenticatedValue",
   default: null,

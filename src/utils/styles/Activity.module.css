@@ -40,13 +40,13 @@
     /* font-weight: 500; */
     font-size: 14px;
     color: #8c9199;
-    text-transform: capitalize;
+    /* text-transform: capitalize; */
   }
   .textInputTag {
     flex: 1;
     /* margin-left: 10px; */
     color: #8c9199cb;
-    text-transform: capitalize;
+    /* text-transform: capitalize; */
     font-size: 12px;
     font-family: "light";
   }
@@ -66,7 +66,7 @@
     font-family: "regular";
     font-size: 14px;
     color: #404040;
-    text-transform: capitalize;
+    /* text-transform: capitalize; */
   }
   
   .containerTag {
@@ -85,7 +85,7 @@
     font-family: "light";
     margin-left: 10px;
     color: #8c9199cb;
-    text-transform: capitalize;
+    /* text-transform: capitalize; */
   }
   .inputContainer {
     flex-direction: row;
@@ -102,7 +102,7 @@
     flex: 1;
     margin-left: 10px;
     color: #8c9199cb;
-    text-transform: capitalize;
+    /* text-transform: capitalize; */
     font-size: 12px;
     font-family: "light";
   }
@@ -110,7 +110,7 @@
     font-family: "regular";
     font-size: 14px;
     color: #404040;
-    text-transform: capitalize;
+    /* text-transform: capitalize; */
   }
   .titleTag {
     margin-top: -12px;
