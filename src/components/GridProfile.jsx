@@ -1,16 +1,17 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import styles from "@/utils/styles/GridProfile.module.css";
+import { useNavigation } from "@react-navigation/native";
 
-const GridProfile = ({business, navigation}) => {
-  const {item, image} = business
+const GridProfile = ({business}) => {
+  const navigation = useNavigation()
+  const {image} = business
   const data = [
     {
       id: 1,
-      text: item.name,
       image: image,
       link: `Post`,
-      data: item
+      item: business
     },
     { id: 2, text: "" },
     { id: 3, text: "" },
@@ -29,11 +30,10 @@ const GridProfile = ({business, navigation}) => {
           style={styles.column}
           onPress={() =>
             navigation.navigate(post.link, {
-              data: data
+              data: post.item
             })
           }
         >
-          {post.image ? "" : <Text>{post.text}</Text>}
           {post.image && (
             <Image
               style={{

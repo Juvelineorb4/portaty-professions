@@ -24,15 +24,15 @@ const Profile = ({navigation, router}) => {
         email: attributes.email,
       },
     });
-    console.log(result.data.userByEmail.items[0].business.items.length)
     if (result.data.userByEmail.items[0].business.items.length !== 0)
       setBusiness([result.data.userByEmail.items[0].business.items[0]]);
     setUser([result.data.userByEmail.items[0]]);
   };
   const getImage = async () => {
     try {
-      const url = await Storage.get(business.image, {
+      const url = await Storage.get(business[0].image, {
         level: "protected",
+        identityId: user[0].identityID
       });
       setSelectKey(url);
     } catch (error) {
@@ -40,12 +40,10 @@ const Profile = ({navigation, router}) => {
     }
   };
   useEffect(() => {
-    if(user.length === 0) User()
-    console.log(user.length)
-    console.log(business)
-    if (user.length !== 0 && business.length !== 0) getImage() 
+    User()
+    getImage() 
   }, []);
-
+/*  */
   if (user.length !== 0 || business.length !== 0) return  (
     <ScrollView style={[styles.container, global.bgWhite]}>
       <View style={{ flex: 0.5 }}>
@@ -275,6 +273,7 @@ const Profile = ({navigation, router}) => {
               item: business,
               image: selectKey,
             }}
+            
           />
         ) : (
           <View
