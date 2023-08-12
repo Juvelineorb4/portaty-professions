@@ -1,6 +1,6 @@
 {
   "api": {
-    "professionsGraphql": {
+    "professionGraphql": {
       "dependsOn": [
         {
           "attributes": [
@@ -59,9 +59,8 @@
       "service": "Cognito"
     }
   },
-  "custom": {},
   "storage": {
-    "s3portatyprofessions": {
+    "s3Professions": {
       "dependsOn": [],
       "providerPlugin": "awscloudformation",
       "service": "S3"

@@ -34,8 +34,7 @@ const MAP_SETTINGS = [
   },
 ];
 
-const MapMarketBusiness = () => {
-  const [userLocation, setUserLocation] = useState(null);
+const MapMarketBusiness = ({initialLocation}) => {
   const global = require("@/utils/styles/global.js");
   const [marketLocation, setMarketLocation] = useState(null);
   const [initalMarketLocation, setInitialMarketLocation] = useState(null);
@@ -44,64 +43,14 @@ const MapMarketBusiness = () => {
   const [selectMap, setSelectMap] = useState(false);
   const [selectMapBusiness, setSelectMapBusiness] = useRecoilState(mapBusiness);
   let mapRef = useRef(null);
-
-  // useEffect(() => {
-  //   // (async () => {
-  //   //   let { status } = await Location.requestForegroundPermissionsAsync();
-  //   //   if (status !== "granted") {
-  //   //     setErrorMsg("Permission to access location was denied");
-  //   //     return;
-  //   //   }
-  //   //   let location = await Location.getCurrentPositionAsync({
-  //   //     accuracy: Location.Accuracy.BestForNavigation,
-  //   //   });
-  //   //   console.log(location.coords)
-  //   //   setUserLocation(location.coords);
-  //   //   setMarketLocation({
-  //   //     latitude: location.coords.latitude,
-  //   //     longitude: location.coords.longitude,
-  //   //   });
-  //   // })();
-  // }, []);
+  console.log(initialLocation)
   const onHandleMapMarket = async () => {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== "granted") {
-      setErrorMsg("Permission to access location was denied");
-      return;
-    }
-    let location = await Location.getCurrentPositionAsync({
-      accuracy: Location.Accuracy.BestForNavigation,
-    });
-    // console.log(location.coords);
-    // setUserLocation(location.coords);
-    // setMarketLocation({
-    //   latitude: location.coords.latitude,
-    //   longitude: location.coords.longitude,
-    // });
     setModalVisible(!modalVisible);
   };
   const onHandleMarketMove = (e) => {
     let {
       nativeEvent: { coordinate },
     } = e;
-    // comentar para pruebas
-    // const isInsideColombiaRegion =
-    //   coordinate.latitude >=
-    //     COUNTRY_REGION.latitude - COUNTRY_REGION.latitudeDelta / 2 &&
-    //   coordinate.latitude <=
-    //     COUNTRY_REGION.latitude + COUNTRY_REGION.latitudeDelta / 2 &&
-    //   coordinate.longitude >=
-    //     COUNTRY_REGION.longitude - COUNTRY_REGION.longitudeDelta / 2 &&
-    //   coordinate.longitude <=
-    //     COUNTRY_REGION.longitude + COUNTRY_REGION.longitudeDelta / 2;
-
-    if (true) {
-      console.log("ESTA EN COLOMBIA");
-      setMarketLocation(coordinate);
-    } else {
-      console.log("NO ESTA EN COLOMBIA");
-      setMarketLocation(initalMarketLocation);
-    }
   };
 
   const onHandleMarkerDragStart = (e) => {
@@ -185,12 +134,12 @@ const MapMarketBusiness = () => {
                     style={{ flex: 1 }}
                     showsUserLocation={modalVisible}
                     ref={mapRef}
-                    // initialRegion={{
-                    //   latitude: userLocation.latitude,
-                    //   longitude: userLocation.longitude,
-                    //   latitudeDelta: 0.001,
-                    //   longitudeDelta: 0.001,
-                    // }}
+                    initialRegion={{
+                      latitude: initialLocation.latitude,
+                      longitude: initialLocation.longitude,
+                      latitudeDelta: 0.001,
+                      longitudeDelta: 0.001,
+                    }}
                     showsPointsOfInterest={false}
                     onDoublePress={onHandlePress}
                     customMapStyle={MAP_SETTINGS}

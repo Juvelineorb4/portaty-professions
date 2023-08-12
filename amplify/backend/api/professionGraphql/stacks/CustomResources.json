@@ -31,7 +31,7 @@
       "Type": "Custom::EmptyResource",
       "Condition": "AlwaysFalse"
     },
-    "QueryNearbyTodos": {
+    "QueSearchByDistance": {
       "Type": "AWS::AppSync::Resolver",
       "Properties": {
         "ApiId": {
