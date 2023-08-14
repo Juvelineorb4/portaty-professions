@@ -1,11 +1,12 @@
-import { View, Text } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import React from "react";
+import GridSearch from "@/components/Search/GridSearch";
 
 const Search = () => {
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: '#FFFFFF' }}>
-      <Text>search je</Text>
-    </View>
+    <ScrollView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
+      <GridSearch />
+    </ScrollView>
   );
 };
 
