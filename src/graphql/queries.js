@@ -15,6 +15,35 @@ export const searchByDistance = /* GraphQL */ `
     }
   }
 `;
+export const searchBusinessByDistance = /* GraphQL */ `
+  query SearchBusinessByDistance(
+    $location: LocationInput!
+    $km: Float
+    $text: String!
+  ) {
+    searchBusinessByDistance(location: $location, km: $km, text: $text) {
+      items {
+        id
+        userID
+        name
+        image
+        email
+        phone
+        whatsapp
+        instagram
+        facebook
+        page
+        activity
+        tags
+        owner
+        createdAt
+        updatedAt
+      }
+      total
+      nextToken
+    }
+  }
+`;
 export const getTags = /* GraphQL */ `
   query GetTags($id: ID!) {
     getTags(id: $id) {
@@ -265,8 +294,10 @@ export const getBusiness = /* GraphQL */ `
       instagram
       facebook
       page
-      latitude
-      longitude
+      coordinates {
+        lat
+        lon
+      }
       activity
       tags
       favorites {
@@ -296,8 +327,6 @@ export const listBusinesses = /* GraphQL */ `
         instagram
         facebook
         page
-        latitude
-        longitude
         activity
         tags
         owner
@@ -334,8 +363,6 @@ export const businessesByUserID = /* GraphQL */ `
         instagram
         facebook
         page
-        latitude
-        longitude
         activity
         tags
         owner
@@ -343,6 +370,59 @@ export const businessesByUserID = /* GraphQL */ `
         updatedAt
       }
       nextToken
+    }
+  }
+`;
+export const searchBusinesses = /* GraphQL */ `
+  query SearchBusinesses(
+    $filter: SearchableBusinessFilterInput
+    $sort: [SearchableBusinessSortInput]
+    $limit: Int
+    $nextToken: String
+    $from: Int
+    $aggregates: [SearchableBusinessAggregationInput]
+  ) {
+    searchBusinesses(
+      filter: $filter
+      sort: $sort
+      limit: $limit
+      nextToken: $nextToken
+      from: $from
+      aggregates: $aggregates
+    ) {
+      items {
+        id
+        userID
+        name
+        image
+        email
+        phone
+        whatsapp
+        instagram
+        facebook
+        page
+        activity
+        tags
+        owner
+        createdAt
+        updatedAt
+      }
+      nextToken
+      total
+      aggregateItems {
+        name
+        result {
+          ... on SearchableAggregateScalarResult {
+            value
+          }
+          ... on SearchableAggregateBucketResult {
+            buckets {
+              key
+              doc_count
+            }
+          }
+        }
+      }
     }
   }
 `;
@@ -362,8 +442,6 @@ export const getFavorites = /* GraphQL */ `
         instagram
         facebook
         page
-        latitude
-        longitude
         activity
         tags
         owner

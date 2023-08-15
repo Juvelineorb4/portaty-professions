@@ -134,7 +134,8 @@ const Post = ({ route }) => {
           <Text
             style={{
               fontFamily: "light",
-              fontSize: 14,
+              fontSize: 12,
+              width: 180
             }}
           >
             {item[0].email}

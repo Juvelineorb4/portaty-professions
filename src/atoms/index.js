@@ -36,3 +36,8 @@ export const businessProfile = atom({
   key: "businessProfileValue",
   default: [],
 });
+
+export const profileState = atom({
+  key: "profileStateValue",
+  default: false,
+});

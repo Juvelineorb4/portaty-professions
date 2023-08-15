@@ -1,4 +1,11 @@
-import { View, Text, Image, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import styles from "@/utils/styles/RegisterForm.module.css";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -10,8 +17,8 @@ import * as queries from "@/graphql/queries";
 import * as customProfile from "@/graphql/CustomQueries/Profile";
 import * as mutations from "@/graphql/mutations";
 import CustomActivities from "@/components/CustomActivities";
-import { useRecoilValue } from "recoil";
-import { activitySelect, mapBusiness, tagsList } from "@/atoms";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { activitySelect, mapBusiness, profileState, tagsList } from "@/atoms";
 import * as MediaLibrary from "expo-media-library";
 import MapMarketBusiness from "@/components/MapMarketBusiness";
 import * as Location from "expo-location";
@@ -27,6 +34,12 @@ const Form = ({ navigation, route }) => {
   const tags = useRecoilValue(tagsList);
   const map = useRecoilValue(mapBusiness);
   const [userLocation, setUserLocation] = useState(null);
+
+  /* Para limpiar */
+  const [selectTagsList, setSelectTagsList] = useRecoilState(tagsList);
+  const [selectActivity, setSelectActivity] = useRecoilState(activitySelect);
+  const [selectMapBusiness, setSelectMapBusiness] = useRecoilState(mapBusiness);
+  const [stateProfile, setStateProfile] = useRecoilState(profileState);
 
   function urlToBlob(url) {
     return new Promise((resolve, reject) => {
@@ -52,12 +65,15 @@ const Form = ({ navigation, route }) => {
     if (!result.canceled) {
       const { uri } = result.assets[0];
       const blobData = await urlToBlob(uri);
-      console.log(JSON.stringify(blobData));
       setBlobImage(blobData);
       setImage(uri);
     }
   };
-
+  const BlankInputs = () => {
+    setSelectTagsList([]);
+    setSelectActivity({});
+    setSelectMapBusiness({});
+  };
   const onRegisterBusiness = async (data) => {
     const { company, email, phone, wsme } = data;
 
@@ -82,14 +98,18 @@ const Form = ({ navigation, route }) => {
           phone: phone,
           whatsapp: wsme,
           image: key,
-          latitude: map.latitude,
-          longitude: map.longitude,
+          coordinates: {
+            lat: map.latitude,
+            lon: map.longitude
+          },
           activity: activity.name,
-          tags: tags.toString(),
+          tags: tags,
         },
       },
     });
     console.log(business);
+    BlankInputs()
+    setStateProfile(true)
     navigation.goBack()
   };
   const MultipleData = async () => {
@@ -98,6 +118,7 @@ const Form = ({ navigation, route }) => {
     });
     setActivitiesList(activities.data.listActivities.items);
   };
+  
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -108,13 +129,12 @@ const Form = ({ navigation, route }) => {
       let location = await Location.getCurrentPositionAsync({
         accuracy: Location.Accuracy.BestForNavigation,
       });
-      console.log(location.coords);
       setUserLocation(location.coords);
     })();
-  MultipleData();
-
+    MultipleData();
+    BlankInputs()
   }, []);
-/*  */
+  /*  */
   return (
     <ScrollView style={[global.bgWhite, styles.container]}>
       <CustomInput
@@ -212,7 +232,11 @@ const Form = ({ navigation, route }) => {
           text={`Tags`}
         />
       )}
-      {userLocation ? <MapMarketBusiness initialLocation={userLocation} /> : <ActivityIndicator/> }
+      {userLocation ? (
+        <MapMarketBusiness initialLocation={userLocation} />
+      ) : (
+        <ActivityIndicator />
+      )}
 
       <TouchableOpacity
         style={{

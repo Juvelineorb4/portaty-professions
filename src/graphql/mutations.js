@@ -274,8 +274,10 @@ export const createBusiness = /* GraphQL */ `
       instagram
       facebook
       page
-      latitude
-      longitude
+      coordinates {
+        lat
+        lon
+      }
       activity
       tags
       favorites {
@@ -314,8 +316,10 @@ export const updateBusiness = /* GraphQL */ `
       instagram
       facebook
       page
-      latitude
-      longitude
+      coordinates {
+        lat
+        lon
+      }
       activity
       tags
       favorites {
@@ -354,8 +358,10 @@ export const deleteBusiness = /* GraphQL */ `
       instagram
       facebook
       page
-      latitude
-      longitude
+      coordinates {
+        lat
+        lon
+      }
       activity
       tags
       favorites {
@@ -386,8 +392,6 @@ export const createFavorites = /* GraphQL */ `
         instagram
         facebook
         page
-        latitude
-        longitude
         activity
         tags
         owner
@@ -432,8 +436,6 @@ export const updateFavorites = /* GraphQL */ `
         instagram
         facebook
         page
-        latitude
-        longitude
         activity
         tags
         owner
@@ -478,8 +480,6 @@ export const deleteFavorites = /* GraphQL */ `
         instagram
         facebook
         page
-        latitude
-        longitude
         activity
         tags
         owner
