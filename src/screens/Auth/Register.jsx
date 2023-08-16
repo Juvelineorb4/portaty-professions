@@ -47,7 +47,6 @@ import {
       const { name, lastName, email, password, birthdate } = data;
       const fullName = `${name.trim()} ${lastName.trim()}`;
       const fechaISO8601 = convertirFechaADateISO8601(birthdate);
-      console.log("DATA: ", fullName);
       try {
         const result = await Auth.signUp({
           username: email.trim(),

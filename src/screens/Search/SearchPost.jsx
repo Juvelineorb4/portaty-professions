@@ -1,7 +1,7 @@
 import { View, Text, Image } from "react-native";
 import React from "react";
 
-const Post = ({ route }) => {
+const SearchPost = ({ route }) => {
   /*  */
   const {
     data: { item, image },
@@ -134,8 +134,7 @@ const Post = ({ route }) => {
           <Text
             style={{
               fontFamily: "light",
-              fontSize: 12,
-              width: 180
+              fontSize: 14,
             }}
           >
             {item[0].email}
@@ -232,4 +231,4 @@ const Post = ({ route }) => {
   );
 };
 
-export default Post;
+export default SearchPost;

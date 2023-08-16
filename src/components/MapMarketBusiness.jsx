@@ -43,7 +43,6 @@ const MapMarketBusiness = ({initialLocation}) => {
   const [selectMap, setSelectMap] = useState(false);
   const [selectMapBusiness, setSelectMapBusiness] = useRecoilState(mapBusiness);
   let mapRef = useRef(null);
-  console.log(initialLocation)
   const onHandleMapMarket = async () => {
     setModalVisible(!modalVisible);
   };
@@ -70,12 +69,10 @@ const MapMarketBusiness = ({initialLocation}) => {
   };
 
   const onHandleConfirm = () => {
-    console.log(selectMapBusiness);
     setSelectMap(true);
     setModalVisible(!modalVisible);
   };
   useEffect(() => {
-    console.log(selectMapBusiness);
   }, []);
 
   return (

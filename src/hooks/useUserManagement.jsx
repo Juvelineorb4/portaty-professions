@@ -73,7 +73,6 @@ const useUserManagement = () => {
     }
   };
   const updateUserTableID = async (data) => {
-    console.log(data.attributes);
     const { email } = data.attributes;
     try {
       const result = await API.graphql({

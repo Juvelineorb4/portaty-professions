@@ -33,7 +33,7 @@ const ConfirmRegister = ({ navigation, route }) => {
       newCode = newCode + item;
     });
     try {
-      if (!code.lenght === 6) return console.log("no tiene 6");
+      // if (!code.lenght === 6) return console.log("no tiene 6");
       await Auth.confirmSignUp(email, newCode);
       Alert.alert("Usuario Registrado Exitosamente");
       navigation.navigate("Login_Welcome", { screen: "Login" });
