@@ -16,7 +16,8 @@ web-build/
 # Temporary files created by Metro to check the health of the file watcher
 .metro-health-check*
 
-#amplify-do-not-edit-begin
+#amplify-do-not-edit-begi
+amplify/
 amplify/\#current-cloud-backend
 amplify/.config/local-*
 amplify/logs
@@ -27,7 +28,6 @@ amplify/backend/.temp
 build/
 dist/
 node_modules/
-aws-exports.js
 awsconfiguration.json
 amplifyconfiguration.json
 amplifyconfiguration.dart
