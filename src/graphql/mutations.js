@@ -19,9 +19,11 @@ export const createTags = /* GraphQL */ `
           __typename
         }
         nextToken
+        __typename
       }
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -43,9 +45,11 @@ export const updateTags = /* GraphQL */ `
           __typename
         }
         nextToken
+        __typename
       }
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -67,9 +71,11 @@ export const deleteTags = /* GraphQL */ `
           __typename
         }
         nextToken
+        __typename
       }
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -91,9 +97,11 @@ export const createActivity = /* GraphQL */ `
           __typename
         }
         nextToken
+        __typename
       }
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -115,9 +123,11 @@ export const updateActivity = /* GraphQL */ `
           __typename
         }
         nextToken
+        __typename
       }
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -139,9 +149,11 @@ export const deleteActivity = /* GraphQL */ `
           __typename
         }
         nextToken
+        __typename
       }
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -163,6 +175,7 @@ export const createActivityTags = /* GraphQL */ `
         }
         createdAt
         updatedAt
+        __typename
       }
       activity {
         id
@@ -173,9 +186,11 @@ export const createActivityTags = /* GraphQL */ `
         }
         createdAt
         updatedAt
+        __typename
       }
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -197,6 +212,7 @@ export const updateActivityTags = /* GraphQL */ `
         }
         createdAt
         updatedAt
+        __typename
       }
       activity {
         id
@@ -207,9 +223,11 @@ export const updateActivityTags = /* GraphQL */ `
         }
         createdAt
         updatedAt
+        __typename
       }
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -231,6 +249,7 @@ export const deleteActivityTags = /* GraphQL */ `
         }
         createdAt
         updatedAt
+        __typename
       }
       activity {
         id
@@ -241,9 +260,11 @@ export const deleteActivityTags = /* GraphQL */ `
         }
         createdAt
         updatedAt
+        __typename
       }
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -271,6 +292,7 @@ export const createUsers = /* GraphQL */ `
           __typename
         }
         nextToken
+        __typename
       }
       business {
         items {
@@ -284,20 +306,20 @@ export const createUsers = /* GraphQL */ `
           instagram
           facebook
           page
-          latitude
-          longitude
           activity
           tags
-          owner
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
+        __typename
       }
       owner
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -325,6 +347,7 @@ export const updateUsers = /* GraphQL */ `
           __typename
         }
         nextToken
+        __typename
       }
       business {
         items {
@@ -338,20 +361,20 @@ export const updateUsers = /* GraphQL */ `
           instagram
           facebook
           page
-          latitude
-          longitude
           activity
           tags
-          owner
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
+        __typename
       }
       owner
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -379,6 +402,7 @@ export const deleteUsers = /* GraphQL */ `
           __typename
         }
         nextToken
+        __typename
       }
       business {
         items {
@@ -392,20 +416,20 @@ export const deleteUsers = /* GraphQL */ `
           instagram
           facebook
           page
-          latitude
-          longitude
           activity
           tags
-          owner
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
+        __typename
       }
       owner
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -435,6 +459,7 @@ export const createBusiness = /* GraphQL */ `
         owner
         createdAt
         updatedAt
+        __typename
       }
       name
       image
@@ -444,8 +469,11 @@ export const createBusiness = /* GraphQL */ `
       instagram
       facebook
       page
-      latitude
-      longitude
+      coordinates {
+        lat
+        lon
+        __typename
+      }
       activity
       tags
       favorites {
@@ -460,10 +488,12 @@ export const createBusiness = /* GraphQL */ `
           __typename
         }
         nextToken
+        __typename
       }
-      owner
       createdAt
       updatedAt
+      owner
+      __typename
     }
   }
 `;
@@ -493,6 +523,7 @@ export const updateBusiness = /* GraphQL */ `
         owner
         createdAt
         updatedAt
+        __typename
       }
       name
       image
@@ -502,8 +533,11 @@ export const updateBusiness = /* GraphQL */ `
       instagram
       facebook
       page
-      latitude
-      longitude
+      coordinates {
+        lat
+        lon
+        __typename
+      }
       activity
       tags
       favorites {
@@ -518,10 +552,12 @@ export const updateBusiness = /* GraphQL */ `
           __typename
         }
         nextToken
+        __typename
       }
-      owner
       createdAt
       updatedAt
+      owner
+      __typename
     }
   }
 `;
@@ -551,6 +587,7 @@ export const deleteBusiness = /* GraphQL */ `
         owner
         createdAt
         updatedAt
+        __typename
       }
       name
       image
@@ -560,8 +597,11 @@ export const deleteBusiness = /* GraphQL */ `
       instagram
       facebook
       page
-      latitude
-      longitude
+      coordinates {
+        lat
+        lon
+        __typename
+      }
       activity
       tags
       favorites {
@@ -576,10 +616,12 @@ export const deleteBusiness = /* GraphQL */ `
           __typename
         }
         nextToken
+        __typename
       }
-      owner
       createdAt
       updatedAt
+      owner
+      __typename
     }
   }
 `;
@@ -614,17 +656,21 @@ export const createFavorites = /* GraphQL */ `
         instagram
         facebook
         page
-        latitude
-        longitude
+        coordinates {
+          lat
+          lon
+          __typename
+        }
         activity
         tags
         favorites {
           nextToken
           __typename
         }
-        owner
         createdAt
         updatedAt
+        owner
+        __typename
       }
       userID
       user {
@@ -645,11 +691,13 @@ export const createFavorites = /* GraphQL */ `
         owner
         createdAt
         updatedAt
+        __typename
       }
       position
       owner
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -684,17 +732,21 @@ export const updateFavorites = /* GraphQL */ `
         instagram
         facebook
         page
-        latitude
-        longitude
+        coordinates {
+          lat
+          lon
+          __typename
+        }
         activity
         tags
         favorites {
           nextToken
           __typename
         }
-        owner
         createdAt
         updatedAt
+        owner
+        __typename
       }
       userID
       user {
@@ -715,11 +767,13 @@ export const updateFavorites = /* GraphQL */ `
         owner
         createdAt
         updatedAt
+        __typename
       }
       position
       owner
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -754,17 +808,21 @@ export const deleteFavorites = /* GraphQL */ `
         instagram
         facebook
         page
-        latitude
-        longitude
+        coordinates {
+          lat
+          lon
+          __typename
+        }
         activity
         tags
         favorites {
           nextToken
           __typename
         }
-        owner
         createdAt
         updatedAt
+        owner
+        __typename
       }
       userID
       user {
@@ -785,11 +843,13 @@ export const deleteFavorites = /* GraphQL */ `
         owner
         createdAt
         updatedAt
+        __typename
       }
       position
       owner
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -807,6 +867,7 @@ export const createComplaints = /* GraphQL */ `
       createdAt
       updatedAt
       owner
+      __typename
     }
   }
 `;
@@ -824,6 +885,7 @@ export const updateComplaints = /* GraphQL */ `
       createdAt
       updatedAt
       owner
+      __typename
     }
   }
 `;
@@ -841,6 +903,7 @@ export const deleteComplaints = /* GraphQL */ `
       createdAt
       updatedAt
       owner
+      __typename
     }
   }
 `;
@@ -860,6 +923,7 @@ export const createLogs = /* GraphQL */ `
       name
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -879,6 +943,7 @@ export const updateLogs = /* GraphQL */ `
       name
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -898,6 +963,7 @@ export const deleteLogs = /* GraphQL */ `
       name
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -912,9 +978,11 @@ export const createTesting = /* GraphQL */ `
       coordinates {
         lat
         lon
+        __typename
       }
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -929,9 +997,11 @@ export const updateTesting = /* GraphQL */ `
       coordinates {
         lat
         lon
+        __typename
       }
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -946,9 +1016,11 @@ export const deleteTesting = /* GraphQL */ `
       coordinates {
         lat
         lon
+        __typename
       }
       createdAt
       updatedAt
+      __typename
     }
   }
 `;

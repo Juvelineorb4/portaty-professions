@@ -15,65 +15,30 @@ type Users @model @auth(rules: [{ allow: owner }]) {
 
 type Business
   @model
+  @searchable
   @auth(
     rules: [
       { allow: owner }
+      { allow: public }
       { allow: private, provider: iam, operations: [read] }
-      { allow: groups, groups: ["sp"], operations: [read] }
     ]
   ) {
   id: ID!
-  userID: ID! @index(name: "byUsersBusiness")
+  userID: ID @index(name: "byUsersBusiness")
   user: Users @belongsTo(fields: ["userID"])
-  name: String!
-    @auth(
-      rules: [
-        { allow: owner }
-        { allow: private, provider: iam, operations: [read] }
-        { allow: groups, groups: ["sp"], operations: [read] }
-      ]
-    )
+  name: String
   image: String
-  email: String!
-    @auth(
-      rules: [
-        { allow: owner }
-        { allow: private, provider: iam, operations: [read] }
-        { allow: groups, groups: ["sp"], operations: [read] }
-      ]
-    )
+  email: String
   phone: String
   whatsapp: String
   instagram: String
   facebook: String
   page: String
-  latitude: String
-  longitude: String
-  activity: String!
-    @auth(
-      rules: [
-        { allow: owner }
-        { allow: private, provider: iam, operations: [read] }
-        { allow: groups, groups: ["sp"], operations: [read] }
-      ]
-    )
-  tags: String!
-    @auth(
-      rules: [
-        { allow: owner }
-        { allow: private, provider: iam, operations: [read] }
-        { allow: groups, groups: ["sp"], operations: [read] }
-      ]
-    )
+  coordinates: Coordinates
+  activity: String
+  tags: [String]
   favorites: [Favorites]
     @hasMany(indexName: "byBusinessFavorites", fields: ["id"])
-  owner: String
-    @auth(
-      rules: [
-        { allow: owner, operations: [read, delete] }
-        { allow: groups, groups: ["sp"], operations: [read] }
-      ]
-    )
 }
 
 type Tags @model @auth(rules: [{ allow: private, provider: iam }]) {
@@ -202,6 +167,11 @@ type Coordinates {
 
 type Query {
   searchByDistance(location: LocationInput!, km: Int): TestingConnection
+  searchBusinessByDistance(
+    location: LocationInput!
+    km: Float
+    text: String!
+  ): BusinessConnection
 }
 
 input LocationInput {
@@ -211,6 +181,12 @@ input LocationInput {
 
 type TestingConnection {
   items: [Testing]
+  total: Int
+  nextToken: String
+}
+
+type BusinessConnection {
+  items: [Business]
   total: Int
   nextToken: String
 }
