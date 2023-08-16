@@ -9,7 +9,7 @@ import RightGrid from "./RigthGrid";
 
 const GridSearch = () => {
   return (
-    <View style={{flex: 1, marginBottom: 80}}>
+    <View style={{flex: 1}}>
       <BigLeftGrid />
       <RightGrid />
       <LeftGrid />
