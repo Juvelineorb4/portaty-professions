@@ -1,7 +1,9 @@
 {
   "expo": {
-    "name": "Portaty-dev",
-    "slug": "Portaty-dev",
+    "scheme": "portaty",
+    "name": "portaty-professions",
+    "slug": "portaty-professions",
+    "owner": "portaty",
     "version": "0.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -12,12 +14,12 @@
       "backgroundColor": "#ffffff"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/b378d102-5cf7-49fc-93f0-b5df7f83d8ad"
     },
-    "assetBundlePatterns": [
-      "*/"
-    ],
+    "assetBundlePatterns": ["*/"],
     "ios": {
+      "runtimeVersion": "exposdk:48.0.0",
       "supportsTablet": true,
       "infoPlist": {
         "NSContactsUsageDescription": "Allow Portaty to access your contacts.",
@@ -26,9 +28,23 @@
         "NSPhotoLibraryUsageDescription": "Allow Portasty to access your photos.",
         "NSPhotoLibraryAddUsageDescription": "Allow Portaty to save photos."
       },
-      "bundleIdentifier": "com.teamportaty.appdev"
+      "bundleIdentifier": "com.portaty.professions"
     },
     "android": {
+      "runtimeVersion": "exposdk:48.0.0",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "www.portaty.com"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
@@ -47,18 +63,14 @@
         "android.permission.WRITE_EXTERNAL_STORAGE",
         "android.permission.ACCESS_MEDIA_LOCATION"
       ],
-      "package": "com.teamportaty.appdev"
+      "package": "com.portaty.professions"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "packagerOpts": {
       "config": "metro.config.js",
-      "sourceExts": [
-        "js",
-        "jsx",
-        "css"
-      ]
+      "sourceExts": ["js", "jsx", "css"]
     },
     "plugins": [
       [
@@ -115,7 +127,7 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "091e39db-c821-498e-9204-83786299f20e"
+        "projectId": "b378d102-5cf7-49fc-93f0-b5df7f83d8ad"
       }
     }
   }

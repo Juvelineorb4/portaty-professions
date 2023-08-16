@@ -14,7 +14,17 @@ import awsconfig from "./src/aws-exports.js";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet } from "react-native";
 
-Amplify.configure(awsconfig);
+Amplify.configure({
+  ...awsconfig,
+  API: {
+    endpoints: [
+      {
+        name: "api-professions-gateway",
+        endpoint: "https://36mpr9wfhd.execute-api.us-east-1.amazonaws.com/dev",
+      },
+    ],
+  },
+});
 
 export default function App() {
   const global = require("@/utils/styles/global.js");

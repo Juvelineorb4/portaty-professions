@@ -19,8 +19,8 @@ type Business
   @auth(
     rules: [
       { allow: owner }
+      { allow: public }
       { allow: private, provider: iam, operations: [read] }
-      { allow: groups, groups: ["sp"], operations: [read] }
     ]
   ) {
   id: ID!

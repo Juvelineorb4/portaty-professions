@@ -12,11 +12,11 @@
       "AmplifyAppId": "d3l0nme1mtpq63"
     },
     "categories": {
-      "api": {
-        "professionGraphql": {}
-      },
       "auth": {
         "professions": {}
+      },
+      "api": {
+        "professionGraphql": {}
       },
       "storage": {
         "s3Professions": {}

@@ -15,7 +15,7 @@ const Navigation = () => {
   return (
     <NavigationContainer>
       <NavSettings />
-      <Stack.Navigator initialRouteName="Maps">
+      <Stack.Navigator initialRouteName="Login_Welcome">
         {!userAuth && (
           <Stack.Screen
             name={`Login_Welcome`}
