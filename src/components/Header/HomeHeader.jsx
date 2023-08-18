@@ -4,6 +4,9 @@ import styles from "@/utils/styles/Header.module.css";
 
 const HomeHeader = () => {
   const global = require("@/utils/styles/global.js");
+  function handleKeyPress() {
+    console.log( "You pressed a key." )
+}
   return (
     <View style={[styles.home, global.bgWhite]}>
       <View style={{
@@ -36,7 +39,7 @@ const HomeHeader = () => {
           }}
           source={require("@/utils/images/search.png")}
         />
-        <TextInput placeholder={"Buscar"} style={styles.input} />
+        <TextInput placeholder={"Buscar"} style={styles.input} returnKeyType='search' onSubmitEditing={()=> handleKeyPress()}/>
       </TouchableOpacity>
       <View style={[styles.line, global.mainBgColor]} />
     </View>

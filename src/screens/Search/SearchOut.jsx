@@ -11,8 +11,9 @@ import * as customSearch from "@/graphql/CustomQueries/Search";
 import * as Location from "expo-location";
 import { Auth, API, Storage } from "aws-amplify";
 
-const Search = ({ route }) => {
+const SearchOut = ({ route }) => {
   const global = require("@/utils/styles/global.js");
+  const { input } = route.params;
   const [moreItems, setMoreItems] = useState(1);
   const [items, setItems] = useState([]);
   const [totalData, setTotalData] = useState(2);
@@ -31,11 +32,14 @@ const Search = ({ route }) => {
         }),
         km: 10,
         from: 0,
+        text: input,
         limit: number,
       },
     };
     try {
       const response = await API.get(api, path, params);
+      console.log("toy en response", response.total);
+
       setTotalData(response.total);
       setTotalLimit(response.limit);
       let newItems = [];
@@ -55,9 +59,10 @@ const Search = ({ route }) => {
     getData();
   }, [route, moreItems]);
 
-  if (items.length !== 0) {
+  if (items.length !== 0)
     return (
       <View style={{ flex: 1, backgroundColor: "#FFFFFF", paddingBottom: 50 }}>
+        <Text style={{fontFamily: 'thinItalic', fontSize: 16, paddingLeft: 10, paddingBottom: 15}}>Busqueda por: "{input}"</Text>
         {items !== 0 && (
           <FlatList
             data={items}
@@ -80,7 +85,7 @@ const Search = ({ route }) => {
                 )}
                 {totalData === totalLimit && (
                   <Text style={{ fontFamily: "light", fontSize: 14 }}>
-                    No hay mas negocios por mostrar
+                    No hay mas resultados por: "{input}"
                   </Text>
                 )}
               </View>
@@ -91,6 +96,17 @@ const Search = ({ route }) => {
             onEndReachedThreshold={0}
           />
         )}
+      </View>
+    );
+  if (totalData === 0) {
+    return (
+      <View
+        style={[
+          { flex: 1, alignItems: "center", justifyContent: "center" },
+          global.bgWhite,
+        ]}
+      >
+        <Text style={[{fontFamily: 'light', fontSize: 16, textAlign: 'center', marginBottom: 60}, global.midGray]}>No se encuentran resultados por: "{input}"</Text>
       </View>
     );
   } else {
@@ -107,4 +123,4 @@ const Search = ({ route }) => {
   }
 };
 
-export default Search;
+export default SearchOut;
