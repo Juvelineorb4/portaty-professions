@@ -2,11 +2,9 @@ import { View, Text, Image } from "react-native";
 import React from "react";
 
 const SearchPost = ({ route }) => {
-  /*  */
   const {
     data: { item, image },
   } = route.params;
-  // const {item, image} = data
   return (
     <View
       style={{
@@ -22,208 +20,219 @@ const SearchPost = ({ route }) => {
         <View style={{ flex: 1 }}>
           <Image
             style={{
-              width: '100%',
-              height: '100%',
+              width: "100%",
+              height: "100%",
               resizeMode: "cover",
               borderRadius: 5,
-              backgroundColor: '#fff'
+              backgroundColor: "#fff",
             }}
             source={{ uri: image }}
           />
         </View>
-        <View style={{ flex: 1, paddingHorizontal: 20, borderWidth: 0.3, borderColor: '#444', marginTop: 15, borderRadius: 5 }}>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        <View
+          style={{
+            flex: 1,
+            paddingHorizontal: 20,
+            borderWidth: 0.3,
+            borderColor: "#444",
+            marginTop: 15,
+            borderRadius: 5,
+          }}
+        >
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
             <View>
-            <Text
-              style={{
-                fontFamily: "regular",
-                fontSize: 14,
-                marginTop: 15,
-              }}
-            >
-              Razon Social
-            </Text>
-            <Text
-              style={{
-                fontFamily: "light",
-                fontSize: 14,
-              }}
-            >
-              {item[0].name}
-            </Text>
+              <Text
+                style={{
+                  fontFamily: "regular",
+                  fontSize: 14,
+                  marginTop: 15,
+                }}
+              >
+                Razon Social
+              </Text>
+              <Text
+                style={{
+                  fontFamily: "light",
+                  fontSize: 14,
+                }}
+              >
+                {item.name}
+              </Text>
             </View>
             <View>
-
+              <Text
+                style={{
+                  fontFamily: "regular",
+                  fontSize: 14,
+                  marginTop: 15,
+                  textAlign: "right",
+                }}
+              >
+                Pagina Web
+              </Text>
+              <Text
+                style={{
+                  textAlign: "right",
+                  fontFamily: "light",
+                  fontSize: 14,
+                }}
+              >
+                {`Proximamente`}
+              </Text>
+            </View>
+          </View>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            <View>
+              <Text
+                style={{
+                  fontFamily: "regular",
+                  fontSize: 14,
+                  marginTop: 15,
+                }}
+              >
+                Actividad Laboral
+              </Text>
+              <Text
+                style={{
+                  fontFamily: "light",
+                  fontSize: 14,
+                }}
+              >
+                {item.activity}
+              </Text>
+            </View>
+            <View>
+              <Text
+                style={{
+                  fontFamily: "regular",
+                  fontSize: 14,
+                  marginTop: 15,
+                  textAlign: "right",
+                }}
+              >
+                WhatsApp
+              </Text>
+              <Text
+                style={{
+                  fontFamily: "light",
+                  fontSize: 14,
+                  textAlign: "right",
+                }}
+              >
+                {item.whatsapp}
+              </Text>
+            </View>
+          </View>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            <View>
+              <Text
+                style={{
+                  fontFamily: "regular",
+                  fontSize: 14,
+                  marginTop: 15,
+                }}
+              >
+                Correo Electronico
+              </Text>
+              <Text
+                style={{
+                  fontFamily: "light",
+                  fontSize: 14,
+                }}
+              >
+                {item.email}
+              </Text>
+            </View>
+            <View>
+              <Text
+                style={{
+                  fontFamily: "regular",
+                  fontSize: 14,
+                  marginTop: 15,
+                  textAlign: "right",
+                }}
+              >
+                Instagram
+              </Text>
+              <Text
+                style={{
+                  fontFamily: "light",
+                  fontSize: 14,
+                  textAlign: "right",
+                }}
+              >
+                {`Proximamente`}
+              </Text>
+            </View>
+          </View>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            <View>
+              <Text
+                style={{
+                  fontFamily: "regular",
+                  fontSize: 14,
+                  marginTop: 15,
+                }}
+              >
+                Numero de telefono
+              </Text>
+              <Text
+                style={{
+                  fontFamily: "light",
+                  fontSize: 14,
+                }}
+              >
+                {item.phone}
+              </Text>
+            </View>
+            <View>
+              <Text
+                style={{
+                  fontFamily: "regular",
+                  fontSize: 14,
+                  marginTop: 15,
+                  textAlign: "right",
+                }}
+              >
+                Facebook
+              </Text>
+              <Text
+                style={{
+                  fontFamily: "light",
+                  fontSize: 14,
+                  textAlign: "right",
+                }}
+              >
+                {`Proximamente`}
+              </Text>
+            </View>
+          </View>
+          <View>
             <Text
               style={{
                 fontFamily: "regular",
                 fontSize: 14,
                 marginTop: 15,
-                textAlign: 'right'
               }}
             >
-              Pagina Web
+              Direccion
             </Text>
             <Text
               style={{
-                textAlign: 'right',
                 fontFamily: "light",
                 fontSize: 14,
               }}
             >
               {`Proximamente`}
             </Text>
-            </View>
-
-          </View>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <View>
-
-            <Text
-              style={{
-                fontFamily: "regular",
-                fontSize: 14,
-                marginTop: 15,
-              }}
-            >
-              Actividad Laboral
-            </Text>
-            <Text
-              style={{
-                fontFamily: "light",
-                fontSize: 14,
-              }}
-            >
-              {item[0].name}
-            </Text>
-            </View>
-              <View>
-              <Text
-              style={{
-                fontFamily: "regular",
-                fontSize: 14,
-                marginTop: 15,
-                textAlign: 'right'
-              }}
-            >
-              WhatsApp
-            </Text>
-            <Text
-              style={{
-                fontFamily: "light",
-                fontSize: 14,
-                textAlign: 'right'
-              }}
-            >
-              {item[0].whatsapp}
-            </Text>
-              </View>
-          </View>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <View>
-
-          <Text
-            style={{
-              fontFamily: "regular",
-              fontSize: 14,
-              marginTop: 15,
-            }}
-          >
-            Correo Electronico
-          </Text>
-          <Text
-            style={{
-              fontFamily: "light",
-              fontSize: 14,
-            }}
-          >
-            {item[0].email}
-          </Text>
-          </View>
-            <View>
-            <Text
-            style={{
-              fontFamily: "regular",
-              fontSize: 14,
-              marginTop: 15,
-              textAlign: 'right'
-            }}
-          >
-            Instagram
-          </Text>
-          <Text
-            style={{
-              fontFamily: "light",
-              fontSize: 14,
-              textAlign: 'right'
-            }}
-          >
-            {`Proximamente`}
-          </Text>
-            </View>
-          </View>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <View>
-
-          <Text
-            style={{
-              fontFamily: "regular",
-              fontSize: 14,
-              marginTop: 15,
-            }}
-          >
-            Numero de telefono
-          </Text>
-          <Text
-            style={{
-              fontFamily: "light",
-              fontSize: 14,
-            }}
-          >
-            {item[0].phone}
-          </Text>
-            </View>
-            <View>
-            <Text
-            style={{
-              fontFamily: "regular",
-              fontSize: 14,
-              marginTop: 15,
-              textAlign: 'right'
-            }}
-          >
-            Facebook
-          </Text>
-          <Text
-            style={{
-              fontFamily: "light",
-              fontSize: 14,
-              textAlign: 'right'
-            }}
-          >
-            {`Proximamente`}
-          </Text>
-            </View>
-          </View>
-          <View>
-
-          <Text
-            style={{
-              fontFamily: "regular",
-              fontSize: 14,
-              marginTop: 15,
-            }}
-          >
-            Direccion
-          </Text>
-          <Text
-            style={{
-              fontFamily: "light",
-              fontSize: 14,
-            }}
-          >
-            {`Proximamente`}
-          </Text>
           </View>
         </View>
       </View>

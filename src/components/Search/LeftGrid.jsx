@@ -9,11 +9,14 @@ const LeftGrid = ({ data, value }) => {
   return (
     <View style={{ paddingHorizontal: 10, flexDirection: 'row'}}>
         <View style={styles.bigContainer}>
-        <TouchableOpacity
+        {data[0] && <TouchableOpacity
           style={styles.bigColumn}
             onPress={() =>
               navigation.navigate('SearchPost', {
-                data: data[0],
+                data: {
+                  item: data[0],
+                  image: `https://picsum.photos/id/${number + 1}/200/300`
+                },
               })
             }
         >
@@ -26,14 +29,17 @@ const LeftGrid = ({ data, value }) => {
             }}
             source={{ uri: `https://picsum.photos/id/${number + 1}/200/300` }}
           />
-        </TouchableOpacity>
+        </TouchableOpacity>}
       </View>
       <View style={styles.leftGridContainer}>
-        <TouchableOpacity
+      {data[1] && <TouchableOpacity
           style={styles.column}
             onPress={() =>
               navigation.navigate('SearchPost', {
-                data: data[1],
+                data: {
+                  item: data[1],
+                  image: `https://picsum.photos/id/${number + 2}/200/300`
+                },
               })
             }
         >
@@ -46,12 +52,15 @@ const LeftGrid = ({ data, value }) => {
             }}
             source={{ uri: `https://picsum.photos/id/${number + 2}/200/300` }}
           />
-        </TouchableOpacity>
-        <TouchableOpacity
+        </TouchableOpacity>}
+        {data[2] && <TouchableOpacity
           style={styles.column}
             onPress={() =>
               navigation.navigate('SearchPost', {
-                data: data[2],
+                data: {
+                  item: data[2],
+                  image: `https://picsum.photos/id/${number + 3}/200/300`
+                },
               })
             }
         >
@@ -64,12 +73,15 @@ const LeftGrid = ({ data, value }) => {
             }}
             source={{ uri: `https://picsum.photos/id/${number + 3}/200/300` }}
           />
-        </TouchableOpacity>
-        <TouchableOpacity
+        </TouchableOpacity>}
+        {data[3] && <TouchableOpacity
           style={styles.column}
             onPress={() =>
               navigation.navigate('SearchPost', {
-                data: data[3],
+                data: {
+                  item: data[3],
+                  image: `https://picsum.photos/id/${number + 4}/200/300`
+                },
               })
             }
         >
@@ -82,12 +94,15 @@ const LeftGrid = ({ data, value }) => {
             }}
             source={{ uri: `https://picsum.photos/id/${number + 4}/200/300` }}
           />
-        </TouchableOpacity>
-        <TouchableOpacity
+        </TouchableOpacity>}
+        {data[4] && <TouchableOpacity
           style={styles.column}
             onPress={() =>
               navigation.navigate('SearchPost', {
-                data: data[4].item,
+                data: {
+                  item: data[4],
+                  image: `https://picsum.photos/id/${number + 5}/200/300`
+                },
               })
             }
         >
@@ -100,7 +115,7 @@ const LeftGrid = ({ data, value }) => {
             }}
             source={{ uri: `https://picsum.photos/id/${number + 5}/200/300` }}
           />
-        </TouchableOpacity>
+        </TouchableOpacity>}
       </View>
       
     </View>

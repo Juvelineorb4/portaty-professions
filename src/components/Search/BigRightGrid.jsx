@@ -10,11 +10,14 @@ const BigRightGrid = ({ data, value }) => {
   return (
     <View style={{ paddingHorizontal: 10, flexDirection: "row" }}>
       <View style={styles.rightContainer}>
-        <TouchableOpacity
+        {data[0] && <TouchableOpacity
           style={styles.tinyRightColumn}
             onPress={() =>
               navigation.navigate('SearchPost', {
-                data: data[0],
+                data: {
+                  item: data[0],
+                  image: `https://picsum.photos/id/${number + 1}/200/300`
+                },
               })
             }
         >
@@ -27,12 +30,15 @@ const BigRightGrid = ({ data, value }) => {
             }}
             source={{ uri: `https://picsum.photos/id/${number + 1}/200/300` }}
           />
-        </TouchableOpacity>
-        <TouchableOpacity
+        </TouchableOpacity>}
+        {data[1] && <TouchableOpacity
           style={styles.tinyRightColumn}
             onPress={() =>
               navigation.navigate('SearchPost', {
-                data: data[1],
+                data: {
+                  item: data[1],
+                  image: `https://picsum.photos/id/${number + 2}/200/300`
+                },
               })
             }
         >
@@ -45,14 +51,17 @@ const BigRightGrid = ({ data, value }) => {
             }}
             source={{ uri: `https://picsum.photos/id/${number + 2}/200/300` }}
           />
-        </TouchableOpacity>
+        </TouchableOpacity>}
       </View>
       <View style={styles.bigRightContainer}>
-        <TouchableOpacity
+        {data[2] && <TouchableOpacity
           style={styles.bigRightColumn}
             onPress={() =>
               navigation.navigate('SearchPost', {
-                data: data[2],
+                data: {
+                  item: data[2],
+                  image: `https://picsum.photos/id/${number + 3}/200/300`
+                },
               })
             }
         >
@@ -65,7 +74,7 @@ const BigRightGrid = ({ data, value }) => {
             }}
             source={{ uri: `https://picsum.photos/id/${number + 3}/200/300` }}
           />
-        </TouchableOpacity>
+        </TouchableOpacity>}
       </View>
     </View>
   );

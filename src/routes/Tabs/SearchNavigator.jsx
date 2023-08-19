@@ -7,11 +7,12 @@ import SearchPost from "@/screens/Search/SearchPost";
 import SearchIn from "@/screens/Search/SearchIn";
 import styles from "@/utils/styles/Header.module.css";
 import SearchOut from "@/screens/Search/SearchOut";
+import LeftHeader from "@/components/Header/LeftHeader";
 
-const SearchNavigator = ({navigation}) => {
+const SearchNavigator = ({ navigation }) => {
   const [active, setActive] = useState(false);
   const [activeOut, setActiveOut] = useState(false);
-  const [inputSearch, setInputSearch] = useState('');
+  const [inputSearch, setInputSearch] = useState("");
   const Stack = createNativeStackNavigator();
   const global = require("@/utils/styles/global.js");
   return (
@@ -29,19 +30,21 @@ const SearchNavigator = ({navigation}) => {
                   paddingRight: active ? 40 : 0,
                 }}
               >
-                {active && <TouchableOpacity
-                  activeOpacity={1}
-                  onPress={() => setActive(false)}
-                >
-                  <Image
-                    style={{
-                      width: 40,
-                      height: 30,
-                      resizeMode: "cover",
-                    }}
-                    source={require("@/utils/images/arrow_back.png")}
-                  />
-                </TouchableOpacity>}
+                {active && (
+                  <TouchableOpacity
+                    activeOpacity={1}
+                    onPress={() => setActive(false)}
+                  >
+                    <Image
+                      style={{
+                        width: 40,
+                        height: 30,
+                        resizeMode: "cover",
+                      }}
+                      source={require("@/utils/images/arrow_back.png")}
+                    />
+                  </TouchableOpacity>
+                )}
                 <TouchableOpacity
                   style={[styles.content, global.bgWhiteSoft]}
                   activeOpacity={1}
@@ -61,10 +64,10 @@ const SearchNavigator = ({navigation}) => {
                     onPressIn={() => setActive(true)}
                     onChangeText={(e) => setInputSearch(e)}
                     value={inputSearch}
-                    returnKeyType='search'
-                    onSubmitEditing={()=> {
-                      setActiveOut(false)
-                      navigation.navigate('SearchOut', {input: inputSearch})
+                    returnKeyType="search"
+                    onSubmitEditing={() => {
+                      setActiveOut(false);
+                      navigation.navigate("SearchOut", { input: inputSearch });
                     }}
                   />
                 </TouchableOpacity>
@@ -78,7 +81,7 @@ const SearchNavigator = ({navigation}) => {
       <Stack.Screen
         name="SearchOut"
         component={activeOut ? SearchIn : SearchOut}
-        options={{ 
+        options={{
           animation: "slide_from_right",
           header: (props) => (
             <View style={[styles.home, global.bgWhite]}>
@@ -92,8 +95,8 @@ const SearchNavigator = ({navigation}) => {
                 <TouchableOpacity
                   activeOpacity={1}
                   onPress={() => {
-                    navigation.navigate('Search')
-                    setActive(false)
+                    navigation.navigate("Search");
+                    setActive(false);
                   }}
                 >
                   <Image
@@ -124,10 +127,10 @@ const SearchNavigator = ({navigation}) => {
                     onPressIn={() => setActiveOut(true)}
                     onChangeText={(e) => setInputSearch(e)}
                     value={inputSearch}
-                    returnKeyType='search'
-                    onSubmitEditing={()=> {
-                      setActiveOut(false)
-                      navigation.navigate('SearchOut', {input: inputSearch})
+                    returnKeyType="search"
+                    onSubmitEditing={() => {
+                      setActiveOut(false);
+                      navigation.navigate("SearchOut", { input: inputSearch });
                     }}
                   />
                 </TouchableOpacity>
@@ -136,12 +139,15 @@ const SearchNavigator = ({navigation}) => {
               <View style={[styles.lineSearch, global.mainBgColor]} />
             </View>
           ),
-         }}
+        }}
       />
       <Stack.Screen
         name="SearchPost"
         component={SearchPost}
-        options={{ header: (props) => <SearchHeader {...props} /> }}
+        options={{
+          animation: "slide_from_right",
+          header: (props) => <LeftHeader {...props} />,
+        }}
       />
     </Stack.Navigator>
   );

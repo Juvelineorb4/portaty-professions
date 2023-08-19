@@ -32,7 +32,7 @@ const SearchOut = ({ route }) => {
         }),
         km: 10,
         from: 0,
-        text: input,
+        text: input.trim(),
         limit: number,
       },
     };
@@ -62,7 +62,7 @@ const SearchOut = ({ route }) => {
   if (items.length !== 0)
     return (
       <View style={{ flex: 1, backgroundColor: "#FFFFFF", paddingBottom: 50 }}>
-        <Text style={{fontFamily: 'thinItalic', fontSize: 16, paddingLeft: 10, paddingBottom: 15}}>Busqueda por: "{input}"</Text>
+        <Text style={{fontFamily: 'thinItalic', fontSize: 16, paddingLeft: 10, paddingBottom: 15}}>Busqueda por: "{input.trim()}"</Text>
         {items !== 0 && (
           <FlatList
             data={items}
@@ -85,7 +85,7 @@ const SearchOut = ({ route }) => {
                 )}
                 {totalData === totalLimit && (
                   <Text style={{ fontFamily: "light", fontSize: 14 }}>
-                    No hay mas resultados por: "{input}"
+                    No hay mas resultados por: "{input.trim()}"
                   </Text>
                 )}
               </View>
@@ -106,7 +106,7 @@ const SearchOut = ({ route }) => {
           global.bgWhite,
         ]}
       >
-        <Text style={[{fontFamily: 'light', fontSize: 16, textAlign: 'center', marginBottom: 60}, global.midGray]}>No se encuentran resultados por: "{input}"</Text>
+        <Text style={[{fontFamily: 'light', fontSize: 16, textAlign: 'center', marginBottom: 60}, global.midGray]}>No se encuentran resultados por: "{input.trim()}"</Text>
       </View>
     );
   } else {

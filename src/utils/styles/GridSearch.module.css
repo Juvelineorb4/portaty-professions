@@ -75,14 +75,14 @@
 }
 
 .bigColumn {
-  background-color: cornflowerblue;
+  /* background-color: cornflowerblue; */
 }
 .bigLeftColumn,
 .bigRightColumn {
-  background-color: crimson;
+  /* background-color: crimson; */
 }
 .tinyLeftColumn,
 .tinyRightColumn,
 .column {
-  background-color: coral;
+  /* background-color: coral; */
 }
