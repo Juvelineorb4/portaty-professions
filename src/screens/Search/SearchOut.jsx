@@ -4,12 +4,18 @@ import {
   ScrollView,
   FlatList,
   ActivityIndicator,
+  Image,
+  Pressable,
+  Modal,
+  TouchableOpacity,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import GridSearch from "@/components/Search/GridSearch";
 import * as customSearch from "@/graphql/CustomQueries/Search";
 import * as Location from "expo-location";
 import { Auth, API, Storage } from "aws-amplify";
+import Slider from "@react-native-community/slider";
+import styles from "@/utils/styles/Tags.module.css";
 
 const SearchOut = ({ route }) => {
   const global = require("@/utils/styles/global.js");
@@ -18,6 +24,9 @@ const SearchOut = ({ route }) => {
   const [items, setItems] = useState([]);
   const [totalData, setTotalData] = useState(2);
   const [totalLimit, setTotalLimit] = useState(1);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [statusFilter, setStatusFilter] = useState(false);
+  const [filterRadio, setFilterRadio] = useState(1);
   let number = 26 * moreItems;
 
   const getData = async () => {
@@ -30,7 +39,7 @@ const SearchOut = ({ route }) => {
           lat: 10.175697,
           lon: -69.3123711,
         }),
-        km: 10,
+        km: filterRadio,
         from: 0,
         text: input.trim(),
         limit: number,
@@ -55,6 +64,13 @@ const SearchOut = ({ route }) => {
       };
     }
   };
+  const getFilterData = async () => {
+    setStatusFilter(true);
+    getData();
+    setTimeout(() => {
+      setStatusFilter(false);
+    }, 3000);
+  };
   useEffect(() => {
     getData();
   }, [route, moreItems]);
@@ -62,8 +78,113 @@ const SearchOut = ({ route }) => {
   if (items.length !== 0)
     return (
       <View style={{ flex: 1, backgroundColor: "#FFFFFF", paddingBottom: 50 }}>
-        <Text style={{fontFamily: 'thinItalic', fontSize: 16, paddingLeft: 10, paddingBottom: 15}}>Busqueda por: "{input.trim()}"</Text>
-        {items !== 0 && (
+        
+        <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 10, paddingHorizontal: 10, alignItems: 'center' }}
+          >
+            <Text style={{fontFamily: 'thinItalic', fontSize: 14}}>Tienes {totalData} de {input.trim()} cerca de ti</Text>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Image
+                style={{
+                  width: 25,
+                  height: 25,
+                  resizeMode: "contain",
+                }}
+                source={require("@/utils/images/editcard.png")}
+              />
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontFamily: "thinItalic",
+                }}
+              >
+                Filtrar
+              </Text>
+            </View>
+          </View>
+
+          <Modal animationType="none" transparent={true} visible={modalVisible}>
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContent}>
+                <View style={styles.modalTop}>
+                  <Pressable
+                    onPress={() => {
+                      setModalVisible(!modalVisible);
+                    }}
+                  >
+                    <Image
+                      style={{
+                        width: 25,
+                        height: 25,
+                        resizeMode: "contain",
+                      }}
+                      source={require("@/utils/images/arrow_back.png")}
+                    />
+                  </Pressable>
+                  <Text style={styles.modalText}>{`Filtra tu busqueda`}</Text>
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text
+                    style={styles.modalText}
+                  >{`La distancia de tu radio son: ${filterRadio} km`}</Text>
+                  <Slider
+                    style={{ height: 100 }}
+                    minimumValue={1}
+                    maximumValue={100}
+                    onValueChange={(e) => setFilterRadio(e)}
+                    step={1}
+                    minimumTrackTintColor="#5E2129"
+                    maximumTrackTintColor="#1f1f1f"
+                    thumbTintColor="#5E2129"
+                    value={filterRadio}
+                  />
+                  <Text
+                    style={styles.modalText}
+                  >{`La distancia esta reflejada en un radio de kilometros`}</Text>
+                </View>
+                <View style={{ flex: 1 }}>
+                  <TouchableOpacity
+                    style={[
+                      global.mainBgColor,
+                      {
+                        borderRadius: 8,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        height: 49,
+                        marginTop: 80,
+                      },
+                    ]}
+                    onPress={() => {
+                      setModalVisible(!modalVisible);
+                      getFilterData();
+                    }}
+                  >
+                    <Text
+                      style={[
+                        global.white,
+                        { fontFamily: "medium", fontSize: 14 },
+                      ]}
+                    >
+                      {`Buscar`}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </Modal>
+        </TouchableOpacity>
+        {statusFilter ? (
+          <View
+            style={[
+              { flex: 1, alignItems: "center", justifyContent: "center" },
+              global.bgWhite,
+            ]}
+          >
+            <ActivityIndicator size="large" color="#5E2129" />
+          </View>
+        ) : (
+        items !== 0 && (
           <FlatList
             data={items}
             renderItem={({ item, index }) => (
@@ -95,7 +216,7 @@ const SearchOut = ({ route }) => {
             }}
             onEndReachedThreshold={0}
           />
-        )}
+        ))}
       </View>
     );
   if (totalData === 0) {

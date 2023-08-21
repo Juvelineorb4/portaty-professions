@@ -12,7 +12,7 @@ const GridSearch = ({renderItems, more}) => {
   useLayoutEffect(() => {
   }, [])
   if (renderItems.length !== 0) return (
-    <View style={{flex: 1}}>
+    <View style={{flex: 1,}}>
       <BigLeftGrid data={renderItems.slice(0, 3)} value={more + 15}/>
       {renderItems.length >= 4 && <RightGrid data={renderItems.slice(3, renderItems.length - 1 < 7 ? renderItems.length - 1 : 8)} value={more + 20}/>}
       {renderItems.length >= 9 &&<LeftGrid data={renderItems.slice(8, renderItems.length - 1 < 12 ? renderItems.length - 1 : 13)} value={more + 25} />}

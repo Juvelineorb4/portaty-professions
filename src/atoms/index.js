@@ -41,3 +41,7 @@ export const profileState = atom({
   key: "profileStateValue",
   default: false,
 });
+export const filterState = atom({
+  key: "filterStateValue",
+  default: 0.01,
+});
