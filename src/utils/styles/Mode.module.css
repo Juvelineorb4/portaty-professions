@@ -1,0 +1,26 @@
+
+.container {
+    flex: 1;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.columnGrid, .columnList {
+    /* align-items: center; */
+    height: 110px;
+    border: 0.5px solid #5E2129;
+}
+.columnGrid {
+    width: 33%;
+    margin-bottom: 1%;
+    border-radius: 2px;
+}
+.columnList {
+    padding-top: 10px;
+    /* align-items: center; */
+    margin-bottom: 5%;
+    width: 100%;
+    border-radius: 8px;
+    flex-direction: row;
+}
