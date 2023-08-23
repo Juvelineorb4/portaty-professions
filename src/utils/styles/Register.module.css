@@ -55,12 +55,12 @@
 .textInputRow {
   font-family: "light";
   margin-left: 5px;
-  width: 35%;
+  width: 75%;
 }
 .placeholderRow {
   text-align: left;
   font-family: "light";
-  width: 35%;
+  width: 75%;
   margin-left: 5px;
 }
 

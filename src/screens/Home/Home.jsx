@@ -1,37 +1,18 @@
-import React, { useEffect } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import { Auth, API } from "aws-amplify";
 import { searchBusinessByDistance, searchByDistance } from "@/graphql/queries";
+import Grid from "@/components/Home/Grid";
+import List from "@/components/Home/List";
 const Home = () => {
-  useEffect(() => {
-    fecthAlgo();
-  }, []);
-
-  const fecthAlgo = async () => {
-    const api = "api-professions-gateway";
-    const path = "/searchBusinessByDistance";
-    const params = {
-      headers: {}, // OPTIONAL
-      queryStringParameters: {
-        location: JSON.stringify({
-          lat: 10.175697,
-          lon: -69.3123711,
-        }),
-        km: 10,
-        text: "restaurante",
-      },
-    };
-    try {
-      const response = await API.get(api, path, params);
-      console.log(response);
-      return response;
-    } catch (error) {
-      return {
-        error: error,
-      };
-    }
-  };
-
+  const global = require("@/utils/styles/global.js");
+  const [mode, setMode] = useState(false)
   const data = [
     { id: 1, text: "Elemento 1" },
     { id: 2, text: "Elemento 2" },
@@ -47,28 +28,34 @@ const Home = () => {
     <ScrollView style={{ flex: 1, backgroundColor: "#fff" }}>
       <View
         style={{
-          flex: 1,
-          alignItems: "center",
-          justifyContent: "center",
-          padding: 20,
+          flexDirection: "row",
+          justifyContent: 'flex-end',
+          marginRight: 10,
         }}
       >
-        <View style={styles.container}>
-          {data.map((item) => (
-            <View key={item.id} style={styles.column}>
-              <Text>{item.text}</Text>
-            </View>
-          ))}
-        </View>
+        <TouchableOpacity
+          style={[{ borderColor: "#1f1f1f", borderWidth: 0.5, paddingHorizontal: 15, paddingVertical: 8, borderTopLeftRadius: 8, borderBottomLeftRadius: 8 }, mode ? global.mainBgColor : global.bgWhite]}
+          onPress={() => setMode(!mode)}
+        >
+          <Text style={[{fontSize: 14, fontFamily: 'light'}, mode ? global.white : global.mainColor]}>Grid</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[{ borderColor: "#1f1f1f", borderWidth: 0.5, padding: 10, borderTopRightRadius: 8, borderBottomRightRadius: 8, paddingHorizontal: 15, paddingVertical: 8, }, !mode ? global.mainBgColor : global.bgWhite]}
+          onPress={() => setMode(!mode)}
+        >
+          <Text style={[{fontSize: 14, fontFamily: 'light'}, !mode ? global.white : global.mainColor]}>List</Text>
+        </TouchableOpacity>
       </View>
-
-      <Text
+        <View style={{padding: 10, paddingBottom: 80}}>
+          {mode ? <Grid /> : <List /> }
+        </View>
+      {/* <Text
         onPress={() => {
           Auth.signOut();
         }}
       >
         Logout
-      </Text>
+      </Text> */}
     </ScrollView>
   );
 };
