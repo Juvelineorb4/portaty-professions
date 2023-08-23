@@ -110,7 +110,7 @@ const Form = ({ navigation, route }) => {
     console.log(business);
     BlankInputs()
     setStateProfile(true)
-    navigation.goBack()
+    navigation.navigate('Profile')
   };
   const MultipleData = async () => {
     const activities = await API.graphql({
