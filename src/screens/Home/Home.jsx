@@ -10,9 +10,14 @@ import { Auth, API } from "aws-amplify";
 import { searchBusinessByDistance, searchByDistance } from "@/graphql/queries";
 import Grid from "@/components/Home/Grid";
 import List from "@/components/Home/List";
+import { mapUser } from "@/atoms";
+import { useRecoilState } from "recoil";
+import * as Location from "expo-location";
+
 const Home = () => {
   const global = require("@/utils/styles/global.js");
   const [mode, setMode] = useState(false)
+  const [userLocation, setUserLocation] = useRecoilState(mapUser);
   const data = [
     { id: 1, text: "Elemento 1" },
     { id: 2, text: "Elemento 2" },
@@ -24,6 +29,18 @@ const Home = () => {
     { id: 8, text: "Elemento 8" },
     { id: 9, text: "Elemento 9" },
   ];
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status === "granted") {
+        let location = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.BestForNavigation,
+        });
+        setUserLocation(location.coords);
+      }
+    })();
+  }, [])
+  
   return (
     <ScrollView style={{ flex: 1, backgroundColor: "#fff" }}>
       <View

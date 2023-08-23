@@ -33,7 +33,7 @@ const Form = ({ navigation, route }) => {
   const activity = useRecoilValue(activitySelect);
   const tags = useRecoilValue(tagsList);
   const map = useRecoilValue(mapBusiness);
-  const [userLocation, setUserLocation] = useState(null);
+  const [userLocation, setUserLocation] = useRecoilState(mapUser);
 
   /* Para limpiar */
   const [selectTagsList, setSelectTagsList] = useRecoilState(tagsList);
@@ -122,14 +122,15 @@ const Form = ({ navigation, route }) => {
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-        return;
+      
+      if (status === "granted") {
+        let location = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.BestForNavigation,
+        });
+        setUserLocation(location.coords);
+      } else {
+        navigation.goBack()
       }
-      let location = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.BestForNavigation,
-      });
-      setUserLocation(location.coords);
     })();
     MultipleData();
     BlankInputs()

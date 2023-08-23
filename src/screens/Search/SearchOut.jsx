@@ -16,6 +16,9 @@ import * as Location from "expo-location";
 import { Auth, API, Storage } from "aws-amplify";
 import Slider from "@react-native-community/slider";
 import styles from "@/utils/styles/Tags.module.css";
+import { useRecoilValue } from "recoil";
+import { mapUser } from "@/atoms";
+import * as Location from "expo-location";
 
 const SearchOut = ({ route }) => {
   const global = require("@/utils/styles/global.js");
@@ -28,6 +31,7 @@ const SearchOut = ({ route }) => {
   const [statusFilter, setStatusFilter] = useState(false);
   const [filterRadio, setFilterRadio] = useState(1);
   let number = 26 * moreItems;
+  const location = useRecoilValue(mapUser);
 
   const getData = async () => {
     const api = "api-professions-gateway";
@@ -36,8 +40,8 @@ const SearchOut = ({ route }) => {
       headers: {}, // OPTIONAL
       queryStringParameters: {
         location: JSON.stringify({
-          lat: 10.175697,
-          lon: -69.3123711,
+          lat: location.latitude,
+          lon: location.longitude,
         }),
         km: filterRadio,
         from: 0,
