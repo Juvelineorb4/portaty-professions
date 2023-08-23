@@ -12,7 +12,6 @@ import {
 import React, { useEffect, useState } from "react";
 import GridSearch from "@/components/Search/GridSearch";
 import * as customSearch from "@/graphql/CustomQueries/Search";
-import * as Location from "expo-location";
 import { Auth, API, Storage } from "aws-amplify";
 import Slider from "@react-native-community/slider";
 import styles from "@/utils/styles/Tags.module.css";

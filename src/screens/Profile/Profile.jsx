@@ -25,8 +25,7 @@ const Profile = ({ navigation, route }) => {
         email: attributes.email,
       },
     });
-    if (result.data.userByEmail.items[0].business.items.length !== 0)
-      setBusiness([result.data.userByEmail.items[0].business.items[0]]);
+    if (result.data.userByEmail.items[0].business.items.length !== 0) setBusiness([result.data.userByEmail.items[0].business.items[0]]);
     setUser([result.data.userByEmail.items[0]]);
 
   };
@@ -41,12 +40,12 @@ const Profile = ({ navigation, route }) => {
       }
   };
   useLayoutEffect(() => {
-    if (user.length === 0) User();
-    if (business.length !== 0) getImage()
-  }, [route, business]);
+    User();
+    getImage()
+    console.log(status)
+  }, [route, status]);
   /*  */
   if (user.length !== 0 || business.length !== 0) { 
-
     return (
       <ScrollView style={[styles.container, global.bgWhite]}>
         <View style={{ flex: 0.5 }}>
@@ -123,6 +122,7 @@ const Profile = ({ navigation, route }) => {
                 <View style={{ alignItems: "center" }}>
                   <Text style={{ fontFamily: "thin", fontSize: 22 }}>0</Text>
                   <Text style={{ fontFamily: "light" }}>Mis Favoritos</Text>
+                  {status ? <Text style={{ fontFamily: "light" }}>Activo</Text> : <Text style={{ fontFamily: "light" }}>No activo</Text>}
                 </View>
               </View>
             </View>
@@ -320,6 +320,7 @@ const Profile = ({ navigation, route }) => {
     )
   }
 
+  
 };
 
 export default Profile;
