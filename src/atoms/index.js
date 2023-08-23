@@ -45,3 +45,8 @@ export const filterState = atom({
   key: "filterStateValue",
   default: 0.01,
 });
+
+export const mapUser = atom({
+  key: "mapUserValue",
+  default: null,
+});

@@ -16,6 +16,8 @@ import * as Location from "expo-location";
 import { Auth, API, Storage } from "aws-amplify";
 import Slider from "@react-native-community/slider";
 import styles from "@/utils/styles/Tags.module.css";
+import { mapUser } from "@/atoms";
+import { useRecoilValue } from "recoil";
 
 const Search = ({ route }) => {
   const global = require("@/utils/styles/global.js");
@@ -26,19 +28,22 @@ const Search = ({ route }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [statusFilter, setStatusFilter] = useState(false);
   const [filterRadio, setFilterRadio] = useState(1);
+  const location = useRecoilValue(mapUser);
   let number = 26 * moreItems;
 
-
-
   const getData = async () => {
+    console.log({
+      lat: location.latitude,
+      lon: location.longitude,
+    });
     const api = "api-professions-gateway";
     const path = "/searchBusinessByDistance";
     const params = {
       headers: {},
       queryStringParameters: {
         location: JSON.stringify({
-          lat: 10.175697,
-          lon: -69.3123711,
+          lat: location.latitude,
+          lon: location.longitude,
         }),
         km: filterRadio,
         from: 0,

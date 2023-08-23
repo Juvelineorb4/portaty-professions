@@ -16,6 +16,8 @@ import * as Location from "expo-location";
 import { Auth, API, Storage } from "aws-amplify";
 import Slider from "@react-native-community/slider";
 import styles from "@/utils/styles/Tags.module.css";
+import { useRecoilValue } from "recoil";
+import { mapUser } from "@/atoms";
 
 const SearchOut = ({ route }) => {
   const global = require("@/utils/styles/global.js");
@@ -28,18 +30,23 @@ const SearchOut = ({ route }) => {
   const [statusFilter, setStatusFilter] = useState(false);
   const [filterRadio, setFilterRadio] = useState(1);
   let number = 26 * moreItems;
+  const location = useRecoilValue(mapUser);
 
   const getData = async () => {
+    console.log({
+      lat: location.latitude,
+      lon: location.longitude,
+    });
     const api = "api-professions-gateway";
     const path = "/searchBusinessByDistance";
     const params = {
       headers: {}, // OPTIONAL
       queryStringParameters: {
         location: JSON.stringify({
-          lat: 10.175697,
-          lon: -69.3123711,
+          lat: location.latitude,
+          lon: location.longitude,
         }),
-        km: filterRadio,
+        km: 2,
         from: 0,
         text: input.trim(),
         limit: number,
@@ -78,13 +85,20 @@ const SearchOut = ({ route }) => {
   if (items.length !== 0)
     return (
       <View style={{ flex: 1, backgroundColor: "#FFFFFF", paddingBottom: 50 }}>
-        
         <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
           <View
-            style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 10, paddingHorizontal: 10, alignItems: 'center' }}
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginBottom: 10,
+              paddingHorizontal: 10,
+              alignItems: "center",
+            }}
           >
-            <Text style={{fontFamily: 'thinItalic', fontSize: 14}}>Tienes {totalData} de {input.trim()} cerca de ti</Text>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Text style={{ fontFamily: "thinItalic", fontSize: 14 }}>
+              Tienes {totalData} de {input.trim()} cerca de ti
+            </Text>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Image
                 style={{
                   width: 25,
@@ -184,39 +198,40 @@ const SearchOut = ({ route }) => {
             <ActivityIndicator size="large" color="#5E2129" />
           </View>
         ) : (
-        items !== 0 && (
-          <FlatList
-            data={items}
-            renderItem={({ item, index }) => (
-              <GridSearch renderItems={item} more={index} />
-            )}
-            keyExtractor={(item, index) => index}
-            ListFooterComponent={() => (
-              <View
-                style={{
-                  height: 100,
-                  background: "#ffffff",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  paddingBottom: 20,
-                }}
-              >
-                {totalData > totalLimit && (
-                  <ActivityIndicator size="large" color="#5E2129" />
-                )}
-                {totalData === totalLimit && (
-                  <Text style={{ fontFamily: "light", fontSize: 14 }}>
-                    No hay mas resultados por: "{input.trim()}"
-                  </Text>
-                )}
-              </View>
-            )}
-            onEndReached={() => {
-              if (totalData > totalLimit) setMoreItems(moreItems + 1);
-            }}
-            onEndReachedThreshold={0}
-          />
-        ))}
+          items !== 0 && (
+            <FlatList
+              data={items}
+              renderItem={({ item, index }) => (
+                <GridSearch renderItems={item} more={index} />
+              )}
+              keyExtractor={(item, index) => index}
+              ListFooterComponent={() => (
+                <View
+                  style={{
+                    height: 100,
+                    background: "#ffffff",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    paddingBottom: 20,
+                  }}
+                >
+                  {totalData > totalLimit && (
+                    <ActivityIndicator size="large" color="#5E2129" />
+                  )}
+                  {totalData === totalLimit && (
+                    <Text style={{ fontFamily: "light", fontSize: 14 }}>
+                      No hay mas resultados por: "{input.trim()}"
+                    </Text>
+                  )}
+                </View>
+              )}
+              onEndReached={() => {
+                if (totalData > totalLimit) setMoreItems(moreItems + 1);
+              }}
+              onEndReachedThreshold={0}
+            />
+          )
+        )}
       </View>
     );
   if (totalData === 0) {
@@ -227,7 +242,19 @@ const SearchOut = ({ route }) => {
           global.bgWhite,
         ]}
       >
-        <Text style={[{fontFamily: 'light', fontSize: 16, textAlign: 'center', marginBottom: 60}, global.midGray]}>No se encuentran resultados por: "{input.trim()}"</Text>
+        <Text
+          style={[
+            {
+              fontFamily: "light",
+              fontSize: 16,
+              textAlign: "center",
+              marginBottom: 60,
+            },
+            global.midGray,
+          ]}
+        >
+          No se encuentran resultados por: "{input.trim()}"
+        </Text>
       </View>
     );
   } else {
