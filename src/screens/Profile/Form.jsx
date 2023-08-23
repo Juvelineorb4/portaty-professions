@@ -18,7 +18,13 @@ import * as customProfile from "@/graphql/CustomQueries/Profile";
 import * as mutations from "@/graphql/mutations";
 import CustomActivities from "@/components/CustomActivities";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { activitySelect, mapBusiness, profileState, tagsList } from "@/atoms";
+import {
+  activitySelect,
+  mapBusiness,
+  profileState,
+  tagsList,
+  mapUser,
+} from "@/atoms";
 import * as MediaLibrary from "expo-media-library";
 import MapMarketBusiness from "@/components/MapMarketBusiness";
 import * as Location from "expo-location";
@@ -108,9 +114,9 @@ const Form = ({ navigation, route }) => {
       },
     });
     console.log(business);
-    BlankInputs()
-    setStateProfile(true)
-    navigation.navigate('Profile')
+    BlankInputs();
+    setStateProfile(true);
+    navigation.navigate("Profile");
   };
   const MultipleData = async () => {
     const activities = await API.graphql({
@@ -122,14 +128,14 @@ const Form = ({ navigation, route }) => {
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      
+
       if (status === "granted") {
         let location = await Location.getCurrentPositionAsync({
           accuracy: Location.Accuracy.BestForNavigation,
         });
         setUserLocation(location.coords);
       } else {
-        navigation.goBack()
+        navigation.goBack();
       }
     })();
     MultipleData();
