@@ -18,7 +18,7 @@ import * as customProfile from "@/graphql/CustomQueries/Profile";
 import * as mutations from "@/graphql/mutations";
 import CustomActivities from "@/components/CustomActivities";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { activitySelect, mapBusiness, profileState, tagsList } from "@/atoms";
+import { activitySelect, mapBusiness, mapUser, profileState, tagsList } from "@/atoms";
 import * as MediaLibrary from "expo-media-library";
 import MapMarketBusiness from "@/components/MapMarketBusiness";
 import * as Location from "expo-location";
