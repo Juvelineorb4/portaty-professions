@@ -28,6 +28,8 @@ const Search = ({ route }) => {
   const [filterRadio, setFilterRadio] = useState(1);
   let number = 26 * moreItems;
 
+
+
   const getData = async () => {
     const api = "api-professions-gateway";
     const path = "/searchBusinessByDistance";
@@ -76,7 +78,13 @@ const Search = ({ route }) => {
       <View style={{ flex: 1, backgroundColor: "#FFFFFF", paddingBottom: 50 }}>
         <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
           <View
-            style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 10, paddingHorizontal: 10, alignItems: 'center' }}
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginBottom: 10,
+              paddingHorizontal: 10,
+              alignItems: "center",
+            }}
           >
             <Text
               style={{
@@ -86,7 +94,7 @@ const Search = ({ route }) => {
             >
               Tienes {totalData} negocios cerca de ti
             </Text>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Image
                 style={{
                   width: 25,

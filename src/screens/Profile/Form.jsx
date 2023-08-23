@@ -100,7 +100,7 @@ const Form = ({ navigation, route }) => {
           image: key,
           coordinates: {
             lat: map.latitude,
-            lon: map.longitude
+            lon: map.longitude,
           },
           activity: activity.name,
           tags: tags,
@@ -108,9 +108,9 @@ const Form = ({ navigation, route }) => {
       },
     });
     console.log(business);
-    BlankInputs()
-    setStateProfile(true)
-    navigation.goBack()
+    BlankInputs();
+    setStateProfile(true);
+    navigation.goBack();
   };
   const MultipleData = async () => {
     const activities = await API.graphql({
@@ -118,7 +118,7 @@ const Form = ({ navigation, route }) => {
     });
     setActivitiesList(activities.data.listActivities.items);
   };
-  
+
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -132,7 +132,7 @@ const Form = ({ navigation, route }) => {
       setUserLocation(location.coords);
     })();
     MultipleData();
-    BlankInputs()
+    BlankInputs();
   }, []);
   /*  */
   return (
