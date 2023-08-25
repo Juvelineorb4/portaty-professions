@@ -18,6 +18,7 @@ import styles from "@/utils/styles/Tags.module.css";
 import { mapUser } from "@/atoms";
 import { useRecoilValue } from "recoil";
 import * as Location from "expo-location";
+import * as queries from "@/graphql/CustomQueries/Favorites";
 
 const Search = ({ route }) => {
   const global = require("@/utils/styles/global.js");
@@ -51,16 +52,40 @@ const Search = ({ route }) => {
       setTotalData(response.total);
       setTotalLimit(response.limit);
       let newItems = [];
+      let newRenderItems = [];
       const long = 26;
-      for (let i = 0; i < response.items.length; i += long) {
-        let cut = response.items.slice(i, i + long);
-        newItems.push(cut);
+      for (let i = 0; i < response.items.length; i += 1) {
+        try {
+          let result = await API.graphql({
+            query: queries.favoritesByBusinessID,
+            authMode: "AMAZON_COGNITO_USER_POOLS",
+            variables: {
+              businessID: response.items[i].id,
+            },
+          });
+          if (result.data.favoritesByBusinessID.items.length !== 0) {
+            newItems.push({
+              favorite: true,
+              item: response.items[i],
+            });
+          } else {
+            newItems.push({
+              favorite: false,
+              item: response.items[i],
+            });
+          }
+          // console.log(response.items.length)
+        } catch (error) {
+          return;
+        }
       }
-      return setItems(newItems);
+      for (let i = 0; i < newItems.length; i += long) {
+        let cut = newItems.slice(i, i + long);
+        newRenderItems.push(cut);
+      }
+      return setItems(newRenderItems);
     } catch (error) {
-      return {
-        error: error,
-      };
+      return console.log(error);
     }
   };
   const getFilterData = async () => {
@@ -79,7 +104,13 @@ const Search = ({ route }) => {
       <View style={{ flex: 1, backgroundColor: "#FFFFFF", paddingBottom: 50 }}>
         <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
           <View
-            style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 10, paddingHorizontal: 10, alignItems: 'center' }}
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginBottom: 10,
+              paddingHorizontal: 10,
+              alignItems: "center",
+            }}
           >
             <Text
               style={{
@@ -89,7 +120,7 @@ const Search = ({ route }) => {
             >
               Tienes {totalData} negocios cerca de ti
             </Text>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Image
                 style={{
                   width: 25,
