@@ -24,6 +24,24 @@ export const userByEmail = /* GraphQL */ `
           items {
             id
             businessID
+            business {
+              id
+              userID
+              name
+              image
+              email
+              phone
+              whatsapp
+              instagram
+              facebook
+              page
+              activity
+              tags
+              createdAt
+              updatedAt
+              owner
+              __typename
+            }
             userID
             position
             owner
@@ -44,6 +62,7 @@ export const userByEmail = /* GraphQL */ `
 export const favoritesByBusinessID = /* GraphQL */ `
   query FavoritesByBusinessID(
     $businessID: ID!
+    $userID: ModelIDKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelFavoritesFilterInput
     $limit: Int
@@ -51,6 +70,7 @@ export const favoritesByBusinessID = /* GraphQL */ `
   ) {
     favoritesByBusinessID(
       businessID: $businessID
+      userID: $userID
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit

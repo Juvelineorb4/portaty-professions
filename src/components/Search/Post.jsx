@@ -11,7 +11,6 @@ import { userAuthenticated } from "@/atoms";
 const Post = ({ data, image, styled }) => {
   const navigation = useNavigation();
   const [save, setSave] = useState("");
-  const user = useRecoilValue(userAuthenticated);
   const onCreateFavorite = async () => {
     try {
       const { attributes } = await Auth.currentAuthenticatedUser();
@@ -46,24 +45,12 @@ const Post = ({ data, image, styled }) => {
     setSave("");
   };
 
-  // const fetchFavorites = async () => {
-  //   const { attributes } = await Auth.currentAuthenticatedUser();
-  //   try {
-  //     const result = await API.graphql({
-  //       query: queries.favoritesByBusinessID,
-  //       authMode: "AMAZON_COGNITO_USER_POOLS",
-  //       variables: {
-  //         businessID: data.id,
-  //       },
-  //     });
-  //     setSave(result.data.favoritesByBusinessID.items[0].id)
-  //   } catch (error) {
-  //     return
-  //   }
-  // };
+  const fetchFavorite = () => {
+    setSave(data.favorite)
+  };
 
   useLayoutEffect(() => {
-    // fetchFavorites();
+    fetchFavorite();
   }, []);
   return (
     <TouchableOpacity
@@ -91,7 +78,7 @@ const Post = ({ data, image, styled }) => {
         }}
         source={{ uri: image }}
       />
-      {data.favorite ? (
+      {save ? (
         <TouchableOpacity
           onPress={() => {
             onDeleteFavorite();

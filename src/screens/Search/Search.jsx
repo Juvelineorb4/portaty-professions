@@ -53,7 +53,10 @@ const Search = ({ route }) => {
       setTotalLimit(response.limit);
       let newItems = [];
       let newRenderItems = [];
+      console.log(response.items.length);
       const long = 26;
+      const { attributes } = await Auth.currentAuthenticatedUser();
+
       for (let i = 0; i < response.items.length; i += 1) {
         try {
           let result = await API.graphql({
@@ -61,22 +64,25 @@ const Search = ({ route }) => {
             authMode: "AMAZON_COGNITO_USER_POOLS",
             variables: {
               businessID: response.items[i].id,
+              userID: {eq: attributes["custom:userTableID"]},
             },
           });
+          console.log(attributes["custom:userTableID"])
+
           if (result.data.favoritesByBusinessID.items.length !== 0) {
             newItems.push({
-              favorite: true,
+              favorite: result.data.favoritesByBusinessID.items[0].id,
               item: response.items[i],
             });
           } else {
             newItems.push({
-              favorite: false,
+              favorite: "",
               item: response.items[i],
             });
           }
-          // console.log(response.items.length)
+          console.log(response.items.length);
         } catch (error) {
-          return;
+          // console.log(error)
         }
       }
       for (let i = 0; i < newItems.length; i += long) {
@@ -97,6 +103,7 @@ const Search = ({ route }) => {
   };
   useEffect(() => {
     getData();
+    console.log(moreItems);
   }, [route, moreItems]);
 
   if (items.length !== 0) {
