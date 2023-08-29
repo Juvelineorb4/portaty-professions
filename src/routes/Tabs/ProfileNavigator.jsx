@@ -5,14 +5,20 @@ import ProfileHeader from "@/components/Header/ProfileHeader";
 import Profile from "@/screens/Profile/Profile";
 import Post from "@/screens/Profile/Post";
 import Form from "@/screens/Profile/Form";
+import Unprofile from "@/screens/Profile/Unprofile";
 
 const ProfileNavigator = () => {
   const Stack = createNativeStackNavigator();
   return (
-    <Stack.Navigator initialRouteName={`Profile`}>
+    <Stack.Navigator initialRouteName={`Unprofile`}>
       <Stack.Screen
         name="Profile"
         component={Profile}
+        options={{ header: (props) => <ProfileHeader {...props} /> }}
+      />
+      <Stack.Screen
+        name="Unprofile"
+        component={Unprofile}
         options={{ header: (props) => <ProfileHeader {...props} /> }}
       />
       <Stack.Screen

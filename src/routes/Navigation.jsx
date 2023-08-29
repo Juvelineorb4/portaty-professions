@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import React from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginNavigator from "./Authentication/LoginNavigator";
@@ -7,11 +7,25 @@ import Tabs from "./Tabs/Tabs";
 // Navigation Settings
 import NavSettings from "./NavSettings";
 // recoil
-import { useRecoilValue } from "recoil";
-import { userAuthenticated } from "@/atoms";
+import { useRecoilValue, useRecoilState } from "recoil";
+import { userAuthenticated, mapUser } from "@/atoms";
+import * as Location from "expo-location";
 const Navigation = () => {
   const userAuth = useRecoilValue(userAuthenticated);
   const Stack = createNativeStackNavigator();
+  const [userLocation, setUserLocation] = useRecoilState(mapUser);
+   useLayoutEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status === "granted") {
+        let location = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.BestForNavigation,
+        });
+        setUserLocation(location.coords);
+        console.log(status);
+      }
+    })();
+  }, []);
   return (
     <NavigationContainer>
       <NavSettings />
