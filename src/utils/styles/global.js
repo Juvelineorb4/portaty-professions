@@ -44,9 +44,33 @@ module.exports = StyleSheet.create({
     backgroundColor: '#1f1f1f'
   },
   mainColor: {
-    color: '#5E2129'
+    color: '#fb8500'
   },
   mainBgColor: {
-    backgroundColor: '#5E2129'
+    backgroundColor: '#fb8500'
+  },
+  yellow: {
+    color: '#ffb703'
+  },
+  bgYellow: {
+    backgroundColor: '#ffb703'
+  },
+  blue: {
+    color: '#023047'
+  },
+  bgBlue: {
+    backgroundColor: '#023047'
+  },
+  blueSoft: {
+    color: '#219ebc'
+  },
+  bgBlueSoft: {
+    backgroundColor: '#219ebc'
+  },
+  sky: {
+    color: '#8ecae6'
+  },
+  bgSky: {
+    backgroundColor: '#8ecae6'
   },
 });

@@ -38,7 +38,7 @@ function MyTabBar({ state, descriptors, navigation }) {
     <View
       style={[
         styles.tabBarContainer,
-        global.bgWhite,
+        global.mainBgColor,
         { width: TAB_BAR_WIDTH, bottom: MARGIN },
       ]}
     >
@@ -143,7 +143,7 @@ const TabIcon = ({ isFocused, tabIcon, label, index }) => {
       </Animated.View>
       <Text
         style={{
-          color: isFocused ? "#5E2129" : "#5E2129",
+          color: isFocused ? "#ffffff" : "#ffffff",
           fontSize: 13,
           fontFamily: "regular",
           marginTop: isFocused ? 0 : -3,
@@ -169,11 +169,11 @@ const Tabs = () => {
         name="Home_Tab"
         options={{
           tabBarIcon: {
-            activeIcon: require("@/utils/images/home_white.png"),
-            inActiveIcon: require("@/utils/images/home.png"),
+            activeIcon: require("@/utils/images/favorites.png"),
+            inActiveIcon: require("@/utils/images/favorites.png"),
           },
           headerShown: false,
-          tabBarLabel: "Inicio",
+          tabBarLabel: "Favoritos",
         }}
         component={HomeNavigator}
       />
@@ -182,7 +182,7 @@ const Tabs = () => {
         options={{
           tabBarIcon: {
             activeIcon: require("@/utils/images/search_white.png"),
-            inActiveIcon: require("@/utils/images/search.png"),
+            inActiveIcon: require("@/utils/images/search_white.png"),
           },
           headerShown: false,
           tabBarLabel: "Buscar",
@@ -194,7 +194,7 @@ const Tabs = () => {
         options={{
           tabBarIcon: {
             activeIcon: require("@/utils/images/profile_white.png"),
-            inActiveIcon: require("@/utils/images/profile.png"),
+            inActiveIcon: require("@/utils/images/profile_white.png"),
           },
           headerShown: false,
           tabBarLabel: "Mi perfil",

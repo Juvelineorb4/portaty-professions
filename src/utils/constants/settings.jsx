@@ -1,16 +1,6 @@
 export const settings = {
     buttons: [
       {
-        title: "Permisos de la aplicación",
-        subtitle: "Establezca a qué permisos tiene acceso la aplicación.",
-        icon: {
-          left: require("@/utils/images/lock.png"),
-          right: require("@/utils/images/arrow_right.png"),
-        },
-        route: "Permissions",
-        // routePush: true,
-      },
-      {
         title: "Introducción",
         subtitle: "Guía de nuestra aplicación.",
         icon: {

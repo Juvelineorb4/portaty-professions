@@ -6,6 +6,11 @@ import Profile from "@/screens/Profile/Profile";
 import Post from "@/screens/Profile/Post";
 import Form from "@/screens/Profile/Form";
 import Unprofile from "@/screens/Profile/Unprofile";
+import Introduction from "@/screens/Profile/Introduction";
+import Terms from "@/screens/Profile/Terms";
+import About from "@/screens/Profile/About";
+import List from "@/screens/Profile/List";
+import Page from "@/screens/Profile/Page";
 
 const ProfileNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -24,6 +29,46 @@ const ProfileNavigator = () => {
       <Stack.Screen
         name="Form"
         component={Form}
+        options={{
+          animation: "slide_from_right",
+          header: (props) => <LeftHeader {...props} />,
+        }}
+      />
+      <Stack.Screen
+        name="Page"
+        component={Page}
+        options={{
+          animation: "slide_from_right",
+          header: (props) => <LeftHeader {...props} />,
+        }}
+      />
+      <Stack.Screen
+        name="List"
+        component={List}
+        options={{
+          animation: "slide_from_right",
+          header: (props) => <LeftHeader {...props} />,
+        }}
+      />
+      <Stack.Screen
+        name="Introduction"
+        component={Introduction}
+        options={{
+          animation: "slide_from_right",
+          header: (props) => <LeftHeader {...props} />,
+        }}
+      />
+      <Stack.Screen
+        name="Terms"
+        component={Terms}
+        options={{
+          animation: "slide_from_right",
+          header: (props) => <LeftHeader {...props} />,
+        }}
+      />
+      <Stack.Screen
+        name="About"
+        component={About}
         options={{
           animation: "slide_from_right",
           header: (props) => <LeftHeader {...props} />,
