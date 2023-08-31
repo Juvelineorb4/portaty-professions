@@ -1,20 +1,36 @@
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { View, Text, TouchableOpacity, Image, ActivityIndicator } from "react-native";
 import React, { useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Auth, API, Storage } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Favorites";
 import * as customFavorites from "@/graphql/CustomMutations/Favorites";
 import { Ionicons } from "@expo/vector-icons";
-const ItemProfile = ({ data, number, styled }) => {
+const ItemProfile = ({ data, identityID, styled }) => {
+  const [selectKey, setSelectKey] = useState('');
   const navigation = useNavigation();
-    return (
+  console.log(identityID)
+  const getImage = async () => {
+      try {
+        const url = await Storage.get(data.image, {
+          level: "protected",
+          identityId: identityID,
+        }).then((res) => setSelectKey(res));
+      } catch (error) {
+        console.log("toy", error);
+      }
+  };
+  useLayoutEffect(() => {
+    console.log(selectKey)
+    getImage()
+  }, []);
+  if (identityID) return (
     <TouchableOpacity
       style={styled.column}
       onPress={() =>
         navigation.navigate("Page", {
           data: {
             item: data,
-            image: `https://picsum.photos/id/${100 + number}/200/300`,
+            image: selectKey,
           },
         })
       }
@@ -23,17 +39,21 @@ const ItemProfile = ({ data, number, styled }) => {
         style={{
           justifyContent: "space-between",
           marginLeft: 10,
+          // alignItems: 'center',
+          // justifyContent: 'center'
         }}
       >
-        <Image
+        {selectKey !== '' ? <Image
           style={{
             width: 100,
             height: 100,
             resizeMode: "cover",
             borderRadius: 2,
           }}
-          source={{ uri: `https://picsum.photos/id/${100 + number}/200/300` }}
-        />
+          source={{ uri: selectKey }}
+        /> : <View style={{paddingTop: 40}}>
+ <ActivityIndicator />
+        </View>}
         <View
           style={{
             flexDirection: "row",

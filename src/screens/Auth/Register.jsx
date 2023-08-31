@@ -79,9 +79,9 @@ import {
           >
             <View style={[styles.content]}>
               <Text style={styles.title}>{es.authentication.register.title}</Text>
-              <View
+              {/* <View
                 style={{ flexDirection: "row", justifyContent: "space-between" }}
-              >
+              > */}
                 <CustomInput
                   control={control}
                   name={`name`}
@@ -124,7 +124,7 @@ import {
                     required: es.authentication.register.lastName.rules,
                   }}
                 />
-              </View>
+              {/* </View> */}
   
               <CustomInput
                 control={control}

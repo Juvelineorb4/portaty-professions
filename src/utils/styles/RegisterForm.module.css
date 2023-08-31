@@ -16,7 +16,7 @@
   flex: 1;
   font-family: "light";
   margin-left: 10px;
-  color: #5E2129;
+  color: #fb8500;
 }
 .inputContainer {
   flex-direction: row;
@@ -46,7 +46,7 @@
 .textInputBot {
   flex: 1;
   margin-left: 10px;
-  color: #5E2129;
+  color: #fb8500;
   font-family: "light";
 }
 .inputContainerBot {

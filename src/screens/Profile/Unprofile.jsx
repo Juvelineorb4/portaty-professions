@@ -16,7 +16,12 @@ const Unprofile = ({ navigation, route }) => {
   const [user, setUser] = useState([]);
   const [business, setBusiness] = useState([]);
   const status = useRecoilValue(profileState);
-
+  const onHandleLogout = async () => {
+    await Auth.signOut();
+    setTimeout(() => {
+      navigation.navigate("Login_Welcome");
+    }, 500);
+  };
   const User = async () => {
     const { attributes } = await Auth.currentAuthenticatedUser();
     const result = await API.graphql({
@@ -114,7 +119,8 @@ const Unprofile = ({ navigation, route }) => {
       <TouchableOpacity
         activeOpacity={1}
         onPress={() => navigation.navigate('List', {
-          data: business
+          data: business,
+          user: user[0]
         })}
       >
         <View style={[styles.line, global.bgWhiteSmoke]} />
@@ -167,7 +173,7 @@ const Unprofile = ({ navigation, route }) => {
                 />
               </TouchableOpacity>
             ) : (
-              <TouchableOpacity activeOpacity={1}>
+              <TouchableOpacity activeOpacity={1} onPress={onHandleLogout} >
                 <View style={[styles.line, global.bgWhiteSmoke]} />
                 <CustomSelect
                   title={button.title}
