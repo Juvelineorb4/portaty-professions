@@ -11,9 +11,15 @@ const ProfileHeader = () => {
         alignItems: 'center',
         justifyContent: 'space-between'
       }}>
-        <Text style={[{ fontFamily: "name", fontSize: 26 }, global.mainColor]}>
-          Portaty
-        </Text>
+        <Image
+          style={{
+            width: 80,
+            height: 50,
+            resizeMode: "cover",
+            marginLeft: -12
+          }}
+          source={require("@/utils/images/portaty.png")}
+        />
         <Image
           style={{
             width: 45,

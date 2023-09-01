@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
+  Image
 } from "react-native";
 import { Auth } from "aws-amplify";
 import styles from "@/utils/styles/Login.module.css";
@@ -69,6 +70,15 @@ const Login = ({ navigation }) => {
         >
           <View style={styles.content}>
             <Text style={styles.title}>{es.authentication.login.title}</Text>
+            <Image
+              style={{
+                width: 300,
+                height: 100,
+                marginBottom: 25,
+                resizeMode: "contain",
+              }}
+              source={require("@/utils/images/welcome.png")}
+            />
             <Text style={styles.name}>{es.authentication.login.name}</Text>
             {errorActive && (
               <Text style={styles.errorInputMain}>

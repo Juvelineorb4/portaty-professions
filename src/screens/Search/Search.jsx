@@ -17,6 +17,8 @@ import Slider from "@react-native-community/slider";
 import styles from "@/utils/styles/Tags.module.css";
 import { mapUser } from "@/atoms";
 import { useRecoilValue } from "recoil";
+import * as Location from "expo-location";
+import * as queries from "@/graphql/CustomQueries/Favorites";
 
 const Search = ({ route }) => {
   const global = require("@/utils/styles/global.js");
@@ -54,16 +56,46 @@ const Search = ({ route }) => {
       setTotalData(response.total);
       setTotalLimit(response.limit);
       let newItems = [];
+      let newRenderItems = [];
+      console.log(response.items.length);
       const long = 26;
-      for (let i = 0; i < response.items.length; i += long) {
-        let cut = response.items.slice(i, i + long);
-        newItems.push(cut);
+      const { attributes } = await Auth.currentAuthenticatedUser();
+
+      for (let i = 0; i < response.items.length; i += 1) {
+        try {
+          let result = await API.graphql({
+            query: queries.favoritesByBusinessID,
+            authMode: "AMAZON_COGNITO_USER_POOLS",
+            variables: {
+              businessID: response.items[i].id,
+              userID: {eq: attributes["custom:userTableID"]},
+            },
+          });
+          console.log(attributes["custom:userTableID"])
+
+          if (result.data.favoritesByBusinessID.items.length !== 0) {
+            newItems.push({
+              favorite: result.data.favoritesByBusinessID.items[0].id,
+              item: response.items[i],
+            });
+          } else {
+            newItems.push({
+              favorite: "",
+              item: response.items[i],
+            });
+          }
+          console.log(response.items.length);
+        } catch (error) {
+          // console.log(error)
+        }
       }
-      return setItems(newItems);
+      for (let i = 0; i < newItems.length; i += long) {
+        let cut = newItems.slice(i, i + long);
+        newRenderItems.push(cut);
+      }
+      return setItems(newRenderItems);
     } catch (error) {
-      return {
-        error: error,
-      };
+      return console.log(error);
     }
   };
   const getFilterData = async () => {
@@ -75,6 +107,7 @@ const Search = ({ route }) => {
   };
   useEffect(() => {
     getData();
+    console.log(moreItems);
   }, [route, moreItems]);
 
   if (items.length !== 0) {
