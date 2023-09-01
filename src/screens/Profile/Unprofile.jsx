@@ -35,19 +35,9 @@ const Unprofile = ({ navigation, route }) => {
       setBusiness(result.data.userByEmail.items[0].business.items);
     setUser([result.data.userByEmail.items[0]]);
   };
-  // const getImage = async () => {
-  //     try {
-  //       const url = await Storage.get(business[0].image, {
-  //         level: "protected",
-  //         identityId: user[0].identityID,
-  //       }).then((res) => setSelectKey(res));
-  //     } catch (error) {
-  //       console.log("toy", error);
-  //     }
-  // };
+
   useLayoutEffect(() => {
     User();
-    // getImage()
     console.log(business)
     console.log(status);
   }, [route, status]);
@@ -61,6 +51,12 @@ const Unprofile = ({ navigation, route }) => {
           {`Perfil`}
         </Text>
         <View style={[styles.line, global.bgWhiteSmoke]} />
+        <TouchableOpacity
+        activeOpacity={1}
+        onPress={() => navigation.navigate('Profile', {
+          user: user[0]
+        })}
+      >
         <CustomSelect
           title={`Mi cuenta`}
           subtitle={`Manten actualizado tus datos`}
@@ -79,6 +75,8 @@ const Unprofile = ({ navigation, route }) => {
             right: require("@/utils/images/arrow_right.png"),
           }}
         />
+      </TouchableOpacity>
+
       </View>
       <Text style={[styles.titleSettings, global.black, { marginTop: 20 }]}>
         {`Gestion`}
