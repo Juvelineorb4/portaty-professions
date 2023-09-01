@@ -5,6 +5,7 @@ import {
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import styles from "@/utils/styles/RegisterForm.module.css";
 import React, { useEffect, useState } from "react";
@@ -18,7 +19,13 @@ import * as customProfile from "@/graphql/CustomQueries/Profile";
 import * as mutations from "@/graphql/mutations";
 import CustomActivities from "@/components/CustomActivities";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { activitySelect, mapBusiness, mapUser, profileState, tagsList } from "@/atoms";
+import {
+  activitySelect,
+  mapBusiness,
+  mapUser,
+  profileState,
+  tagsList,
+} from "@/atoms";
 import * as MediaLibrary from "expo-media-library";
 import MapMarketBusiness from "@/components/MapMarketBusiness";
 import * as Location from "expo-location";
@@ -76,41 +83,46 @@ const Form = ({ navigation, route }) => {
   };
   const onRegisterBusiness = async (data) => {
     const { company, email, phone, wsme } = data;
-
     const storageFolder = company.replace(/ /g, "");
 
-    const { key } = await Storage.put(
-      `business/${storageFolder}/profile.jpg`,
-      blobImage,
-      {
-        level: "protected",
-        contentType: "image/jpeg",
-      }
-    );
-    const business = await API.graphql({
-      query: mutations.createBusiness,
-      authMode: "AMAZON_COGNITO_USER_POOLS",
-      variables: {
-        input: {
-          userID: user,
-          name: company,
-          email: email,
-          phone: phone,
-          whatsapp: wsme,
-          image: key,
-          coordinates: {
-            lat: map.latitude,
-            lon: map.longitude,
+    try {
+      const { key } = await Storage.put(
+        `business/${storageFolder}/profile.jpg`,
+        blobImage,
+        {
+          level: "protected",
+          contentType: "image/jpeg",
+        }
+      );
+      const business = await API.graphql({
+        query: mutations.createBusiness,
+        authMode: "AMAZON_COGNITO_USER_POOLS",
+        variables: {
+          input: {
+            userID: user,
+            name: company,
+            email: email,
+            phone: phone,
+            whatsapp: wsme,
+            image: key,
+            coordinates: {
+              lat: map.latitude,
+              lon: map.longitude,
+            },
+            activity: activity.name,
+            tags: tags,
           },
-          activity: activity.name,
-          tags: tags,
         },
-      },
-    });
-    console.log(business);
-    BlankInputs();
-    setStateProfile(true);
-    navigation.navigate("Profile");
+      });
+      console.log(business);
+      BlankInputs();
+      setStateProfile(true);
+      Alert.alert("REGISTRO EXITOSO");
+      navigation.navigate("Profile");
+    } catch (error) {
+      const { message } = new Error(error);
+      Alert.alert(message);
+    }
   };
   const MultipleData = async () => {
     const activities = await API.graphql({

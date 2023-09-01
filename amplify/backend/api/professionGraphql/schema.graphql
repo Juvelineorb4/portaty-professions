@@ -21,6 +21,7 @@ type Business
       { allow: owner }
       { allow: public }
       { allow: private, provider: iam, operations: [read] }
+      { allow: private, operations: [read] }
     ]
   ) {
   id: ID!
@@ -63,7 +64,11 @@ type Favorites
   ) {
   id: ID!
   businessID: ID!
-    @index(name: "byBusinessFavorites")
+    @index(
+      name: "byBusinessFavorites"
+      sortKeyFields: ["userID"]
+      queryField: "favoritesByBusinessID"
+    )
     @auth(
       rules: [
         { allow: owner }

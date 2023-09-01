@@ -819,6 +819,7 @@ export const listFavorites = /* GraphQL */ `
 export const favoritesByBusinessID = /* GraphQL */ `
   query FavoritesByBusinessID(
     $businessID: ID!
+    $userID: ModelIDKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelFavoritesFilterInput
     $limit: Int
@@ -826,6 +827,7 @@ export const favoritesByBusinessID = /* GraphQL */ `
   ) {
     favoritesByBusinessID(
       businessID: $businessID
+      userID: $userID
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
