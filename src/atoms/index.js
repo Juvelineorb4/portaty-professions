@@ -50,3 +50,7 @@ export const mapUser = atom({
   key: "mapUserValue",
   default: null,
 });
+export const favoriteSelection = atom({
+  key: "favoriteSelectionValue",
+  default: false,
+});

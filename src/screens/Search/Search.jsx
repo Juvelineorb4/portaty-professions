@@ -57,7 +57,6 @@ const Search = ({ route }) => {
       setTotalLimit(response.limit);
       let newItems = [];
       let newRenderItems = [];
-      console.log(response.items.length);
       const long = 26;
       const { attributes } = await Auth.currentAuthenticatedUser();
 
@@ -71,7 +70,6 @@ const Search = ({ route }) => {
               userID: {eq: attributes["custom:userTableID"]},
             },
           });
-          console.log(attributes["custom:userTableID"])
 
           if (result.data.favoritesByBusinessID.items.length !== 0) {
             newItems.push({
@@ -84,7 +82,6 @@ const Search = ({ route }) => {
               item: response.items[i],
             });
           }
-          console.log(response.items.length);
         } catch (error) {
           // console.log(error)
         }
@@ -107,7 +104,6 @@ const Search = ({ route }) => {
   };
   useEffect(() => {
     getData();
-    console.log(moreItems);
   }, [route, moreItems]);
 
   if (items.length !== 0) {
