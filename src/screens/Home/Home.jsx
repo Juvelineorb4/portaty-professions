@@ -16,6 +16,7 @@ import * as Location from "expo-location";
 import * as queries from "@/graphql/CustomQueries/Favorites";
 import CustomButton from "@/components/CustomButton";
 import styles from "@/utils/styles/Home.module.css";
+import { Ionicons } from '@expo/vector-icons';
 
 const Home = ({ navigation }) => {
   const global = require("@/utils/styles/global.js");
@@ -74,14 +75,7 @@ const Home = ({ navigation }) => {
             ]}
             onPress={() => setMode(!mode)}
           >
-            <Text
-              style={[
-                { fontSize: 14, fontFamily: "light" },
-                mode ? global.white : global.mainColor,
-              ]}
-            >
-              Grid
-            </Text>
+            <Ionicons name="grid-outline" size={18} color={mode ? '#ffffff' : '#fb8500'} />
           </TouchableOpacity>
           <TouchableOpacity
             style={[
@@ -98,14 +92,7 @@ const Home = ({ navigation }) => {
             ]}
             onPress={() => setMode(!mode)}
           >
-            <Text
-              style={[
-                { fontSize: 14, fontFamily: "light" },
-                !mode ? global.white : global.mainColor,
-              ]}
-            >
-              List
-            </Text>
+            <Ionicons name="list-outline" size={18} color={!mode ? '#ffffff' : '#fb8500'} />
           </TouchableOpacity>
         </View>
         <View style={{ padding: 10, paddingBottom: 80 }}>
