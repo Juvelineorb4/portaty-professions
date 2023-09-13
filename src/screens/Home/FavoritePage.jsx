@@ -18,15 +18,28 @@ import {
   EvilIcons,
   Feather,
 } from "@expo/vector-icons";
+import { Auth, API, Storage } from "aws-amplify";
+import * as queries from "@/graphql/CustomQueries/Favorites";
+import * as customFavorites from "@/graphql/CustomMutations/Favorites";
 
-const FavoritePage = ({ route }) => {
-  /*  */
+const FavoritePage = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
   const {
     data: { item, image },
   } = route.params;
-  // const {item, image} = data
-  console.log(item);
+  const onDeleteFavorite = async () => {
+    const favorites = await API.graphql({
+      query: customFavorites.deleteFavorites,
+      variables: {
+        input: {
+          id: item.id,
+        },
+      },
+      authMode: "AMAZON_COGNITO_USER_POOLS",
+    });
+    navigation.goBack();
+    console.log(favorites);
+  };
   return (
     <View
       style={[
@@ -57,7 +70,7 @@ const FavoritePage = ({ route }) => {
               overflow: "hidden",
               padding: 10,
               marginBottom: 20,
-              marginTop: 20
+              marginTop: 20,
             }}
           >
             <Image
@@ -71,6 +84,33 @@ const FavoritePage = ({ route }) => {
               source={{ uri: image }}
             />
           </View>
+        </View>
+        <View
+          style={{
+            // flex: 1,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: 20,
+          }}
+        >
+          <View
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text style={{ fontSize: 26, fontFamily: "thin" }}>0</Text>
+            <Text style={{ fontSize: 22, fontFamily: "thin" }}>Favoritos</Text>
+          </View>
+          <TouchableOpacity
+            style={[global.bgWhiteSmoke, { padding: 10, borderRadius: 8 }]}
+            onPress={onDeleteFavorite}
+          >
+            <Text style={{ fontSize: 14, fontFamily: "thin" }}>
+              Eliminar de favoritos
+            </Text>
+          </TouchableOpacity>
         </View>
         <View style={[styles.line, global.bgWhiteSmoke]} />
         <TouchableOpacity
@@ -223,7 +263,7 @@ const FavoritePage = ({ route }) => {
               {/* <FontAwesome name="phone" size={20} color="#1f1f1f" /> */}
               <Text
                 style={[
-                  { fontFamily: "thinItalic", fontSize: 15},
+                  { fontFamily: "thinItalic", fontSize: 15 },
                   global.midGray,
                 ]}
               >
@@ -249,7 +289,7 @@ const FavoritePage = ({ route }) => {
               {/* <FontAwesome name="whatsapp" size={22} color="#1f1f1f" /> */}
               <Text
                 style={[
-                  { fontFamily: "thinItalic", fontSize: 15},
+                  { fontFamily: "thinItalic", fontSize: 15 },
                   global.midGray,
                 ]}
               >

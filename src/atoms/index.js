@@ -57,6 +57,10 @@ export const profileState = atom({
   key: "profileStateValue",
   default: false,
 });
+export const favoritesState = atom({
+  key: "favoritesStateValue",
+  default: false,
+});
 export const filterState = atom({
   key: "filterStateValue",
   default: 0.01,
@@ -68,5 +72,5 @@ export const mapUser = atom({
 });
 export const favoriteSelection = atom({
   key: "favoriteSelectionValue",
-  default: false,
+  default: [],
 });

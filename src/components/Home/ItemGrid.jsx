@@ -10,11 +10,10 @@ import { favoriteSelection } from "@/atoms";
 import { AntDesign } from '@expo/vector-icons';
 
 const ItemGrid = ({ data, number, styled }) => {
-  const [save, setSave] = useState("");
   const [select, setSelect] = useState(false);
-  const [active, setActive] = useState(false);
   const [selection, setSelection] = useRecoilState(favoriteSelection);
   const navigation = useNavigation();
+  const selectionFavorite = selection.some((item) => item === data.id)
   const onDeleteFavorite = async () => {
     const favorites = await API.graphql({
       query: customFavorites.deleteFavorites,
@@ -26,24 +25,20 @@ const ItemGrid = ({ data, number, styled }) => {
       authMode: "AMAZON_COGNITO_USER_POOLS",
     });
     console.log(favorites);
-    setSave("");
-  };
-  const fetchFavorite = () => {
-    setSave(data.id);
-  };
-  const openOptions = () => {
-    setActive(!active);
   };
   useLayoutEffect(() => {
-    fetchFavorite();
+    // fetchFavorite();
   }, []);
-  if (save)
+  // if (save)
     return (
       <TouchableOpacity
         style={styled.column}
         onPress={() => {
-          if (select) {
-            setSelect(false)
+          if (selectionFavorite) {
+            // setSelect(false)
+            // console.log(selection)
+            let selections = selection.filter((item) => item !== data.id)
+            setSelection(selections);
           } else {
             navigation.navigate("FavoritePage", {
               data: {
@@ -55,8 +50,8 @@ const ItemGrid = ({ data, number, styled }) => {
         }          
         }
         onLongPress={() => {
-          setSelect(true);
-          setSelection(true);
+          // setSelect(true);
+          setSelection([...selection, data.id]);
         }}
         delayLongPress={1000}
         activeOpacity={1}
@@ -72,7 +67,7 @@ const ItemGrid = ({ data, number, styled }) => {
           }}
           source={{ uri: `https://picsum.photos/id/${100 + number}/200/300` }}
         />
-        {select ? (
+        {selectionFavorite ? (
           <View
             style={{
               position: 'absolute',

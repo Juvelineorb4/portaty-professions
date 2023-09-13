@@ -1,6 +1,5 @@
 import { View, Text, Image, ScrollView, TouchableOpacity, TextInput } from "react-native";
 import React, { useState, useEffect } from "react";
-import { Auth, API, Storage } from "aws-amplify";
 import * as customSearch from "@/graphql/CustomQueries/Search";
 import CustomSelect from "@/components/CustomSelect";
 import styles from "@/utils/styles/Unprofile.module.css";
@@ -12,14 +11,53 @@ import {
   Foundation,
   EvilIcons,
   Feather,
+  Fontisto
 } from "@expo/vector-icons";
+import { Auth, API, Storage } from "aws-amplify";
+import * as queries from "@/graphql/CustomQueries/Favorites";
+import * as customFavorites from "@/graphql/CustomMutations/Favorites";
 
 const SearchPost = ({ route }) => {
   const [post, setPost] = useState([])
+  const [save, setSave] = useState('')
   const global = require("@/utils/styles/global.js");
   const {
     data: { item, image },
   } = route.params;
+
+  const onCreateFavorite = async () => {
+    try {
+      const { attributes } = await Auth.currentAuthenticatedUser();
+      const favorites = await API.graphql({
+        query: customFavorites.createFavorites,
+        variables: {
+          input: {
+            businessID: post.id,
+            userID: attributes["custom:userTableID"],
+          },
+        },
+        authMode: "AMAZON_COGNITO_USER_POOLS",
+      });
+      console.log(favorites.data.createFavorites);
+      setSave(favorites.data.createFavorites.id);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const onDeleteFavorite = async () => {
+    const favorites = await API.graphql({
+      query: customFavorites.deleteFavorites,
+      variables: {
+        input: {
+          id: save,
+        },
+      },
+      authMode: "AMAZON_COGNITO_USER_POOLS",
+    });
+    console.log(favorites);
+    setSave('')
+  };
 
   const fetchData = async () => {
     try {
@@ -35,7 +73,25 @@ const SearchPost = ({ route }) => {
       console.log(error);
     }
   };
+
+  const fetchFavorite = async () => {
+    try {
+      const { attributes } = await Auth.currentAuthenticatedUser();
+      const favorite = await API.graphql({
+        query: queries.favoritesByBusinessID,
+        authMode: "AMAZON_COGNITO_USER_POOLS",
+        variables: {
+            businessID: item,
+            userID: {eq: attributes["custom:userTableID"]},
+        },
+      });
+      if (favorite.data.favoritesByBusinessID.items.length !== 0 ) setSave(favorite.data.favoritesByBusinessID.items[0].id);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
+    fetchFavorite()
     fetchData()
   }, [])
   
@@ -83,6 +139,44 @@ const SearchPost = ({ route }) => {
               source={{ uri: image }}
             />
           </View>
+          {/* <View>
+          <Fontisto name="heart" size={23} color="#e31b23" />
+          <Text>Agregado a favoritos</Text>
+
+          </View> */}
+        </View>
+        <View
+          style={{
+            // flex: 1,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: 20,
+          }}
+        >
+          <View
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text style={{ fontSize: 26, fontFamily: "thin" }}>0</Text>
+            <Text style={{ fontSize: 22, fontFamily: "thin" }}>Favoritos</Text>
+          </View>
+          <TouchableOpacity
+            style={[save === '' ? global.mainBgColor : global.bgWhiteSmoke, { padding: 10, borderRadius: 8 }]}
+            onPress={() => {
+              if(save === '') {
+                onCreateFavorite()
+              } else {
+                onDeleteFavorite()
+              }
+            }}
+          >
+            <Text style={[{ fontSize: 14, fontFamily: "thin" }, save === '' ? global.white : global.black]}>
+              {save === '' ? 'Agregar a favoritos' : 'Eliminar de favoritos'}
+            </Text>
+          </TouchableOpacity>
         </View>
         <View style={[styles.line, global.bgWhiteSmoke]} />
         <TouchableOpacity
