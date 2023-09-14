@@ -7,6 +7,7 @@ export const createFavorites = /* GraphQL */ `
       id
       businessID
       userID
+      position
       owner
       createdAt
       updatedAt
@@ -22,6 +23,19 @@ export const deleteFavorites = /* GraphQL */ `
   ) {
     deleteFavorites(input: $input, condition: $condition) {
       id
+    }
+  }
+`;
+
+export const updateFavorites = /* GraphQL */ `
+  mutation UpdateFavorites(
+    $input: UpdateFavoritesInput!
+    $condition: ModelFavoritesConditionInput
+  ) {
+    updateFavorites(input: $input, condition: $condition) {
+      id
+      businessID
+      position
     }
   }
 `;

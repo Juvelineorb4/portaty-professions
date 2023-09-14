@@ -34,6 +34,7 @@ const SearchPost = ({ route }) => {
           input: {
             businessID: post.id,
             userID: attributes["custom:userTableID"],
+            position: 0
           },
         },
         authMode: "AMAZON_COGNITO_USER_POOLS",
