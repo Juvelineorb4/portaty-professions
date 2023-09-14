@@ -5,6 +5,8 @@ import {
   TextInput,
   ScrollView,
   TouchableOpacity,
+  Share,
+  Linking
 } from "react-native";
 import React from "react";
 import CustomSelect from "@/components/CustomSelect";
@@ -40,6 +42,21 @@ const FavoritePage = ({ navigation, route }) => {
     navigation.goBack();
     console.log(favorites);
   };
+
+  const onShare = async () => {
+    try {
+      await Share.share({
+        message:
+          "Han compartido contigo un negocio, da click para mirarlo app://portaty.com",
+      });
+    } catch (error) {
+      console.error("Error sharing:", error);
+    }
+  };
+  const openCall = () =>{
+    const url=`tel://${item.business.phone}`
+    Linking.openURL(url)
+  }
   return (
     <View
       style={[
@@ -120,6 +137,7 @@ const FavoritePage = ({ navigation, route }) => {
             justifyContent: "space-between",
             alignItems: "center",
           }}
+          onPress={onShare}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <View
@@ -162,6 +180,7 @@ const FavoritePage = ({ navigation, route }) => {
             alignItems: "center",
             marginTop: -25,
           }}
+          onPress={openCall}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <View

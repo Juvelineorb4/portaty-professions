@@ -5,6 +5,7 @@ import {
   TextInput,
   ScrollView,
   TouchableOpacity,
+  Share
 } from "react-native";
 import React from "react";
 import CustomSelect from "@/components/CustomSelect";
@@ -30,6 +31,16 @@ const Page = ({ route }) => {
   } = route.params;
   // const {item, image} = data
   console.log(item);
+  const onShare = async () => {
+    try {
+      await Share.share({
+        message:
+          "Han compartido contigo un negocio, da click para mirarlo app://portaty.com",
+      });
+    } catch (error) {
+      console.error("Error sharing:", error);
+    }
+  };
   return (
     <View
       style={[
@@ -93,6 +104,7 @@ const Page = ({ route }) => {
             justifyContent: "space-between",
             alignItems: "center",
           }}
+          onPress={onShare}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <View

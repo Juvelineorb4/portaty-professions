@@ -1,4 +1,4 @@
-import { View, Text, Image, ScrollView, TouchableOpacity, TextInput } from "react-native";
+import { View, Text, Image, ScrollView, TouchableOpacity, TextInput, Share, Linking } from "react-native";
 import React, { useState, useEffect } from "react";
 import * as customSearch from "@/graphql/CustomQueries/Search";
 import CustomSelect from "@/components/CustomSelect";
@@ -90,6 +90,20 @@ const SearchPost = ({ route }) => {
       console.log(error);
     }
   };
+  const onShare = async () => {
+    try {
+      await Share.share({
+        message:
+          "Han compartido contigo un negocio, da click para mirarlo app://portaty.com",
+      });
+    } catch (error) {
+      console.error("Error sharing:", error);
+    }
+  };
+  const openCall = () =>{
+    const url=`tel://${post.phone}`
+    Linking.openURL(url)
+  }
   useEffect(() => {
     fetchFavorite()
     fetchData()
@@ -186,6 +200,7 @@ const SearchPost = ({ route }) => {
             justifyContent: "space-between",
             alignItems: "center",
           }}
+          onPress={onShare}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <View
@@ -228,6 +243,7 @@ const SearchPost = ({ route }) => {
             alignItems: "center",
             marginTop: -25,
           }}
+          onPress={openCall}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <View

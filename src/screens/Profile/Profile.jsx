@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   TextInput,
   Switch,
+  Share
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Auth, API, Storage } from "aws-amplify";
@@ -27,6 +28,16 @@ const Profile = ({ route }) => {
   const { user } = route.params;
   const [editActive, setEditActive] = useState(false);
   console.log(user);
+  const onShare = async () => {
+    try {
+      await Share.share({
+        message:
+          "Han compartido contigo un negocio, da click para mirarlo app://portaty.com",
+      });
+    } catch (error) {
+      console.error("Error sharing:", error);
+    }
+  };
   return (
     <View
       style={[
@@ -58,6 +69,7 @@ const Profile = ({ route }) => {
             justifyContent: "space-between",
             alignItems: "center",
           }}
+          onPress={onShare}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <View
