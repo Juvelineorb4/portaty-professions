@@ -121,3 +121,32 @@ export const favoritesByBusinessID = /* GraphQL */ `
     }
   }
 `;
+
+export const userByEmailPosition = /* GraphQL */ `
+  query UserByEmail(
+    $email: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelUsersFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    userByEmail(
+      email: $email
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        favorites {
+          items {
+            id
+            position
+          }
+        }
+      }
+      nextToken
+    }
+  }
+`;

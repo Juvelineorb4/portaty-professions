@@ -7,14 +7,14 @@ import * as customFavorites from "@/graphql/CustomMutations/Favorites";
 import { Ionicons } from "@expo/vector-icons";
 import { useRecoilState } from "recoil";
 import { favoriteSelection } from "@/atoms";
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, EvilIcons } from "@expo/vector-icons";
 
 const ItemGrid = ({ data, number, styled }) => {
-  const [save, setSave] = useState("");
+  const global = require("@/utils/styles/global.js");
   const [select, setSelect] = useState(false);
-  const [active, setActive] = useState(false);
   const [selection, setSelection] = useRecoilState(favoriteSelection);
   const navigation = useNavigation();
+  const selectionFavorite = selection.some((item) => item === data.id);
   const onDeleteFavorite = async () => {
     const favorites = await API.graphql({
       query: customFavorites.deleteFavorites,
@@ -26,72 +26,72 @@ const ItemGrid = ({ data, number, styled }) => {
       authMode: "AMAZON_COGNITO_USER_POOLS",
     });
     console.log(favorites);
-    setSave("");
-  };
-  const fetchFavorite = () => {
-    setSave(data.id);
-  };
-  const openOptions = () => {
-    setActive(!active);
   };
   useLayoutEffect(() => {
-    fetchFavorite();
+    console.log(data.position);
   }, []);
-  if (save)
-    return (
-      <TouchableOpacity
-        style={styled.column}
-        onPress={() => {
-          if (select) {
-            setSelect(false)
-          } else {
-            navigation.navigate("FavoritePage", {
-              data: {
-                item: data,
-                image: `https://picsum.photos/id/${100 + number}/200/300`,
-              },
-            })
-          }
-        }          
+  // if (save)
+  return (
+    <TouchableOpacity
+      style={styled.column}
+      onPress={() => {
+        if (selectionFavorite) {
+          // setSelect(false)
+          // console.log(selection)
+          let selections = selection.filter((item) => item !== data.id);
+          setSelection(selections);
+        } else {
+          navigation.navigate("FavoritePage", {
+            data: {
+              item: data,
+              image: `https://picsum.photos/id/${100 + number}/200/300`,
+            },
+          });
         }
-        onLongPress={() => {
-          setSelect(true);
-          setSelection(true);
+      }}
+      onLongPress={() => {
+        // setSelect(true);
+        setSelection([...selection, data.id]);
+      }}
+      delayLongPress={1000}
+      activeOpacity={1}
+    >
+      <Image
+        style={{
+          width: "100%",
+          height: "100%",
+          resizeMode: "cover",
+          // marginLeft: 5,
+          borderRadius: 2,
         }}
-        delayLongPress={1000}
-        activeOpacity={1}
-
-      >
-        <Image
+        source={{ uri: `https://picsum.photos/id/${100 + number}/200/300` }}
+      />
+      {selectionFavorite ? (
+        <View
           style={{
+            position: "absolute",
             width: "100%",
             height: "100%",
-            resizeMode: "cover",
-            // marginLeft: 5,
-            borderRadius: 2,
+            backgroundColor: "#fff",
+            opacity: 0.7,
+            alignItems: "center",
+            justifyContent: "center",
           }}
-          source={{ uri: `https://picsum.photos/id/${100 + number}/200/300` }}
-        />
-        {select ? (
-          <View
-            style={{
-              position: 'absolute',
-              width: "100%",
-              height: "100%",
-              backgroundColor: "#fff",
-              opacity: 0.7,
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-          >
-            <AntDesign name="checkcircleo" size={18} color="green" />
-            <Text style={{fontSize: 12, fontFamily: 'thin', marginTop: 5}}>Seleccionado</Text>
-          </View>
-        ) : (
-          ""
-        )}
-
-        {/* <TouchableOpacity style={styled.options} onPress={openOptions}>
+        >
+          <AntDesign name="checkcircleo" size={18} color="green" />
+          <Text style={{ fontSize: 12, fontFamily: "thin", marginTop: 5 }}>
+            Seleccionado
+          </Text>
+        </View>
+      ) : (
+        ""
+      )}
+      {data.position > 0 && (
+        <View style={[{position: 'absolute', width: 25, height: 25, borderRadius: 5, opacity: 0.5, alignItems: 'center', justifyContent: 'center', left: 4, top: 3 }, global.bgMidGray]}>
+          <EvilIcons name="lock" size={26} color="#1f1f1f" />
+        </View>
+      )}
+      {/* <TouchableOpacity style={styled.options} onPress={openOptions}>
         <Ionicons name="ellipsis-vertical-outline" size={24} color="black" />
           {active && (
             <View style={styled.modal}>
@@ -102,8 +102,8 @@ const ItemGrid = ({ data, number, styled }) => {
             </View>
           )}
         </TouchableOpacity> */}
-      </TouchableOpacity>
-    );
+    </TouchableOpacity>
+  );
 };
 
 export default ItemGrid;

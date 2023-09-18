@@ -10,17 +10,20 @@ import { Auth, API } from "aws-amplify";
 import { searchBusinessByDistance, searchByDistance } from "@/graphql/queries";
 import Grid from "@/components/Home/Grid";
 import List from "@/components/Home/List";
-import { mapUser } from "@/atoms";
-import { useRecoilState } from "recoil";
+import { favoritesState, mapUser } from "@/atoms";
+import { useRecoilState, useRecoilValue } from "recoil";
 import * as Location from "expo-location";
 import * as queries from "@/graphql/CustomQueries/Favorites";
 import CustomButton from "@/components/CustomButton";
 import styles from "@/utils/styles/Home.module.css";
+import { Ionicons } from '@expo/vector-icons';
 
-const Home = ({ navigation }) => {
+const Home = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
   const [mode, setMode] = useState(false);
   const [userLocation, setUserLocation] = useRecoilState(mapUser);
+  const statusFavorites = useRecoilValue(favoritesState);
+  console.log(statusFavorites)
   const [favoritesList, setFavoritesList] = useState([]);
   const [nothing, setNothing] = useState(false);
   const fetchFavorites = async () => {
@@ -49,7 +52,7 @@ const Home = ({ navigation }) => {
       }
     })();
     fetchFavorites();
-  }, []);
+  }, [route, statusFavorites]);
 
   if (favoritesList.length !== 0)
     return (
@@ -75,14 +78,7 @@ const Home = ({ navigation }) => {
             ]}
             onPress={() => setMode(!mode)}
           >
-            <Text
-              style={[
-                { fontSize: 14, fontFamily: "light" },
-                mode ? global.white : global.mainColor,
-              ]}
-            >
-              Grid
-            </Text>
+            <Ionicons name="grid-outline" size={18} color={mode ? '#ffffff' : '#fb8500'} />
           </TouchableOpacity>
           <TouchableOpacity
             style={[
@@ -99,14 +95,7 @@ const Home = ({ navigation }) => {
             ]}
             onPress={() => setMode(!mode)}
           >
-            <Text
-              style={[
-                { fontSize: 14, fontFamily: "light" },
-                !mode ? global.white : global.mainColor,
-              ]}
-            >
-              List
-            </Text>
+            <Ionicons name="list-outline" size={18} color={!mode ? '#ffffff' : '#fb8500'} />
           </TouchableOpacity>
         </View>
         <View style={{ padding: 10, paddingBottom: 80 }}>
@@ -123,7 +112,7 @@ const Home = ({ navigation }) => {
                 global.bgWhite,
               ]}
             >
-              <ActivityIndicator size="large" color="#5E2129" />
+              <ActivityIndicator size="large" color="#fb8500" />
             </View>
           )}
         </View>
@@ -145,7 +134,7 @@ const Home = ({ navigation }) => {
           global.bgWhite,
         ]}
       >
-        <ActivityIndicator size="large" color="#5E2129" />
+        <ActivityIndicator size="large" color="#fb8500" />
       </View>
     );
 

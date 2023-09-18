@@ -36,9 +36,29 @@ export const businessProfile = atom({
   key: "businessProfileValue",
   default: [],
 });
+export const searchStatus = atom({
+  key: "searchStatusValue",
+  default: false,
+});
+export const searchCache = atom({
+  key: "searchCacheValue",
+  default: [],
+});
+export const kmRadio = atom({
+  key: "kmRadioValue",
+  default: 1,
+});
+export const totalSearch = atom({
+  key: "totalSearchValue",
+  default: 2,
+});
 
 export const profileState = atom({
   key: "profileStateValue",
+  default: false,
+});
+export const favoritesState = atom({
+  key: "favoritesStateValue",
   default: false,
 });
 export const filterState = atom({
@@ -52,5 +72,5 @@ export const mapUser = atom({
 });
 export const favoriteSelection = atom({
   key: "favoriteSelectionValue",
-  default: false,
+  default: [],
 });

@@ -67,3 +67,30 @@ export const searchBusinesses = /* GraphQL */ `
     }
   }
 `;
+
+export const getBusiness = /* GraphQL */ `
+  query GetBusiness($id: ID!) {
+    getBusiness(id: $id) {
+      id
+      userID
+      name
+      image
+      email
+      phone
+      whatsapp
+      instagram
+      facebook
+      page
+      coordinates {
+        lat
+        lon
+        __typename
+      }
+      activity
+      tags
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;

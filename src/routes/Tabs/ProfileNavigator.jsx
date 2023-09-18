@@ -19,7 +19,7 @@ const ProfileNavigator = () => {
       <Stack.Screen
         name="Profile"
         component={Profile}
-        options={{ header: (props) => <ProfileHeader {...props} /> }}
+        options={{ header: (props) => <LeftHeader {...props} /> }}
       />
       <Stack.Screen
         name="Unprofile"

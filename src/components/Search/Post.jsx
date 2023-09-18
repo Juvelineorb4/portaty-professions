@@ -11,46 +11,46 @@ import { userAuthenticated } from "@/atoms";
 const Post = ({ data, image, styled }) => {
   const navigation = useNavigation();
   const [save, setSave] = useState("");
-  const onCreateFavorite = async () => {
-    try {
-      const { attributes } = await Auth.currentAuthenticatedUser();
-      const favorites = await API.graphql({
-        query: customFavorites.createFavorites,
-        variables: {
-          input: {
-            businessID: data.item.id,
-            userID: attributes["custom:userTableID"],
-          },
-        },
-        authMode: "AMAZON_COGNITO_USER_POOLS",
-      });
-      console.log(favorites.data.createFavorites);
-      setSave(favorites.data.createFavorites.id);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const onCreateFavorite = async () => {
+  //   try {
+  //     const { attributes } = await Auth.currentAuthenticatedUser();
+  //     const favorites = await API.graphql({
+  //       query: customFavorites.createFavorites,
+  //       variables: {
+  //         input: {
+  //           businessID: data.item.id,
+  //           userID: attributes["custom:userTableID"],
+  //         },
+  //       },
+  //       authMode: "AMAZON_COGNITO_USER_POOLS",
+  //     });
+  //     console.log(favorites.data.createFavorites);
+  //     setSave(favorites.data.createFavorites.id);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
-  const onDeleteFavorite = async () => {
-    const favorites = await API.graphql({
-      query: customFavorites.deleteFavorites,
-      variables: {
-        input: {
-          id: save,
-        },
-      },
-      authMode: "AMAZON_COGNITO_USER_POOLS",
-    });
-    console.log(favorites);
-    setSave("");
-  };
+  // const onDeleteFavorite = async () => {
+  //   const favorites = await API.graphql({
+  //     query: customFavorites.deleteFavorites,
+  //     variables: {
+  //       input: {
+  //         id: save,
+  //       },
+  //     },
+  //     authMode: "AMAZON_COGNITO_USER_POOLS",
+  //   });
+  //   console.log(favorites);
+  //   setSave("");
+  // };
 
-  const fetchFavorite = () => {
-    setSave(data.favorite)
-  };
+  // const fetchFavorite = () => {
+  //   setSave(data.favorite)
+  // };
 
   useLayoutEffect(() => {
-    fetchFavorite();
+    // fetchFavorite();
   }, []);
   return (
     <TouchableOpacity
@@ -63,7 +63,7 @@ const Post = ({ data, image, styled }) => {
       onPress={() =>
         navigation.navigate("SearchPost", {
           data: {
-            item: data.item,
+            item: data,
             image: image,
           },
         })
@@ -78,7 +78,7 @@ const Post = ({ data, image, styled }) => {
         }}
         source={{ uri: image }}
       />
-      {save ? (
+      {/* {save ? (
         <TouchableOpacity
           onPress={() => {
             onDeleteFavorite();
@@ -104,7 +104,7 @@ const Post = ({ data, image, styled }) => {
         >
           <Fontisto name="heart-alt" size={23} color="#ffffff" />
         </TouchableOpacity>
-      )}
+      )} */}
     </TouchableOpacity>
   );
 };
