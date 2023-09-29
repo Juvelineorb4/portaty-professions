@@ -29,8 +29,6 @@ const Page = ({ route }) => {
   const {
     data: { item, image },
   } = route.params;
-  // const {item, image} = data
-  console.log(item);
   const onShare = async () => {
     try {
       await Share.share({
@@ -93,7 +91,7 @@ const Page = ({ route }) => {
             justifyContent: "center",
           }}
         >
-          <Text style={{ fontSize: 26, fontFamily: "thin" }}>0</Text>
+          <Text style={{ fontSize: 26, fontFamily: "thin" }}>{item.favorites?.items.length}</Text>
           <Text style={{ fontSize: 22, fontFamily: "thin" }}>Favoritos</Text>
         </View>
         <View style={[styles.line, global.bgWhiteSmoke]} />

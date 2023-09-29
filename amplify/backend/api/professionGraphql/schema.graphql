@@ -63,6 +63,13 @@ type Favorites
     ]
   ) {
   id: ID!
+    @auth(
+      rules: [
+        { allow: owner }
+        { allow: groups, groups: ["sp"], operations: [read] }
+        { allow: private, provider: iam, operations: [read] }
+      ]
+    )
   businessID: ID!
     @index(
       name: "byBusinessFavorites"
@@ -73,6 +80,7 @@ type Favorites
       rules: [
         { allow: owner }
         { allow: groups, groups: ["sp"], operations: [read] }
+        { allow: private, provider: iam, operations: [read] }
       ]
     )
   business: Business @belongsTo(fields: ["businessID"])
@@ -82,6 +90,7 @@ type Favorites
       rules: [
         { allow: owner }
         { allow: groups, groups: ["sp"], operations: [read] }
+        { allow: private, provider: iam, operations: [read] }
       ]
     )
   user: Users @belongsTo(fields: ["userID"])

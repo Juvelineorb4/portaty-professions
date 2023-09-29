@@ -88,9 +88,26 @@ export const getBusiness = /* GraphQL */ `
       }
       activity
       tags
+      favorites {
+        items {
+          id
+        }
+      }
       createdAt
       updatedAt
       __typename
+    }
+  }
+`;
+export const getBusinessFavorites = /* GraphQL */ `
+  query GetBusiness($id: ID!) {
+    getBusiness(id: $id) {
+      id
+      favorites {
+        items {
+          id
+        }
+      }
     }
   }
 `;

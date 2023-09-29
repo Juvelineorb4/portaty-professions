@@ -15,7 +15,13 @@ import * as customSearch from "@/graphql/CustomQueries/Search";
 import { Auth, API, Storage } from "aws-amplify";
 import Slider from "@react-native-community/slider";
 import styles from "@/utils/styles/Tags.module.css";
-import { mapUser, searchStatus, searchCache, kmRadio, totalSearch } from "@/atoms";
+import {
+  mapUser,
+  searchStatus,
+  searchCache,
+  kmRadio,
+  totalSearch,
+} from "@/atoms";
 import { useRecoilState, useRecoilValue } from "recoil";
 import * as Location from "expo-location";
 import * as queries from "@/graphql/CustomQueries/Favorites";
@@ -32,6 +38,15 @@ const Search = ({ route }) => {
   const [statusFilter, setStatusFilter] = useState(false);
   const [filterRadio, setFilterRadio] = useRecoilState(kmRadio);
   const location = useRecoilValue(mapUser);
+  const kilometers = [
+    1,
+    5,
+    10,
+    20,
+    50,
+    100
+  ]
+  console.log(filterRadio);
   let number = 26 * moreItems;
   const getData = async () => {
     const api = "api-professions-gateway";
@@ -170,17 +185,40 @@ const Search = ({ route }) => {
                   <Text
                     style={styles.modalText}
                   >{`La distancia de tu radio son: ${filterRadio} km`}</Text>
-                  <Slider
-                    style={{ height: 100 }}
-                    minimumValue={1}
-                    maximumValue={100}
-                    onValueChange={(e) => setFilterRadio(e)}
-                    step={1}
-                    minimumTrackTintColor="#fb8500"
-                    maximumTrackTintColor="#1f1f1f"
-                    thumbTintColor="#fb8500"
-                    value={filterRadio}
-                  />
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      flexWrap: "wrap",
+                      marginVertical: 15
+                    }}
+                  >
+                    {kilometers.map((item, index) => (
+                      <TouchableOpacity
+                      key={index}
+                      onPress={() => setFilterRadio(item)}
+                      style={[
+                        filterRadio === item ? global.mainBgColor : global.bgWhite,
+                        {
+                          padding: 7,
+                          borderRadius: 4,
+                          marginBottom: 7,
+                          borderWidth: 0.5,
+                          borderColor: filterRadio === item ? '#fff' : '#000'
+                        },
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          { fontFamily: "regular", fontSize: 12 },
+                          filterRadio === item ? global.white : global.black,
+                        ]}
+                      >
+                        {item}km
+                      </Text>
+                    </TouchableOpacity>
+                    ))}
+                  </View>
                   <Text
                     style={styles.modalText}
                   >{`La distancia esta reflejada en un radio de kilometros`}</Text>
@@ -225,37 +263,39 @@ const Search = ({ route }) => {
           >
             <ActivityIndicator size="large" color="#fb8500" />
           </View>
-        ) : ( searchActive ?  <FlatList
-          data={searchCacheActive}
-          renderItem={({ item, index }) => (
-            <GridSearch renderItems={item} more={index} />
-          )}
-          keyExtractor={(item, index) => index}
-          ListFooterComponent={() => (
-            <View
-              style={{
-                height: 100,
-                background: "#ffffff",
-                alignItems: "center",
-                justifyContent: "center",
-                paddingBottom: 20,
-              }}
-            >
-              {/* {totalData > totalLimit && (
+        ) : searchActive ? (
+          <FlatList
+            data={searchCacheActive}
+            renderItem={({ item, index }) => (
+              <GridSearch renderItems={item} more={index} />
+            )}
+            keyExtractor={(item, index) => index}
+            ListFooterComponent={() => (
+              <View
+                style={{
+                  height: 100,
+                  background: "#ffffff",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  paddingBottom: 20,
+                }}
+              >
+                {/* {totalData > totalLimit && (
                 <ActivityIndicator size="large" color="#5E2129" />
               )} */}
-              {totalData === totalLimit && (
-                <Text style={{ fontFamily: "light", fontSize: 14 }}>
-                  No hay mas negocios por mostrar
-                </Text>
-              )}
-            </View>
-          )}
-          onEndReached={() => {
-            if (totalData > totalLimit) setMoreItems(moreItems + 1);
-          }}
-          onEndReachedThreshold={0}
-        /> :
+                {totalData === totalLimit && (
+                  <Text style={{ fontFamily: "light", fontSize: 14 }}>
+                    No hay mas negocios por mostrar
+                  </Text>
+                )}
+              </View>
+            )}
+            onEndReached={() => {
+              if (totalData > totalLimit) setMoreItems(moreItems + 1);
+            }}
+            onEndReachedThreshold={0}
+          />
+        ) : (
           items.length !== 0 && (
             <FlatList
               data={items}

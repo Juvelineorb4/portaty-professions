@@ -36,6 +36,11 @@ export const userByEmail = /* GraphQL */ `
               facebook
               page
               activity
+              favorites {
+                items {
+                  id
+                }
+              }
               tags
               createdAt
               updatedAt
