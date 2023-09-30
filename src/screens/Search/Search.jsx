@@ -15,7 +15,13 @@ import * as customSearch from "@/graphql/CustomQueries/Search";
 import { Auth, API, Storage } from "aws-amplify";
 import Slider from "@react-native-community/slider";
 import styles from "@/utils/styles/Tags.module.css";
-import { mapUser, searchStatus, searchCache, kmRadio, totalSearch } from "@/atoms";
+import {
+  mapUser,
+  searchStatus,
+  searchCache,
+  kmRadio,
+  totalSearch,
+} from "@/atoms";
 import { useRecoilState, useRecoilValue } from "recoil";
 import * as Location from "expo-location";
 import * as queries from "@/graphql/CustomQueries/Favorites";
@@ -229,37 +235,39 @@ const Search = ({ route }) => {
           >
             <ActivityIndicator size="large" color="#fb8500" />
           </View>
-        ) : ( searchActive ?  <FlatList
-          data={searchCacheActive}
-          renderItem={({ item, index }) => (
-            <GridSearch renderItems={item} more={index} />
-          )}
-          keyExtractor={(item, index) => index}
-          ListFooterComponent={() => (
-            <View
-              style={{
-                height: 100,
-                background: "#ffffff",
-                alignItems: "center",
-                justifyContent: "center",
-                paddingBottom: 20,
-              }}
-            >
-              {/* {totalData > totalLimit && (
+        ) : searchActive ? (
+          <FlatList
+            data={searchCacheActive}
+            renderItem={({ item, index }) => (
+              <GridSearch renderItems={item} more={index} />
+            )}
+            keyExtractor={(item, index) => index}
+            ListFooterComponent={() => (
+              <View
+                style={{
+                  height: 100,
+                  background: "#ffffff",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  paddingBottom: 20,
+                }}
+              >
+                {/* {totalData > totalLimit && (
                 <ActivityIndicator size="large" color="#5E2129" />
               )} */}
-              {totalData === totalLimit && (
-                <Text style={{ fontFamily: "light", fontSize: 14 }}>
-                  No hay mas negocios por mostrar
-                </Text>
-              )}
-            </View>
-          )}
-          onEndReached={() => {
-            if (totalData > totalLimit) setMoreItems(moreItems + 1);
-          }}
-          onEndReachedThreshold={0}
-        /> :
+                {totalData === totalLimit && (
+                  <Text style={{ fontFamily: "light", fontSize: 14 }}>
+                    No hay mas negocios por mostrar
+                  </Text>
+                )}
+              </View>
+            )}
+            onEndReached={() => {
+              if (totalData > totalLimit) setMoreItems(moreItems + 1);
+            }}
+            onEndReachedThreshold={0}
+          />
+        ) : (
           items.length !== 0 && (
             <FlatList
               data={items}

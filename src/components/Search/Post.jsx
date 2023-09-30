@@ -11,6 +11,13 @@ import { userAuthenticated } from "@/atoms";
 const Post = ({ data, image, styled }) => {
   const navigation = useNavigation();
   const [save, setSave] = useState("");
+
+  const roundNumber = (num) => {
+    numero = parseFloat(num);
+
+    // Usar toFixed para mostrar dos decimales
+    return numero.toFixed(1);
+  };
   // const onCreateFavorite = async () => {
   //   try {
   //     const { attributes } = await Auth.currentAuthenticatedUser();
@@ -63,7 +70,7 @@ const Post = ({ data, image, styled }) => {
       onPress={() =>
         navigation.navigate("SearchPost", {
           data: {
-            item: data,
+            item: data.id,
             image: image,
           },
         })
@@ -78,6 +85,11 @@ const Post = ({ data, image, styled }) => {
         }}
         source={{ uri: image }}
       />
+      <Text
+        style={{ position: "absolute", color: "white", left: 5, bottom: 5 }}
+      >
+        Dist: {roundNumber(data.distance)}Km
+      </Text>
       {/* {save ? (
         <TouchableOpacity
           onPress={() => {
