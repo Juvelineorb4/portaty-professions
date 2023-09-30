@@ -3,32 +3,26 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  Alert,
   Modal,
   Pressable,
 } from "react-native";
 import React, { useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { Auth, API, Storage } from "aws-amplify";
-import * as queries from "@/graphql/CustomQueries/Favorites";
-import * as customFavorites from "@/graphql/CustomMutations/Favorites";
-import { Fontisto } from "@expo/vector-icons";
-import { useRecoilValue } from "recoil";
-import { userAuthenticated } from "@/atoms";
+import { API } from "aws-amplify";
 import styles from "@/utils/styles/Post.module.css";
 import * as customSearch from "@/graphql/CustomQueries/Search";
 
 const Post = ({ data, image, styled }) => {
   const global = require("@/utils/styles/global.js");
   const navigation = useNavigation();
-  const [post, setPost] = useState([])
+  const [post, setPost] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const fetchData = async () => {
     try {
       const business = await API.graphql({
         query: customSearch.getBusinessFavorites,
         variables: {
-            id: data.id,
+          id: data.id,
         },
         authMode: "AWS_IAM",
       });
@@ -37,8 +31,15 @@ const Post = ({ data, image, styled }) => {
       console.log(error);
     }
   };
+
+  const roundNumber = (num) => {
+    numero = parseFloat(num);
+    // Usar toFixed para mostrar dos decimales
+    return numero.toFixed(1);
+  };
+
   useLayoutEffect(() => {
-    fetchData()
+    fetchData();
   }, []);
   return (
     <TouchableOpacity
@@ -48,7 +49,15 @@ const Post = ({ data, image, styled }) => {
           position: "relative",
         },
       ]}
-      onPress={() => setModalVisible(!modalVisible)}
+      onPress={() => {
+        setModalVisible(!modalVisible);
+        navigation.navigate("SearchPost", {
+          data: {
+            item: data.id,
+            image: image,
+          },
+        });
+      }}
     >
       <Image
         style={{
@@ -114,7 +123,9 @@ const Post = ({ data, image, styled }) => {
                   <Text style={{ fontFamily: "light", fontSize: 18 }}>
                     Favoritos:
                   </Text>
-                  <Text style={{ fontFamily: "regular", fontSize: 18 }}>{post.favorites?.items.length}</Text>
+                  <Text style={{ fontFamily: "regular", fontSize: 18 }}>
+                    {post.favorites?.items.length}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -150,6 +161,11 @@ const Post = ({ data, image, styled }) => {
           </View>
         </View>
       </Modal>
+      <Text
+        style={{ position: "absolute", color: "white", left: 5, bottom: 5 }}
+      >
+        Dist: {roundNumber(data.distance)}Km
+      </Text>
     </TouchableOpacity>
   );
 };
