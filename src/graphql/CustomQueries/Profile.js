@@ -56,6 +56,11 @@ export const userByEmail = /* GraphQL */ `
             instagram
             facebook
             page
+            favorites {
+              items {
+                id
+              }
+            }
             coordinates {
               lat
               lon

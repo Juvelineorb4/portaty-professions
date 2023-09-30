@@ -24,7 +24,6 @@ const SearchPost = ({ route }) => {
   const {
     data: { item, image },
   } = route.params;
-
   const onCreateFavorite = async () => {
     try {
       const { attributes } = await Auth.currentAuthenticatedUser();
@@ -65,7 +64,7 @@ const SearchPost = ({ route }) => {
       const business = await API.graphql({
         query: customSearch.getBusiness,
         variables: {
-            id: item,
+            id: item.id,
         },
         authMode: "AWS_IAM",
       });
@@ -74,7 +73,6 @@ const SearchPost = ({ route }) => {
       console.log(error);
     }
   };
-
   const fetchFavorite = async () => {
     try {
       const { attributes } = await Auth.currentAuthenticatedUser();
@@ -82,7 +80,7 @@ const SearchPost = ({ route }) => {
         query: queries.favoritesByBusinessID,
         authMode: "AMAZON_COGNITO_USER_POOLS",
         variables: {
-            businessID: item,
+            businessID: item.id,
             userID: {eq: attributes["custom:userTableID"]},
         },
       });
@@ -175,7 +173,7 @@ const SearchPost = ({ route }) => {
               justifyContent: "center",
             }}
           >
-            <Text style={{ fontSize: 26, fontFamily: "thin" }}>0</Text>
+            <Text style={{ fontSize: 26, fontFamily: "thin" }}>{post.favorites?.items.length}</Text>
             <Text style={{ fontSize: 22, fontFamily: "thin" }}>Favoritos</Text>
           </View>
           <TouchableOpacity

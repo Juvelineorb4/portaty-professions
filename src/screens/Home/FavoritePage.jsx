@@ -117,7 +117,7 @@ const FavoritePage = ({ navigation, route }) => {
               justifyContent: "center",
             }}
           >
-            <Text style={{ fontSize: 26, fontFamily: "thin" }}>0</Text>
+            <Text style={{ fontSize: 26, fontFamily: "thin" }}>{item.business.favorites?.items.length}</Text>
             <Text style={{ fontSize: 22, fontFamily: "thin" }}>Favoritos</Text>
           </View>
           <TouchableOpacity

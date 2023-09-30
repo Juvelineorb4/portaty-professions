@@ -23,7 +23,6 @@ const Home = ({ navigation, route }) => {
   const [mode, setMode] = useState(false);
   const [userLocation, setUserLocation] = useRecoilState(mapUser);
   const statusFavorites = useRecoilValue(favoritesState);
-  console.log(statusFavorites)
   const [favoritesList, setFavoritesList] = useState([]);
   const [nothing, setNothing] = useState(false);
   const fetchFavorites = async () => {
