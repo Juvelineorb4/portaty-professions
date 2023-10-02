@@ -40,9 +40,14 @@ const Home = ({ navigation, route }) => {
         email: attributes.email,
       },
     });
+<<<<<<< HEAD
     let temporalList = [];
     if (inputFavorite === "")
       setFavoritesList(result.data.userByEmail.items[0].favorites.items);
+=======
+    console.log(result.data.userByEmail.items[0].favorites.items)
+    setFavoritesList(result.data.userByEmail.items[0].favorites.items);
+>>>>>>> 3bc64d38529a17ce90805ac571d6199cee784d4e
     if (result.data.userByEmail.items[0].favorites.items.length === 0)
       setNothing(true);
     if (inputFavorite !== "") {
