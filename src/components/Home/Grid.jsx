@@ -4,13 +4,8 @@ import styles from "@/utils/styles/Mode.module.css";
 import ItemGrid from "./ItemGrid";
 
 const Grid = ({ data }) => {
-  console.log(data);
   data.sort((a, b) => b.position - a.position);
 
-  // Renderizamos el array
-  data.map((obj) => {
-    console.log(obj.position);
-  });
   return (
     <View style={styles.container}>
       {data.map((post, index) => (

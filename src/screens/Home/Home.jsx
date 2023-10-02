@@ -10,22 +10,28 @@ import { Auth, API } from "aws-amplify";
 import { searchBusinessByDistance, searchByDistance } from "@/graphql/queries";
 import Grid from "@/components/Home/Grid";
 import List from "@/components/Home/List";
-import { favoritesState, mapUser } from "@/atoms";
+import { favoritesState, inputFavoritesSearch, mapUser } from "@/atoms";
 import { useRecoilState, useRecoilValue } from "recoil";
 import * as Location from "expo-location";
 import * as queries from "@/graphql/CustomQueries/Favorites";
 import CustomButton from "@/components/CustomButton";
 import styles from "@/utils/styles/Home.module.css";
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
 
 const Home = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
   const [mode, setMode] = useState(false);
   const [userLocation, setUserLocation] = useRecoilState(mapUser);
   const statusFavorites = useRecoilValue(favoritesState);
+  const inputFavorite = useRecoilValue(inputFavoritesSearch);
+  const [inputFavorites, setInputFavorites] =
+    useRecoilState(inputFavoritesSearch);
   const [favoritesList, setFavoritesList] = useState([]);
   const [nothing, setNothing] = useState(false);
+  const [resultNothing, setResultNothing] = useState(false);
+  const [loading, setLoading] = useState(false);
   const fetchFavorites = async () => {
+    setLoading(true);
     const { attributes } = await Auth.currentAuthenticatedUser();
     const result = await API.graphql({
       query: queries.userByEmail,
@@ -34,9 +40,30 @@ const Home = ({ navigation, route }) => {
         email: attributes.email,
       },
     });
-    setFavoritesList(result.data.userByEmail.items[0].favorites.items);
+    let temporalList = [];
+    if (inputFavorite === "")
+      setFavoritesList(result.data.userByEmail.items[0].favorites.items);
     if (result.data.userByEmail.items[0].favorites.items.length === 0)
       setNothing(true);
+    if (inputFavorite !== "") {
+      result.data.userByEmail.items[0].favorites.items.map((item, index) => {
+        if (item.business.activity === inputFavorite) temporalList.push(item);
+      });
+      if (temporalList.length !== 0) {
+        setFavoritesList(temporalList);
+      } else {
+        setResultNothing(true);
+      }
+      console.log(temporalList);
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
+    } else {
+      setFavoritesList(result.data.userByEmail.items[0].favorites.items);
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
+    }
   };
   useLayoutEffect(() => {
     (async () => {
@@ -46,11 +73,51 @@ const Home = ({ navigation, route }) => {
           accuracy: Location.Accuracy.BestForNavigation,
         });
         setUserLocation(location.coords);
-        console.log(status);
       }
     })();
     fetchFavorites();
-  }, [route, statusFavorites]);
+  }, [route, statusFavorites, inputFavorite]);
+
+  if (loading && !resultNothing)
+    return (
+      <View
+        style={[
+          { flex: 1, alignItems: "center", justifyContent: "center" },
+          global.bgWhite,
+        ]}
+      >
+        <ActivityIndicator size="large" color="#fb8500" />
+      </View>
+    );
+
+  if (resultNothing)
+    return (
+      <View
+        style={[
+          {
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+            paddingHorizontal: 20,
+            paddingBottom: 80,
+          },
+          global.bgWhite,
+        ]}
+      >
+        <Text style={{ fontSize: 16, fontFamily: "light" }}>
+          No tienes ningun favorito por '{inputFavorite}'
+        </Text>
+        <CustomButton
+          text={`Refrescar`}
+          handlePress={() => {
+            setInputFavorites("")
+            setResultNothing(false)
+          }}
+          textStyles={[styles.textSearch, global.white]}
+          buttonStyles={[styles.search, global.mainBgColor]}
+        />
+      </View>
+    );
 
   if (favoritesList.length !== 0)
     return (
@@ -76,7 +143,11 @@ const Home = ({ navigation, route }) => {
             ]}
             onPress={() => setMode(!mode)}
           >
-            <Ionicons name="grid-outline" size={18} color={mode ? '#ffffff' : '#fb8500'} />
+            <Ionicons
+              name="grid-outline"
+              size={18}
+              color={mode ? "#ffffff" : "#fb8500"}
+            />
           </TouchableOpacity>
           <TouchableOpacity
             style={[
@@ -93,11 +164,15 @@ const Home = ({ navigation, route }) => {
             ]}
             onPress={() => setMode(!mode)}
           >
-            <Ionicons name="list-outline" size={18} color={!mode ? '#ffffff' : '#fb8500'} />
+            <Ionicons
+              name="list-outline"
+              size={18}
+              color={!mode ? "#ffffff" : "#fb8500"}
+            />
           </TouchableOpacity>
         </View>
         <View style={{ padding: 10, paddingBottom: 80 }}>
-          {favoritesList ? (
+          {!loading ? (
             mode ? (
               <Grid data={favoritesList} />
             ) : (
