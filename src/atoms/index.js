@@ -74,3 +74,7 @@ export const favoriteSelection = atom({
   key: "favoriteSelectionValue",
   default: [],
 });
+export const inputFavoritesSearch = atom({
+  key: "inputFavoritesSearchValue",
+  default: '',
+});

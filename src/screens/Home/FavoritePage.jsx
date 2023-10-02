@@ -40,7 +40,6 @@ const FavoritePage = ({ navigation, route }) => {
       authMode: "AMAZON_COGNITO_USER_POOLS",
     });
     navigation.goBack();
-    console.log(favorites);
   };
 
   const onShare = async () => {
