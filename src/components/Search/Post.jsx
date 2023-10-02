@@ -51,12 +51,12 @@ const Post = ({ data, image, styled }) => {
       ]}
       onPress={() => {
         setModalVisible(!modalVisible);
-        navigation.navigate("SearchPost", {
-          data: {
-            item: data.id,
-            image: image,
-          },
-        });
+        // navigation.navigate("SearchPost", {
+        //   data: {
+        //     item: data.id,
+        //     image: image,
+        //   },
+        // });
       }}
     >
       <Image
