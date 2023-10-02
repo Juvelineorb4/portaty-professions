@@ -10,11 +10,13 @@ import NavSettings from "./NavSettings";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { userAuthenticated, mapUser } from "@/atoms";
 import * as Location from "expo-location";
+// linking
+import linking from "./linking";
 const Navigation = () => {
   const userAuth = useRecoilValue(userAuthenticated);
   const Stack = createNativeStackNavigator();
   const [userLocation, setUserLocation] = useRecoilState(mapUser);
-   useLayoutEffect(() => {
+  useLayoutEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status === "granted") {
@@ -27,7 +29,7 @@ const Navigation = () => {
     })();
   }, []);
   return (
-    <NavigationContainer>
+    <NavigationContainer linking={linking}>
       <NavSettings />
       <Stack.Navigator initialRouteName="Login_Welcome">
         {!userAuth && (

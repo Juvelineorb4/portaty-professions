@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import {
   SafeAreaProvider,
@@ -13,7 +13,8 @@ import { Amplify } from "aws-amplify";
 import awsconfig from "./src/aws-exports.js";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet } from "react-native";
-
+// linking
+import * as Linking from "expo-linking";
 Amplify.configure({
   ...awsconfig,
   API: {
@@ -28,6 +29,7 @@ Amplify.configure({
 
 export default function App() {
   const global = require("@/utils/styles/global.js");
+  const url = Linking.useURL();
   const [fontsLoaded] = useFonts({
     thin: require("@/utils/fonts/Montserrat-Thin.ttf"),
     regular: require("@/utils/fonts/Montserrat-Regular.ttf"),
@@ -43,6 +45,30 @@ export default function App() {
     boldItalic: require("@/utils/fonts/Montserrat-BoldItalic.ttf"),
     name: require("@/utils/fonts/ConeriaScript.ttf"),
   });
+
+  // linkg action
+  const handleURL = (url) => {
+    const { hostname, path, queryParams } = Linking.parse(url);
+    console.log("HOSTNAME: ", hostname);
+    console.log("PATH: ", path);
+    console.log("PARAMS: ", queryParams);
+    return;
+    Alert.alert("LINKING: ", JSON.stringify(Linking.parse(url)));
+    if (path === "alert") {
+      console.log(queryParams.str);
+      // Alert.alert(queryParams.str);
+    } else {
+      console.log(path, queryParams);
+    }
+  };
+
+  useEffect(() => {
+    if (url) {
+      handleURL(url);
+    } else {
+      console.log("No URL");
+    }
+  }, [url]);
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {

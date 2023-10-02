@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   TextInput,
   Switch,
-  Share
+  Share,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Auth, API, Storage } from "aws-amplify";
@@ -27,7 +27,7 @@ const Profile = ({ route }) => {
   const global = require("@/utils/styles/global.js");
   const { user } = route.params;
   const [editActive, setEditActive] = useState(false);
-  console.log(user);
+  console.log("PROFILE: ", user);
   const onShare = async () => {
     try {
       await Share.share({

@@ -39,7 +39,13 @@
           "data": [
             {
               "scheme": "https",
-              "host": "www.portaty.com"
+              "host": "portaty.com",
+              "pathPrefix": "/"
+            },
+            {
+              "scheme": "http",
+              "host": "portaty.com",
+              "pathPrefix": "/"
             }
           ],
           "category": ["BROWSABLE", "DEFAULT"]
