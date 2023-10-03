@@ -11,7 +11,10 @@ import { useRecoilValue, useRecoilState } from "recoil";
 import { userAuthenticated, mapUser } from "@/atoms";
 import * as Location from "expo-location";
 // linking
+import SharePage from "@/screens/Search/SharePage";
+import ShareListPage from "@/screens/Search/ShareListPage";
 import linking from "./linking";
+import LeftHeaderShare from "@/components/Header/LeftHeaderShare";
 const Navigation = () => {
   const userAuth = useRecoilValue(userAuthenticated);
   const Stack = createNativeStackNavigator();
@@ -48,6 +51,22 @@ const Navigation = () => {
             headerShown: false,
           }}
         />
+        <Stack.Screen
+      name="SharePage"
+      component={SharePage}
+      options={{
+        animation: "slide_from_right",
+        header: (props) => <LeftHeaderShare {...props} />,
+      }}
+    />
+    <Stack.Screen
+        name="ShareListPage"
+        component={ShareListPage}
+        options={{
+          animation: "slide_from_right",
+          header: (props) => <LeftHeaderShare {...props} />,
+        }}
+      />
       </Stack.Navigator>
     </NavigationContainer>
   );

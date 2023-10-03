@@ -74,34 +74,6 @@ const Search = ({ route }) => {
       // let newItems = [];
       let newRenderItems = [];
       const long = 26;
-      // const { attributes } = await Auth.currentAuthenticatedUser();
-
-      // for (let i = 0; i < response.items.length; i += 1) {
-      //   try {
-      //     let result = await API.graphql({
-      //       query: queries.favoritesByBusinessID,
-      //       authMode: "AMAZON_COGNITO_USER_POOLS",
-      //       variables: {
-      //         businessID: response.items[i].id,
-      //         userID: {eq: attributes["custom:userTableID"]},
-      //       },
-      //     });
-
-      //     if (result.data.favoritesByBusinessID.items.length !== 0) {
-      //       newItems.push({
-      //         favorite: result.data.favoritesByBusinessID.items[0].id,
-      //         item: response.items[i],
-      //       });
-      //     } else {
-      //       newItems.push({
-      //         favorite: "",
-      //         item: response.items[i],
-      //       });
-      //     }
-      //   } catch (error) {
-      //     // console.log(error)
-      //   }
-      // }
       for (let i = 0; i < response.items.length; i += long) {
         let cut = response.items.slice(i, i + long);
         newRenderItems.push(cut);

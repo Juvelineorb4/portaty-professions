@@ -8,8 +8,9 @@ import SearchIn from "@/screens/Search/SearchIn";
 import styles from "@/utils/styles/Header.module.css";
 import SearchOut from "@/screens/Search/SearchOut";
 import LeftHeader from "@/components/Header/LeftHeader";
-// prueba
+
 import Other from "@/screens/Search/Other";
+
 const SearchNavigator = ({ navigation }) => {
   const [active, setActive] = useState(false);
   const [activeOut, setActiveOut] = useState(false);
@@ -157,6 +158,7 @@ const SearchNavigator = ({ navigation }) => {
           animation: "slide_from_right",
         }}
       />
+       
     </Stack.Navigator>
   );
 };

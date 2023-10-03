@@ -8,9 +8,9 @@ const ShareListPage = ({ route }) => {
   const global = require("@/utils/styles/global.js");
   return (
     <View style={[{ flex: 1, paddingHorizontal: 10, paddingTop: 40 }, global.bgWhite]}>
-      {data.map((post, index) => (
+      {/* {data.map((post, index) => (
         <SharePage key={index} data={post} identityID={user.identityID} styled={{column: styles.columnList}} />
-      ))}
+      ))} */}
     </View>
   );
 };
