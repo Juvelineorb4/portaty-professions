@@ -13,10 +13,10 @@ export default {
             },
           },
           Search_Tab: {
+            path: "search",
             screens: {
-              Other: {
-                path: "share/other",
-              },
+              Search: "search",
+              Other: "other",
             },
           },
         },

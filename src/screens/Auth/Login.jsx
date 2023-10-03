@@ -8,7 +8,8 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
-  Image
+  Image,
+  ActivityIndicator,
 } from "react-native";
 import { Auth } from "aws-amplify";
 import styles from "@/utils/styles/Login.module.css";
@@ -23,9 +24,10 @@ const Login = ({ navigation }) => {
   const global = require("@/utils/styles/global.js");
   const EMAIL_REGEX = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
   const [errorActive, setErrorActive] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
   const onHandleLogin = async (data) => {
     const { email, password } = data;
+    setIsLoading(true);
     try {
       const result = await Auth.signIn(email.trim(), password.trim());
     } catch (error) {
@@ -49,7 +51,9 @@ const Login = ({ navigation }) => {
         default:
           break;
       }
+      setIsLoading(false);
       console.log("ERROR AL LOGEARSE: ", message);
+      Alert.alert("Error Al Logearse: ", message);
     }
   };
 
@@ -130,7 +134,9 @@ const Login = ({ navigation }) => {
       <View style={styles.panel}>
         <View style={{ height: 60 }}>
           <CustomButton
-            text={es.authentication.login.button}
+            text={
+              isLoading ? <ActivityIndicator /> : es.authentication.login.button
+            }
             handlePress={handleSubmit(onHandleLogin)}
             textStyles={[styles.textLogin, global.white]}
             buttonStyles={[styles.login, global.mainBgColor]}
