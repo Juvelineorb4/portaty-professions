@@ -4,7 +4,7 @@
     "name": "portaty-professions",
     "slug": "portaty-professions",
     "owner": "portaty",
-    "version": "0.5.",
+    "version": "0.5.8",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -71,7 +71,7 @@
         "android.permission.ACCESS_MEDIA_LOCATION"
       ],
       "package": "com.teamportaty.appdev",
-      "versionCode": 29
+      "versionCode": 31
     },
     "web": {
       "favicon": "./assets/favicon.png"
