@@ -93,7 +93,7 @@ const SearchPost = ({ route }) => {
     try {
       await Share.share({
         message:
-          "Han compartido contigo un negocio, da click para mirarlo app://portaty.com",
+          `Han compartido contigo un negocio, da click para mirarlo exp://192.168.250.1:19000/--/share/business?id=${item.id}`,
       });
     } catch (error) {
       console.error("Error sharing:", error);

@@ -7,8 +7,7 @@ import LeftHeader from "@/components/Header/LeftHeader";
 import { useRecoilValue } from "recoil";
 import { favoriteSelection } from "@/atoms";
 import FavoriteHeader from "@/components/Header/FavoriteHeader";
-import SharePage from "@/screens/Home/SharePage";
-import ShareListPage from "@/screens/Home/ShareListPage";
+
 
 const HomeNavigator = ({ route, navigation }) => {
   const Stack = createNativeStackNavigator();
@@ -35,22 +34,6 @@ const HomeNavigator = ({ route, navigation }) => {
       <Stack.Screen
         name="FavoritePage"
         component={FavoritePage}
-        options={{
-          animation: "slide_from_right",
-          header: (props) => <LeftHeader {...props} />,
-        }}
-      />
-      <Stack.Screen
-      name="SharePage"
-      component={SharePage}
-      options={{
-        animation: "slide_from_right",
-        header: (props) => <LeftHeader {...props} />,
-      }}
-    />
-    <Stack.Screen
-        name="ShareListPage"
-        component={ShareListPage}
         options={{
           animation: "slide_from_right",
           header: (props) => <LeftHeader {...props} />,

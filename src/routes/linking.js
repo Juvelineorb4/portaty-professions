@@ -3,23 +3,11 @@ export default {
   prefixes: [Linking.createURL("/"), "portaty://", "https://portaty.com"],
   config: {
     screens: {
-      Tabs_Navigation: {
-        screens: {
-          Profile_Tab: {
-            screens: {
-              Unprofile: {
-                path: "profile",
-              },
-            },
-          },
-          Search_Tab: {
-            path: "search",
-            screens: {
-              Search: "search",
-              Other: "other",
-            },
-          },
-        },
+      ShareListPage: {
+        path: "share/list",
+      },
+      SharePage: {
+        path: "share/business",
       },
     },
   },

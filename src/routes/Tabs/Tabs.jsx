@@ -186,7 +186,9 @@ const Tabs = () => {
           },
           headerShown: false,
           tabBarLabel: "Buscar",
+          unmountOnBlur: true
         }}
+        
         component={SearchNavigator}
       />
       <Tab.Screen

@@ -1,62 +1,123 @@
 import {
-    View,
-    Text,
-    Image,
-    TextInput,
-    ScrollView,
-    TouchableOpacity,
-    Share,
-    Linking
-  } from "react-native";
-  import React from "react";
-  import CustomSelect from "@/components/CustomSelect";
-  import styles from "@/utils/styles/Unprofile.module.css";
-  import {
-    FontAwesome5,
-    MaterialCommunityIcons,
-    AntDesign,
-    FontAwesome,
-    Foundation,
-    EvilIcons,
-    Feather,
-  } from "@expo/vector-icons";
-  import { Auth, API, Storage } from "aws-amplify";
-  import * as queries from "@/graphql/CustomQueries/Favorites";
-  import * as customFavorites from "@/graphql/CustomMutations/Favorites";
-  
-  const SharePage = ({ navigation, route }) => {
-    const global = require("@/utils/styles/global.js");
-    const {
-      data: { item, image },
-    } = route.params;
-    const onDeleteFavorite = async () => {
+  View,
+  Text,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  TextInput,
+  Share,
+  Linking,
+} from "react-native";
+import React, { useState, useEffect } from "react";
+import * as customSearch from "@/graphql/CustomQueries/Search";
+import CustomSelect from "@/components/CustomSelect";
+import styles from "@/utils/styles/Unprofile.module.css";
+import {
+  FontAwesome5,
+  MaterialCommunityIcons,
+  AntDesign,
+  FontAwesome,
+  Foundation,
+  EvilIcons,
+  Feather,
+  Fontisto,
+} from "@expo/vector-icons";
+import { Auth, API, Storage } from "aws-amplify";
+import * as queries from "@/graphql/CustomQueries/Favorites";
+import * as customFavorites from "@/graphql/CustomMutations/Favorites";
+import { useFocusEffect } from "@react-navigation/native";
+import CustomButton from "@/components/CustomButton";
+
+const SharePage = ({ route, navigation }) => {
+  const [post, setPost] = useState([]);
+  const [save, setSave] = useState("");
+  const global = require("@/utils/styles/global.js");
+  const { params } = route;
+  const onCreateFavorite = async () => {
+    try {
+      const { attributes } = await Auth.currentAuthenticatedUser();
       const favorites = await API.graphql({
-        query: customFavorites.deleteFavorites,
+        query: customFavorites.createFavorites,
         variables: {
           input: {
-            id: item.id,
+            businessID: post.id,
+            userID: attributes["custom:userTableID"],
+            position: 0,
           },
         },
         authMode: "AMAZON_COGNITO_USER_POOLS",
       });
-      navigation.goBack();
-      console.log(favorites);
-    };
-  
-    const onShare = async () => {
-      try {
-        await Share.share({
-          message:
-            "Han compartido contigo un negocio, da click para mirarlo app://portaty.com",
-        });
-      } catch (error) {
-        console.error("Error sharing:", error);
-      }
-    };
-    const openCall = () =>{
-      const url=`tel://${item.business.phone}`
-      Linking.openURL(url)
+      setSave(favorites.data.createFavorites.id);
+    } catch (error) {
+      console.log(error);
     }
+  };
+
+  const onDeleteFavorite = async () => {
+    const favorites = await API.graphql({
+      query: customFavorites.deleteFavorites,
+      variables: {
+        input: {
+          id: save,
+        },
+      },
+      authMode: "AMAZON_COGNITO_USER_POOLS",
+    });
+    setSave("");
+  };
+
+  const fetchData = async () => {
+    try {
+      const business = await API.graphql({
+        query: customSearch.getBusiness,
+        variables: {
+          id: params?.id,
+        },
+        authMode: "AWS_IAM",
+      });
+      console.log(business)
+      setPost(business.data.getBusiness);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const fetchFavorite = async () => {
+    try {
+      const { attributes } = await Auth.currentAuthenticatedUser();
+      const favorite = await API.graphql({
+        query: queries.favoritesByBusinessID,
+        authMode: "AMAZON_COGNITO_USER_POOLS",
+        variables: {
+          businessID: params?.id,
+          userID: { eq: attributes["custom:userTableID"] },
+        },
+      });
+      if (favorite.data.favoritesByBusinessID.items.length !== 0)
+        setSave(favorite.data.favoritesByBusinessID.items[0].id);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const onShare = async () => {
+    try {
+      await Share.share({
+        message:
+        `Han compartido contigo un negocio, da click para mirarlo exp://192.168.250.1:19000/--/share/business?id=${params?.id}`,
+      });
+    } catch (error) {
+      console.error("Error sharing:", error);
+    }
+  };
+  const openCall = () => {
+    const url = `tel://${post.phone}`;
+    Linking.openURL(url);
+  };
+  useEffect(() => {
+      fetchData();
+      fetchFavorite();
+  }, []);
+
+  if (params?.id !== undefined)
     return (
       <View
         style={[
@@ -98,9 +159,14 @@ import {
                   borderRadius: 5,
                   backgroundColor: "#fff",
                 }}
-                source={{ uri: image }}
+                source={{ uri: `https://picsum.photos/id/1/200/300` }}
               />
             </View>
+            {/* <View>
+          <Fontisto name="heart" size={23} color="#e31b23" />
+          <Text>Agregado a favoritos</Text>
+
+          </View> */}
           </View>
           <View
             style={{
@@ -117,15 +183,33 @@ import {
                 justifyContent: "center",
               }}
             >
-              <Text style={{ fontSize: 26, fontFamily: "thin" }}>0</Text>
-              <Text style={{ fontSize: 22, fontFamily: "thin" }}>Favoritos</Text>
+              <Text style={{ fontSize: 26, fontFamily: "thin" }}>
+                {post?.favorites?.items.length}
+              </Text>
+              <Text style={{ fontSize: 22, fontFamily: "thin" }}>
+                Favoritos
+              </Text>
             </View>
             <TouchableOpacity
-              style={[global.bgWhiteSmoke, { padding: 10, borderRadius: 8 }]}
-              onPress={onDeleteFavorite}
+              style={[
+                save === "" ? global.mainBgColor : global.bgWhiteSmoke,
+                { padding: 10, borderRadius: 8 },
+              ]}
+              onPress={() => {
+                if (save === "") {
+                  onCreateFavorite();
+                } else {
+                  onDeleteFavorite();
+                }
+              }}
             >
-              <Text style={{ fontSize: 14, fontFamily: "thin" }}>
-                Eliminar de favoritos
+              <Text
+                style={[
+                  { fontSize: 14, fontFamily: "thin" },
+                  save === "" ? global.white : global.black,
+                ]}
+              >
+                {save === "" ? "Agregar a favoritos" : "Eliminar de favoritos"}
               </Text>
             </TouchableOpacity>
           </View>
@@ -198,7 +282,9 @@ import {
                 <Feather name="phone-call" size={17} color="white" />
               </View>
               <View style={{ marginLeft: 10 }}>
-                <Text style={{ fontFamily: "light", fontSize: 16 }}>Llamar</Text>
+                <Text style={{ fontFamily: "light", fontSize: 16 }}>
+                  Llamar
+                </Text>
                 <Text style={{ fontFamily: "thin", fontSize: 12, width: 150 }}>
                   Contacta al negocio directamente
                 </Text>
@@ -214,7 +300,9 @@ import {
             />
           </TouchableOpacity>
           <View style={{ marginBottom: 80 }}>
-            <Text style={{ fontSize: 22, fontFamily: "thinItalic", padding: 10 }}>
+            <Text
+              style={{ fontSize: 22, fontFamily: "thinItalic", padding: 10 }}
+            >
               Datos
             </Text>
             <View style={[styles.line, global.bgWhiteSmoke]} />
@@ -239,7 +327,7 @@ import {
               </View>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Text style={[{ fontSize: 13, fontFamily: "lightItalic" }]}>
-                  {item.business.name}
+                  {post?.name}
                 </Text>
               </View>
             </View>
@@ -265,7 +353,7 @@ import {
               </View>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Text style={[{ fontSize: 13, fontFamily: "lightItalic" }]}>
-                  {item.business.activity}
+                  {post?.activity}
                 </Text>
               </View>
             </View>
@@ -291,7 +379,7 @@ import {
               </View>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Text style={[{ fontSize: 13, fontFamily: "lightItalic" }]}>
-                  {item.business.phone}
+                  {post?.phone}
                 </Text>
               </View>
             </View>
@@ -317,7 +405,7 @@ import {
               </View>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Text style={[{ fontSize: 13, fontFamily: "lightItalic" }]}>
-                  {item.business.whatsapp}
+                  {post?.whatsapp}
                 </Text>
               </View>
             </View>
@@ -332,10 +420,10 @@ import {
             >
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 {/* <MaterialCommunityIcons
-                  name="email-open-multiple-outline"
-                  size={20}
-                  color="#1f1f1f"
-                /> */}
+                name="email-open-multiple-outline"
+                size={20}
+                color="#1f1f1f"
+              /> */}
                 <Text
                   style={[
                     { fontFamily: "thinItalic", fontSize: 15 },
@@ -347,7 +435,7 @@ import {
               </View>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Text style={[{ fontSize: 13, fontFamily: "lightItalic" }]}>
-                  {item.business.email}
+                  {post?.email}
                 </Text>
               </View>
             </View>
@@ -449,7 +537,31 @@ import {
         </ScrollView>
       </View>
     );
-  };
-  
-  export default SharePage;
-  
+
+  if (params?.id === undefined)
+    return (
+      <View
+        style={[
+          {
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+            paddingHorizontal: 20,
+            paddingBottom: 80,
+          },
+          global.bgWhite,
+        ]}
+      >
+        <Text style={{ fontSize: 20, fontFamily: "light", textAlign: 'center' }}>
+          No se encuentra el negocio al cual quieres acceder
+        </Text>
+        <CustomButton
+          text={`Encuentra mas negocios`}
+          handlePress={() => navigation.navigate("Tabs_Navigation")}
+          textStyles={[styles.textSearch, global.white]}
+          buttonStyles={[styles.search, global.mainBgColor]}
+        />
+      </View>
+    );
+};
+export default SharePage;
