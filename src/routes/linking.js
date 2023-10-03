@@ -12,6 +12,13 @@ export default {
               },
             },
           },
+          Search_Tab: {
+            screens: {
+              Other: {
+                path: "share/other",
+              },
+            },
+          },
         },
       },
     },

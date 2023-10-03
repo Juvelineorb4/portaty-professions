@@ -4,7 +4,7 @@
     "name": "portaty-professions",
     "slug": "portaty-professions",
     "owner": "portaty",
-    "version": "0.0.1",
+    "version": "0.0.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -28,7 +28,8 @@
         "NSPhotoLibraryUsageDescription": "Allow Portasty to access your photos.",
         "NSPhotoLibraryAddUsageDescription": "Allow Portaty to save photos."
       },
-      "bundleIdentifier": "com.portaty.professions"
+      "bundleIdentifier": "com.teamportaty.appdev",
+      "versionCode": 28
     },
     "android": {
       "runtimeVersion": "exposdk:48.0.0",
@@ -39,12 +40,7 @@
           "data": [
             {
               "scheme": "https",
-              "host": "portaty.com",
-              "pathPrefix": "/"
-            },
-            {
-              "scheme": "http",
-              "host": "portaty.com",
+              "host": "www.portaty.com",
               "pathPrefix": "/"
             }
           ],
@@ -69,7 +65,7 @@
         "android.permission.WRITE_EXTERNAL_STORAGE",
         "android.permission.ACCESS_MEDIA_LOCATION"
       ],
-      "package": "com.portaty.professions"
+      "package": "com.teamportaty.appdev"
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -113,9 +113,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace 'com.portaty.professions'
+    namespace 'com.teamportaty.appdev'
     defaultConfig {
-        applicationId 'com.portaty.professions'
+        applicationId 'com.teamportaty.appdev'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
