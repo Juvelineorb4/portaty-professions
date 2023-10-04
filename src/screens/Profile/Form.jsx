@@ -84,7 +84,6 @@ const Form = ({ navigation, route }) => {
   const onRegisterBusiness = async (data) => {
     const { company, email, phone, wsme } = data;
     const storageFolder = company.replace(/ /g, "");
-
     try {
       const { key } = await Storage.put(
         `business/${storageFolder}/profile.jpg`,
@@ -114,14 +113,13 @@ const Form = ({ navigation, route }) => {
           },
         },
       });
-      console.log(business);
       BlankInputs();
       setStateProfile(true);
       Alert.alert("REGISTRO EXITOSO");
-      navigation.navigate("Profile");
+      navigation.goBack();
     } catch (error) {
-      const { message } = new Error(error);
-      Alert.alert(message);
+      Alert.alert("ERROR AL CARGAR NEGOCIO: ", JSON.stringify(error));
+      console.log("ERROR AL CARGAR NEGOCIO: ", error);
     }
   };
   const MultipleData = async () => {

@@ -158,7 +158,6 @@ const SearchNavigator = ({ navigation }) => {
           animation: "slide_from_right",
         }}
       />
-       
     </Stack.Navigator>
   );
 };

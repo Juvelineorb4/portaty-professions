@@ -64,6 +64,57 @@ export const userByEmail = /* GraphQL */ `
   }
 `;
 
+export const getUsers = /* GraphQL */ `
+  query GetUsers($id: ID!) {
+    getUsers(id: $id) {
+      id
+      cognitoID
+      name
+      lastName
+      email
+      identityID
+      favorites {
+        items {
+          id
+          businessID
+          business {
+            id
+            userID
+            name
+            image
+            email
+            phone
+            whatsapp
+            instagram
+            facebook
+            page
+            activity
+            favorites {
+              items {
+                id
+              }
+            }
+            tags
+            createdAt
+            updatedAt
+            owner
+            __typename
+          }
+          userID
+          position
+          owner
+          createdAt
+          updatedAt
+          __typename
+        }
+      }
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 export const favoritesByBusinessID = /* GraphQL */ `
   query FavoritesByBusinessID(
     $businessID: ID!
