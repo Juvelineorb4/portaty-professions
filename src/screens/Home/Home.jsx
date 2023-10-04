@@ -71,6 +71,7 @@ const Home = ({ navigation, route }) => {
         let location = await Location.getCurrentPositionAsync({
           accuracy: Location.Accuracy.BestForNavigation,
         });
+        console.log(location.coords)
         setUserLocation(location.coords);
       }
     })();
