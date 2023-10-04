@@ -145,6 +145,7 @@ const MapMarketBusiness = ({ initialLocation }) => {
                     />
                   </Pressable>
                 </View>
+                <Text>{PROVIDER_GOOGLE}</Text>
                 <View style={{ flex: 1 }}>
                   <MapView
                     style={{ flex: 1 }}
