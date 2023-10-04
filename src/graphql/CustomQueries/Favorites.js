@@ -155,3 +155,21 @@ export const userByEmailPosition = /* GraphQL */ `
     }
   }
 `;
+
+export const getUsers = /* GraphQL */ `
+  query GetUsers($id: ID!) {
+    getUsers(id: $id) {
+      id
+      favorites {
+        items {
+          id
+          business {
+            id
+            name
+            activity
+          }
+        }
+      }
+    }
+  }
+`;
