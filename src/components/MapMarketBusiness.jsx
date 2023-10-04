@@ -9,7 +9,7 @@ import {
   Modal,
   Image,
 } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from "expo-location";
 import styles from "@/utils/styles/MapMarket.module.css";
 import { mapBusiness } from "@/atoms";
@@ -34,7 +34,7 @@ const MAP_SETTINGS = [
   },
 ];
 
-const MapMarketBusiness = ({initialLocation}) => {
+const MapMarketBusiness = ({ initialLocation }) => {
   const global = require("@/utils/styles/global.js");
   const [marketLocation, setMarketLocation] = useState(null);
   const [initalMarketLocation, setInitialMarketLocation] = useState(null);
@@ -64,7 +64,7 @@ const MapMarketBusiness = ({initialLocation}) => {
       nativeEvent: { coordinate },
     } = e;
     setMarketLocation(coordinate);
-    setSelectMapBusiness(coordinate)
+    setSelectMapBusiness(coordinate);
     setSelectMap(true);
   };
 
@@ -72,8 +72,7 @@ const MapMarketBusiness = ({initialLocation}) => {
     setSelectMap(true);
     setModalVisible(!modalVisible);
   };
-  useEffect(() => {
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <ScrollView
@@ -81,19 +80,39 @@ const MapMarketBusiness = ({initialLocation}) => {
       showsVerticalScrollIndicator={false}
     >
       <View>
-        <TouchableOpacity onPress={() => onHandleMapMarket()} style={{flexDirection: 'row', alignItems: 'center', marginBottom: 10, marginTop: 5}}>
-          <View style={[global.mainBgColor, {
-            height: 50,
-            width: 110,
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: 8,
-            marginRight: 35
-          }]}>
-            <Text style={[global.white, {
-              fontFamily: 'medium',
-              fontSize: 13
-            }]}>Abrir mapa</Text>
+        <TouchableOpacity
+          onPress={() => onHandleMapMarket()}
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            marginBottom: 10,
+            marginTop: 5,
+          }}
+        >
+          <View
+            style={[
+              global.mainBgColor,
+              {
+                height: 50,
+                width: 110,
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: 8,
+                marginRight: 35,
+              },
+            ]}
+          >
+            <Text
+              style={[
+                global.white,
+                {
+                  fontFamily: "medium",
+                  fontSize: 13,
+                },
+              ]}
+            >
+              Abrir mapa
+            </Text>
           </View>
           <View style={{ flex: 1, flexDirection: "row" }}>
             {selectMap ? (
@@ -140,6 +159,7 @@ const MapMarketBusiness = ({initialLocation}) => {
                     showsPointsOfInterest={false}
                     onDoublePress={onHandlePress}
                     customMapStyle={MAP_SETTINGS}
+                    provider={PROVIDER_GOOGLE}
                   >
                     {marketLocation && (
                       <Marker
