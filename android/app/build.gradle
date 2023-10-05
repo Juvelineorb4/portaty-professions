@@ -118,8 +118,8 @@ android {
         applicationId 'com.teamportaty.appdev'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 41
-        versionName "0.5.9.7"
+        versionCode 42
+        versionName "0.5.9.8"
     }
 
     splits {
