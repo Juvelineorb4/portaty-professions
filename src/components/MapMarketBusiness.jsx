@@ -14,6 +14,8 @@ import * as Location from "expo-location";
 import styles from "@/utils/styles/MapMarket.module.css";
 import { mapBusiness } from "@/atoms";
 import { useRecoilState } from "recoil";
+// hook form
+import { Controller } from "react-hook-form";
 
 const COUNTRY_REGION = {
   // colombia
@@ -34,7 +36,14 @@ const MAP_SETTINGS = [
   },
 ];
 
-const MapMarketBusiness = ({ initialLocation }) => {
+const MapMarketBusiness = ({
+  initialLocation,
+  control,
+  name,
+  text,
+  placeholder,
+  rules = {},
+}) => {
   const global = require("@/utils/styles/global.js");
   const [marketLocation, setMarketLocation] = useState(null);
   const [initalMarketLocation, setInitialMarketLocation] = useState(null);
@@ -75,127 +84,148 @@ const MapMarketBusiness = ({ initialLocation }) => {
   useEffect(() => {}, []);
 
   return (
-    <ScrollView
-      style={[global.bgWhite, { flex: 1 }]}
-      showsVerticalScrollIndicator={false}
-    >
-      <View>
-        <TouchableOpacity
-          onPress={() => onHandleMapMarket()}
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            marginBottom: 10,
-            marginTop: 5,
-          }}
+    <Controller
+      control={control}
+      name={name}
+      rules={rules}
+      render={({
+        field: { value, onChange, onBlur },
+        fieldState: { error },
+      }) => (
+        <ScrollView
+          style={[global.bgWhite, { flex: 1 }]}
+          showsVerticalScrollIndicator={false}
         >
-          <View
-            style={[
-              global.mainBgColor,
-              {
-                height: 50,
-                width: 110,
+          <View>
+            <TouchableOpacity
+              onPress={() => onHandleMapMarket()}
+              style={{
+                flexDirection: "row",
                 alignItems: "center",
-                justifyContent: "center",
-                borderRadius: 8,
-                marginRight: 35,
-              },
-            ]}
-          >
-            <Text
-              style={[
-                global.white,
-                {
-                  fontFamily: "medium",
-                  fontSize: 13,
-                },
-              ]}
+                marginBottom: 10,
+                marginTop: 5,
+              }}
             >
-              Abrir mapa
-            </Text>
-          </View>
-          <View style={{ flex: 1, flexDirection: "row" }}>
-            {selectMap ? (
-              <Text
-                style={styles.textTag}
-              >{`Tu ubicacion se agrego exitosamente!`}</Text>
-            ) : (
-              <Text
-                style={styles.textInputTag}
-              >{`Selecciona una ubicacion`}</Text>
-            )}
-          </View>
-
-          <Modal animationType="none" transparent={true} visible={modalVisible}>
-            <View style={styles.modalContainer}>
-              <View style={styles.modalContent}>
-                <View style={styles.modalTop}>
-                  <Pressable
-                    onPress={() => {
-                      setModalVisible(!modalVisible);
-                    }}
-                  >
-                    <Image
-                      style={{
-                        width: 25,
-                        height: 25,
-                        resizeMode: "contain",
+              <View
+                style={[
+                  global.mainBgColor,
+                  {
+                    height: 50,
+                    width: 110,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: 8,
+                    marginRight: 35,
+                  },
+                ]}
+              >
+                <Text
+                  style={[
+                    global.white,
+                    {
+                      fontFamily: "medium",
+                      fontSize: 13,
+                    },
+                  ]}
+                >
+                  Abrir mapa
+                </Text>
+              </View>
+              <View style={{ flex: 1, flexDirection: "row" }}>
+                {selectMap ? (
+                  <Text
+                    style={styles.textTag}
+                  >{`Tu ubicacion se agrego exitosamente!`}</Text>
+                ) : (
+                  <Text
+                    style={styles.textInputTag}
+                  >{`Selecciona una ubicacion`}</Text>
+                )}
+              </View>
+            </TouchableOpacity>
+            <Modal
+              animationType="none"
+              transparent={true}
+              visible={modalVisible}
+            >
+              <View style={styles.modalContainer}>
+                <View style={styles.modalContent}>
+                  <View style={styles.modalTop}>
+                    <Pressable
+                      onPress={() => {
+                        setModalVisible(!modalVisible);
                       }}
-                      source={require("@/utils/images/arrow_back.png")}
-                    />
-                  </Pressable>
-                </View>
-                <View style={{ flex: 1 }}>
-                  <MapView
-                    provider={PROVIDER_GOOGLE}
-                    style={{ flex: 1 }}
-                    showsUserLocation={modalVisible}
-                    ref={mapRef}
-                    initialRegion={{
-                      latitude: initialLocation.latitude,
-                      longitude: initialLocation.longitude,
-                      latitudeDelta: 0.001,
-                      longitudeDelta: 0.001,
-                    }}
-                    showsPointsOfInterest={false}
-                    onDoublePress={onHandlePress}
-                    customMapStyle={MAP_SETTINGS}
-                  >
-                    {marketLocation && (
-                      <Marker
-                        title="Ubicacion de tu negocion"
-                        coordinate={marketLocation}
-                        draggable
-                        onDragStart={(e) => onHandleMarkerDragStart(e)}
-                        onDragEnd={onHandleMarketMove}
+                    >
+                      <Image
+                        style={{
+                          width: 25,
+                          height: 25,
+                          resizeMode: "contain",
+                        }}
+                        source={require("@/utils/images/arrow_back.png")}
                       />
-                    )}
-                  </MapView>
-                  <TouchableOpacity
-                    style={[
-                      {
-                        position: "absolute",
-                        bottom: 20,
-                        right: 20,
-                        paddingHorizontal: 10,
-                        paddingVertical: 15,
-                        borderRadius: 5,
-                      },
-                      global.mainBgColor,
-                    ]}
-                    onPress={onHandleConfirm}
-                  >
-                    <Text
-                      style={[global.white, { fontFamily: "light" }]}
-                    >{`Confirmar`}</Text>
-                  </TouchableOpacity>
+                    </Pressable>
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <MapView
+                      provider={PROVIDER_GOOGLE}
+                      style={{ flex: 1 }}
+                      showsUserLocation={modalVisible}
+                      ref={mapRef}
+                      initialRegion={{
+                        latitude: initialLocation.latitude,
+                        longitude: initialLocation.longitude,
+                        latitudeDelta: 0.001,
+                        longitudeDelta: 0.001,
+                      }}
+                      showsPointsOfInterest={false}
+                      onDoublePress={(e) => {
+                        onHandlePress(e);
+                        onChange(e.nativeEvent.coordinate);
+                      }}
+                      customMapStyle={MAP_SETTINGS}
+                    >
+                      {marketLocation && (
+                        <Marker
+                          title="Ubicacion de tu negocion"
+                          coordinate={marketLocation}
+                          draggable
+                          onDragStart={(e) => onHandleMarkerDragStart(e)}
+                          onDragEnd={onHandleMarketMove}
+                        />
+                      )}
+                    </MapView>
+                    <TouchableOpacity
+                      style={[
+                        {
+                          position: "absolute",
+                          bottom: 20,
+                          right: 20,
+                          paddingHorizontal: 10,
+                          paddingVertical: 15,
+                          borderRadius: 5,
+                        },
+                        global.mainBgColor,
+                      ]}
+                      onPress={onHandleConfirm}
+                    >
+                      <Text
+                        style={[global.white, { fontFamily: "light" }]}
+                      >{`Confirmar`}</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
-            </View>
-          </Modal>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+            </Modal>
+            {error && (
+              <Text style={{ color: "red" }}>
+                No has Selecciona la Ubicacion de tu Negocio
+              </Text>
+            )}
+          </View>
+        </ScrollView>
+      )}
+    />
   );
 };
 

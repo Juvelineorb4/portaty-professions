@@ -19,18 +19,14 @@ import * as customProfile from "@/graphql/CustomQueries/Profile";
 import * as mutations from "@/graphql/mutations";
 import CustomActivities from "@/components/CustomActivities";
 import { useRecoilState, useRecoilValue } from "recoil";
-import {
-  activitySelect,
-  mapBusiness,
-  mapUser,
-  profileState,
-  tagsList,
-} from "@/atoms";
-import * as MediaLibrary from "expo-media-library";
+import { activitySelect, mapBusiness, profileState, tagsList } from "@/atoms";
 import MapMarketBusiness from "@/components/MapMarketBusiness";
-import * as Location from "expo-location";
-
+// hooks
+import useLocation from "@/hooks/useLocation";
+// lengaujhe
+import { es } from "@/utils/constants/lenguage";
 const Form = ({ navigation, route }) => {
+  const { location } = useLocation();
   const global = require("@/utils/styles/global.js");
   const { user } = route.params;
   const { control, handleSubmit } = useForm();
@@ -39,8 +35,6 @@ const Form = ({ navigation, route }) => {
   const [activitiesList, setActivitiesList] = useState([]);
   const activity = useRecoilValue(activitySelect);
   const tags = useRecoilValue(tagsList);
-  const map = useRecoilValue(mapBusiness);
-  const [userLocation, setUserLocation] = useRecoilState(mapUser);
 
   /* Para limpiar */
   const [selectTagsList, setSelectTagsList] = useRecoilState(tagsList);
@@ -82,7 +76,7 @@ const Form = ({ navigation, route }) => {
     setSelectMapBusiness({});
   };
   const onRegisterBusiness = async (data) => {
-    const { company, email, phone, wsme } = data;
+    const { company, email, phone, wsme, coordinates } = data;
     const storageFolder = company.replace(/ /g, "");
     try {
       const { key } = await Storage.put(
@@ -105,8 +99,8 @@ const Form = ({ navigation, route }) => {
             whatsapp: wsme,
             image: key,
             coordinates: {
-              lat: map.latitude,
-              lon: map.longitude,
+              lat: coordinates.latitude,
+              lon: coordinates.longitude,
             },
             activity: activity.name,
             tags: tags,
@@ -130,21 +124,10 @@ const Form = ({ navigation, route }) => {
   };
 
   useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-
-      if (status === "granted") {
-        let location = await Location.getCurrentPositionAsync({
-          accuracy: Location.Accuracy.BestForNavigation,
-        });
-        setUserLocation(location.coords);
-      } else {
-        navigation.goBack();
-      }
-    })();
     MultipleData();
     BlankInputs();
   }, []);
+
   /*  */
   return (
     <ScrollView style={[global.bgWhite, styles.container]}>
@@ -159,7 +142,10 @@ const Form = ({ navigation, route }) => {
           input: [styles.inputContainer],
           placeholder: styles.placeholder,
         }}
-        text={`Razon social`}
+        text={`Razon social*`}
+        rules={{
+          required: es.businessForm.register.company.rules,
+        }}
       />
       <CustomInput
         control={control}
@@ -172,7 +158,10 @@ const Form = ({ navigation, route }) => {
           input: [styles.inputContainer],
           placeholder: styles.placeholder,
         }}
-        text={`Correo electronico`}
+        text={`Correo electronico*`}
+        rules={{
+          required: es.businessForm.register.email.rules,
+        }}
       />
       <View
         style={{
@@ -187,11 +176,14 @@ const Form = ({ navigation, route }) => {
           styled={{
             text: styles.textInputBot,
             label: [styles.labelInputBot],
-            error: styles.errorInputBot,
+            error: styles.errorInput,
             input: [styles.inputContainerBot],
             placeholder: styles.placeholderBot,
           }}
-          text={`Telefono`}
+          text={`Telefono*`}
+          rules={{
+            required: es.businessForm.register.email.rules,
+          }}
         />
         <CustomInput
           control={control}
@@ -200,7 +192,7 @@ const Form = ({ navigation, route }) => {
           styled={{
             text: styles.textInputBot,
             label: [styles.labelInputBot],
-            error: styles.errorInputBot,
+            error: styles.errorInput,
             input: [styles.inputContainerBot],
             placeholder: styles.placeholderBot,
           }}
@@ -223,6 +215,9 @@ const Form = ({ navigation, route }) => {
             placeholder: styles.placeholder,
           }}
           text={`Actividad Laboral`}
+          rules={{
+            required: es.businessForm.register.email.rules,
+          }}
         />
       )}
 
@@ -243,8 +238,17 @@ const Form = ({ navigation, route }) => {
           text={`Tags`}
         />
       )}
-      {userLocation ? (
-        <MapMarketBusiness initialLocation={userLocation} />
+      {location ? (
+        <MapMarketBusiness
+          control={control}
+          initialLocation={location}
+          name={"coordinates"}
+          text={"Abrir Mapa"}
+          placeholder={"Selecciona una Ubicacion"}
+          rules={{
+            required: es.businessForm.register.email.rules,
+          }}
+        />
       ) : (
         <ActivityIndicator />
       )}
@@ -290,7 +294,7 @@ const Form = ({ navigation, route }) => {
           marginVertical: 10,
         }}
       >
-        Sube una imagen de tu negocio
+        Sube una imagen de tu negocio*
       </Text>
       <TouchableOpacity
         style={[

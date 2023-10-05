@@ -9,7 +9,6 @@
   margin-bottom: 10px;
 }
 
-
 /*  */
 
 .textInput {
@@ -17,6 +16,9 @@
   font-family: "light";
   margin-left: 10px;
   color: #fb8500;
+}
+.errorInput {
+  color: red;
 }
 .inputContainer {
   flex-direction: row;
@@ -72,4 +74,3 @@
   font-size: 14px;
   color: #404040;
 }
-

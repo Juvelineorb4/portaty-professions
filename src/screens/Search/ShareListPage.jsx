@@ -22,17 +22,17 @@ const ShareListPage = ({ route }) => {
       query: queries.getUsers,
       authMode: "AWS_IAM",
       variables: {
-        id: '82c735b0-9bba-4049-9c2c-ced64b42c35c',
+        id: "82c735b0-9bba-4049-9c2c-ced64b42c35c",
       },
     });
+    
     setFavoritesList(result.data.getUsers.favorites.items);
-    if (result.data.getUsers.favorites.items.length === 0)
-      setNothing(true);
+    console.log(result.data.getUsers.favorites.items);
+    if (result.data.getUsers.favorites.items.length === 0) setNothing(true);
     setTimeout(() => {
       setLoading(false);
     }, 2000);
   };
-
 
   useEffect(() => {
     fetchFavorites();
@@ -53,7 +53,11 @@ const ShareListPage = ({ route }) => {
   if (favoritesList.length !== 0)
     return (
       <ScrollView style={[{ flex: 1, padding: 20 }, global.bgWhite]}>
-        <Text style={{fontSize: 16, fontFamily: 'light', paddingVertical: 20}}>Compartieron esta lista de negocios contigo</Text>
+        <Text
+          style={{ fontSize: 16, fontFamily: "light", paddingVertical: 20 }}
+        >
+          Compartieron esta lista de negocios contigo
+        </Text>
         <View style={{}}>
           {favoritesList.map((post, index) => (
             <ItemShareList
