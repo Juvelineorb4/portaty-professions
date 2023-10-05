@@ -9,11 +9,11 @@ import NavSettings from "./NavSettings";
 // recoil
 import { useRecoilValue, useRecoilState } from "recoil";
 import { userAuthenticated, mapUser } from "@/atoms";
-import * as Location from "expo-location";
 // linking
 import SharePage from "@/screens/Search/SharePage";
 import linking from "./linking";
 import LeftHeaderShare from "@/components/Header/LeftHeaderShare";
+import * as Linking from "expo-linking";
 // hooks
 import useLocation from "@/hooks/useLocation";
 import ShareNavigator from "./ShareNavigator";
@@ -23,6 +23,12 @@ const Navigation = () => {
   const Stack = createNativeStackNavigator();
   // pido localizacion
   const { location } = useLocation();
+
+  // Linking.addEventListener("url", ({ url }) => {
+  //   const { hostname, path, queryParams } = Linking.parse(url);
+
+  // });
+
   return (
     <NavigationContainer linking={linking}>
       <NavSettings />

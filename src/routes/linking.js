@@ -3,7 +3,12 @@ import * as Linking from "expo-linking";
 
 console.log("LINK CREADO:", Linking.createURL("/"));
 export default {
-  prefixes: [Linking.createURL("/")],
+  prefixes: [
+    Linking.createURL("/"),
+    "https://www.portaty.com/",
+    "https://www.portaty.com/share/list",
+    "https://www.portaty.com/share/business",
+  ],
   config: {
     screens: {
       ShareNavigator: {
