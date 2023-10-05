@@ -8,7 +8,7 @@ import {
   Share,
   Linking
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CustomSelect from "@/components/CustomSelect";
 import styles from "@/utils/styles/Unprofile.module.css";
 import {
@@ -23,12 +23,31 @@ import {
 import { Auth, API, Storage } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Favorites";
 import * as customFavorites from "@/graphql/CustomMutations/Favorites";
+import * as customSearch from "@/graphql/CustomQueries/Search";
 
 const FavoritePage = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
+  const [post, setPost] = useState([]);
   const {
     data: { item, image },
   } = route.params;
+  console.log('toy aqui manito',item.businessID)
+  const fetchData = async () => {
+    try {
+      const business = await API.graphql({
+        query: customSearch.getBusinessFavorites,
+        variables: {
+          id: item.businessID,
+        },
+        authMode: "AWS_IAM",
+      });
+      console.log(business.data.getBusiness)
+      setPost(business.data.getBusiness);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  // console.log(item.business.favorites)
   const onDeleteFavorite = async () => {
     const favorites = await API.graphql({
       query: customFavorites.deleteFavorites,
@@ -56,6 +75,11 @@ const FavoritePage = ({ navigation, route }) => {
     const url=`tel://${item.business.phone}`
     Linking.openURL(url)
   }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
+  
   return (
     <View
       style={[
@@ -116,7 +140,7 @@ const FavoritePage = ({ navigation, route }) => {
               justifyContent: "center",
             }}
           >
-            <Text style={{ fontSize: 26, fontFamily: "thin" }}>{item.business.favorites?.items.length}</Text>
+            <Text style={{ fontSize: 26, fontFamily: "thin" }}>{post.favorites?.items.length}</Text>
             <Text style={{ fontSize: 22, fontFamily: "thin" }}>Favoritos</Text>
           </View>
           <TouchableOpacity

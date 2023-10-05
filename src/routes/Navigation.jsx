@@ -12,11 +12,11 @@ import { userAuthenticated, mapUser } from "@/atoms";
 import * as Location from "expo-location";
 // linking
 import SharePage from "@/screens/Search/SharePage";
-import ShareListPage from "@/screens/Search/ShareListPage";
 import linking from "./linking";
 import LeftHeaderShare from "@/components/Header/LeftHeaderShare";
 // hooks
 import useLocation from "@/hooks/useLocation";
+import ShareNavigator from "./ShareNavigator";
 
 const Navigation = () => {
   const userAuth = useRecoilValue(userAuthenticated);
@@ -52,11 +52,11 @@ const Navigation = () => {
           }}
         />
         <Stack.Screen
-          name="ShareListPage"
-          component={ShareListPage}
+          name="ShareNavigator"
+          component={ShareNavigator}
           options={{
             animation: "slide_from_right",
-            header: (props) => <LeftHeaderShare {...props} />,
+            headerShown: false,
           }}
         />
       </Stack.Navigator>

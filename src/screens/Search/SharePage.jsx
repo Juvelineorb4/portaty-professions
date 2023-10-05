@@ -33,6 +33,7 @@ const SharePage = ({ route, navigation }) => {
   const [save, setSave] = useState("");
   const global = require("@/utils/styles/global.js");
   const { params } = route;
+  const { item, image } = route.params;
   const onCreateFavorite = async () => {
     try {
       const { attributes } = await Auth.currentAuthenticatedUser();
@@ -71,7 +72,7 @@ const SharePage = ({ route, navigation }) => {
       const business = await API.graphql({
         query: customSearch.getBusiness,
         variables: {
-          id: params?.id,
+          id: item ? item : params?.id,
         },
         authMode: "AWS_IAM",
       });
@@ -88,7 +89,7 @@ const SharePage = ({ route, navigation }) => {
         query: queries.favoritesByBusinessID,
         authMode: "AMAZON_COGNITO_USER_POOLS",
         variables: {
-          businessID: params?.id,
+          businessID: item ? item : params?.id,
           userID: { eq: attributes["custom:userTableID"] },
         },
       });
@@ -115,9 +116,10 @@ const SharePage = ({ route, navigation }) => {
   useEffect(() => {
       fetchData();
       fetchFavorite();
+      console.log(item)
   }, []);
 
-  if (params?.id !== undefined)
+  if (params?.id !== undefined || item !== undefined)
     return (
       <View
         style={[
@@ -538,7 +540,7 @@ const SharePage = ({ route, navigation }) => {
       </View>
     );
 
-  if (params?.id === undefined)
+  if (params?.id === undefined || item === undefined)
     return (
       <View
         style={[

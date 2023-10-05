@@ -1,13 +1,14 @@
 import { View, Text, ScrollView, ActivityIndicator } from "react-native";
 import React, { useEffect, useState } from "react";
-import styles from "@/utils/styles/Mode.module.css";
+import styles from "@/utils/styles/ShareListPage.module.css";
 import ItemShareList from "@/components/ItemShareList";
 import * as customSearch from "@/graphql/CustomQueries/Search";
 import { Auth, API, Storage } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Favorites";
 import * as customFavorites from "@/graphql/CustomMutations/Favorites";
+import CustomButton from "@/components/CustomButton";
 
-const ShareListPage = ({ route }) => {
+const ShareListPage = ({ route, navigation }) => {
   const { params } = route;
   const global = require("@/utils/styles/global.js");
   const [data, setData] = useState([]);
@@ -17,28 +18,27 @@ const ShareListPage = ({ route }) => {
 
   const fetchFavorites = async () => {
     setLoading(true);
-    const { attributes } = await Auth.currentAuthenticatedUser();
     const result = await API.graphql({
       query: queries.getUsers,
       authMode: "AWS_IAM",
       variables: {
-        id: '82c735b0-9bba-4049-9c2c-ced64b42c35c',
+        id: params?.id,
+        // id: '82c735b0-9bba-4049-9c2c-ced64b42c35c',
       },
     });
+    console.log(result.data.getUsers.favorites.items)
     setFavoritesList(result.data.getUsers.favorites.items);
-    if (result.data.getUsers.favorites.items.length === 0)
-      setNothing(true);
+    if (result.data.getUsers.favorites.items.length === 0) setNothing(true);
     setTimeout(() => {
       setLoading(false);
     }, 2000);
   };
 
-
   useEffect(() => {
-    fetchFavorites();
+    if (params?.id !== undefined) fetchFavorites();
   }, []);
 
-  if (favoritesList.length === 0)
+  if (loading)
     return (
       <View
         style={[
@@ -50,10 +50,32 @@ const ShareListPage = ({ route }) => {
       </View>
     );
 
+  if (favoritesList.length === 0 || params?.id === undefined)
+    return (
+      <View
+        style={[
+          { flex: 1, alignItems: "center", justifyContent: "center" },
+          global.bgWhite,
+        ]}
+      >
+        <Text style={{fontFamily: 'light', fontSize: 16}}>Este usuario no tiene ningun negocio en favoritos para compartir</Text>
+        <CustomButton
+          text={`Encuentra mas negocios`}
+          handlePress={() => navigation.navigate("Tabs_Navigation")}
+          textStyles={[styles.textSearch, global.white]}
+          buttonStyles={[styles.search, global.mainBgColor]}
+        />
+      </View>
+    );
+
   if (favoritesList.length !== 0)
     return (
       <ScrollView style={[{ flex: 1, padding: 20 }, global.bgWhite]}>
-        <Text style={{fontSize: 16, fontFamily: 'light', paddingVertical: 20}}>Compartieron esta lista de negocios contigo</Text>
+        <Text
+          style={{ fontSize: 16, fontFamily: "light", paddingVertical: 20 }}
+        >
+          Compartieron esta lista de negocios contigo
+        </Text>
         <View style={{}}>
           {favoritesList.map((post, index) => (
             <ItemShareList

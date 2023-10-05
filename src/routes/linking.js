@@ -3,8 +3,12 @@ export default {
   prefixes: [Linking.createURL("/"), "portaty://", "https://portaty.com"],
   config: {
     screens: {
-      ShareListPage: {
-        path: "share/list",
+      ShareNavigator: {
+        screens: {
+          ShareListPage: {
+            path: "share/list",
+          },
+        },
       },
       SharePage: {
         path: "share/business",
