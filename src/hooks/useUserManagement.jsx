@@ -25,6 +25,7 @@ const useUserManagement = () => {
     navigation.navigate("Login_Welcome");
   };
   const checkUser = async () => {
+    console.log("SE ACTIVO EL CHECK USER");
     try {
       const data = await Auth.currentAuthenticatedUser();
       setUserAuth(data);
@@ -39,24 +40,21 @@ const useUserManagement = () => {
   const checkAttributes = (data) => {
     const { attributes } = data;
     if (
-      !attributes["custom:identityID"] ||
-      attributes["custom:identityID"] === ""
-    )
-      updateIdentityID(data);
-    if (
       !attributes["custom:userTableID"] ||
       attributes["custom:userTableID"] === ""
     )
       updateUserTableID(data);
+    if (
+      !attributes["custom:identityID"] ||
+      attributes["custom:identityID"] === ""
+    )
+      updateIdentityID(data);
   };
 
   const updateIdentityID = async (data) => {
     const { attributes } = data;
     try {
       const { identityId } = await Auth.currentUserCredentials();
-      await Auth.updateUserAttributes(data, {
-        "custom:identityID": identityId,
-      });
       await API.graphql({
         query: updateUsers,
         authMode: "AMAZON_COGNITO_USER_POOLS",
@@ -66,6 +64,9 @@ const useUserManagement = () => {
             identityID: identityId,
           },
         },
+      });
+      await Auth.updateUserAttributes(data, {
+        "custom:identityID": identityId,
       });
     } catch (error) {
       const { message } = new Error(error);

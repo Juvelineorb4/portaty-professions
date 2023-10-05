@@ -1,13 +1,20 @@
 # schema
-type Users @model @auth(rules: [{ allow: owner }]) {
-  id: ID!
-  cognitoID: ID! @auth(rules: [{ allow: owner, operations: [read, delete] }])
-  name: String! @auth(rules: [{ allow: owner }])
-  lastName: String! @auth(rules: [{ allow: owner }])
-  email: String!
+type Users
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: private, provider: iam, operations: [read] }
+    ]
+  ) {
+  id: ID
+  cognitoID: ID @auth(rules: [{ allow: owner, operations: [read, delete] }])
+  name: String @auth(rules: [{ allow: owner }])
+  lastName: String @auth(rules: [{ allow: owner }])
+  email: String
     @auth(rules: [{ allow: owner }])
     @index(name: "byEmailUser", queryField: "userByEmail")
-  identityID: ID
+  identityID: ID @auth(rules: [{ allow: owner }])
   favorites: [Favorites] @hasMany(indexName: "byUsersFavorites", fields: ["id"])
   business: [Business] @hasMany(indexName: "byUsersBusiness", fields: ["id"])
   owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }])
@@ -59,6 +66,7 @@ type Favorites
   @auth(
     rules: [
       { allow: owner }
+      { allow: private, provider: iam, operations: [read] }
       { allow: groups, groups: ["sp"], operations: [read] }
     ]
   ) {
@@ -66,8 +74,8 @@ type Favorites
     @auth(
       rules: [
         { allow: owner }
-        { allow: groups, groups: ["sp"], operations: [read] }
         { allow: private, provider: iam, operations: [read] }
+        { allow: groups, groups: ["sp"], operations: [read] }
       ]
     )
   businessID: ID!
@@ -79,18 +87,17 @@ type Favorites
     @auth(
       rules: [
         { allow: owner }
-        { allow: groups, groups: ["sp"], operations: [read] }
         { allow: private, provider: iam, operations: [read] }
+        { allow: groups, groups: ["sp"], operations: [read] }
       ]
     )
   business: Business @belongsTo(fields: ["businessID"])
-  userID: ID!
+  userID: ID
     @index(name: "byUsersFavorites")
     @auth(
       rules: [
         { allow: owner }
         { allow: groups, groups: ["sp"], operations: [read] }
-        { allow: private, provider: iam, operations: [read] }
       ]
     )
   user: Users @belongsTo(fields: ["userID"])

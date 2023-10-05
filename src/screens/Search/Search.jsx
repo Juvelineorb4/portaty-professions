@@ -25,7 +25,7 @@ import {
 import { useRecoilState, useRecoilValue } from "recoil";
 import * as Location from "expo-location";
 import * as queries from "@/graphql/CustomQueries/Favorites";
-
+import useLocation from "@/hooks/useLocation";
 const Search = ({ route }) => {
   const global = require("@/utils/styles/global.js");
   const [moreItems, setMoreItems] = useState(1);
@@ -37,30 +37,19 @@ const Search = ({ route }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [statusFilter, setStatusFilter] = useState(false);
   const [filterRadio, setFilterRadio] = useRecoilState(kmRadio);
-  const location = useRecoilValue(mapUser);
-  const kilometers = [
-    1,
-    5,
-    10,
-    20,
-    50,
-    100
-  ]
-  console.log(filterRadio);
+  const { location } = useLocation();
+  const kilometers = [1, 5, 10, 20, 50, 100];
+
   let number = 26 * moreItems;
   const getData = async () => {
-    console.log({
-      lat: location.latitude,
-      lon: location.longitude,
-    });
     const api = "api-professions-gateway";
     const path = "/searchBusinessByDistance";
     const params = {
       headers: {},
       queryStringParameters: {
         location: JSON.stringify({
-          lat: location.latitude,
-          lon: location.longitude,
+          lat: location?.latitude,
+          lon: location?.longitude,
         }),
         km: filterRadio,
         from: 0,
@@ -87,14 +76,15 @@ const Search = ({ route }) => {
   };
   const getFilterData = async () => {
     setStatusFilter(true);
-    getData();
+    if (location) getData();
     setTimeout(() => {
       setStatusFilter(false);
     }, 3000);
   };
   useEffect(() => {
-    getData();
-  }, [moreItems]);
+    // espero que me traiga algo de location
+    if (location) getData();
+  }, [location, moreItems]);
 
   if (searchActive) {
     return (
@@ -166,33 +156,35 @@ const Search = ({ route }) => {
                       flexDirection: "row",
                       justifyContent: "space-between",
                       flexWrap: "wrap",
-                      marginVertical: 15
+                      marginVertical: 15,
                     }}
                   >
                     {kilometers.map((item, index) => (
                       <TouchableOpacity
-                      key={index}
-                      onPress={() => setFilterRadio(item)}
-                      style={[
-                        filterRadio === item ? global.mainBgColor : global.bgWhite,
-                        {
-                          padding: 7,
-                          borderRadius: 4,
-                          marginBottom: 7,
-                          borderWidth: 0.5,
-                          borderColor: filterRadio === item ? '#fff' : '#000'
-                        },
-                      ]}
-                    >
-                      <Text
+                        key={index}
+                        onPress={() => setFilterRadio(item)}
                         style={[
-                          { fontFamily: "regular", fontSize: 12 },
-                          filterRadio === item ? global.white : global.black,
+                          filterRadio === item
+                            ? global.mainBgColor
+                            : global.bgWhite,
+                          {
+                            padding: 7,
+                            borderRadius: 4,
+                            marginBottom: 7,
+                            borderWidth: 0.5,
+                            borderColor: filterRadio === item ? "#fff" : "#000",
+                          },
                         ]}
                       >
-                        {item}km
-                      </Text>
-                    </TouchableOpacity>
+                        <Text
+                          style={[
+                            { fontFamily: "regular", fontSize: 12 },
+                            filterRadio === item ? global.white : global.black,
+                          ]}
+                        >
+                          {item}km
+                        </Text>
+                      </TouchableOpacity>
                     ))}
                   </View>
                   <Text
@@ -213,7 +205,7 @@ const Search = ({ route }) => {
                     ]}
                     onPress={() => {
                       setModalVisible(!modalVisible);
-                      getFilterData();
+                      if (location) getFilterData();
                     }}
                   >
                     <Text

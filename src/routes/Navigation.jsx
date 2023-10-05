@@ -15,22 +15,14 @@ import SharePage from "@/screens/Search/SharePage";
 import ShareListPage from "@/screens/Search/ShareListPage";
 import linking from "./linking";
 import LeftHeaderShare from "@/components/Header/LeftHeaderShare";
+// hooks
+import useLocation from "@/hooks/useLocation";
+
 const Navigation = () => {
   const userAuth = useRecoilValue(userAuthenticated);
   const Stack = createNativeStackNavigator();
-  const [userLocation, setUserLocation] = useRecoilState(mapUser);
-  useLayoutEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status === "granted") {
-        let location = await Location.getCurrentPositionAsync({
-          accuracy: Location.Accuracy.BestForNavigation,
-        });
-        setUserLocation(location.coords);
-        console.log(status);
-      }
-    })();
-  }, []);
+  // pido localizacion
+  useLocation();
   return (
     <NavigationContainer linking={linking}>
       <NavSettings />
@@ -52,21 +44,21 @@ const Navigation = () => {
           }}
         />
         <Stack.Screen
-      name="SharePage"
-      component={SharePage}
-      options={{
-        animation: "slide_from_right",
-        header: (props) => <LeftHeaderShare {...props} />,
-      }}
-    />
-    <Stack.Screen
-        name="ShareListPage"
-        component={ShareListPage}
-        options={{
-          animation: "slide_from_right",
-          header: (props) => <LeftHeaderShare {...props} />,
-        }}
-      />
+          name="SharePage"
+          component={SharePage}
+          options={{
+            animation: "slide_from_right",
+            header: (props) => <LeftHeaderShare {...props} />,
+          }}
+        />
+        <Stack.Screen
+          name="ShareListPage"
+          component={ShareListPage}
+          options={{
+            animation: "slide_from_right",
+            header: (props) => <LeftHeaderShare {...props} />,
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

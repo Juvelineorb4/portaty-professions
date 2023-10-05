@@ -40,7 +40,6 @@ const Home = ({ navigation, route }) => {
         email: attributes.email,
       },
     });
-    console.log(result.data.userByEmail.items[0].favorites.items);
     setFavoritesList(result.data.userByEmail.items[0].favorites.items);
     if (result.data.userByEmail.items[0].favorites.items.length === 0)
       setNothing(true);
@@ -53,28 +52,13 @@ const Home = ({ navigation, route }) => {
       } else {
         setResultNothing(true);
       }
-      console.log(temporalList);
-      setTimeout(() => {
-        setLoading(false);
-      }, 2000);
     } else {
       setFavoritesList(result.data.userByEmail.items[0].favorites.items);
-      setTimeout(() => {
-        setLoading(false);
-      }, 2000);
     }
+    // setTimeout(() => {}, 2000);
+    setLoading(false);
   };
   useLayoutEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status === "granted") {
-        let location = await Location.getCurrentPositionAsync({
-          accuracy: Location.Accuracy.BestForNavigation,
-        });
-        console.log(location.coords)
-        setUserLocation(location.coords);
-      }
-    })();
     fetchFavorites();
   }, [route, statusFavorites, inputFavorite]);
 
