@@ -145,9 +145,9 @@ const MapMarketBusiness = ({ initialLocation }) => {
                     />
                   </Pressable>
                 </View>
-                <Text>{PROVIDER_GOOGLE}</Text>
                 <View style={{ flex: 1 }}>
                   <MapView
+                    provider={PROVIDER_GOOGLE}
                     style={{ flex: 1 }}
                     showsUserLocation={modalVisible}
                     ref={mapRef}
@@ -160,7 +160,6 @@ const MapMarketBusiness = ({ initialLocation }) => {
                     showsPointsOfInterest={false}
                     onDoublePress={onHandlePress}
                     customMapStyle={MAP_SETTINGS}
-                    provider={PROVIDER_GOOGLE}
                   >
                     {marketLocation && (
                       <Marker
