@@ -83,4 +83,18 @@ export const es = {
       },
     },
   },
+  businessForm: {
+    register: {
+      company: {
+        text: "",
+        placeholder: "",
+        rules: "Requerido",
+      },
+      email: {
+        text: "",
+        placeholder: "",
+        rules: "Requerido",
+      },
+    },
+  },
 };

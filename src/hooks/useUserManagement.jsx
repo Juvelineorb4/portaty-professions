@@ -37,7 +37,7 @@ const useUserManagement = () => {
     }
   };
 
-  const checkAttributes = (data) => {
+  const checkAttributes = async (data) => {
     const { attributes } = data;
     if (
       !attributes["custom:userTableID"] ||
@@ -47,14 +47,16 @@ const useUserManagement = () => {
     if (
       !attributes["custom:identityID"] ||
       attributes["custom:identityID"] === ""
-    )
-      updateIdentityID(data);
+    ) {
+      const { identityId } = await Auth.currentUserCredentials();
+      await updateIdentityID(data, identityId);
+      await updateTableIdentityID(data, identityId);
+    }
   };
 
-  const updateIdentityID = async (data) => {
+  const updateTableIdentityID = async (data, identityId) => {
     const { attributes } = data;
     try {
-      const { identityId } = await Auth.currentUserCredentials();
       await API.graphql({
         query: updateUsers,
         authMode: "AMAZON_COGNITO_USER_POOLS",
@@ -64,13 +66,19 @@ const useUserManagement = () => {
             identityID: identityId,
           },
         },
-      });
+      }).then((r) => console.log("TABLA IDENTITYD ID UPDATE"));
+    } catch (error) {
+      console.log("ERROR AL ACTUALZIAR TABLA EN IDENTITYID", error);
+    }
+  };
+  const updateIdentityID = async (data, identityId) => {
+    try {
       await Auth.updateUserAttributes(data, {
         "custom:identityID": identityId,
       });
     } catch (error) {
       const { message } = new Error(error);
-      console.log("ERROR AL ACTUALIZAR IDENTITY ID: ", message);
+      console.log("ERROR AL ACTUALIZAR ATRIBUTO IDENTITY ID: ", message);
     }
   };
   const updateUserTableID = async (data) => {

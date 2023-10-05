@@ -48,8 +48,8 @@ export default function App() {
 
   // linkg action
   const handleURL = (url) => {
-    const { hostname, path, queryParams } = Linking.parse(url);
-    console.log("HOSTNAME: ", hostname);
+    const { path, queryParams } = Linking.parse(url);
+    console.log("Link: ", url);
     console.log("PATH: ", path);
     console.log("PARAMS: ", queryParams);
     return;

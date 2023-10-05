@@ -22,7 +22,7 @@ const Navigation = () => {
   const userAuth = useRecoilValue(userAuthenticated);
   const Stack = createNativeStackNavigator();
   // pido localizacion
-  useLocation();
+  const { location } = useLocation();
   return (
     <NavigationContainer linking={linking}>
       <NavSettings />

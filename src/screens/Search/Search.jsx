@@ -76,10 +76,9 @@ const Search = ({ route }) => {
   };
   const getFilterData = async () => {
     setStatusFilter(true);
-    if (location) getData();
-    setTimeout(() => {
-      setStatusFilter(false);
-    }, 3000);
+    getData();
+    // setTimeout(() => {}, 3000);
+    setStatusFilter(false);
   };
   useEffect(() => {
     // espero que me traiga algo de location
