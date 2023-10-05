@@ -24,10 +24,9 @@ const Navigation = () => {
   // pido localizacion
   const { location } = useLocation();
 
-  // Linking.addEventListener("url", ({ url }) => {
-  //   const { hostname, path, queryParams } = Linking.parse(url);
-
-  // });
+  Linking.addEventListener("url", ({ url }) => {
+    console.log("EVENTO LISTINER: ", url);
+  });
 
   return (
     <NavigationContainer linking={linking}>
