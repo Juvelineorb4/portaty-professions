@@ -137,13 +137,16 @@ const Page = ({ route }) => {
             source={require("@/utils/images/arrow_right.png")}
           />
         </TouchableOpacity>
-        {/* <TouchableOpacity
+        <TouchableOpacity
           style={{
             padding: 20,
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
             marginTop: -25,
+          }}
+          onPress={() => {
+            navigation.navigate("ViewQR", { id: `https://www.portaty.com/share/business?id=${item.id}`, name: item.name });
           }}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -159,12 +162,12 @@ const Page = ({ route }) => {
                 global.mainBgColor,
               ]}
             >
-              <Feather name="phone-call" size={17} color="white" />
+              <MaterialCommunityIcons name="qrcode-scan" size={25} color="white" />
             </View>
             <View style={{ marginLeft: 10 }}>
-              <Text style={{ fontFamily: "light", fontSize: 16 }}>Llamar</Text>
+              <Text style={{ fontFamily: "light", fontSize: 16 }}>Ver QR</Text>
               <Text style={{ fontFamily: "thin", fontSize: 12, width: 150 }}>
-                Contacta al negocio directamente
+                Compartelo en formato QR para pegarlo en donde quieras
               </Text>
             </View>
           </View>
@@ -176,7 +179,7 @@ const Page = ({ route }) => {
             }}
             source={require("@/utils/images/arrow_right.png")}
           />
-        </TouchableOpacity> */}
+        </TouchableOpacity>
         <View style={{ marginBottom: 80 }}>
           <Text style={{ fontSize: 22, fontFamily: "thinItalic", padding: 10 }}>
             Datos

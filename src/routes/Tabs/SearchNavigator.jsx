@@ -10,6 +10,7 @@ import SearchOut from "@/screens/Search/SearchOut";
 import LeftHeader from "@/components/Header/LeftHeader";
 
 import Other from "@/screens/Search/Other";
+import CustomQR from "@/components/CustomQR";
 
 const SearchNavigator = ({ navigation }) => {
   const [active, setActive] = useState(false);
@@ -156,6 +157,14 @@ const SearchNavigator = ({ navigation }) => {
         component={Other}
         options={{
           animation: "slide_from_right",
+        }}
+      />
+      <Stack.Screen
+        name="ViewQR"
+        component={CustomQR}
+        options={{
+          animation: "slide_from_right",
+          header: (props) => <LeftHeader {...props} />,
         }}
       />
     </Stack.Navigator>
