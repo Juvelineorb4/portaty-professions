@@ -4,7 +4,7 @@
     "name": "portaty-professions",
     "slug": "portaty-professions",
     "owner": "portaty",
-    "version": "0.6.0.2",
+    "version": "0.6.0.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -17,9 +17,7 @@
       "fallbackToCacheTimeout": 0,
       "url": "https://u.expo.dev/b378d102-5cf7-49fc-93f0-b5df7f83d8ad"
     },
-    "assetBundlePatterns": [
-      "*/"
-    ],
+    "assetBundlePatterns": ["*/"],
     "ios": {
       "runtimeVersion": "exposdk:48.0.0",
       "supportsTablet": true,
@@ -61,10 +59,7 @@
               "pathPrefix": "/share/business"
             }
           ],
-          "category": [
-            "BROWSABLE",
-            "DEFAULT"
-          ]
+          "category": ["BROWSABLE", "DEFAULT"]
         }
       ],
       "adaptiveIcon": {
@@ -86,18 +81,14 @@
         "android.permission.ACCESS_MEDIA_LOCATION"
       ],
       "package": "com.teamportaty.appdev",
-      "versionCode": 45
+      "versionCode": 46
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "packagerOpts": {
       "config": "metro.config.js",
-      "sourceExts": [
-        "js",
-        "jsx",
-        "css"
-      ]
+      "sourceExts": ["js", "jsx", "css"]
     },
     "plugins": [
       [
