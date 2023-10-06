@@ -17,12 +17,12 @@ const useUserManagement = () => {
   const userSignIn = (data) => {
     setUserAuth(data);
     checkAttributes(data);
-    navigation.navigate("Tabs_Navigation");
+    // navigation.navigate("Tabs_Navigation");
   };
 
   const userSignOut = () => {
     setUserAuth(null);
-    navigation.navigate("Login_Welcome");
+    // navigation.navigate("Login_Welcome");
   };
   const checkUser = async () => {
     console.log("SE ACTIVO EL CHECK USER");
@@ -30,7 +30,7 @@ const useUserManagement = () => {
       const data = await Auth.currentAuthenticatedUser();
       setUserAuth(data);
       checkAttributes(data);
-      navigation.navigate("Tabs_Navigation");
+      // navigation.navigate("Tabs_Navigation");
     } catch (error) {
       const { message } = new Error(error);
       console.log("ERROR USER: ", message);
