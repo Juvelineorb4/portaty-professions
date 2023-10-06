@@ -9,7 +9,6 @@ import NavSettings from "./NavSettings";
 // recoil
 import { useRecoilValue, useRecoilState } from "recoil";
 import { userAuthenticated, mapUser } from "@/atoms";
-import * as Location from "expo-location";
 // linking
 import SharePage from "@/screens/Search/SharePage";
 import linking from "./linking";
@@ -23,6 +22,7 @@ const Navigation = () => {
   const Stack = createNativeStackNavigator();
   // pido localizacion
   const { location } = useLocation();
+
   return (
     <NavigationContainer linking={linking}>
       <NavSettings />
