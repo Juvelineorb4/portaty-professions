@@ -7,6 +7,7 @@ import LeftHeader from "@/components/Header/LeftHeader";
 import { useRecoilValue } from "recoil";
 import { favoriteSelection } from "@/atoms";
 import FavoriteHeader from "@/components/Header/FavoriteHeader";
+import CustomQR from "@/components/CustomQR";
 
 
 const HomeNavigator = ({ route, navigation }) => {
@@ -34,6 +35,14 @@ const HomeNavigator = ({ route, navigation }) => {
       <Stack.Screen
         name="FavoritePage"
         component={FavoritePage}
+        options={{
+          animation: "slide_from_right",
+          header: (props) => <LeftHeader {...props} />,
+        }}
+      />
+      <Stack.Screen
+        name="ViewQR"
+        component={CustomQR}
         options={{
           animation: "slide_from_right",
           header: (props) => <LeftHeader {...props} />,

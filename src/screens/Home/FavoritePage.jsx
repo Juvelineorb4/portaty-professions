@@ -6,7 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Share,
-  Linking
+  Linking,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import CustomSelect from "@/components/CustomSelect";
@@ -31,7 +31,7 @@ const FavoritePage = ({ navigation, route }) => {
   const {
     data: { item, image },
   } = route.params;
-  console.log('toy aqui manito',item.businessID)
+  console.log("toy aqui manito", item.businessID);
   const fetchData = async () => {
     try {
       const business = await API.graphql({
@@ -41,7 +41,7 @@ const FavoritePage = ({ navigation, route }) => {
         },
         authMode: "AWS_IAM",
       });
-      console.log(business.data.getBusiness)
+      console.log(business.data.getBusiness);
       setPost(business.data.getBusiness);
     } catch (error) {
       console.log(error);
@@ -64,22 +64,21 @@ const FavoritePage = ({ navigation, route }) => {
   const onShare = async () => {
     try {
       await Share.share({
-        message:
-        `Han compartido contigo un negocio, da click para mirarlo https://www.portaty.com/share/business?id=${item.businessID}`,
+        message: `Han compartido contigo un negocio, da click para mirarlo https://www.portaty.com/share/business?id=${item.businessID}`,
       });
     } catch (error) {
       console.error("Error sharing:", error);
     }
   };
-  const openCall = () =>{
-    const url=`tel://${item.business.phone}`
-    Linking.openURL(url)
-  }
+  const openCall = () => {
+    const url = `tel://${item.business.phone}`;
+    Linking.openURL(url);
+  };
 
   useEffect(() => {
-    fetchData()
-  }, [])
-  
+    fetchData();
+  }, []);
+
   return (
     <View
       style={[
@@ -140,7 +139,9 @@ const FavoritePage = ({ navigation, route }) => {
               justifyContent: "center",
             }}
           >
-            <Text style={{ fontSize: 26, fontFamily: "thin" }}>{post.favorites?.items.length}</Text>
+            <Text style={{ fontSize: 26, fontFamily: "thin" }}>
+              {post.favorites?.items.length}
+            </Text>
             <Text style={{ fontSize: 22, fontFamily: "thin" }}>Favoritos</Text>
           </View>
           <TouchableOpacity
@@ -183,6 +184,49 @@ const FavoritePage = ({ navigation, route }) => {
               </Text>
               <Text style={{ fontFamily: "thin", fontSize: 12, width: 150 }}>
                 Compartelo con tus amigos y familiares
+              </Text>
+            </View>
+          </View>
+          <Image
+            style={{
+              width: 40,
+              height: 40,
+              resizeMode: "cover",
+            }}
+            source={require("@/utils/images/arrow_right.png")}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            padding: 20,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginTop: -25,
+          }}
+          onPress={() => {
+            navigation.navigate("ViewQR", { id: `https://www.portaty.com/share/business?id=${item.businessID}`, name: item.business.name });
+          }}
+        >
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View
+              style={[
+                {
+                  width: 58,
+                  height: 58,
+                  borderRadius: 10,
+                  alignItems: "center",
+                  justifyContent: "center",
+                },
+                global.mainBgColor,
+              ]}
+            >
+              <MaterialCommunityIcons name="qrcode-scan" size={25} color="white" />
+            </View>
+            <View style={{ marginLeft: 10 }}>
+              <Text style={{ fontFamily: "light", fontSize: 16 }}>Ver QR</Text>
+              <Text style={{ fontFamily: "thin", fontSize: 12, width: 150 }}>
+                Compartelo en formato QR para pegarlo en donde quieras
               </Text>
             </View>
           </View>

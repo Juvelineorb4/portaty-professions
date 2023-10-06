@@ -26,7 +26,7 @@ import { Auth, API, Storage } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Favorites";
 import * as customFavorites from "@/graphql/CustomMutations/Favorites";
 
-const SearchPost = ({ route }) => {
+const SearchPost = ({ route, navigation }) => {
   const [post, setPost] = useState([]);
   const [save, setSave] = useState("");
   const global = require("@/utils/styles/global.js");
@@ -241,6 +241,49 @@ const SearchPost = ({ route }) => {
               </Text>
               <Text style={{ fontFamily: "thin", fontSize: 12, width: 150 }}>
                 Compartelo con tus amigos y familiares
+              </Text>
+            </View>
+          </View>
+          <Image
+            style={{
+              width: 40,
+              height: 40,
+              resizeMode: "cover",
+            }}
+            source={require("@/utils/images/arrow_right.png")}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            padding: 20,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginTop: -25,
+          }}
+          onPress={() => {
+            navigation.navigate("ViewQR", { id: `https://www.portaty.com/share/business?id=${item.id}`, name: post.name });
+          }}
+        >
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View
+              style={[
+                {
+                  width: 58,
+                  height: 58,
+                  borderRadius: 10,
+                  alignItems: "center",
+                  justifyContent: "center",
+                },
+                global.mainBgColor,
+              ]}
+            >
+              <MaterialCommunityIcons name="qrcode-scan" size={25} color="white" />
+            </View>
+            <View style={{ marginLeft: 10 }}>
+              <Text style={{ fontFamily: "light", fontSize: 16 }}>Ver QR</Text>
+              <Text style={{ fontFamily: "thin", fontSize: 12, width: 150 }}>
+                Compartelo en formato QR para pegarlo en donde quieras
               </Text>
             </View>
           </View>
