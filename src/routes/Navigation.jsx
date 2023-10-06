@@ -8,7 +8,7 @@ import Tabs from "./Tabs/Tabs";
 import NavSettings from "./NavSettings";
 // recoil
 import { useRecoilValue, useRecoilState } from "recoil";
-import { userAuthenticated, mapUser } from "@/atoms";
+import { userAuthenticated, mapUser, checkRenderState } from "@/atoms";
 // linking
 import SharePage from "@/screens/Search/SharePage";
 import linking from "./linking";
@@ -22,45 +22,18 @@ import { Text, View, Image } from "react-native";
 const Navigation = () => {
   const Stack = createNativeStackNavigator();
   const global = require("@/utils/styles/global.js");
-  const [checkRender, setCheckRender] = useState(false);
+
   const [userState, setUserState] = useState(false);
   const userAuth = useRecoilValue(userAuthenticated);
+  const checkRender = useRecoilValue(checkRenderState);
   // pido localizacion
   const { location } = useLocation();
-  const renderNavigation = () => {
-    setCheckRender(true);
-    try {
-      if (userAuth !== null) setUserState(true);
-      setCheckRender(false);
-    } catch (error) {
-      console.log(error);
-      setCheckRender(false);
-    }
-  };
-
-  useEffect(() => {
-    renderNavigation();
-  }, [userAuth]);
 
   return (
-    <NavigationContainer
-      linking={linking}
-      fallback={
-        <View style={[{ flex: 1 }, global.mainBgColor]}>
-          <Image
-            style={{
-              width: "100%",
-              height: "100%",
-              resizeMode: "contain",
-            }}
-            source={require("@/utils/images/splash.png")}
-          />
-        </View>
-      }
-    >
+    <NavigationContainer  fallback={<SplashScreen />}>
       <NavSettings />
       <Stack.Navigator>
-        {userState ? (
+        {userAuth && checkRender ? (
           <Stack.Screen
             name={`Tabs_Navigation`}
             component={Tabs}
@@ -77,6 +50,7 @@ const Navigation = () => {
             }}
           />
         )}
+
         <Stack.Screen
           name="SharePage"
           component={SharePage}

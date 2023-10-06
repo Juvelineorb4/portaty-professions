@@ -33,7 +33,7 @@ const NavSettings = () => {
       if (initialUrl) {
         // La aplicación se abrió mediante un deep link, puedes realizar acciones aquí
         console.log(
-          "La aplicación se abrió mediante el deep link:",
+          "La aplicación se abrió mediante el deep link (primer plano):",
           initialUrl,
           { hostname, path, queryParams }
         );
@@ -49,7 +49,26 @@ const NavSettings = () => {
         }
       }
     };
-    // checkInitialUrl();
+    Linking.addEventListener("url", ({ url }) => {
+      const { hostname, path, queryParams } = Linking.parse(url);
+      if (url) {
+        console.log("La aplicación se abrió en segundo plano:", url, {
+          hostname,
+          path,
+          queryParams,
+        });
+        if (path === "share/list" && queryParams?.id) {
+          return navigation.navigate("ShareNavigator", {
+            screen: "ShareListPage",
+            params: { id: queryParams?.id },
+          });
+        }
+        if (path === "share/business" && queryParams?.id) {
+          return navigation.navigate("SharePage", { id: queryParams?.id });
+        }
+      }
+    });
+    checkInitialUrl();
     checkUser();
     return () => {
       unsubscribe;
