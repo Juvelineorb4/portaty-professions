@@ -16,18 +16,59 @@ import LeftHeaderShare from "@/components/Header/LeftHeaderShare";
 // hooks
 import useLocation from "@/hooks/useLocation";
 import ShareNavigator from "./ShareNavigator";
+import SplashScreen from "@/components/SplashScreen";
+import { Text, View, Image } from "react-native";
 
 const Navigation = () => {
-  const userAuth = useRecoilValue(userAuthenticated);
   const Stack = createNativeStackNavigator();
+  const global = require("@/utils/styles/global.js");
+  const [checkRender, setCheckRender] = useState(false);
+  const [userState, setUserState] = useState(false);
+  const userAuth = useRecoilValue(userAuthenticated);
   // pido localizacion
   const { location } = useLocation();
+  const renderNavigation = () => {
+    setCheckRender(true);
+    try {
+      if (userAuth !== null) setUserState(true);
+      setCheckRender(false);
+    } catch (error) {
+      console.log(error);
+      setCheckRender(false);
+    }
+  };
+
+  useEffect(() => {
+    renderNavigation();
+  }, [userAuth]);
 
   return (
-    <NavigationContainer linking={linking}>
+    <NavigationContainer
+      linking={linking}
+      fallback={
+        <View style={[{ flex: 1 }, global.mainBgColor]}>
+          <Image
+            style={{
+              width: "100%",
+              height: "100%",
+              resizeMode: "contain",
+            }}
+            source={require("@/utils/images/splash.png")}
+          />
+        </View>
+      }
+    >
       <NavSettings />
-      <Stack.Navigator initialRouteName="Login_Welcome">
-        {!userAuth && (
+      <Stack.Navigator>
+        {userState ? (
+          <Stack.Screen
+            name={`Tabs_Navigation`}
+            component={Tabs}
+            options={{
+              headerShown: false,
+            }}
+          />
+        ) : (
           <Stack.Screen
             name={`Login_Welcome`}
             component={LoginNavigator}
@@ -36,13 +77,6 @@ const Navigation = () => {
             }}
           />
         )}
-        <Stack.Screen
-          name={`Tabs_Navigation`}
-          component={Tabs}
-          options={{
-            headerShown: false,
-          }}
-        />
         <Stack.Screen
           name="SharePage"
           component={SharePage}

@@ -49,7 +49,7 @@ const NavSettings = () => {
         }
       }
     };
-    checkInitialUrl();
+    // checkInitialUrl();
     checkUser();
     return () => {
       unsubscribe;
