@@ -8,7 +8,7 @@ import Tabs from "./Tabs/Tabs";
 import NavSettings from "./NavSettings";
 // recoil
 import { useRecoilValue, useRecoilState } from "recoil";
-import { userAuthenticated, mapUser, checkRenderState } from "@/atoms";
+import { userAuthenticated, mapUser } from "@/atoms";
 // linking
 import SharePage from "@/screens/Search/SharePage";
 import linking from "./linking";
@@ -25,15 +25,19 @@ const Navigation = () => {
 
   const [userState, setUserState] = useState(false);
   const userAuth = useRecoilValue(userAuthenticated);
-  const checkRender = useRecoilValue(checkRenderState);
   // pido localizacion
   const { location } = useLocation();
+  useEffect(() => {
+    console.log("ESTADO DE CHECK RENDER: ", checkRender);
+  }, [checkRender]);
 
   return (
-    <NavigationContainer  fallback={<SplashScreen />}>
+    <NavigationContainer>
       <NavSettings />
-      <Stack.Navigator>
-        {userAuth && checkRender ? (
+      <Stack.Navigator
+        initialRouteName={userAuth ? "`Tabs_Navigation" : "Login_Welcome"}
+      >
+        {checkRender && userAuth ? (
           <Stack.Screen
             name={`Tabs_Navigation`}
             component={Tabs}

@@ -5,18 +5,17 @@ import { userByEmail } from "@/graphql/CustomQueries/Navigation";
 import { updateUsers } from "@/graphql/CustomMutations/Navigation";
 // recpil
 import { useRecoilState } from "recoil";
-import { userAuthenticated, userTable, checkRenderState } from "@/atoms/index";
+import { userAuthenticated, userTable } from "@/atoms/index";
 import { useNavigation } from "@react-navigation/native";
 
 const useUserManagement = () => {
   const [userAuth, setUserAuth] = useRecoilState(userAuthenticated);
-  const [checkRender, setCheckRender] = useRecoilState(checkRenderState);
+
   const navigation = useNavigation();
   const userSignIn = (data) => {
     setUserAuth(data);
     checkAttributes(data);
-    setCheckRender(true);
-    navigation.navigate("Tabs_Navigation");
+    navigation.navigate("Tabs_Navigation", { screen: "Home_Tab" });
   };
 
   const userSignOut = () => {
@@ -34,7 +33,6 @@ const useUserManagement = () => {
       const { message } = new Error(error);
       console.log("ERROR USER: ", message);
     }
-    setCheckRender(true);
   };
 
   const checkAttributes = async (data) => {

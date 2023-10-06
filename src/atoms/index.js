@@ -79,7 +79,3 @@ export const inputFavoritesSearch = atom({
   default: "",
 });
 
-export const checkRenderState = atom({
-  key: "checkRenderValue",
-  default: false,
-});

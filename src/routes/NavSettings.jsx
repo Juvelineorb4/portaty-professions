@@ -66,6 +66,7 @@ const NavSettings = () => {
         if (path === "share/business" && queryParams?.id) {
           return navigation.navigate("SharePage", { id: queryParams?.id });
         }
+        return navigation.navigate("Tabs_Navigation", { screen: "Home_Tab" });
       }
     });
     checkInitialUrl();
