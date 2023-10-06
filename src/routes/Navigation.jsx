@@ -23,18 +23,23 @@ import Loading from "@/components/Loading";
 const Navigation = () => {
   const Stack = createNativeStackNavigator();
   const global = require("@/utils/styles/global.js");
-  const [checkRender, setCheckRender] = useState(true);
+  const [checkRender, setCheckRender] = useState(false);
   const [userState, setUserState] = useState(false);
   const userAuth = useRecoilValue(userAuthenticated);
   // pido localizacion
   const { location } = useLocation();
   const renderNavigation = () => {
+    setCheckRender(true);
     try {
       if (userAuth !== null) setUserState(true);
-      setCheckRender(false);
+      setTimeout(() => {
+        setCheckRender(false);
+      }, 2000);
     } catch (error) {
       console.log(error);
-      setCheckRender(false);
+      setTimeout(() => {
+        setCheckRender(false);
+      }, 2000);
     }
   };
 
@@ -43,11 +48,11 @@ const Navigation = () => {
   }, [userAuth]);
 
   return (
-    <NavigationContainer linking={linking} fallback={<Loading />}>
+    <NavigationContainer fallback={<Loading />}>
       <NavSettings />
       {checkRender === false ? (
         <Stack.Navigator>
-          {userState ? (
+          {userAuth ? (
             <Stack.Screen
               name={`Tabs_Navigation`}
               component={Tabs}
@@ -82,10 +87,10 @@ const Navigation = () => {
           />
         </Stack.Navigator>
       ) : (
-        <Stack.Navigator>
+        <Stack.Navigator initialRouteName="Loading">
           <Stack.Screen
             name="Loading"
-            component={<Loading />}
+            component={Loading}
             options={{
               headerShown: false,
             }}
