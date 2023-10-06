@@ -18,17 +18,17 @@ import useLocation from "@/hooks/useLocation";
 import ShareNavigator from "./ShareNavigator";
 import SplashScreen from "@/components/SplashScreen";
 import { Text, View, Image } from "react-native";
+import Loading from "@/components/Loading";
 
 const Navigation = () => {
   const Stack = createNativeStackNavigator();
   const global = require("@/utils/styles/global.js");
-  const [checkRender, setCheckRender] = useState(false);
+  const [checkRender, setCheckRender] = useState(true);
   const [userState, setUserState] = useState(false);
   const userAuth = useRecoilValue(userAuthenticated);
   // pido localizacion
   const { location } = useLocation();
   const renderNavigation = () => {
-    setCheckRender(true);
     try {
       if (userAuth !== null) setUserState(true);
       setCheckRender(false);
@@ -43,57 +43,55 @@ const Navigation = () => {
   }, [userAuth]);
 
   return (
-    <NavigationContainer
-      linking={linking}
-      fallback={
-        <View style={[{ flex: 1 }, global.mainBgColor]}>
-          <Image
-            style={{
-              width: "100%",
-              height: "100%",
-              resizeMode: "contain",
-            }}
-            source={require("@/utils/images/splash.png")}
-          />
-        </View>
-      }
-    >
+    <NavigationContainer linking={linking} fallback={<Loading />}>
       <NavSettings />
-      <Stack.Navigator>
-        {userState ? (
+      {checkRender === false ? (
+        <Stack.Navigator>
+          {userState ? (
+            <Stack.Screen
+              name={`Tabs_Navigation`}
+              component={Tabs}
+              options={{
+                headerShown: false,
+              }}
+            />
+          ) : (
+            <Stack.Screen
+              name={`Login_Welcome`}
+              component={LoginNavigator}
+              options={{
+                headerShown: false,
+              }}
+            />
+          )}
           <Stack.Screen
-            name={`Tabs_Navigation`}
-            component={Tabs}
+            name="SharePage"
+            component={SharePage}
+            options={{
+              animation: "slide_from_right",
+              header: (props) => <LeftHeaderShare {...props} />,
+            }}
+          />
+          <Stack.Screen
+            name="ShareNavigator"
+            component={ShareNavigator}
+            options={{
+              animation: "slide_from_right",
+              headerShown: false,
+            }}
+          />
+        </Stack.Navigator>
+      ) : (
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Loading"
+            component={<Loading />}
             options={{
               headerShown: false,
             }}
           />
-        ) : (
-          <Stack.Screen
-            name={`Login_Welcome`}
-            component={LoginNavigator}
-            options={{
-              headerShown: false,
-            }}
-          />
-        )}
-        <Stack.Screen
-          name="SharePage"
-          component={SharePage}
-          options={{
-            animation: "slide_from_right",
-            header: (props) => <LeftHeaderShare {...props} />,
-          }}
-        />
-        <Stack.Screen
-          name="ShareNavigator"
-          component={ShareNavigator}
-          options={{
-            animation: "slide_from_right",
-            headerShown: false,
-          }}
-        />
-      </Stack.Navigator>
+        </Stack.Navigator>
+      )}
     </NavigationContainer>
   );
 };
