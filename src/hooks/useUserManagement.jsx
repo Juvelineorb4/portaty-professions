@@ -10,12 +10,11 @@ import { useNavigation } from "@react-navigation/native";
 
 const useUserManagement = () => {
   const [userAuth, setUserAuth] = useRecoilState(userAuthenticated);
-
   const navigation = useNavigation();
   const userSignIn = (data) => {
     setUserAuth(data);
     checkAttributes(data);
-    navigation.navigate("Tabs_Navigation", { screen: "Home_Tab" });
+    navigation.navigate("Tabs_Navigation");
   };
 
   const userSignOut = () => {
