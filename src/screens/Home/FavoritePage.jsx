@@ -65,7 +65,7 @@ const FavoritePage = ({ navigation, route }) => {
     try {
       await Share.share({
         message:
-        `Han compartido contigo un negocio, da click para mirarlo exp://192.168.250.1:19000/--/share/business?id=${item.id}`,
+        `Han compartido contigo un negocio, da click para mirarlo https://www.portaty.com/share/business?id=${item.businessID}`,
       });
     } catch (error) {
       console.error("Error sharing:", error);

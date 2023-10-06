@@ -1,4 +1,13 @@
-import { View, Text, Image, ScrollView, TouchableOpacity, TextInput, Share, Linking } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  TextInput,
+  Share,
+  Linking,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 import * as customSearch from "@/graphql/CustomQueries/Search";
 import CustomSelect from "@/components/CustomSelect";
@@ -11,15 +20,15 @@ import {
   Foundation,
   EvilIcons,
   Feather,
-  Fontisto
+  Fontisto,
 } from "@expo/vector-icons";
 import { Auth, API, Storage } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Favorites";
 import * as customFavorites from "@/graphql/CustomMutations/Favorites";
 
 const SearchPost = ({ route }) => {
-  const [post, setPost] = useState([])
-  const [save, setSave] = useState('')
+  const [post, setPost] = useState([]);
+  const [save, setSave] = useState("");
   const global = require("@/utils/styles/global.js");
   const {
     data: { item, image },
@@ -33,7 +42,7 @@ const SearchPost = ({ route }) => {
           input: {
             businessID: post.id,
             userID: attributes["custom:userTableID"],
-            position: 0
+            position: 0,
           },
         },
         authMode: "AMAZON_COGNITO_USER_POOLS",
@@ -56,7 +65,7 @@ const SearchPost = ({ route }) => {
       authMode: "AMAZON_COGNITO_USER_POOLS",
     });
     console.log(favorites);
-    setSave('')
+    setSave("");
   };
 
   const fetchData = async () => {
@@ -64,7 +73,7 @@ const SearchPost = ({ route }) => {
       const business = await API.graphql({
         query: customSearch.getBusiness,
         variables: {
-            id: item.id,
+          id: item.id,
         },
         authMode: "AWS_IAM",
       });
@@ -80,11 +89,12 @@ const SearchPost = ({ route }) => {
         query: queries.favoritesByBusinessID,
         authMode: "AMAZON_COGNITO_USER_POOLS",
         variables: {
-            businessID: item.id,
-            userID: {eq: attributes["custom:userTableID"]},
+          businessID: item.id,
+          userID: { eq: attributes["custom:userTableID"] },
         },
       });
-      if (favorite.data.favoritesByBusinessID.items.length !== 0 ) setSave(favorite.data.favoritesByBusinessID.items[0].id);
+      if (favorite.data.favoritesByBusinessID.items.length !== 0)
+        setSave(favorite.data.favoritesByBusinessID.items[0].id);
     } catch (error) {
       console.log(error);
     }
@@ -92,22 +102,21 @@ const SearchPost = ({ route }) => {
   const onShare = async () => {
     try {
       await Share.share({
-        message:
-          `Han compartido contigo un negocio, da click para mirarlo exp://192.168.250.1:19000/--/share/business?id=${item.id}`,
+        message: `Han compartido contigo un negocio, da click para mirarlo https://www.portaty.com/share/business?id=${item.id}`,
       });
     } catch (error) {
       console.error("Error sharing:", error);
     }
   };
-  const openCall = () =>{
-    const url=`tel://${post.phone}`
-    Linking.openURL(url)
-  }
+  const openCall = () => {
+    const url = `tel://${post.phone}`;
+    Linking.openURL(url);
+  };
   useEffect(() => {
-    fetchFavorite()
-    fetchData()
-  }, [])
-  
+    fetchFavorite();
+    fetchData();
+  }, []);
+
   return (
     <View
       style={[
@@ -138,7 +147,7 @@ const SearchPost = ({ route }) => {
               overflow: "hidden",
               padding: 10,
               marginBottom: 20,
-              marginTop: 20
+              marginTop: 20,
             }}
           >
             <Image
@@ -173,21 +182,31 @@ const SearchPost = ({ route }) => {
               justifyContent: "center",
             }}
           >
-            <Text style={{ fontSize: 26, fontFamily: "thin" }}>{post.favorites?.items.length}</Text>
+            <Text style={{ fontSize: 26, fontFamily: "thin" }}>
+              {post.favorites?.items.length}
+            </Text>
             <Text style={{ fontSize: 22, fontFamily: "thin" }}>Favoritos</Text>
           </View>
           <TouchableOpacity
-            style={[save === '' ? global.mainBgColor : global.bgWhiteSmoke, { padding: 10, borderRadius: 8 }]}
+            style={[
+              save === "" ? global.mainBgColor : global.bgWhiteSmoke,
+              { padding: 10, borderRadius: 8 },
+            ]}
             onPress={() => {
-              if(save === '') {
-                onCreateFavorite()
+              if (save === "") {
+                onCreateFavorite();
               } else {
-                onDeleteFavorite()
+                onDeleteFavorite();
               }
             }}
           >
-            <Text style={[{ fontSize: 14, fontFamily: "thin" }, save === '' ? global.white : global.black]}>
-              {save === '' ? 'Agregar a favoritos' : 'Eliminar de favoritos'}
+            <Text
+              style={[
+                { fontSize: 14, fontFamily: "thin" },
+                save === "" ? global.white : global.black,
+              ]}
+            >
+              {save === "" ? "Agregar a favoritos" : "Eliminar de favoritos"}
             </Text>
           </TouchableOpacity>
         </View>
@@ -344,7 +363,7 @@ const SearchPost = ({ route }) => {
               {/* <FontAwesome name="phone" size={20} color="#1f1f1f" /> */}
               <Text
                 style={[
-                  { fontFamily: "thinItalic", fontSize: 15},
+                  { fontFamily: "thinItalic", fontSize: 15 },
                   global.midGray,
                 ]}
               >
@@ -370,7 +389,7 @@ const SearchPost = ({ route }) => {
               {/* <FontAwesome name="whatsapp" size={22} color="#1f1f1f" /> */}
               <Text
                 style={[
-                  { fontFamily: "thinItalic", fontSize: 15},
+                  { fontFamily: "thinItalic", fontSize: 15 },
                   global.midGray,
                 ]}
               >
