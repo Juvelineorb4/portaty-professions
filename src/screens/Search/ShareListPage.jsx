@@ -23,7 +23,6 @@ const ShareListPage = ({ route, navigation }) => {
       authMode: "AWS_IAM",
       variables: {
         id: params?.id,
-        // id: '82c735b0-9bba-4049-9c2c-ced64b42c35c',
       },
     });
     console.log(result.data.getUsers.favorites.items)

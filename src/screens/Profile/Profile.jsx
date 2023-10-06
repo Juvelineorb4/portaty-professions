@@ -27,12 +27,12 @@ const Profile = ({ route }) => {
   const global = require("@/utils/styles/global.js");
   const { user } = route.params;
   const [editActive, setEditActive] = useState(false);
-  console.log("PROFILE: ", user);
+  console.log("PROFILE: ", user.id);
   const onShare = async () => {
     try {
       await Share.share({
         message:
-          "Han compartido contigo un negocio, da click para mirarlo app://portaty.com",
+        `Han compartido contigo un negocio, da click para mirarlo https://www.portaty.com/share/list?id=${user.id}`,
       });
     } catch (error) {
       console.error("Error sharing:", error);
