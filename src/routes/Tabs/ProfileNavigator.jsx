@@ -11,6 +11,7 @@ import Terms from "@/screens/Profile/Terms";
 import About from "@/screens/Profile/About";
 import List from "@/screens/Profile/List";
 import Page from "@/screens/Profile/Page";
+import CustomQR from "@/components/CustomQR";
 
 const ProfileNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -77,6 +78,14 @@ const ProfileNavigator = () => {
       <Stack.Screen
         name="Post"
         component={Post}
+        options={{
+          animation: "slide_from_right",
+          header: (props) => <LeftHeader {...props} />,
+        }}
+      />
+      <Stack.Screen
+        name="ViewQR"
+        component={CustomQR}
         options={{
           animation: "slide_from_right",
           header: (props) => <LeftHeader {...props} />,
