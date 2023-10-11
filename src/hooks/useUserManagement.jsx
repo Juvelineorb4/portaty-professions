@@ -11,15 +11,24 @@ import { useNavigation } from "@react-navigation/native";
 const useUserManagement = () => {
   const [userAuth, setUserAuth] = useRecoilState(userAuthenticated);
   const navigation = useNavigation();
-  const userSignIn = (data) => {
-    setUserAuth(data);
-    checkAttributes(data);
-    navigation.navigate("Tabs_Navigation");
+  const userSignIn = async (data) => {
+    try {
+      const result = await Auth.currentAuthenticatedUser();
+      setUserAuth(result);
+      checkAttributes(result);
+      setTimeout(() => {
+        // navigation.navigate("Tabs_Navigation", { screen: "Home_Tab" });
+      }, 1000);
+    } catch (error) {
+      setUserAuth(null);
+    }
   };
 
   const userSignOut = () => {
     setUserAuth(null);
-    navigation.navigate("Login_Welcome");
+    setTimeout(() => {
+      // navigation.navigate("Login_Welcome", { screen: "Login" });
+    }, 1000);
   };
   const checkUser = async () => {
     console.log("SE ACTIVO EL CHECK USER");
@@ -31,6 +40,7 @@ const useUserManagement = () => {
     } catch (error) {
       const { message } = new Error(error);
       console.log("ERROR USER: ", message);
+      setUserAuth(null);
     }
   };
 

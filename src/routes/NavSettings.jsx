@@ -3,9 +3,15 @@ import { Hub } from "aws-amplify";
 import { useUserManagement } from "@/hooks";
 import * as Linking from "expo-linking";
 import { useNavigation } from "@react-navigation/native";
-const NavSettings = () => {
+// recoil
+import { useSetRecoilState } from "recoil";
+import { urlInitalShare } from "@/atoms";
+import useDeepLinkInital from "@/hooks/useDeepLinkInital";
+const NavSettings = ({ checkRender }) => {
+  const setUrlInitialShare = useSetRecoilState(urlInitalShare);
   const { userSignIn, userSignOut, checkUser } = useUserManagement();
   const navigation = useNavigation();
+  useDeepLinkInital(checkRender);
   useEffect(() => {
     // crear subscripcion
     const unsubscribe = Hub.listen("auth", ({ payload: { event, data } }) => {
@@ -37,16 +43,10 @@ const NavSettings = () => {
           initialUrl,
           { hostname, path, queryParams }
         );
-
-        if (path === "share/list" && queryParams?.id) {
-          return navigation.navigate("ShareNavigator", {
-            screen: "ShareListPage",
-            params: { id: queryParams?.id },
-          });
-        }
-        if (path === "share/business" && queryParams?.id) {
-          return navigation.navigate("SharePage", { id: queryParams?.id });
-        }
+        setUrlInitialShare({
+          path,
+          queryParams,
+        });
       }
     };
     Linking.addEventListener("url", ({ url }) => {

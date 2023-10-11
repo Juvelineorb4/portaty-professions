@@ -78,4 +78,7 @@ export const inputFavoritesSearch = atom({
   key: "inputFavoritesSearchValue",
   default: "",
 });
-
+export const urlInitalShare = atom({
+  key: "urlInitalShareValue",
+  default: {},
+});

@@ -13,29 +13,36 @@ const ShareListPage = ({ route, navigation }) => {
   const global = require("@/utils/styles/global.js");
   const [data, setData] = useState([]);
   const [favoritesList, setFavoritesList] = useState([]);
+  const [error, setError] = useState(false);
   const [nothing, setNothing] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const fetchFavorites = async () => {
     setLoading(true);
-    const result = await API.graphql({
-      query: queries.getUsers,
-      authMode: "AWS_IAM",
-      variables: {
-        id: params?.id,
-      },
-    });
-    console.log(result.data.getUsers.favorites.items)
-    setFavoritesList(result.data.getUsers.favorites.items);
-    if (result.data.getUsers.favorites.items.length === 0) setNothing(true);
+    try {
+      const result = await API.graphql({
+        query: queries.getUsers,
+        authMode: "AWS_IAM",
+        variables: {
+          id: params?.id,
+        },
+      });
+      console.log(result.data.getUsers.favorites.items);
+      setFavoritesList(result.data.getUsers.favorites.items);
+      if (result.data.getUsers.favorites.items.length === 0) setNothing(true);
+      setError(false);
+    } catch (error) {
+      console.log("OCURRIO UN ERROR");
+      setError(true);
+    }
     setTimeout(() => {
       setLoading(false);
-    }, 2000);
+    }, 500);
   };
 
   useEffect(() => {
     if (params?.id !== undefined) fetchFavorites();
-  }, []);
+  }, [params]);
 
   if (loading)
     return (
@@ -49,7 +56,7 @@ const ShareListPage = ({ route, navigation }) => {
       </View>
     );
 
-  if (favoritesList.length === 0 || params?.id === undefined)
+  if (favoritesList.length === 0 || params?.id === undefined || error)
     return (
       <View
         style={[
@@ -57,7 +64,9 @@ const ShareListPage = ({ route, navigation }) => {
           global.bgWhite,
         ]}
       >
-        <Text style={{fontFamily: 'light', fontSize: 16}}>Este usuario no tiene ningun negocio en favoritos para compartir</Text>
+        <Text style={{ fontFamily: "light", fontSize: 16 }}>
+          Este usuario no tiene ningun negocio en favoritos para compartir
+        </Text>
         <CustomButton
           text={`Encuentra mas negocios`}
           handlePress={() => navigation.navigate("Tabs_Navigation")}

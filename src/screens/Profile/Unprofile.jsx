@@ -18,9 +18,6 @@ const Unprofile = ({ navigation, route }) => {
   const status = useRecoilValue(profileState);
   const onHandleLogout = async () => {
     await Auth.signOut();
-    setTimeout(() => {
-      navigation.navigate("Login_Welcome");
-    }, 500);
   };
   const User = async () => {
     const { attributes } = await Auth.currentAuthenticatedUser();
@@ -38,7 +35,7 @@ const Unprofile = ({ navigation, route }) => {
 
   useLayoutEffect(() => {
     User();
-    console.log(business)
+    console.log(business);
     console.log(status);
   }, [route, status]);
   return (
@@ -52,31 +49,32 @@ const Unprofile = ({ navigation, route }) => {
         </Text>
         <View style={[styles.line, global.bgWhiteSmoke]} />
         <TouchableOpacity
-        activeOpacity={1}
-        onPress={() => navigation.navigate('Profile', {
-          user: user[0]
-        })}
-      >
-        <CustomSelect
-          title={`Mi cuenta`}
-          subtitle={`Manten actualizado tus datos`}
-          styled={{
-            text: {
-              container: styles.textContainerSelect,
-              title: [styles.textTitleSelect, global.black],
-              subtitle: [styles.textSubtitleSelect, global.topGray],
-            },
-            container: styles.containerSelect,
-            iconLeft: [styles.iconLeft, global.mainBgColor],
-            iconRight: styles.iconRight,
-          }}
-          icon={{
-            left: require("@/utils/images/profile_white.png"),
-            right: require("@/utils/images/arrow_right.png"),
-          }}
-        />
-      </TouchableOpacity>
-
+          activeOpacity={1}
+          onPress={() =>
+            navigation.navigate("Profile", {
+              user: user[0],
+            })
+          }
+        >
+          <CustomSelect
+            title={`Mi cuenta`}
+            subtitle={`Manten actualizado tus datos`}
+            styled={{
+              text: {
+                container: styles.textContainerSelect,
+                title: [styles.textTitleSelect, global.black],
+                subtitle: [styles.textSubtitleSelect, global.topGray],
+              },
+              container: styles.containerSelect,
+              iconLeft: [styles.iconLeft, global.mainBgColor],
+              iconRight: styles.iconRight,
+            }}
+            icon={{
+              left: require("@/utils/images/profile_white.png"),
+              right: require("@/utils/images/arrow_right.png"),
+            }}
+          />
+        </TouchableOpacity>
       </View>
       <Text style={[styles.titleSettings, global.black, { marginTop: 20 }]}>
         {`Gestion`}
@@ -116,10 +114,12 @@ const Unprofile = ({ navigation, route }) => {
 
       <TouchableOpacity
         activeOpacity={1}
-        onPress={() => navigation.navigate('List', {
-          data: business,
-          user: user[0]
-        })}
+        onPress={() =>
+          navigation.navigate("List", {
+            data: business,
+            user: user[0],
+          })
+        }
       >
         <View style={[styles.line, global.bgWhiteSmoke]} />
         <CustomSelect
@@ -171,7 +171,7 @@ const Unprofile = ({ navigation, route }) => {
                 />
               </TouchableOpacity>
             ) : (
-              <TouchableOpacity activeOpacity={1} onPress={onHandleLogout} >
+              <TouchableOpacity activeOpacity={1} onPress={onHandleLogout}>
                 <View style={[styles.line, global.bgWhiteSmoke]} />
                 <CustomSelect
                   title={button.title}
