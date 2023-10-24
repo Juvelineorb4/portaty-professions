@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Share,
   Linking,
+  Platform
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import CustomSelect from "@/components/CustomSelect";
@@ -31,7 +32,7 @@ const FavoritePage = ({ navigation, route }) => {
   const {
     data: { item, image },
   } = route.params;
-  console.log("toy aqui manito", item.businessID);
+  console.log("toy aqui manito", item.business.name);
   const fetchData = async () => {
     try {
       const business = await API.graphql({
@@ -60,6 +61,16 @@ const FavoritePage = ({ navigation, route }) => {
     });
     navigation.goBack();
   };
+
+  const onOpenMap = (lat, lng, name) => {
+    let url = '';
+    if (Platform.OS === 'android') {
+      url = `geo:${lat},${lng}?q=${lat},${lng}(${name})`;
+    } else {
+      url = `maps://app?saddr=${lat},${lng}&daddr=${lat},${lng}&q=${lat},${lng}(${name})`;
+    }
+    Linking.openURL(url);
+  }
 
   const onShare = async () => {
     try {
@@ -161,6 +172,51 @@ const FavoritePage = ({ navigation, route }) => {
             justifyContent: "space-between",
             alignItems: "center",
           }}
+          onPress={() => onOpenMap(item.business.coordinates.lat, item.business.coordinates.lon, item.business.name)}
+        >
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View
+              style={[
+                {
+                  width: 58,
+                  height: 58,
+                  borderRadius: 10,
+                  alignItems: "center",
+                  justifyContent: "center",
+                },
+                global.mainBgColor,
+              ]}
+            >
+              <FontAwesome name="map-marker" size={25} color="white" />
+            </View>
+            <View style={{ marginLeft: 10 }}>
+              <Text style={{ fontFamily: "light", fontSize: 16 }}>
+                Cómo llegar
+              </Text>
+              <Text style={{ fontFamily: "thin", fontSize: 12, width: 170 }}>
+                Revisa la ubicacion y busca la manera mas facil de llegar
+              </Text>
+            </View>
+          </View>
+          <Image
+            style={{
+              width: 40,
+              height: 40,
+              resizeMode: "cover",
+            }}
+            source={require("@/utils/images/arrow_right.png")}
+          />
+        </TouchableOpacity>
+
+        {/*  */}
+        <TouchableOpacity
+          style={{
+            padding: 20,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginTop: -23,
+          }}
           onPress={onShare}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -202,10 +258,13 @@ const FavoritePage = ({ navigation, route }) => {
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
-            marginTop: -25,
+            marginTop: -27,
           }}
           onPress={() => {
-            navigation.navigate("ViewQR", { id: `https://www.portaty.com/share/business?id=${item.businessID}`, name: item.business.name });
+            navigation.navigate("ViewQR", {
+              id: `https://www.portaty.com/share/business?id=${item.businessID}`,
+              name: item.business.name,
+            });
           }}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -221,7 +280,11 @@ const FavoritePage = ({ navigation, route }) => {
                 global.mainBgColor,
               ]}
             >
-              <MaterialCommunityIcons name="qrcode-scan" size={25} color="white" />
+              <MaterialCommunityIcons
+                name="qrcode-scan"
+                size={25}
+                color="white"
+              />
             </View>
             <View style={{ marginLeft: 10 }}>
               <Text style={{ fontFamily: "light", fontSize: 16 }}>Ver QR</Text>
@@ -245,7 +308,7 @@ const FavoritePage = ({ navigation, route }) => {
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
-            marginTop: -25,
+            marginTop: -27,
           }}
           onPress={openCall}
         >
