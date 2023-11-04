@@ -17,6 +17,7 @@ const Post = ({ data, image, styled }) => {
   const navigation = useNavigation();
   const [post, setPost] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+  console.log(post)
   const fetchData = async () => {
     try {
       const business = await API.graphql({
@@ -99,17 +100,17 @@ const Post = ({ data, image, styled }) => {
                 source={{ uri: image }}
               />
               <View style={{ paddingVertical: 15 }}>
-                <View
+              <View
                   style={{
                     flexDirection: "row",
                     justifyContent: "space-between",
                     marginTop: 5,
                   }}
                 >
-                  <Text style={{ fontFamily: "light", fontSize: 18 }}>
-                    Distancia de ti:
+                  <Text style={{ fontFamily: "light", fontSize: 14 }}>
+                    Nombre del negocio:
                   </Text>
-                  <Text style={{ fontFamily: "regular", fontSize: 18 }}>
+                  <Text style={{ fontFamily: "regular", fontSize: 14 }}>
                     {data.distance.toFixed(2)}km
                   </Text>
                 </View>
@@ -120,10 +121,38 @@ const Post = ({ data, image, styled }) => {
                     marginTop: 5,
                   }}
                 >
-                  <Text style={{ fontFamily: "light", fontSize: 18 }}>
+                  <Text style={{ fontFamily: "light", fontSize: 14 }}>
+                    Actividad:
+                  </Text>
+                  <Text style={{ fontFamily: "regular", fontSize: 14 }}>
+                    {data.distance.toFixed(2)}km
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    marginTop: 5,
+                  }}
+                >
+                  <Text style={{ fontFamily: "light", fontSize: 14 }}>
+                    Distancia de ti:
+                  </Text>
+                  <Text style={{ fontFamily: "regular", fontSize: 14 }}>
+                    {data.distance.toFixed(2)}km
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    marginTop: 5,
+                  }}
+                >
+                  <Text style={{ fontFamily: "light", fontSize: 14 }}>
                     Favoritos:
                   </Text>
-                  <Text style={{ fontFamily: "regular", fontSize: 18 }}>
+                  <Text style={{ fontFamily: "regular", fontSize: 14 }}>
                     {post.favorites?.items.length}
                   </Text>
                 </View>

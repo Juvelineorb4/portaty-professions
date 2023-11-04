@@ -245,9 +245,9 @@ const Form = ({ navigation, route }) => {
           name={"coordinates"}
           text={"Abrir Mapa"}
           placeholder={"Selecciona una Ubicacion"}
-          rules={{
-            required: es.businessForm.register.email.rules,
-          }}
+          // rules={{
+          //   required: es.businessForm.register.email.rules,
+          // }}
         />
       ) : (
         <ActivityIndicator />

@@ -8,6 +8,7 @@ import {
   Pressable,
   Modal,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from "expo-location";
@@ -48,6 +49,8 @@ const MapMarketBusiness = ({
   const [marketLocation, setMarketLocation] = useState(null);
   const [initalMarketLocation, setInitialMarketLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [errorMap, setErrorMap] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectMap, setSelectMap] = useState(false);
   const [selectMapBusiness, setSelectMapBusiness] = useRecoilState(mapBusiness);
@@ -78,12 +81,18 @@ const MapMarketBusiness = ({
   };
 
   const onHandleConfirm = () => {
-    setSelectMap(true);
-    setModalVisible(!modalVisible);
+    if (!marketLocation) return setErrorMap(true);
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      setErrorMap(false);
+      setSelectMap(true);
+      setModalVisible(!modalVisible);
+    }, 2000);
   };
   useEffect(() => {
-    console.log(marketLocation)
-    console.log(initialLocation)
+    console.log(marketLocation);
+    console.log(initialLocation);
   }, []);
 
   return (
@@ -161,13 +170,17 @@ const MapMarketBusiness = ({
                     >
                       <Image
                         style={{
-                          width: 25,
-                          height: 25,
+                          width: 40,
+                          height: 40,
                           resizeMode: "contain",
+                          marginLeft: 15,
                         }}
                         source={require("@/utils/images/arrow_back.png")}
                       />
                     </Pressable>
+                    <Text style={styles.modalText}>
+                      Salir de la seleccion de ubicacion
+                    </Text>
                   </View>
                   <View style={{ flex: 1 }}>
                     <MapView
@@ -178,26 +191,41 @@ const MapMarketBusiness = ({
                       initialRegion={{
                         latitude: initialLocation.latitude,
                         longitude: initialLocation.longitude,
-                        latitudeDelta: 0.001,
-                        longitudeDelta: 0.001,
+                        latitudeDelta: 0.01,
+                        longitudeDelta: 0.01,
                       }}
                       showsPointsOfInterest={false}
                       onDoublePress={(e) => {
                         onHandlePress(e);
                         onChange(e.nativeEvent.coordinate);
                       }}
-                      customMapStyle={MAP_SETTINGS}
+                      // customMapStyle={MAP_SETTINGS}
                     >
-                      {marketLocation || initialLocation && (
+                      {marketLocation && (
                         <Marker
                           title="Ubicacion de tu negocion"
-                          coordinate={marketLocation ? marketLocation : initialLocation}
+                          coordinate={marketLocation}
                           draggable
-                          onDragStart={(e) => onHandleMarkerDragStart(e)}
+                          // onDragStart={(e) => onHandleMarkerDragStart(e)}
                           onDragEnd={onHandleMarketMove}
                         />
                       )}
                     </MapView>
+                    {errorMap && (
+                      <Text
+                        style={{
+                          position: "absolute",
+                          bottom: 25,
+                          right: 120,
+                          width: 150,
+                          fontFamily: "bold",
+                          color: "red",
+                          fontSize: 12,
+                        }}
+                      >
+                        Aun no seleccionaste ninguna ubicacion
+                      </Text>
+                    )}
                     <TouchableOpacity
                       style={[
                         {
@@ -207,14 +235,20 @@ const MapMarketBusiness = ({
                           paddingHorizontal: 10,
                           paddingVertical: 15,
                           borderRadius: 5,
+                          width: 100,
+                          alignItems: 'center'
                         },
                         global.mainBgColor,
                       ]}
                       onPress={onHandleConfirm}
                     >
-                      <Text
-                        style={[global.white, { fontFamily: "light" }]}
-                      >{`Confirmar`}</Text>
+                      {loading ? (
+                        <ActivityIndicator size="small" color="#ffffff" />
+                      ) : (
+                        <Text
+                          style={[global.white, { fontFamily: "light" }]}
+                        >{`Confirmar`}</Text>
+                      )}
                     </TouchableOpacity>
                   </View>
                 </View>
