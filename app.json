@@ -86,7 +86,7 @@
         "android.permission.ACCESS_MEDIA_LOCATION"
       ],
       "package": "com.teamportaty.appdev",
-      "versionCode": 49
+      "versionCode": 50
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -56,7 +56,7 @@ const HomeHeader = () => {
           source={require("@/utils/images/search.png")}
         />
         <TextInput
-          placeholder={"Buscar"}
+          placeholder={"Buscar Favoritos"}
           defaultValue={inputFavorites}
           style={styles.input}
           returnKeyType="search"
