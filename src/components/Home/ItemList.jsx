@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { View, Text, TouchableOpacity, Image, ActivityIndicator } from "react-native";
 import React, { useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Auth, API, Storage } from "aws-amplify";
@@ -8,6 +8,9 @@ import { Ionicons } from "@expo/vector-icons";
 const ItemList = ({ data, number, styled }) => {
   const navigation = useNavigation();
   const [save, setSave] = useState("");
+  const [selectKey, setSelectKey] = useState("");
+  const [loading, setLoading] = useState(false);
+  console.log(data.business.image)
   const onDeleteFavorite = async () => {
     const favorites = await API.graphql({
       query: customFavorites.deleteFavorites,
@@ -21,11 +24,24 @@ const ItemList = ({ data, number, styled }) => {
     console.log(favorites);
     setSave("");
   };
+  const getImage = async () => {
+    setLoading(true);
+    try {
+      const url = await Storage.get(data.business.image, {
+        level: "protected",
+        identityId: data.business.identityID,
+      }).then((res) => setSelectKey(res));
+      setLoading(false);
+    } catch (error) {
+      console.log("toy", error);
+    }
+  };
   const fetchFavorite = () => {
     setSave(data.id);
   };
   useLayoutEffect(() => {
     fetchFavorite();
+    getImage()
   }, []);
   if (save)
     return (
@@ -35,7 +51,7 @@ const ItemList = ({ data, number, styled }) => {
           navigation.navigate("FavoritePage", {
             data: {
               item: data,
-              image: `https://picsum.photos/id/${100 + number}/200/300`,
+              image: selectKey,
             },
           })
         }
@@ -46,20 +62,29 @@ const ItemList = ({ data, number, styled }) => {
             marginLeft: 10,
           }}
         >
+         {!selectKey ? (
+          <View
+            style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+          >
+            <ActivityIndicator size={`small`} color="fb8500" />
+          </View>
+        ) : (
           <Image
             style={{
-              width: 120,
-              height: 100,
+              width: "100%",
+              height: "100%",
               resizeMode: "cover",
               borderRadius: 2,
             }}
-            source={{ uri: `https://picsum.photos/id/${100 + number}/200/300` }}
+            source={{ uri: selectKey }}
           />
+        )}
           <View
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
               marginTop: 5,
+              // paddingBottom: 5
             }}
           >
             <TouchableOpacity
