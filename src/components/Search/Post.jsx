@@ -16,8 +16,8 @@ const Post = ({ data, image, styled }) => {
   const global = require("@/utils/styles/global.js");
   const navigation = useNavigation();
   const [post, setPost] = useState([]);
+  console.log(data)
   const [modalVisible, setModalVisible] = useState(false);
-  console.log(post)
   const fetchData = async () => {
     try {
       const business = await API.graphql({
@@ -111,7 +111,7 @@ const Post = ({ data, image, styled }) => {
                     Nombre del negocio:
                   </Text>
                   <Text style={{ fontFamily: "regular", fontSize: 14 }}>
-                    {data.distance.toFixed(2)}km
+                    {data.name}
                   </Text>
                 </View>
                 <View
@@ -125,7 +125,7 @@ const Post = ({ data, image, styled }) => {
                     Actividad:
                   </Text>
                   <Text style={{ fontFamily: "regular", fontSize: 14 }}>
-                    {data.distance.toFixed(2)}km
+                    {data.activity}
                   </Text>
                 </View>
                 <View

@@ -17,6 +17,7 @@ import * as queries from "@/graphql/CustomQueries/Favorites";
 import CustomButton from "@/components/CustomButton";
 import styles from "@/utils/styles/Home.module.css";
 import { Ionicons } from "@expo/vector-icons";
+import ModalAlert from "@/components/ModalAlert";
 
 const Home = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
@@ -28,6 +29,7 @@ const Home = ({ navigation, route }) => {
     useRecoilState(inputFavoritesSearch);
   const [favoritesList, setFavoritesList] = useState([]);
   const [nothing, setNothing] = useState(false);
+ 
   const [resultNothing, setResultNothing] = useState(false);
   const [loading, setLoading] = useState(false);
   const fetchFavorites = async () => {
@@ -180,6 +182,7 @@ const Home = ({ navigation, route }) => {
       >
         Logout
       </Text> */}
+      
       </ScrollView>
     );
 
@@ -218,6 +221,7 @@ const Home = ({ navigation, route }) => {
           textStyles={[styles.textSearch, global.white]}
           buttonStyles={[styles.search, global.mainBgColor]}
         />
+       
       </View>
     );
 };
