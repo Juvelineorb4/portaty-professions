@@ -277,6 +277,7 @@ export const onCreateUsers = /* GraphQL */ `
         items {
           id
           userID
+          identityID
           name
           image
           email
@@ -332,6 +333,7 @@ export const onUpdateUsers = /* GraphQL */ `
         items {
           id
           userID
+          identityID
           name
           image
           email
@@ -387,6 +389,7 @@ export const onDeleteUsers = /* GraphQL */ `
         items {
           id
           userID
+          identityID
           name
           image
           email
@@ -440,6 +443,7 @@ export const onCreateBusiness = /* GraphQL */ `
         updatedAt
         __typename
       }
+      identityID
       name
       image
       email
@@ -504,6 +508,7 @@ export const onUpdateBusiness = /* GraphQL */ `
         updatedAt
         __typename
       }
+      identityID
       name
       image
       email
@@ -568,6 +573,7 @@ export const onDeleteBusiness = /* GraphQL */ `
         updatedAt
         __typename
       }
+      identityID
       name
       image
       email
@@ -627,6 +633,7 @@ export const onCreateFavorites = /* GraphQL */ `
           updatedAt
           __typename
         }
+        identityID
         name
         image
         email
@@ -703,6 +710,7 @@ export const onUpdateFavorites = /* GraphQL */ `
           updatedAt
           __typename
         }
+        identityID
         name
         image
         email
@@ -779,6 +787,7 @@ export const onDeleteFavorites = /* GraphQL */ `
           updatedAt
           __typename
         }
+        identityID
         name
         image
         email

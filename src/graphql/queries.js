@@ -44,6 +44,7 @@ export const searchBusinessByDistance = /* GraphQL */ `
           updatedAt
           __typename
         }
+        identityID
         name
         image
         email
@@ -345,6 +346,7 @@ export const getUsers = /* GraphQL */ `
         items {
           id
           userID
+          identityID
           name
           image
           email
@@ -467,6 +469,7 @@ export const getBusiness = /* GraphQL */ `
         updatedAt
         __typename
       }
+      identityID
       name
       image
       email
@@ -525,6 +528,7 @@ export const listBusinesses = /* GraphQL */ `
           updatedAt
           __typename
         }
+        identityID
         name
         image
         email
@@ -584,6 +588,7 @@ export const businessesByUserID = /* GraphQL */ `
           updatedAt
           __typename
         }
+        identityID
         name
         image
         email
@@ -645,6 +650,7 @@ export const searchBusinesses = /* GraphQL */ `
           updatedAt
           __typename
         }
+        identityID
         name
         image
         email
@@ -711,6 +717,7 @@ export const getFavorites = /* GraphQL */ `
           updatedAt
           __typename
         }
+        identityID
         name
         image
         email
@@ -777,6 +784,7 @@ export const listFavorites = /* GraphQL */ `
         business {
           id
           userID
+          identityID
           name
           image
           email
@@ -839,6 +847,7 @@ export const favoritesByBusinessID = /* GraphQL */ `
         business {
           id
           userID
+          identityID
           name
           image
           email
@@ -899,6 +908,7 @@ export const favoritesByUserID = /* GraphQL */ `
         business {
           id
           userID
+          identityID
           name
           image
           email

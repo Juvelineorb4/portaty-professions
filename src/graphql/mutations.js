@@ -298,6 +298,7 @@ export const createUsers = /* GraphQL */ `
         items {
           id
           userID
+          identityID
           name
           image
           email
@@ -353,6 +354,7 @@ export const updateUsers = /* GraphQL */ `
         items {
           id
           userID
+          identityID
           name
           image
           email
@@ -408,6 +410,7 @@ export const deleteUsers = /* GraphQL */ `
         items {
           id
           userID
+          identityID
           name
           image
           email
@@ -461,6 +464,7 @@ export const createBusiness = /* GraphQL */ `
         updatedAt
         __typename
       }
+      identityID
       name
       image
       email
@@ -525,6 +529,7 @@ export const updateBusiness = /* GraphQL */ `
         updatedAt
         __typename
       }
+      identityID
       name
       image
       email
@@ -589,6 +594,7 @@ export const deleteBusiness = /* GraphQL */ `
         updatedAt
         __typename
       }
+      identityID
       name
       image
       email
@@ -648,6 +654,7 @@ export const createFavorites = /* GraphQL */ `
           updatedAt
           __typename
         }
+        identityID
         name
         image
         email
@@ -724,6 +731,7 @@ export const updateFavorites = /* GraphQL */ `
           updatedAt
           __typename
         }
+        identityID
         name
         image
         email
@@ -800,6 +808,7 @@ export const deleteFavorites = /* GraphQL */ `
           updatedAt
           __typename
         }
+        identityID
         name
         image
         email
