@@ -14,13 +14,15 @@ import CustomInput from "@/components/CustomInput";
 import CustomButton from "@/components/CustomButton";
 import CustomCalendarInput from "@/components/CustomCalendarInput";
 import { es } from "@/utils/constants/lenguage";
-
 import { Auth } from "aws-amplify";
-
+import ModalAlert from "@/components/ModalAlert";
+import CustomCheckBox from "@/components/CustomCheckBox";
+import * as WebBrowser from "expo-web-browser";
 const Register = ({ navigation }) => {
   const EMAIL_REGEX = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [visible, setVisible] = useState(false);
   const global = require("@/utils/styles/global.js");
   const { control, handleSubmit, watch, setValue } = useForm({
     defaultValues: {
@@ -44,6 +46,10 @@ const Register = ({ navigation }) => {
     }
     // Convertimos la fecha a string en formato "AAAA-MM-DD"
     return fechaISO8601.toISOString().split("T")[0];
+  };
+
+  const CloseModal = () => {
+    setVisible(false);
   };
 
   const onHandleRegister = async (data) => {
@@ -70,6 +76,7 @@ const Register = ({ navigation }) => {
       console.log("ERROR AL REGISTAR: ", error.message);
       switch (error?.message) {
         case "An account with the given email already exists.":
+          setVisible(true);
           Alert.alert(`El correo: ${email}. Ya esta registrado!`);
           break;
 
@@ -81,6 +88,9 @@ const Register = ({ navigation }) => {
     setIsLoading(false);
   };
 
+  const _handlePressButtonAsync = async () => {
+    let result = await WebBrowser.openBrowserAsync("https://www.portaty.com");
+  };
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -218,6 +228,13 @@ const Register = ({ navigation }) => {
               }}
             />
           </View>
+          <CustomCheckBox
+            control={control}
+            name={"terms"}
+            text={"Acepto los Terminos y Condiciones"}
+            onPressed={_handlePressButtonAsync}
+            rules={{ required: "Requerido" }}
+          />
         </ScrollView>
         <View style={{ height: 60 }}>
           <CustomButton
@@ -235,6 +252,11 @@ const Register = ({ navigation }) => {
           />
         </View>
       </View>
+      <ModalAlert
+        text={`Tu negocio ha sido registrado con exito`}
+        close={() => CloseModal()}
+        open={visible}
+      />
     </KeyboardAvoidingView>
   );
 };

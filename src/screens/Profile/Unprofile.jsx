@@ -8,7 +8,7 @@ import { Auth, API, Storage } from "aws-amplify";
 import * as customProfile from "@/graphql/CustomQueries/Profile";
 import * as mutations from "@/graphql/mutations";
 import { businessProfile, userProfile, profileState } from "@/atoms";
-
+import * as WebBrowser from "expo-web-browser";
 const Unprofile = ({ navigation, route }) => {
   const { buttons } = settings;
   const global = require("@/utils/styles/global.js");
@@ -38,6 +38,10 @@ const Unprofile = ({ navigation, route }) => {
     console.log(business);
     console.log(status);
   }, [route, status]);
+
+  const _handlePressButtonAsync = async () => {
+    let result = await WebBrowser.openBrowserAsync("https://www.portaty.com");
+  };
   return (
     <ScrollView
       style={[styles.container, global.bgWhite]}
@@ -83,11 +87,11 @@ const Unprofile = ({ navigation, route }) => {
         activeOpacity={1}
         onPress={() => {
           // if (user[0].business.items.length !== 0) {
-            // Alert.alert("Ya tienes un negocio registrado");
+          // Alert.alert("Ya tienes un negocio registrado");
           // } else {
-            navigation.navigate("Form", {
-              user: user[0].id,
-            });
+          navigation.navigate("Form", {
+            user: user[0].id,
+          });
           // }
         }}
       >
@@ -150,7 +154,6 @@ const Unprofile = ({ navigation, route }) => {
           <View key={index}>
             {button.route ? (
               <TouchableOpacity
-                activeOpacity={1}
                 onPress={() => navigation.navigate(button.route)}
               >
                 <View style={[styles.line, global.bgWhiteSmoke]} />
@@ -170,8 +173,27 @@ const Unprofile = ({ navigation, route }) => {
                   icon={button.icon}
                 />
               </TouchableOpacity>
+            ) : button.web ? (
+              <TouchableOpacity onPress={_handlePressButtonAsync}>
+                <View style={[styles.line, global.bgWhiteSmoke]} />
+                <CustomSelect
+                  title={button.title}
+                  subtitle={button.subtitle}
+                  styled={{
+                    text: {
+                      container: styles.textContainerSelect,
+                      title: [styles.textTitleSelect, global.black],
+                      subtitle: [styles.textSubtitleSelect, global.topGray],
+                    },
+                    container: styles.containerSelect,
+                    iconLeft: [styles.iconLeft, global.mainBgColor],
+                    iconRight: styles.iconRight,
+                  }}
+                  icon={button.icon}
+                />
+              </TouchableOpacity>
             ) : (
-              <TouchableOpacity activeOpacity={1} onPress={onHandleLogout}>
+              <TouchableOpacity onPress={onHandleLogout}>
                 <View style={[styles.line, global.bgWhiteSmoke]} />
                 <CustomSelect
                   title={button.title}

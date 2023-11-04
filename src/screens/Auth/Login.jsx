@@ -136,6 +136,7 @@ const Login = ({ navigation }) => {
             text={
               isLoading ? <ActivityIndicator /> : es.authentication.login.button
             }
+            disabled={isLoading}
             handlePress={handleSubmit(onHandleLogin)}
             textStyles={[styles.textLogin, global.white]}
             buttonStyles={[styles.login, global.mainBgColor]}

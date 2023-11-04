@@ -33,14 +33,14 @@ const HomeHeader = () => {
           }}
           source={require("@/utils/images/portaty.png")}
         />
-        <Image
+        {/* <Image
           style={{
             width: 50,
             height: 50,
             resizeMode: "cover",
           }}
           source={require("@/utils/images/profile_default.png")}
-        />
+        /> */}
       </View>
 
       {/* <TouchableOpacity

@@ -20,14 +20,14 @@ const ProfileHeader = () => {
           }}
           source={require("@/utils/images/portaty.png")}
         />
-        <Image
+        {/* <Image
           style={{
             width: 45,
             height: 45,
             resizeMode: "cover",
           }}
           source={require("@/utils/images/gear.png")}
-        />
+        /> */}
       </View>
     </View>
   );
