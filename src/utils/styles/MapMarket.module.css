@@ -16,7 +16,7 @@
 .modalTop {
   flex-direction: row;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 .modalText {
   /* font-weight: 600; */
@@ -26,10 +26,10 @@
 }
 .modalContent {
   background-color: white;
-  border-radius: 12px;
-  padding: 20px;
-  width: 330px;
-  height: 500px;
+  /* border-radius: 12px; */
+  /* padding: 20px; */
+  width: 100%;
+  height: 100%;
 }
 .modalTextSelect {
   font-family: "light";
@@ -73,7 +73,7 @@
 }
 .textTag {
   font-size: 13px;
-  font-family: "thin";
+  font-family: "light";
   /* text-transform:none; */
 }
 

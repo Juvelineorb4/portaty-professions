@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Share,
   Linking,
-  Platform
+  Platform,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import CustomSelect from "@/components/CustomSelect";
@@ -25,6 +25,7 @@ import { Auth, API, Storage } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Favorites";
 import * as customFavorites from "@/graphql/CustomMutations/Favorites";
 import * as customSearch from "@/graphql/CustomQueries/Search";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 
 const FavoritePage = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
@@ -63,14 +64,14 @@ const FavoritePage = ({ navigation, route }) => {
   };
 
   const onOpenMap = (lat, lng, name) => {
-    let url = '';
-    if (Platform.OS === 'android') {
+    let url = "";
+    if (Platform.OS === "android") {
       url = `geo:${lat},${lng}?q=${lat},${lng}(${name})`;
     } else {
       url = `maps://app?saddr=${lat},${lng}&daddr=${lat},${lng}&q=${lat},${lng}(${name})`;
     }
     Linking.openURL(url);
-  }
+  };
 
   const onShare = async () => {
     try {
@@ -172,9 +173,15 @@ const FavoritePage = ({ navigation, route }) => {
             justifyContent: "space-between",
             alignItems: "center",
           }}
-          onPress={() => onOpenMap(item.business.coordinates.lat, item.business.coordinates.lon, item.business.name)}
+          onPress={() =>
+            onOpenMap(
+              item.business.coordinates.lat,
+              item.business.coordinates.lon,
+              item.business.name
+            )
+          }
         >
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
+          {/* <View style={{ flexDirection: "row", alignItems: "center" }}>
             <View
               style={[
                 {
@@ -205,7 +212,37 @@ const FavoritePage = ({ navigation, route }) => {
               resizeMode: "cover",
             }}
             source={require("@/utils/images/arrow_right.png")}
-          />
+          /> */}
+
+          <View
+            style={{
+              flex: 1,
+              borderRadius: 10,
+              overflow: 'hidden',
+              marginBottom: 40
+            }}
+          >
+            <MapView
+              style={{
+                width: "100%",
+                height: 220,
+                
+              }}
+              initialRegion={{
+                latitude: item.business.coordinates.lat,
+                longitude: item.business.coordinates.lon,
+                latitudeDelta: 0.005,
+                longitudeDelta: 0.005,
+              }}
+            >
+              <Marker coordinate={{
+                latitude: item.business.coordinates.lat,
+                longitude: item.business.coordinates.lon,
+              }}
+              title={item.business.name}
+              />
+            </MapView>
+          </View>
         </TouchableOpacity>
 
         {/*  */}
