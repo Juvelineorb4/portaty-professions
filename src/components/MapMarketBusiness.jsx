@@ -81,7 +81,10 @@ const MapMarketBusiness = ({
     setSelectMap(true);
     setModalVisible(!modalVisible);
   };
-  useEffect(() => {}, []);
+  useEffect(() => {
+    console.log(marketLocation)
+    console.log(initialLocation)
+  }, []);
 
   return (
     <Controller
@@ -185,10 +188,10 @@ const MapMarketBusiness = ({
                       }}
                       customMapStyle={MAP_SETTINGS}
                     >
-                      {marketLocation && (
+                      {marketLocation || initialLocation && (
                         <Marker
                           title="Ubicacion de tu negocion"
-                          coordinate={marketLocation}
+                          coordinate={marketLocation ? marketLocation : initialLocation}
                           draggable
                           onDragStart={(e) => onHandleMarkerDragStart(e)}
                           onDragEnd={onHandleMarketMove}

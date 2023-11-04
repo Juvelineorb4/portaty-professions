@@ -142,7 +142,7 @@ const Form = ({ navigation, route }) => {
           input: [styles.inputContainer],
           placeholder: styles.placeholder,
         }}
-        text={`Razon social*`}
+        text={`Nombre del negocio*`}
         rules={{
           required: es.businessForm.register.company.rules,
         }}
@@ -263,28 +263,31 @@ const Form = ({ navigation, route }) => {
         }}
         onPress={pickImage}
       >
-        <Image
-          style={{
-            width: 100,
-            height: 100,
-            resizeMode: "contain",
-            marginRight: 5,
-          }}
-          source={require("@/utils/images/cameraadd.png")}
-        />
-        {image && (
+        <View style={{
+          width: 100, height: 100, alignItems: 'center', justifyContent: 'center', borderWidth: 0.5, borderStyle: 'dashed', borderRadius: 5
+        }}>
+        {image ? (
           <Image
             style={{
               width: 95,
               height: 95,
-              borderRadius: 8,
-              position: "absolute",
-              left: 110,
+              borderRadius: 5,
             }}
-            // resizeMethod={`resize`}
             source={{ uri: image }}
           />
-        )}
+        ) :
+        <Image
+          style={{
+            width: 27,
+            height: 27,
+            resizeMode: "contain",
+          }}
+          source={require("@/utils/images/cameraadd.png")}
+        />
+        }
+        </View>
+
+        
       </TouchableOpacity>
       <Text
         style={{
@@ -294,7 +297,7 @@ const Form = ({ navigation, route }) => {
           marginVertical: 10,
         }}
       >
-        Sube una imagen de tu negocio*
+        Sube una imagen de tu negocio
       </Text>
       <TouchableOpacity
         style={[
