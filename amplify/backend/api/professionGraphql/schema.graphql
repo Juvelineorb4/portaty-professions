@@ -14,7 +14,13 @@ type Users
   email: String
     @auth(rules: [{ allow: owner }])
     @index(name: "byEmailUser", queryField: "userByEmail")
-  identityID: ID @auth(rules: [{ allow: owner }])
+  identityID: ID
+    @auth(
+      rules: [
+        { allow: owner }
+        { allow: private, provider: iam, operations: [read] }
+      ]
+    )
   favorites: [Favorites] @hasMany(indexName: "byUsersFavorites", fields: ["id"])
   business: [Business] @hasMany(indexName: "byUsersBusiness", fields: ["id"])
   owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }])
@@ -34,6 +40,7 @@ type Business
   id: ID!
   userID: ID @index(name: "byUsersBusiness")
   user: Users @belongsTo(fields: ["userID"])
+  identityID: String
   name: String
   image: String
   email: String

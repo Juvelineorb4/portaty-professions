@@ -43,7 +43,7 @@ const HomeHeader = () => {
         />
       </View>
 
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={[styles.content, global.bgWhiteSoft]}
         activeOpacity={1}
       >
@@ -63,7 +63,7 @@ const HomeHeader = () => {
           onChangeText={(e) => setInputSearch(e)}
           onSubmitEditing={() => handleKeyPress(inputSearch)}
         />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <View style={[styles.line, global.mainBgColor]} />
     </View>
   );

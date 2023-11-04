@@ -25,6 +25,7 @@ import MapMarketBusiness from "@/components/MapMarketBusiness";
 import useLocation from "@/hooks/useLocation";
 // lengaujhe
 import { es } from "@/utils/constants/lenguage";
+import ModalAlert from "@/components/ModalAlert";
 const Form = ({ navigation, route }) => {
   const { location } = useLocation();
   const global = require("@/utils/styles/global.js");
@@ -35,6 +36,8 @@ const Form = ({ navigation, route }) => {
   const [activitiesList, setActivitiesList] = useState([]);
   const activity = useRecoilValue(activitySelect);
   const tags = useRecoilValue(tagsList);
+  const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   /* Para limpiar */
   const [selectTagsList, setSelectTagsList] = useRecoilState(tagsList);
@@ -76,6 +79,7 @@ const Form = ({ navigation, route }) => {
     setSelectMapBusiness({});
   };
   const onRegisterBusiness = async (data) => {
+    setLoading(true)
     const { company, email, phone, wsme, coordinates } = data;
     const storageFolder = company.replace(/ /g, "");
     try {
@@ -109,8 +113,10 @@ const Form = ({ navigation, route }) => {
       });
       BlankInputs();
       setStateProfile(true);
-      Alert.alert("REGISTRO EXITOSO");
-      navigation.goBack();
+      setLoading(false)
+      setVisible(true)
+      // Alert.alert("REGISTRO EXITOSO");
+      // navigation.goBack();
     } catch (error) {
       Alert.alert("ERROR AL CARGAR NEGOCIO: ", JSON.stringify(error));
       console.log("ERROR AL CARGAR NEGOCIO: ", error);
@@ -123,6 +129,10 @@ const Form = ({ navigation, route }) => {
     setActivitiesList(activities.data.listActivities.items);
   };
 
+  const CloseModal = () => {
+    setVisible(false)
+    navigation.goBack();
+  }
   useEffect(() => {
     MultipleData();
     BlankInputs();
@@ -314,10 +324,11 @@ const Form = ({ navigation, route }) => {
         ]}
         onPress={handleSubmit(onRegisterBusiness)}
       >
-        <Text style={[global.white, { fontFamily: "medium", fontSize: 14 }]}>
+        {loading ? <ActivityIndicator size='small' color='#ffffff'/> : <Text style={[global.white, { fontFamily: "medium", fontSize: 14 }]}>
           {`Registrar`}
-        </Text>
+        </Text>}
       </TouchableOpacity>
+      <ModalAlert text={`Tu negocio ha sido registrado con exito`} close={() => CloseModal()} open={visible} />
     </ScrollView>
   );
 };

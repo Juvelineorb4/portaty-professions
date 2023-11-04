@@ -84,13 +84,13 @@ const Unprofile = ({ navigation, route }) => {
       <TouchableOpacity
         activeOpacity={1}
         onPress={() => {
-          if (user[0].business.items.length !== 0) {
-            Alert.alert("Ya tienes un negocio registrado");
-          } else {
+          // if (user[0].business.items.length !== 0) {
+            // Alert.alert("Ya tienes un negocio registrado");
+          // } else {
             navigation.navigate("Form", {
               user: user[0].id,
             });
-          }
+          // }
         }}
       >
         <View style={[styles.line, global.bgWhiteSmoke]} />
