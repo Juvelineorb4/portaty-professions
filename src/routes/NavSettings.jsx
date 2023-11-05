@@ -28,6 +28,7 @@ const NavSettings = ({ checkRender }) => {
         case "autoSignIn":
           break;
         case "updateUserAttributes":
+          checkUser();
           break;
       }
     });

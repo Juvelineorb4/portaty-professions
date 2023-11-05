@@ -29,7 +29,7 @@ const Home = ({ navigation, route }) => {
     useRecoilState(inputFavoritesSearch);
   const [favoritesList, setFavoritesList] = useState([]);
   const [nothing, setNothing] = useState(false);
- 
+
   const [resultNothing, setResultNothing] = useState(false);
   const [loading, setLoading] = useState(false);
   const fetchFavorites = async () => {
@@ -182,7 +182,6 @@ const Home = ({ navigation, route }) => {
       >
         Logout
       </Text> */}
-      
       </ScrollView>
     );
 
@@ -221,7 +220,6 @@ const Home = ({ navigation, route }) => {
           textStyles={[styles.textSearch, global.white]}
           buttonStyles={[styles.search, global.mainBgColor]}
         />
-       
       </View>
     );
 };

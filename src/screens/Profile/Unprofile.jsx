@@ -7,12 +7,16 @@ import { useRecoilValue } from "recoil";
 import { Auth, API, Storage } from "aws-amplify";
 import * as customProfile from "@/graphql/CustomQueries/Profile";
 import * as mutations from "@/graphql/mutations";
-import { businessProfile, userProfile, profileState } from "@/atoms";
+import { profileState, userAuthenticated } from "@/atoms";
 import * as WebBrowser from "expo-web-browser";
+import SkeletonUnprofile from "@/components/SkeletonUnprofile";
+import { Skeleton } from "@rneui/themed";
+import { useEffect } from "react";
 const Unprofile = ({ navigation, route }) => {
   const { buttons } = settings;
   const global = require("@/utils/styles/global.js");
   const [selectKey, setSelectKey] = useState("");
+  const userAuth = useRecoilValue(userAuthenticated);
   const [user, setUser] = useState([]);
   const [business, setBusiness] = useState([]);
   const status = useRecoilValue(profileState);
@@ -20,28 +24,26 @@ const Unprofile = ({ navigation, route }) => {
     await Auth.signOut();
   };
   const User = async () => {
-    const { attributes } = await Auth.currentAuthenticatedUser();
     const result = await API.graphql({
       query: customProfile.userByEmail,
       authMode: "AMAZON_COGNITO_USER_POOLS",
       variables: {
-        email: attributes.email,
+        email: userAuth?.attributes?.email,
       },
     });
     if (result.data.userByEmail.items[0].business.items.length !== 0)
       setBusiness(result.data.userByEmail.items[0].business.items);
-    setUser([result.data.userByEmail.items[0]]);
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
+    setUser([userAuth?.attributes]);
     User();
-    console.log(business);
-    console.log(status);
-  }, [route, status]);
+  }, [status, userAuth]);
 
   const _handlePressButtonAsync = async () => {
     let result = await WebBrowser.openBrowserAsync("https://www.portaty.com");
   };
+  if (!user[0]) return <SkeletonUnprofile />;
   return (
     <ScrollView
       style={[styles.container, global.bgWhite]}
@@ -51,7 +53,9 @@ const Unprofile = ({ navigation, route }) => {
         <Text style={[styles.titleSettings, global.black, { marginTop: 20 }]}>
           {`Perfil`}
         </Text>
+
         <View style={[styles.line, global.bgWhiteSmoke]} />
+
         <TouchableOpacity
           activeOpacity={1}
           onPress={() =>
@@ -86,13 +90,13 @@ const Unprofile = ({ navigation, route }) => {
       <TouchableOpacity
         activeOpacity={1}
         onPress={() => {
-          // if (user[0].business.items.length !== 0) {
-          // Alert.alert("Ya tienes un negocio registrado");
-          // } else {
-          navigation.navigate("Form", {
-            user: user[0].id,
-          });
-          // }
+          if (business.length !== 0) {
+            Alert.alert("Ya tienes un negocio registrado");
+          } else {
+            navigation.navigate("Form", {
+              user: user[0]["custom:userTableID"],
+            });
+          }
         }}
       >
         <View style={[styles.line, global.bgWhiteSmoke]} />

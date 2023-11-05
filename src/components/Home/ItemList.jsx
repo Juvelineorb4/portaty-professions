@@ -1,4 +1,10 @@
-import { View, Text, TouchableOpacity, Image, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  ActivityIndicator,
+} from "react-native";
 import React, { useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Auth, API, Storage } from "aws-amplify";
@@ -10,7 +16,7 @@ const ItemList = ({ data, number, styled }) => {
   const [save, setSave] = useState("");
   const [selectKey, setSelectKey] = useState("");
   const [loading, setLoading] = useState(false);
-  console.log(data.business.image)
+  console.log(data.business.image);
   const onDeleteFavorite = async () => {
     const favorites = await API.graphql({
       query: customFavorites.deleteFavorites,
@@ -27,7 +33,7 @@ const ItemList = ({ data, number, styled }) => {
   const getImage = async () => {
     setLoading(true);
     try {
-      const url = await Storage.get(data.business.image, {
+      await Storage.get(data.business.image, {
         level: "protected",
         identityId: data.business.identityID,
       }).then((res) => setSelectKey(res));
@@ -41,7 +47,7 @@ const ItemList = ({ data, number, styled }) => {
   };
   useLayoutEffect(() => {
     fetchFavorite();
-    getImage()
+    getImage();
   }, []);
   if (save)
     return (
@@ -62,23 +68,27 @@ const ItemList = ({ data, number, styled }) => {
             marginLeft: 10,
           }}
         >
-         {!selectKey ? (
-          <View
-            style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-          >
-            <ActivityIndicator size={`small`} color="fb8500" />
-          </View>
-        ) : (
-          <Image
-            style={{
-              width: "100%",
-              height: "100%",
-              resizeMode: "cover",
-              borderRadius: 2,
-            }}
-            source={{ uri: selectKey }}
-          />
-        )}
+          {!selectKey ? (
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <ActivityIndicator size={`small`} color="fb8500" />
+            </View>
+          ) : (
+            <Image
+              style={{
+                width: "100%",
+                height: "100%",
+                resizeMode: "cover",
+                borderRadius: 2,
+              }}
+              source={{ uri: selectKey }}
+            />
+          )}
           <View
             style={{
               flexDirection: "row",

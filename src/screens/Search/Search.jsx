@@ -40,7 +40,7 @@ const Search = ({ route }) => {
   const { location } = useLocation();
   const kilometers = [1, 5, 10, 20, 50, 100];
 
-console.log(items)
+  console.log("EJELE: ", items);
 
   let number = 26 * moreItems;
   const getData = async () => {
