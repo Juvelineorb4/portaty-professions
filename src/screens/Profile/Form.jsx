@@ -80,6 +80,7 @@ const Form = ({ navigation, route }) => {
   };
   const onRegisterBusiness = async (data) => {
     setLoading(true)
+    const { identityId } = await Auth.currentUserCredentials();
     const { company, email, phone, wsme, coordinates } = data;
     const storageFolder = company.replace(/ /g, "");
     try {
@@ -102,6 +103,7 @@ const Form = ({ navigation, route }) => {
             phone: phone,
             whatsapp: wsme,
             image: key,
+            identityID: identityId,
             coordinates: {
               lat: coordinates.latitude,
               lon: coordinates.longitude,
@@ -111,7 +113,7 @@ const Form = ({ navigation, route }) => {
           },
         },
       });
-      BlankInputs();
+      console.log(business)
       setStateProfile(true);
       setLoading(false)
       setVisible(true)
@@ -131,6 +133,7 @@ const Form = ({ navigation, route }) => {
 
   const CloseModal = () => {
     setVisible(false)
+    BlankInputs();
     navigation.goBack();
   }
   useEffect(() => {

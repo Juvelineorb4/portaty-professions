@@ -40,6 +40,8 @@ const Search = ({ route }) => {
   const { location } = useLocation();
   const kilometers = [1, 5, 10, 20, 50, 100];
 
+console.log(items)
+
   let number = 26 * moreItems;
   const getData = async () => {
     const api = "api-professions-gateway";

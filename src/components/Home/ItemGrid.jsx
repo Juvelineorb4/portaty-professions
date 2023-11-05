@@ -1,4 +1,10 @@
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  ActivityIndicator,
+} from "react-native";
 import React, { useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Auth, API, Storage } from "aws-amplify";
@@ -14,7 +20,10 @@ const ItemGrid = ({ data, number, styled }) => {
   const [select, setSelect] = useState(false);
   const [selection, setSelection] = useRecoilState(favoriteSelection);
   const navigation = useNavigation();
+  const [selectKey, setSelectKey] = useState("");
+  const [loading, setLoading] = useState(false);
   const selectionFavorite = selection.some((item) => item === data.id);
+  console.log(data.business.identityID, data.business.image);
   const onDeleteFavorite = async () => {
     const favorites = await API.graphql({
       query: customFavorites.deleteFavorites,
@@ -27,71 +36,108 @@ const ItemGrid = ({ data, number, styled }) => {
     });
     console.log(favorites);
   };
+  const getImage = async () => {
+    setLoading(true);
+    try {
+      const url = await Storage.get(data.business.image, {
+        level: "protected",
+        identityId: data.business.identityID,
+      }).then((res) => setSelectKey(res));
+      setLoading(false);
+    } catch (error) {
+      console.log("toy", error);
+    }
+  };
   useLayoutEffect(() => {
+    getImage();
     console.log(data.position);
+    console.log(selectKey)
   }, []);
   // if (save)
-  return (
-    <TouchableOpacity
-      style={styled.column}
-      onPress={() => {
-        if (selectionFavorite) {
-          // setSelect(false)
-          // console.log(selection)
-          let selections = selection.filter((item) => item !== data.id);
-          setSelection(selections);
-        } else {
-          navigation.navigate("FavoritePage", {
-            data: {
-              item: data,
-              image: `https://picsum.photos/id/${100 + number}/200/300`,
-            },
-          });
-        }
-      }}
-      onLongPress={() => {
-        // setSelect(true);
-        setSelection([...selection, data.id]);
-      }}
-      delayLongPress={1000}
-      activeOpacity={1}
-    >
-      <Image
-        style={{
-          width: "100%",
-          height: "100%",
-          resizeMode: "cover",
-          // marginLeft: 5,
-          borderRadius: 2,
+  if (selectKey)
+    return (
+      <TouchableOpacity
+        style={styled.column}
+        onPress={() => {
+          if (selectionFavorite) {
+            // setSelect(false)
+            // console.log(selection)
+            let selections = selection.filter((item) => item !== data.id);
+            setSelection(selections);
+          } else {
+            navigation.navigate("FavoritePage", {
+              data: {
+                item: data,
+                image: selectKey,
+              },
+            });
+          }
         }}
-        source={{ uri: `https://picsum.photos/id/${100 + number}/200/300` }}
-      />
-      {selectionFavorite ? (
-        <View
-          style={{
-            position: "absolute",
-            width: "100%",
-            height: "100%",
-            backgroundColor: "#fff",
-            opacity: 0.7,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <AntDesign name="checkcircleo" size={18} color="green" />
-          <Text style={{ fontSize: 12, fontFamily: "thin", marginTop: 5 }}>
-            Seleccionado
-          </Text>
-        </View>
-      ) : (
-        ""
-      )}
-      {data.position > 0 && (
-        <View style={[{position: 'absolute', width: 25, height: 25, borderRadius: 5, opacity: 0.5, alignItems: 'center', justifyContent: 'center', left: 4, top: 3 }, global.bgMidGray]}>
-          <EvilIcons name="lock" size={26} color="#1f1f1f" />
-        </View>
-      )}
-      {/* <TouchableOpacity style={styled.options} onPress={openOptions}>
+        onLongPress={() => {
+          // setSelect(true);
+          setSelection([...selection, data.id]);
+        }}
+        delayLongPress={1000}
+        activeOpacity={1}
+      >
+        {!selectKey ? (
+          <View
+            style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+          >
+            <ActivityIndicator size={`small`} color="fb8500" />
+          </View>
+        ) : (
+          <Image
+            style={{
+              width: "100%",
+              height: "100%",
+              resizeMode: "cover",
+              borderRadius: 2,
+            }}
+            source={{ uri: selectKey }}
+          />
+        )}
+        {selectionFavorite ? (
+          <View
+            style={{
+              position: "absolute",
+              width: "100%",
+              height: "100%",
+              backgroundColor: "#fff",
+              opacity: 0.7,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <AntDesign name="checkcircleo" size={18} color="green" />
+            <Text style={{ fontSize: 12, fontFamily: "thin", marginTop: 5 }}>
+              Seleccionado
+            </Text>
+          </View>
+        ) : (
+          ""
+        )}
+        {data.position > 0 && (
+          <View
+            style={[
+              {
+                position: "absolute",
+                width: 25,
+                height: 25,
+                borderRadius: 5,
+                opacity: 0.5,
+                alignItems: "center",
+                justifyContent: "center",
+                left: 4,
+                top: 3,
+              },
+              global.bgMidGray,
+            ]}
+          >
+            <EvilIcons name="lock" size={26} color="#1f1f1f" />
+          </View>
+        )}
+        {/* <TouchableOpacity style={styled.options} onPress={openOptions}>
         <Ionicons name="ellipsis-vertical-outline" size={24} color="black" />
           {active && (
             <View style={styled.modal}>
@@ -102,8 +148,8 @@ const ItemGrid = ({ data, number, styled }) => {
             </View>
           )}
         </TouchableOpacity> */}
-    </TouchableOpacity>
-  );
+      </TouchableOpacity>
+    );
 };
 
 export default ItemGrid;

@@ -5,10 +5,11 @@ import {
   Image,
   Modal,
   Pressable,
+  ActivityIndicator,
 } from "react-native";
 import React, { useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { API } from "aws-amplify";
+import { API, Storage } from "aws-amplify";
 import styles from "@/utils/styles/Post.module.css";
 import * as customSearch from "@/graphql/CustomQueries/Search";
 
@@ -16,8 +17,23 @@ const Post = ({ data, image, styled }) => {
   const global = require("@/utils/styles/global.js");
   const navigation = useNavigation();
   const [post, setPost] = useState([]);
-  console.log(data)
+  const [selectKey, setSelectKey] = useState("");
+  const [loading, setLoading] = useState(false);
+  // console.log(data)
   const [modalVisible, setModalVisible] = useState(false);
+  const getImage = async () => {
+    setLoading(true)
+    try {
+      const url = await Storage.get(data.path, {
+        level: "protected",
+        identityId: data.identityID,
+      }).then((res) => setSelectKey(res));
+    setLoading(false)
+
+    } catch (error) {
+      console.log("toy", error);
+    }
+  };
   const fetchData = async () => {
     try {
       const business = await API.graphql({
@@ -41,8 +57,10 @@ const Post = ({ data, image, styled }) => {
 
   useLayoutEffect(() => {
     fetchData();
+    getImage()
+    console.log(selectKey)
   }, []);
-  return (
+  if (selectKey) return (
     <TouchableOpacity
       style={[
         styled,
@@ -60,15 +78,15 @@ const Post = ({ data, image, styled }) => {
         // });
       }}
     >
-      <Image
+      {!selectKey ? <ActivityIndicator size={`large`} color={`#fb8500`} /> : <Image
         style={{
           width: "100%",
           height: "100%",
           resizeMode: "cover",
           borderRadius: 2,
         }}
-        source={{ uri: image }}
-      />
+        source={{ uri: selectKey }}
+      />}
       <Modal animationType="none" transparent={true} visible={modalVisible}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
@@ -97,7 +115,7 @@ const Post = ({ data, image, styled }) => {
                   resizeMode: "cover",
                   borderRadius: 5,
                 }}
-                source={{ uri: image }}
+                source={{ uri: selectKey }}
               />
               <View style={{ paddingVertical: 15 }}>
               <View
@@ -108,7 +126,7 @@ const Post = ({ data, image, styled }) => {
                   }}
                 >
                   <Text style={{ fontFamily: "light", fontSize: 14 }}>
-                    Nombre del negocio:
+                    Nombre:
                   </Text>
                   <Text style={{ fontFamily: "regular", fontSize: 14 }}>
                     {data.name}
@@ -175,7 +193,7 @@ const Post = ({ data, image, styled }) => {
                   navigation.navigate("SearchPost", {
                     data: {
                       item: data,
-                      image: image,
+                      image: selectKey,
                     },
                   });
                 }}
