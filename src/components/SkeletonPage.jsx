@@ -2,6 +2,7 @@ import { View, ScrollView } from "react-native";
 import React from "react";
 import styles from "@/utils/styles/Unprofile.module.css";
 import { Skeleton } from "@rneui/themed";
+
 const SkeletonExample = () => {
   const global = require("@/utils/styles/global.js");
   return (

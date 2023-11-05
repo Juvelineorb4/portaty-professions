@@ -29,11 +29,12 @@ import * as queries from "@/graphql/CustomQueries/Favorites";
 import * as customFavorites from "@/graphql/CustomMutations/Favorites";
 import { useFocusEffect } from "@react-navigation/native";
 import CustomButton from "@/components/CustomButton";
-import { MapView, Marker } from "react-native-maps";
-import SkeletonPage from "@/components/SkeletonPage";
+import MapView, { Marker } from "react-native-maps";
+import SkeletonExample from "@/components/SkeletonExample";
+// import SkeletonPage from "@/components/SkeletonPage";
 
 const SharePage = ({ route, navigation }) => {
-  const [post, setPost] = useState([]);
+  const [post, setPost] = useState(null);
   const [save, setSave] = useState("");
   const global = require("@/utils/styles/global.js");
   const { params } = route;
@@ -147,7 +148,7 @@ const SharePage = ({ route, navigation }) => {
     fetchFavorite();
     getImage(); 
   }, []);
-  if (!post) return <SkeletonPage />;
+  if (!post) return <SkeletonExample />;
   return (
     <View
       style={[
@@ -261,7 +262,7 @@ const SharePage = ({ route, navigation }) => {
               marginBottom: 40,
             }}
           >
-            {/* <MapView
+            <MapView
               style={{
                 width: "100%",
                 height: 220,
@@ -280,7 +281,7 @@ const SharePage = ({ route, navigation }) => {
                 }}
                 title={post.name}
               />
-            </MapView> */}
+            </MapView>
           </View>
         </TouchableOpacity>
 
