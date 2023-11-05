@@ -76,7 +76,7 @@ const SharePage = ({ route, navigation }) => {
         },
         authMode: "AWS_IAM",
       });
-      console.log(business)
+      console.log(business);
       setPost(business.data.getBusiness);
     } catch (error) {
       console.log(error);
@@ -102,8 +102,7 @@ const SharePage = ({ route, navigation }) => {
   const onShare = async () => {
     try {
       await Share.share({
-        message:
-        `Han compartido contigo un negocio, da click para mirarlo exp://192.168.250.1:19000/--/share/business?id=${params?.id}`,
+        message: `Han compartido contigo un negocio, da click para mirarlo exp://192.168.250.1:19000/--/share/business?id=${params?.id}`,
       });
     } catch (error) {
       console.error("Error sharing:", error);
@@ -114,10 +113,10 @@ const SharePage = ({ route, navigation }) => {
     Linking.openURL(url);
   };
   useEffect(() => {
-      fetchData();
-      fetchFavorite();
-      console.log(item)
-  }, []);
+    fetchData();
+    fetchFavorite();
+    console.log(item);
+  }, [params]);
 
   if (params?.id !== undefined || item !== undefined)
     return (
@@ -554,7 +553,9 @@ const SharePage = ({ route, navigation }) => {
           global.bgWhite,
         ]}
       >
-        <Text style={{ fontSize: 20, fontFamily: "light", textAlign: 'center' }}>
+        <Text
+          style={{ fontSize: 20, fontFamily: "light", textAlign: "center" }}
+        >
           No se encuentra el negocio al cual quieres acceder
         </Text>
         <CustomButton

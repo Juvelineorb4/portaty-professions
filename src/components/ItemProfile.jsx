@@ -17,7 +17,7 @@ const ItemProfile = ({ data, identityID, styled }) => {
   console.log(identityID);
   const getImage = async () => {
     try {
-      const url = await Storage.get(data.image, {
+      await Storage.get(data.image, {
         level: "protected",
         identityId: identityID,
       }).then((res) => setSelectKey(res));
@@ -85,12 +85,14 @@ const ItemProfile = ({ data, identityID, styled }) => {
                 Eliminar
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity  style={{
+            <TouchableOpacity
+              style={{
                 flexDirection: "row",
                 alignItems: "center",
-              }}>
-                <Ionicons name="eye-outline" size={12} color="black" />
-            <Text
+              }}
+            >
+              <Ionicons name="eye-outline" size={12} color="black" />
+              <Text
                 style={{ fontSize: 12, fontFamily: "light", marginLeft: 1 }}
               >
                 Ver
@@ -104,7 +106,7 @@ const ItemProfile = ({ data, identityID, styled }) => {
               flex: 1,
               // flexDirection: "row",
               justifyContent: "space-between",
-              marginLeft: 20
+              marginLeft: 20,
             }}
           >
             <View>
@@ -124,9 +126,7 @@ const ItemProfile = ({ data, identityID, styled }) => {
               </Text>
             </View>
           </View>
-          <View style={{height: 30}}>
-
-          </View>
+          <View style={{ height: 30 }}></View>
         </View>
       </TouchableOpacity>
     );

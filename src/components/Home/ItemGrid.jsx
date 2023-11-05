@@ -39,7 +39,7 @@ const ItemGrid = ({ data, number, styled }) => {
   const getImage = async () => {
     setLoading(true);
     try {
-      const url = await Storage.get(data.business.image, {
+      await Storage.get(data.business.image, {
         level: "protected",
         identityId: data.business.identityID,
       }).then((res) => setSelectKey(res));
@@ -50,8 +50,6 @@ const ItemGrid = ({ data, number, styled }) => {
   };
   useLayoutEffect(() => {
     getImage();
-    console.log(data.position);
-    console.log(selectKey)
   }, []);
   // if (save)
   if (selectKey)

@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   Share,
   ActivityIndicator,
-  Platform
+  Platform,
+  Linking,
 } from "react-native";
 import React from "react";
 import CustomSelect from "@/components/CustomSelect";
@@ -25,14 +26,14 @@ import { Auth, API, Storage } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Favorites";
 import * as customFavorites from "@/graphql/CustomMutations/Favorites";
 import MapView, { Marker } from "react-native-maps";
-
-const Page = ({ route }) => {
+import SkeletonPage from "@/components/SkeletonPage";
+const Page = ({ route, navigation }) => {
   /*  */
   const global = require("@/utils/styles/global.js");
   const {
     data: { item, image },
   } = route.params;
-  console.log(item, 'toy')
+  console.log(item, "toy");
 
   const onOpenMap = (lat, lng, name) => {
     let url = "";
@@ -47,13 +48,14 @@ const Page = ({ route }) => {
   const onShare = async () => {
     try {
       await Share.share({
-        message:
-        `Han compartido contigo un negocio, da click para mirarlo https://www.portaty.com/share/business?id=${item.id}`,
+        message: `Han compartido contigo un negocio, da click para mirarlo https://www.portaty.com/share/business?id=${item.id}`,
       });
     } catch (error) {
       console.error("Error sharing:", error);
     }
   };
+
+  if (!item) return <SkeletonPage />;
   return (
     <View
       style={[
@@ -106,7 +108,9 @@ const Page = ({ route }) => {
             justifyContent: "center",
           }}
         >
-          <Text style={{ fontSize: 26, fontFamily: "thin" }}>{item.favorites?.items.length}</Text>
+          <Text style={{ fontSize: 26, fontFamily: "thin" }}>
+            {item.favorites?.items.length}
+          </Text>
           <Text style={{ fontSize: 22, fontFamily: "thin" }}>Favoritos</Text>
         </View>
         <View style={[styles.line, global.bgWhiteSmoke]} />
@@ -117,73 +121,38 @@ const Page = ({ route }) => {
             justifyContent: "space-between",
             alignItems: "center",
           }}
+          activeOpacity={1}
           onPress={() =>
-            onOpenMap(
-              item.coordinates.lat,
-              item.coordinates.lon,
-              item.name
-            )
+            onOpenMap(item.coordinates.lat, item.coordinates.lon, item.name)
           }
         >
-          {/* <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <View
-              style={[
-                {
-                  width: 58,
-                  height: 58,
-                  borderRadius: 10,
-                  alignItems: "center",
-                  justifyContent: "center",
-                },
-                global.mainBgColor,
-              ]}
-            >
-              <FontAwesome name="map-marker" size={25} color="white" />
-            </View>
-            <View style={{ marginLeft: 10 }}>
-              <Text style={{ fontFamily: "light", fontSize: 16 }}>
-                Cómo llegar
-              </Text>
-              <Text style={{ fontFamily: "thin", fontSize: 12, width: 170 }}>
-                Revisa la ubicacion y busca la manera mas facil de llegar
-              </Text>
-            </View>
-          </View>
-          <Image
-            style={{
-              width: 40,
-              height: 40,
-              resizeMode: "cover",
-            }}
-            source={require("@/utils/images/arrow_right.png")}
-          /> */}
-
           <View
             style={{
               flex: 1,
               borderRadius: 10,
-              overflow: 'hidden',
-              marginBottom: 40
+              overflow: "hidden",
+              marginBottom: 40,
             }}
           >
             <MapView
               style={{
                 width: "100%",
                 height: 220,
-                
               }}
               initialRegion={{
                 latitude: item.coordinates.lat,
                 longitude: item.coordinates.lon,
-                latitudeDelta: 0.005,
-                longitudeDelta: 0.005,
+                latitudeDelta: 0.001,
+                longitudeDelta: 0.001,
               }}
+              scrollEnabled={false}
             >
-              <Marker coordinate={{
-                latitude: item.coordinates.lat,
-                longitude: item.coordinates.lon,
-              }}
-              title={item.name}
+              <Marker
+                coordinate={{
+                  latitude: item.coordinates.lat,
+                  longitude: item.coordinates.lon,
+                }}
+                title={item.name}
               />
             </MapView>
           </View>
@@ -239,7 +208,10 @@ const Page = ({ route }) => {
             marginTop: -25,
           }}
           onPress={() => {
-            navigation.navigate("ViewQR", { id: `https://www.portaty.com/share/business?id=${item.id}`, name: item.name });
+            navigation.navigate("ViewQR", {
+              id: `https://www.portaty.com/share/business?id=${item.id}`,
+              name: item.name,
+            });
           }}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -255,7 +227,11 @@ const Page = ({ route }) => {
                 global.mainBgColor,
               ]}
             >
-              <MaterialCommunityIcons name="qrcode-scan" size={25} color="white" />
+              <MaterialCommunityIcons
+                name="qrcode-scan"
+                size={25}
+                color="white"
+              />
             </View>
             <View style={{ marginLeft: 10 }}>
               <Text style={{ fontFamily: "light", fontSize: 16 }}>Ver QR</Text>

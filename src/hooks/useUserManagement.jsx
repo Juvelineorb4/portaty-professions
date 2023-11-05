@@ -5,23 +5,30 @@ import { userByEmail } from "@/graphql/CustomQueries/Navigation";
 import { updateUsers } from "@/graphql/CustomMutations/Navigation";
 // recpil
 import { useRecoilState } from "recoil";
-import { userAuthenticated, userTable, checkRenderState } from "@/atoms/index";
+import { userAuthenticated, userTable } from "@/atoms/index";
 import { useNavigation } from "@react-navigation/native";
 
 const useUserManagement = () => {
   const [userAuth, setUserAuth] = useRecoilState(userAuthenticated);
-  const [checkRender, setCheckRender] = useRecoilState(checkRenderState);
   const navigation = useNavigation();
-  const userSignIn = (data) => {
-    setUserAuth(data);
-    checkAttributes(data);
-    setCheckRender(true);
-    navigation.navigate("Tabs_Navigation");
+  const userSignIn = async (data) => {
+    try {
+      const result = await Auth.currentAuthenticatedUser();
+      setUserAuth(result);
+      checkAttributes(result);
+      setTimeout(() => {
+        // navigation.navigate("Tabs_Navigation", { screen: "Home_Tab" });
+      }, 1000);
+    } catch (error) {
+      setUserAuth(null);
+    }
   };
 
   const userSignOut = () => {
     setUserAuth(null);
-    navigation.navigate("Login_Welcome");
+    setTimeout(() => {
+      // navigation.navigate("Login_Welcome", { screen: "Login" });
+    }, 1000);
   };
   const checkUser = async () => {
     console.log("SE ACTIVO EL CHECK USER");
@@ -33,8 +40,8 @@ const useUserManagement = () => {
     } catch (error) {
       const { message } = new Error(error);
       console.log("ERROR USER: ", message);
+      setUserAuth(null);
     }
-    setCheckRender(true);
   };
 
   const checkAttributes = async (data) => {

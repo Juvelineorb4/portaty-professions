@@ -24,7 +24,7 @@ const Post = ({ data, image, styled }) => {
   const getImage = async () => {
     setLoading(true)
     try {
-      const url = await Storage.get(data.path, {
+     await Storage.get(data.path, {
         level: "protected",
         identityId: data.identityID,
       }).then((res) => setSelectKey(res));

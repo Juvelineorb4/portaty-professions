@@ -33,14 +33,14 @@ const HomeHeader = () => {
           }}
           source={require("@/utils/images/portaty.png")}
         />
-        <Image
+        {/* <Image
           style={{
             width: 50,
             height: 50,
             resizeMode: "cover",
           }}
           source={require("@/utils/images/profile_default.png")}
-        />
+        /> */}
       </View>
 
       {/* <TouchableOpacity
@@ -56,7 +56,7 @@ const HomeHeader = () => {
           source={require("@/utils/images/search.png")}
         />
         <TextInput
-          placeholder={"Buscar"}
+          placeholder={"Buscar Favoritos"}
           defaultValue={inputFavorites}
           style={styles.input}
           returnKeyType="search"

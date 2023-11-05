@@ -36,7 +36,7 @@ const ConfirmRegister = ({ navigation, route }) => {
       // if (!code.lenght === 6) return console.log("no tiene 6");
       await Auth.confirmSignUp(email, newCode);
       Alert.alert("Usuario Registrado Exitosamente");
-      navigation.navigate("Login_Welcome", { screen: "Login" });
+      navigation.replace("Login_Welcome", { screen: "Login" });
     } catch (error) {
       console.log("ERROR AL CONFIRMAR USUARIO: ", error);
     }

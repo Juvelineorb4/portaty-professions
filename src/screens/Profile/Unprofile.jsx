@@ -7,40 +7,43 @@ import { useRecoilValue } from "recoil";
 import { Auth, API, Storage } from "aws-amplify";
 import * as customProfile from "@/graphql/CustomQueries/Profile";
 import * as mutations from "@/graphql/mutations";
-import { businessProfile, userProfile, profileState } from "@/atoms";
-
+import { profileState, userAuthenticated } from "@/atoms";
+import * as WebBrowser from "expo-web-browser";
+import SkeletonUnprofile from "@/components/SkeletonUnprofile";
+import { Skeleton } from "@rneui/themed";
+import { useEffect } from "react";
 const Unprofile = ({ navigation, route }) => {
   const { buttons } = settings;
   const global = require("@/utils/styles/global.js");
   const [selectKey, setSelectKey] = useState("");
+  const userAuth = useRecoilValue(userAuthenticated);
   const [user, setUser] = useState([]);
   const [business, setBusiness] = useState([]);
   const status = useRecoilValue(profileState);
   const onHandleLogout = async () => {
     await Auth.signOut();
-    setTimeout(() => {
-      navigation.navigate("Login_Welcome");
-    }, 500);
   };
   const User = async () => {
-    const { attributes } = await Auth.currentAuthenticatedUser();
     const result = await API.graphql({
       query: customProfile.userByEmail,
       authMode: "AMAZON_COGNITO_USER_POOLS",
       variables: {
-        email: attributes.email,
+        email: userAuth?.attributes?.email,
       },
     });
     if (result.data.userByEmail.items[0].business.items.length !== 0)
       setBusiness(result.data.userByEmail.items[0].business.items);
-    setUser([result.data.userByEmail.items[0]]);
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
+    setUser([userAuth?.attributes]);
     User();
-    console.log(business)
-    console.log(status);
-  }, [route, status]);
+  }, [status, userAuth]);
+
+  const _handlePressButtonAsync = async () => {
+    let result = await WebBrowser.openBrowserAsync("https://www.portaty.com");
+  };
+  if (!user[0]) return <SkeletonUnprofile />;
   return (
     <ScrollView
       style={[styles.container, global.bgWhite]}
@@ -50,33 +53,36 @@ const Unprofile = ({ navigation, route }) => {
         <Text style={[styles.titleSettings, global.black, { marginTop: 20 }]}>
           {`Perfil`}
         </Text>
-        <View style={[styles.line, global.bgWhiteSmoke]} />
-        <TouchableOpacity
-        activeOpacity={1}
-        onPress={() => navigation.navigate('Profile', {
-          user: user[0]
-        })}
-      >
-        <CustomSelect
-          title={`Mi cuenta`}
-          subtitle={`Manten actualizado tus datos`}
-          styled={{
-            text: {
-              container: styles.textContainerSelect,
-              title: [styles.textTitleSelect, global.black],
-              subtitle: [styles.textSubtitleSelect, global.topGray],
-            },
-            container: styles.containerSelect,
-            iconLeft: [styles.iconLeft, global.mainBgColor],
-            iconRight: styles.iconRight,
-          }}
-          icon={{
-            left: require("@/utils/images/profile_white.png"),
-            right: require("@/utils/images/arrow_right.png"),
-          }}
-        />
-      </TouchableOpacity>
 
+        <View style={[styles.line, global.bgWhiteSmoke]} />
+
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={() =>
+            navigation.navigate("Profile", {
+              user: user[0],
+            })
+          }
+        >
+          <CustomSelect
+            title={`Mi cuenta`}
+            subtitle={`Manten actualizado tus datos`}
+            styled={{
+              text: {
+                container: styles.textContainerSelect,
+                title: [styles.textTitleSelect, global.black],
+                subtitle: [styles.textSubtitleSelect, global.topGray],
+              },
+              container: styles.containerSelect,
+              iconLeft: [styles.iconLeft, global.mainBgColor],
+              iconRight: styles.iconRight,
+            }}
+            icon={{
+              left: require("@/utils/images/profile_white.png"),
+              right: require("@/utils/images/arrow_right.png"),
+            }}
+          />
+        </TouchableOpacity>
       </View>
       <Text style={[styles.titleSettings, global.black, { marginTop: 20 }]}>
         {`Gestion`}
@@ -84,13 +90,13 @@ const Unprofile = ({ navigation, route }) => {
       <TouchableOpacity
         activeOpacity={1}
         onPress={() => {
-          // if (user[0].business.items.length !== 0) {
-            // Alert.alert("Ya tienes un negocio registrado");
-          // } else {
+          if (business.length !== 0) {
+            Alert.alert("Ya tienes un negocio registrado");
+          } else {
             navigation.navigate("Form", {
-              user: user[0].id,
+              user: user[0]["custom:userTableID"],
             });
-          // }
+          }
         }}
       >
         <View style={[styles.line, global.bgWhiteSmoke]} />
@@ -116,10 +122,12 @@ const Unprofile = ({ navigation, route }) => {
 
       <TouchableOpacity
         activeOpacity={1}
-        onPress={() => navigation.navigate('List', {
-          data: business,
-          user: user[0]
-        })}
+        onPress={() =>
+          navigation.navigate("List", {
+            data: business,
+            user: user[0],
+          })
+        }
       >
         <View style={[styles.line, global.bgWhiteSmoke]} />
         <CustomSelect
@@ -150,7 +158,6 @@ const Unprofile = ({ navigation, route }) => {
           <View key={index}>
             {button.route ? (
               <TouchableOpacity
-                activeOpacity={1}
                 onPress={() => navigation.navigate(button.route)}
               >
                 <View style={[styles.line, global.bgWhiteSmoke]} />
@@ -170,8 +177,27 @@ const Unprofile = ({ navigation, route }) => {
                   icon={button.icon}
                 />
               </TouchableOpacity>
+            ) : button.web ? (
+              <TouchableOpacity onPress={_handlePressButtonAsync}>
+                <View style={[styles.line, global.bgWhiteSmoke]} />
+                <CustomSelect
+                  title={button.title}
+                  subtitle={button.subtitle}
+                  styled={{
+                    text: {
+                      container: styles.textContainerSelect,
+                      title: [styles.textTitleSelect, global.black],
+                      subtitle: [styles.textSubtitleSelect, global.topGray],
+                    },
+                    container: styles.containerSelect,
+                    iconLeft: [styles.iconLeft, global.mainBgColor],
+                    iconRight: styles.iconRight,
+                  }}
+                  icon={button.icon}
+                />
+              </TouchableOpacity>
             ) : (
-              <TouchableOpacity activeOpacity={1} onPress={onHandleLogout} >
+              <TouchableOpacity onPress={onHandleLogout}>
                 <View style={[styles.line, global.bgWhiteSmoke]} />
                 <CustomSelect
                   title={button.title}

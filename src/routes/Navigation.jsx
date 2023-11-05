@@ -23,13 +23,15 @@ import Loading from "@/components/Loading";
 const Navigation = () => {
   const Stack = createNativeStackNavigator();
   const global = require("@/utils/styles/global.js");
-  const [checkRender, setCheckRender] = useState(false);
+  const [checkRender, setCheckRender] = useState(true);
   const [userState, setUserState] = useState(false);
+  const [isFirsTime, setIsFirsTime] = useState(false);
   const userAuth = useRecoilValue(userAuthenticated);
   // pido localizacion
   const { location } = useLocation();
   const renderNavigation = () => {
     setCheckRender(true);
+
     try {
       if (userAuth !== null) setUserState(true);
       setTimeout(() => {
@@ -41,15 +43,16 @@ const Navigation = () => {
         setCheckRender(false);
       }, 2000);
     }
+    setIsFirsTime(true);
   };
 
   useEffect(() => {
-    renderNavigation();
+    if (!isFirsTime) renderNavigation();
   }, [userAuth]);
 
   return (
     <NavigationContainer fallback={<Loading />}>
-      <NavSettings />
+      <NavSettings checkRender={checkRender} />
       {checkRender === false ? (
         <Stack.Navigator>
           {userAuth ? (

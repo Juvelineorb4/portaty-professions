@@ -7,12 +7,16 @@ import {
   TextInput,
   Switch,
   Share,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Auth, API, Storage } from "aws-amplify";
+import * as mutations from "@/graphql/CustomMutations/Profile";
 import * as customSearch from "@/graphql/CustomQueries/Search";
 import CustomSelect from "@/components/CustomSelect";
 import styles from "@/utils/styles/Profile.module.css";
+import CustomButton from "@/components/CustomButton";
+
 import {
   FontAwesome5,
   MaterialCommunityIcons,
@@ -22,22 +26,76 @@ import {
   EvilIcons,
   Feather,
 } from "@expo/vector-icons";
-
-const Profile = ({ route }) => {
+// amplify
+const Profile = ({ route, navigation }) => {
   const global = require("@/utils/styles/global.js");
   const { user } = route.params;
+  const [name, setName] = useState(user?.name);
+  const [lastName, setLastName] = useState(user["custom:lastName"]);
+  const [email, setEmail] = useState(user?.email);
   const [editActive, setEditActive] = useState(false);
-  console.log("PROFILE: ", user.id);
+  const [isSave, setIsSave] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  console.log("PROFILE: ", user);
   const onShare = async () => {
     try {
       await Share.share({
-        message:
-        `Han compartido contigo un negocio, da click para mirarlo https://www.portaty.com/share/list?id=${user.id}`,
+        message: `Han compartido contigo un negocio, da click para mirarlo https://www.portaty.com/share/list?id=${user.id}`,
       });
     } catch (error) {
       console.error("Error sharing:", error);
     }
   };
+
+  useEffect(() => {
+    onCheckChange();
+  }, [name, lastName]);
+
+  const onCheckChange = () => {
+    // si hubo un cambio de informacion habilitar boton
+    if (
+      name?.toLowerCase()?.trim() !== user?.name?.toLowerCase().trim() ||
+      lastName?.toLowerCase().trim() !== user?.lastName?.toLowerCase().trim()
+    ) {
+      setIsSave(true);
+    } else {
+      setIsSave(false);
+    }
+  };
+
+  const onSaveChange = async () => {
+    setIsLoading(true);
+    const data = await Auth.currentAuthenticatedUser();
+    const tableID = data?.attributes["custom:userTableID"];
+    console.log("ID DE TABLAA  CAMBAIR: ", tableID);
+
+    try {
+      // Cambiar en Cognito
+      await Auth.updateUserAttributes(data, {
+        name: name,
+        "custom:lastName": lastName,
+      });
+      navigation.goBack();
+      // Cambiar en tabla
+      const result = await API.graphql({
+        query: mutations.updateUsers,
+        authMode: "AMAZON_COGNITO_USER_POOLS",
+        variables: {
+          input: {
+            id: tableID,
+            name,
+            lastName,
+          },
+        },
+      });
+      console.log("ACTUALIZAR: ", result);
+    } catch (error) {
+      const { message } = new Error(error);
+      console.log("ERROR AL ACTUALIZAR ATRIBUTO IDENTITY ID: ", message);
+    }
+    setIsLoading(false);
+  };
+
   return (
     <View
       style={[
@@ -171,7 +229,8 @@ const Profile = ({ route }) => {
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <TextInput
-                value={user.name}
+                onChangeText={setName}
+                value={name}
                 style={[
                   {
                     fontSize: 13,
@@ -209,7 +268,8 @@ const Profile = ({ route }) => {
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <TextInput
-                value={user.lastName}
+                onChangeText={setLastName}
+                value={lastName}
                 style={[
                   {
                     fontSize: 13,
@@ -251,7 +311,7 @@ const Profile = ({ route }) => {
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <TextInput
-                value={user.email}
+                value={email}
                 style={[
                   {
                     fontSize: 13,
@@ -261,13 +321,34 @@ const Profile = ({ route }) => {
                     borderWidth: 0.3,
                     borderRadius: 4,
                   },
-                  editActive ? global.bgWhite : global.bgWhiteSoft,
+                  global.bgWhiteSoft,
                 ]}
-                editable={editActive ? true : false}
+                editable={false}
               />
             </View>
           </View>
-          <View style={[styles.line, global.bgWhiteSmoke]} />
+          <View style={{ height: 60 }}>
+            {editActive && (
+              <CustomButton
+                text={isLoading ? <ActivityIndicator /> : "Guardar"}
+                handlePress={onSaveChange}
+                textStyles={[global.white]}
+                buttonStyles={[
+                  {
+                    paddingVertical: 10,
+                    margin: 10,
+                    marginHorizontal: 80,
+                    borderRadius: 6,
+                    flexDirection: "row",
+                    justifyContent: "center",
+                  },
+                  isSave ? global.mainBgColor : global.bgWhiteSoft,
+                  ,
+                ]}
+                disabled={!isSave && isLoading}
+              />
+            )}
+          </View>
         </View>
       </ScrollView>
     </View>

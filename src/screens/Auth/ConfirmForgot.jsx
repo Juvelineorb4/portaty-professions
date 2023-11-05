@@ -25,6 +25,7 @@ const ConfirmForgot = ({ navigation, route }) => {
       code: ["", "", "", "", "", ""],
     },
   });
+  console.log(password)
   const onHandleConfirmCodeNewPassword = async (data) => {
     const { email, code, password } = data;
     let newCode = "";

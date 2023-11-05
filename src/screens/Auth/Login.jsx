@@ -23,18 +23,17 @@ const Login = ({ navigation }) => {
   const { control, handleSubmit } = useForm();
   const global = require("@/utils/styles/global.js");
   const EMAIL_REGEX = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
-  const [errorActive, setErrorActive] = useState(false);
+  const [errorActive, setErrorActive] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const onHandleLogin = async (data) => {
     const { email, password } = data;
+    setErrorActive("");
     setIsLoading(true);
     try {
       const result = await Auth.signIn(email.trim(), password.trim());
     } catch (error) {
-      const response = new Error(error);
-      const { message } = response;
-      switch (message) {
-        case "UserNotConfirmedException: User is not confirmed.":
+      switch (error.message) {
+        case "User is not confirmed.":
           Alert.alert(`Usuario: ${email} no confirmado`, "por favor confirmar");
           navigation.navigate("Register_App", {
             screen: "ConfirmRegister",
@@ -42,18 +41,20 @@ const Login = ({ navigation }) => {
           });
           break;
 
-        case "UserNotFoundException: User does not exist.":
-          Alert.alert(
-            `Usuario: ${email} no registrado`,
-            "por favor resgitrase"
+        case "User does not exist.":
+          setErrorActive(
+            `Usuario: ${email} no registrado por favor resgitrase`
           );
           break;
+        case "Incorrect username or password.":
+          setErrorActive(`Correo y/o Contraseña incorrectos.`);
+          break;
         default:
+          setErrorActive(`Ocurrio un error intente mas tarde.`);
           break;
       }
       setIsLoading(false);
-      console.log("ERROR AL LOGEARSE: ", message);
-      Alert.alert("Error Al Logearse: ", message);
+      console.log("ERROR AL LOGEARSE: ", error.message);
     }
   };
 
@@ -85,9 +86,7 @@ const Login = ({ navigation }) => {
             />
             <Text style={styles.name}>{es.authentication.login.name}</Text>
             {errorActive && (
-              <Text style={styles.errorInputMain}>
-                Correo electrónico y/o contraseña incorrectos
-              </Text>
+              <Text style={styles.errorInputMain}>{errorActive}</Text>
             )}
             <CustomInput
               control={control}
@@ -137,6 +136,7 @@ const Login = ({ navigation }) => {
             text={
               isLoading ? <ActivityIndicator /> : es.authentication.login.button
             }
+            disabled={isLoading}
             handlePress={handleSubmit(onHandleLogin)}
             textStyles={[styles.textLogin, global.white]}
             buttonStyles={[styles.login, global.mainBgColor]}
