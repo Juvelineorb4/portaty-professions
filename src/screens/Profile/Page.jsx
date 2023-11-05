@@ -8,6 +8,7 @@ import {
   Share,
   ActivityIndicator,
   Platform,
+  Linking,
 } from "react-native";
 import React from "react";
 import CustomSelect from "@/components/CustomSelect";
@@ -26,7 +27,7 @@ import * as queries from "@/graphql/CustomQueries/Favorites";
 import * as customFavorites from "@/graphql/CustomMutations/Favorites";
 import MapView, { Marker } from "react-native-maps";
 import SkeletonPage from "@/components/SkeletonPage";
-const Page = ({ route }) => {
+const Page = ({ route, navigation }) => {
   /*  */
   const global = require("@/utils/styles/global.js");
   const {
