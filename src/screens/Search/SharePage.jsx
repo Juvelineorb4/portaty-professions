@@ -145,10 +145,10 @@ const SharePage = ({ route, navigation }) => {
   useEffect(() => {
     fetchData();
     fetchFavorite();
-    getImage();
+    getImage(); 
   }, []);
-  // if (!post) return <SkeletonPage />;
-  if (post) return (
+  if (!post) return <SkeletonPage />;
+  return (
     <View
       style={[
         {
@@ -261,7 +261,7 @@ const SharePage = ({ route, navigation }) => {
               marginBottom: 40,
             }}
           >
-            <MapView
+            {/* <MapView
               style={{
                 width: "100%",
                 height: 220,
@@ -280,7 +280,7 @@ const SharePage = ({ route, navigation }) => {
                 }}
                 title={post.name}
               />
-            </MapView>
+            </MapView> */}
           </View>
         </TouchableOpacity>
 
