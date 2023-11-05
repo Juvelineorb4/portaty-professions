@@ -12,6 +12,8 @@ import { useNavigation } from "@react-navigation/native";
 import { API, Storage } from "aws-amplify";
 import styles from "@/utils/styles/Post.module.css";
 import * as customSearch from "@/graphql/CustomQueries/Search";
+import { Entypo } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 
 const Post = ({ data, image, styled }) => {
   const global = require("@/utils/styles/global.js");
@@ -22,14 +24,13 @@ const Post = ({ data, image, styled }) => {
   // console.log(data)
   const [modalVisible, setModalVisible] = useState(false);
   const getImage = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-     await Storage.get(data.path, {
+      await Storage.get(data.path, {
         level: "protected",
         identityId: data.identityID,
       }).then((res) => setSelectKey(res));
-    setLoading(false)
-
+      setLoading(false);
     } catch (error) {
       console.log("toy", error);
     }
@@ -57,164 +58,232 @@ const Post = ({ data, image, styled }) => {
 
   useLayoutEffect(() => {
     fetchData();
-    getImage()
-    console.log(selectKey)
+    getImage();
+    console.log(selectKey);
   }, []);
-  if (selectKey) return (
-    <TouchableOpacity
-      style={[
-        styled,
-        {
-          position: "relative",
-        },
-      ]}
-      onPress={() => {
-        setModalVisible(!modalVisible);
-        // navigation.navigate("SearchPost", {
-        //   data: {
-        //     item: data.id,
-        //     image: image,
-        //   },
-        // });
-      }}
-    >
-      {!selectKey ? <ActivityIndicator size={`large`} color={`#fb8500`} /> : <Image
-        style={{
-          width: "100%",
-          height: "100%",
-          resizeMode: "cover",
-          borderRadius: 2,
-        }}
-        source={{ uri: selectKey }}
-      />}
-      <Modal animationType="none" transparent={true} visible={modalVisible}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalTop}>
-              <Pressable
-                onPress={() => {
-                  setModalVisible(!modalVisible);
-                }}
-              >
-                <Image
-                  style={{
-                    width: 25,
-                    height: 25,
-                    resizeMode: "contain",
-                  }}
-                  source={require("@/utils/images/arrow_back.png")}
-                />
-              </Pressable>
-              <Text style={styles.modalText}>{`Vista previa del negocio`}</Text>
-            </View>
-            <View style={{ flex: 1 }}>
+  if (selectKey)
+    return (
+      <>
+        <TouchableOpacity
+          style={[
+            styled,
+            {
+              position: "relative",
+            },
+          ]}
+          onPress={() => {
+            setModalVisible(!modalVisible);
+            // navigation.navigate("SearchPost", {
+            //   data: {
+            //     item: data.id,
+            //     image: image,
+            //   },
+            // });
+          }}
+        >
+          {!selectKey ? (
+            <ActivityIndicator size={`large`} color={`#fb8500`} />
+          ) : (
+            <View style={{ height: "100%", width: "100%" }}>
               <Image
                 style={{
-                  width: 260,
-                  height: 260,
+                  width: "100%",
+                  height: "100%",
                   resizeMode: "cover",
-                  borderRadius: 5,
+                  borderRadius: 2,
                 }}
                 source={{ uri: selectKey }}
               />
-              <View style={{ paddingVertical: 15 }}>
               <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    marginTop: 5,
-                  }}
-                >
-                  <Text style={{ fontFamily: "light", fontSize: 14 }}>
-                    Nombre:
-                  </Text>
-                  <Text style={{ fontFamily: "regular", fontSize: 14 }}>
-                    {data.name}
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    marginTop: 5,
-                  }}
-                >
-                  <Text style={{ fontFamily: "light", fontSize: 14 }}>
-                    Actividad:
-                  </Text>
-                  <Text style={{ fontFamily: "regular", fontSize: 14 }}>
-                    {data.activity}
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    marginTop: 5,
-                  }}
-                >
-                  <Text style={{ fontFamily: "light", fontSize: 14 }}>
-                    Distancia de ti:
-                  </Text>
-                  <Text style={{ fontFamily: "regular", fontSize: 14 }}>
-                    {data.distance.toFixed(2)}km
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    marginTop: 5,
-                  }}
-                >
-                  <Text style={{ fontFamily: "light", fontSize: 14 }}>
-                    Favoritos:
-                  </Text>
-                  <Text style={{ fontFamily: "regular", fontSize: 14 }}>
-                    {post.favorites?.items.length}
-                  </Text>
+                style={{
+                  position: "absolute",
+                  right: 5,
+                  top: 5,
+                }}
+              >
+                <View style={{ flexDirection: "row" }}>
+                  {/* <View
+                    style={{
+                      backgroundColor: "white",
+                      borderRadius: 8,
+                      borderWidth: 1,
+                      paddingVertical: 2,
+                      paddingHorizontal: 5,
+                      marginLeft: 1,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <FontAwesome name="building" size={12} color="black" />
+                    <Text
+                      style={{
+                        color: "black",
+                        fontSize: 12,
+                        marginLeft: 1,
+                      }}
+                    >
+                      {data?.name}
+                    </Text>
+                  </View> */}
+                  <View
+                    style={{
+                      backgroundColor: "white",
+                      borderRadius: 8,
+                      borderWidth: 1,
+                      paddingVertical: 2,
+                      paddingHorizontal: 5,
+                      marginLeft: 1,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Entypo name="location-pin" size={15} color="black" />
+                    <Text
+                      style={{
+                        color: "black",
+                        fontSize: 12,
+                      }}
+                    >
+                      {roundNumber(data.distance) === "0.0"
+                        ? "Muy Cerca"
+                        : `${roundNumber(data.distance)}Km`}
+                    </Text>
+                  </View>
                 </View>
               </View>
             </View>
-            <View style={{}}>
-              <TouchableOpacity
-                style={[
-                  global.mainBgColor,
-                  {
-                    borderRadius: 8,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    height: 49,
-                    marginTop: 10,
-                  },
-                ]}
-                onPress={() => {
-                  setModalVisible(!modalVisible);
-                  navigation.navigate("SearchPost", {
-                    data: {
-                      item: data,
-                      image: selectKey,
-                    },
-                  });
-                }}
-              >
-                <Text
-                  style={[global.white, { fontFamily: "medium", fontSize: 14 }]}
+          )}
+        </TouchableOpacity>
+        <Modal animationType="none" transparent={true} visible={modalVisible}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <View style={styles.modalTop}>
+                <Pressable
+                  onPress={() => {
+                    setModalVisible(!modalVisible);
+                  }}
                 >
-                  {`Ver`}
-                </Text>
-              </TouchableOpacity>
+                  <Image
+                    style={{
+                      width: 25,
+                      height: 25,
+                      resizeMode: "contain",
+                    }}
+                    source={require("@/utils/images/arrow_back.png")}
+                  />
+                </Pressable>
+                <Text
+                  style={styles.modalText}
+                >{`Vista previa del negocio`}</Text>
+              </View>
+              <View style={{ flex: 1 }}>
+                <Image
+                  style={{
+                    width: 260,
+                    height: 260,
+                    resizeMode: "cover",
+                    borderRadius: 5,
+                  }}
+                  source={{ uri: selectKey }}
+                />
+                <View style={{ paddingVertical: 15 }}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      marginTop: 5,
+                    }}
+                  >
+                    <Text style={{ fontFamily: "light", fontSize: 14 }}>
+                      Nombre:
+                    </Text>
+                    <Text style={{ fontFamily: "regular", fontSize: 14 }}>
+                      {data?.name}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      marginTop: 5,
+                    }}
+                  >
+                    <Text style={{ fontFamily: "light", fontSize: 14 }}>
+                      Actividad:
+                    </Text>
+                    <Text style={{ fontFamily: "regular", fontSize: 14 }}>
+                      {data.activity}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      marginTop: 5,
+                    }}
+                  >
+                    <Text style={{ fontFamily: "light", fontSize: 14 }}>
+                      Distancia de ti:
+                    </Text>
+                    <Text style={{ fontFamily: "regular", fontSize: 14 }}>
+                      {roundNumber(data.distance)}km
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      marginTop: 5,
+                    }}
+                  >
+                    <Text style={{ fontFamily: "light", fontSize: 14 }}>
+                      Favoritos:
+                    </Text>
+                    <Text style={{ fontFamily: "regular", fontSize: 14 }}>
+                      {post.favorites?.items.length}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+              <View style={{}}>
+                <TouchableOpacity
+                  style={[
+                    global.mainBgColor,
+                    {
+                      borderRadius: 8,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: 49,
+                      marginTop: 10,
+                    },
+                  ]}
+                  onPress={() => {
+                    setModalVisible(!modalVisible);
+                    navigation.navigate("SearchPost", {
+                      data: {
+                        item: data,
+                        image: selectKey,
+                      },
+                    });
+                  }}
+                >
+                  <Text
+                    style={[
+                      global.white,
+                      { fontFamily: "medium", fontSize: 14 },
+                    ]}
+                  >
+                    {`Ver`}
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      </Modal>
-      <Text
-        style={{ position: "absolute", color: "white", left: 5, bottom: 5 }}
-      >
-        Dist: {roundNumber(data.distance)}Km
-      </Text>
-    </TouchableOpacity>
-  );
+        </Modal>
+      </>
+    );
 };
 
 export default Post;
