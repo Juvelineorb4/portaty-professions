@@ -28,9 +28,14 @@ import * as queries from "@/graphql/CustomQueries/Favorites";
 import * as customFavorites from "@/graphql/CustomMutations/Favorites";
 import MapView, { Marker } from "react-native-maps";
 import SkeletonExample from "@/components/SkeletonExample";
+// recoil
+import { useRecoilValue } from "recoil";
+import { userAuthenticated } from "@/atoms/index";
 const SearchPost = ({ route, navigation }) => {
+  const userAuth = useRecoilValue(userAuthenticated);
   const [post, setPost] = useState(null);
   const [save, setSave] = useState("");
+  const [showAgg, setShowAgg] = useState(false);
   const global = require("@/utils/styles/global.js");
   const {
     data: { item, image },
@@ -78,6 +83,16 @@ const SearchPost = ({ route, navigation }) => {
         },
         authMode: "AWS_IAM",
       });
+      if (
+        userAuth?.attributes["custom:userTableID"] ===
+        business?.data?.getBusiness?.userID
+      ) {
+      
+        setShowAgg(false);
+      } else {
+        
+        setShowAgg(true);
+      }
       setPost(business?.data?.getBusiness);
     } catch (error) {
       console.log(error);
@@ -181,49 +196,53 @@ const SearchPost = ({ route, navigation }) => {
 
           </View> */}
         </View>
-        <View
-          style={{
-            // flex: 1,
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: 20,
-          }}
-        >
+        {showAgg && (
           <View
             style={{
+              // flex: 1,
+              flexDirection: "row",
               alignItems: "center",
-              justifyContent: "center",
+              justifyContent: "space-between",
+              padding: 20,
             }}
           >
-            <Text style={{ fontSize: 26, fontFamily: "thin" }}>
-              {post?.favorites?.items?.length}
-            </Text>
-            <Text style={{ fontSize: 22, fontFamily: "thin" }}>Favoritos</Text>
-          </View>
-          <TouchableOpacity
-            style={[
-              save === "" ? global.mainBgColor : global.bgWhiteSmoke,
-              { padding: 10, borderRadius: 8 },
-            ]}
-            onPress={() => {
-              if (save === "") {
-                onCreateFavorite();
-              } else {
-                onDeleteFavorite();
-              }
-            }}
-          >
-            <Text
-              style={[
-                { fontSize: 14, fontFamily: "thin" },
-                save === "" ? global.white : global.black,
-              ]}
+            <View
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+              }}
             >
-              {save === "" ? "Agregar a favoritos" : "Eliminar de favoritos"}
-            </Text>
-          </TouchableOpacity>
-        </View>
+              <Text style={{ fontSize: 26, fontFamily: "thin" }}>
+                {post?.favorites?.items?.length}
+              </Text>
+              <Text style={{ fontSize: 22, fontFamily: "thin" }}>
+                Favoritos
+              </Text>
+            </View>
+            <TouchableOpacity
+              style={[
+                save === "" ? global.mainBgColor : global.bgWhiteSmoke,
+                { padding: 10, borderRadius: 8 },
+              ]}
+              onPress={() => {
+                if (save === "") {
+                  onCreateFavorite();
+                } else {
+                  onDeleteFavorite();
+                }
+              }}
+            >
+              <Text
+                style={[
+                  { fontSize: 14, fontFamily: "thin" },
+                  save === "" ? global.white : global.black,
+                ]}
+              >
+                {save === "" ? "Agregar a favoritos" : "Eliminar de favoritos"}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
         <View style={[styles.line, global.bgWhiteSmoke]} />
 
         <TouchableOpacity
