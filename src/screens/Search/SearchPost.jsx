@@ -27,15 +27,15 @@ import { Auth, API, Storage } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Favorites";
 import * as customFavorites from "@/graphql/CustomMutations/Favorites";
 import MapView, { Marker } from "react-native-maps";
-import SkeletonExample from "@/components/SkeletonExample";
+
 const SearchPost = ({ route, navigation }) => {
-  const [post, setPost] = useState(null);
+  const [post, setPost] = useState([]);
   const [save, setSave] = useState("");
   const global = require("@/utils/styles/global.js");
   const {
     data: { item, image },
   } = route.params;
-
+  console.log(post)
   const onCreateFavorite = async () => {
     try {
       const { attributes } = await Auth.currentAuthenticatedUser();
@@ -43,14 +43,15 @@ const SearchPost = ({ route, navigation }) => {
         query: customFavorites.createFavorites,
         variables: {
           input: {
-            businessID: post?.id,
+            businessID: post.id,
             userID: attributes["custom:userTableID"],
             position: 0,
           },
         },
         authMode: "AMAZON_COGNITO_USER_POOLS",
       });
-      setSave(favorites?.data?.createFavorites?.id);
+      console.log(favorites.data.createFavorites);
+      setSave(favorites.data.createFavorites.id);
     } catch (error) {
       console.log(error);
     }
@@ -66,6 +67,7 @@ const SearchPost = ({ route, navigation }) => {
       },
       authMode: "AMAZON_COGNITO_USER_POOLS",
     });
+    console.log(favorites);
     setSave("");
   };
 
@@ -78,7 +80,7 @@ const SearchPost = ({ route, navigation }) => {
         },
         authMode: "AWS_IAM",
       });
-      setPost(business?.data?.getBusiness);
+      setPost(business.data.getBusiness);
     } catch (error) {
       console.log(error);
     }
@@ -94,8 +96,8 @@ const SearchPost = ({ route, navigation }) => {
           userID: { eq: attributes["custom:userTableID"] },
         },
       });
-      if (favorite?.data?.favoritesByBusinessID?.items?.length !== 0)
-        setSave(favorite?.data?.favoritesByBusinessID?.items[0]?.id);
+      if (favorite.data.favoritesByBusinessID.items.length !== 0)
+        setSave(favorite.data.favoritesByBusinessID.items[0].id);
     } catch (error) {
       console.log(error);
     }
@@ -121,15 +123,13 @@ const SearchPost = ({ route, navigation }) => {
     }
   };
   const openCall = () => {
-    const url = `tel://${post?.phone}`;
+    const url = `tel://${post.phone}`;
     Linking.openURL(url);
   };
   useEffect(() => {
     fetchFavorite();
     fetchData();
   }, []);
-
-  if (!post) return <SkeletonExample />;
 
   return (
     <View
@@ -197,7 +197,7 @@ const SearchPost = ({ route, navigation }) => {
             }}
           >
             <Text style={{ fontSize: 26, fontFamily: "thin" }}>
-              {post?.favorites?.items?.length}
+              {post.favorites?.items.length}
             </Text>
             <Text style={{ fontSize: 22, fontFamily: "thin" }}>Favoritos</Text>
           </View>
@@ -225,7 +225,6 @@ const SearchPost = ({ route, navigation }) => {
           </TouchableOpacity>
         </View>
         <View style={[styles.line, global.bgWhiteSmoke]} />
-
         <TouchableOpacity
           style={{
             padding: 20,
@@ -233,47 +232,77 @@ const SearchPost = ({ route, navigation }) => {
             justifyContent: "space-between",
             alignItems: "center",
           }}
-          activeOpacity={1}
           onPress={() =>
             onOpenMap(
-              post?.coordinates?.lat,
-              post?.coordinates?.lon,
-              post?.name
+              post.coordinates.lat,
+              post.coordinates.lon,
+              post.name
             )
           }
         >
+          {/* <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View
+              style={[
+                {
+                  width: 58,
+                  height: 58,
+                  borderRadius: 10,
+                  alignItems: "center",
+                  justifyContent: "center",
+                },
+                global.mainBgColor,
+              ]}
+            >
+              <FontAwesome name="map-marker" size={25} color="white" />
+            </View>
+            <View style={{ marginLeft: 10 }}>
+              <Text style={{ fontFamily: "light", fontSize: 16 }}>
+                Cómo llegar
+              </Text>
+              <Text style={{ fontFamily: "thin", fontSize: 12, width: 170 }}>
+                Revisa la ubicacion y busca la manera mas facil de llegar
+              </Text>
+            </View>
+          </View>
+          <Image
+            style={{
+              width: 40,
+              height: 40,
+              resizeMode: "cover",
+            }}
+            source={require("@/utils/images/arrow_right.png")}
+          /> */}
+
           <View
             style={{
               flex: 1,
               borderRadius: 10,
-              overflow: "hidden",
-              marginBottom: 40,
+              overflow: 'hidden',
+              marginBottom: 40
             }}
           >
             <MapView
               style={{
                 width: "100%",
                 height: 220,
+                
               }}
               initialRegion={{
-                latitude: post?.coordinates?.lat,
-                longitude: post?.coordinates?.lon,
-                latitudeDelta: 0.001,
-                longitudeDelta: 0.001,
+                latitude: post.coordinates.lat,
+                longitude: post.coordinates.lon,
+                latitudeDelta: 0.005,
+                longitudeDelta: 0.005,
               }}
-              scrollEnabled={false}
             >
-              <Marker
-                coordinate={{
-                  latitude: post?.coordinates?.lat,
-                  longitude: post?.coordinates?.lon,
-                }}
-                title={post?.name}
+              <Marker coordinate={{
+                latitude: post.coordinates.lat,
+                longitude: post.coordinates.lon,
+              }}
+              title={post.name}
               />
             </MapView>
           </View>
         </TouchableOpacity>
-
         <TouchableOpacity
           style={{
             padding: 20,
@@ -325,10 +354,7 @@ const SearchPost = ({ route, navigation }) => {
             marginTop: -25,
           }}
           onPress={() => {
-            navigation.navigate("ViewQR", {
-              id: `https://www.portaty.com/share/business?id=${item.id}`,
-              name: post?.name,
-            });
+            navigation.navigate("ViewQR", { id: `https://www.portaty.com/share/business?id=${item.id}`, name: post.name });
           }}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -344,11 +370,7 @@ const SearchPost = ({ route, navigation }) => {
                 global.mainBgColor,
               ]}
             >
-              <MaterialCommunityIcons
-                name="qrcode-scan"
-                size={25}
-                color="white"
-              />
+              <MaterialCommunityIcons name="qrcode-scan" size={25} color="white" />
             </View>
             <View style={{ marginLeft: 10 }}>
               <Text style={{ fontFamily: "light", fontSize: 16 }}>Ver QR</Text>
@@ -433,7 +455,7 @@ const SearchPost = ({ route, navigation }) => {
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Text style={[{ fontSize: 13, fontFamily: "lightItalic" }]}>
-                {post?.name}
+                {post.name}
               </Text>
             </View>
           </View>
@@ -459,7 +481,7 @@ const SearchPost = ({ route, navigation }) => {
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Text style={[{ fontSize: 13, fontFamily: "lightItalic" }]}>
-                {post?.activity}
+                {post.activity}
               </Text>
             </View>
           </View>
@@ -485,7 +507,7 @@ const SearchPost = ({ route, navigation }) => {
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Text style={[{ fontSize: 13, fontFamily: "lightItalic" }]}>
-                {post?.phone}
+                {post.phone}
               </Text>
             </View>
           </View>
@@ -511,7 +533,7 @@ const SearchPost = ({ route, navigation }) => {
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Text style={[{ fontSize: 13, fontFamily: "lightItalic" }]}>
-                {post?.whatsapp}
+                {post.whatsapp}
               </Text>
             </View>
           </View>
@@ -541,7 +563,7 @@ const SearchPost = ({ route, navigation }) => {
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Text style={[{ fontSize: 13, fontFamily: "lightItalic" }]}>
-                {post?.email}
+                {post.email}
               </Text>
             </View>
           </View>

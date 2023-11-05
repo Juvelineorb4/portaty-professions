@@ -81,6 +81,7 @@ export const getBusiness = /* GraphQL */ `
       instagram
       facebook
       page
+      identityID
       coordinates {
         lat
         lon
