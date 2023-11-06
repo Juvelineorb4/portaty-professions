@@ -42,6 +42,7 @@ const Home = ({ navigation, route }) => {
         email: attributes.email,
       },
     });
+    console.log(result.data.userByEmail.items[0])
     setFavoritesList(result.data.userByEmail.items[0].favorites.items);
     if (result.data.userByEmail.items[0].favorites.items.length === 0)
       setNothing(true);

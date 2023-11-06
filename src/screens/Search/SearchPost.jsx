@@ -55,9 +55,10 @@ const SearchPost = ({ route, navigation }) => {
         },
         authMode: "AMAZON_COGNITO_USER_POOLS",
       });
+      console.log(favorites?.data?.createFavorites?.id);
       setSave(favorites?.data?.createFavorites?.id);
     } catch (error) {
-      console.log(error);
+      console.log("ERRO AL CARGAR UN FAVORITO: ", error);
     }
   };
 
@@ -87,10 +88,8 @@ const SearchPost = ({ route, navigation }) => {
         userAuth?.attributes["custom:userTableID"] ===
         business?.data?.getBusiness?.userID
       ) {
-      
         setShowAgg(false);
       } else {
-        
         setShowAgg(true);
       }
       setPost(business?.data?.getBusiness);
