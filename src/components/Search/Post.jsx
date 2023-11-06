@@ -51,7 +51,7 @@ const Post = ({ data, image, styled }) => {
   };
 
   const roundNumber = (num) => {
-    numero = parseFloat(num);
+    const numero = parseFloat(num);
     // Usar toFixed para mostrar dos decimales
     return numero.toFixed(1);
   };
@@ -227,8 +227,16 @@ const Post = ({ data, image, styled }) => {
                     <Text style={{ fontFamily: "light", fontSize: 14 }}>
                       Distancia de ti:
                     </Text>
-                    <Text style={{ fontFamily: "regular", fontSize: 14 }}>
-                      {roundNumber(data.distance)}km
+                    <Text
+                      style={{
+                        fontFamily: "regular",
+                        fontSize: 14,
+                        color: "red",
+                      }}
+                    >
+                      {roundNumber(data.distance) === "0.0"
+                        ? "Muy Cerca"
+                        : `${roundNumber(item)}Km`}
                     </Text>
                   </View>
                   <View

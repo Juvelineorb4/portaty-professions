@@ -6,8 +6,9 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
+  ActivityIndicator,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import CustomInput from "@/components/CustomInput";
 import CustomButton from "@/components/CustomButton";
 import styles from "@/utils/styles/Forgot.module.css";
@@ -17,6 +18,8 @@ import { Auth } from "aws-amplify";
 
 const Forgot = ({ navigation }) => {
   const global = require("@/utils/styles/global.js");
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
   const { control, watch, handleSubmit } = useForm({
     defaultValues: {
       email: "",
@@ -28,7 +31,10 @@ const Forgot = ({ navigation }) => {
   const EMAIL_REGEX = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
 
   const onHandleSendCodeEmail = async (data) => {
+    setIsLoading(true);
+    setErrorMsg("");
     const { email, password } = data;
+
     try {
       await Auth.forgotPassword(email);
       const passwordReplace = password.toString().replace(/%/g, "~~pct~~");
@@ -39,7 +45,22 @@ const Forgot = ({ navigation }) => {
       });
     } catch (error) {
       console.log("ERROR AL ENVIAR CODIGO", error.message);
+      switch (error.message) {
+        case "Username/client id combination not found.":
+          setErrorMsg("Correo no existe como usuario.");
+          break;
+        case "Attempt limit exceeded, please try after some time.":
+          setErrorMsg(
+            "Se superó el límite de intentos. Inténtelo después de un tiempo."
+          );
+          break;
+
+        default:
+          setErrorMsg("Ocurrio un error intente mas tarde.");
+          break;
+      }
     }
+    setIsLoading(false);
   };
 
   return (
@@ -55,6 +76,7 @@ const Forgot = ({ navigation }) => {
             showsVerticalScrollIndicator={false}
           >
             <Text style={styles.title}>{es.authentication.forgot.title}</Text>
+            <Text style={{ color: "red" }}>{errorMsg}</Text>
             <CustomInput
               control={control}
               name={`email`}
@@ -120,7 +142,14 @@ const Forgot = ({ navigation }) => {
           </ScrollView>
           <View style={{ height: 60 }}>
             <CustomButton
-              text={es.authentication.forgot.button}
+              text={
+                isLoading ? (
+                  <ActivityIndicator />
+                ) : (
+                  es.authentication.forgot.button
+                )
+              }
+              disabled={isLoading}
               handlePress={handleSubmit(onHandleSendCodeEmail)}
               textStyles={[styles.textContinue, global.white]}
               buttonStyles={[styles.continue, global.mainBgColor]}
