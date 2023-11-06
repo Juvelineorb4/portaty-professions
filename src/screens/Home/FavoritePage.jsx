@@ -173,6 +173,7 @@ const FavoritePage = ({ navigation, route }) => {
             justifyContent: "space-between",
             alignItems: "center",
           }}
+          activeOpacity={1}
           onPress={() =>
             onOpenMap(
               item.business.coordinates.lat,
@@ -218,16 +219,16 @@ const FavoritePage = ({ navigation, route }) => {
             style={{
               flex: 1,
               borderRadius: 10,
-              overflow: 'hidden',
-              marginBottom: 40
+              overflow: "hidden",
+              marginBottom: 40,
             }}
           >
             <MapView
               style={{
                 width: "100%",
                 height: 220,
-                
               }}
+              scrollEnabled={false}
               initialRegion={{
                 latitude: item.business.coordinates.lat,
                 longitude: item.business.coordinates.lon,
@@ -235,11 +236,12 @@ const FavoritePage = ({ navigation, route }) => {
                 longitudeDelta: 0.005,
               }}
             >
-              <Marker coordinate={{
-                latitude: item.business.coordinates.lat,
-                longitude: item.business.coordinates.lon,
-              }}
-              title={item.business.name}
+              <Marker
+                coordinate={{
+                  latitude: item.business.coordinates.lat,
+                  longitude: item.business.coordinates.lon,
+                }}
+                title={item.business.name}
               />
             </MapView>
           </View>
