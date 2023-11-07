@@ -58,7 +58,7 @@ const Post = ({ data, image, styled }) => {
 
   useLayoutEffect(() => {
     fetchData();
-    getImage();
+    if(!selectKey) getImage();
     console.log(selectKey);
   }, []);
   if (selectKey)

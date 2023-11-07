@@ -36,5 +36,19 @@
   margin: 15% 10px 0%;
   text-align: center;
   font-size: 42px;
-  color: #5E2129;
+}
+
+.titleAlert {
+  text-align: center;
+  font-family: 'thin';
+  font-size: 20px;
+  margin-bottom: 3px;
+}
+.subtitleAlert {
+  font-family: 'medium';
+  text-align: center;
+  font-size: 15px;
+  margin-left: 5px;
+  color: #fb8500;
+
 }

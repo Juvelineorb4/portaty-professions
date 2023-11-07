@@ -65,6 +65,7 @@ const CustomInput = ({
               && iconRight && (
                   <TouchableOpacity
                     onPress={() => setSecurityChange(!securityChange)}
+                    style={styled.security}
                   >
                     {
                       securityChange ? <Image

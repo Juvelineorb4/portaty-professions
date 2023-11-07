@@ -99,8 +99,8 @@ const Login = ({ navigation }) => {
                 placeholder: styles.placeholder,
                 input: [styles.inputContainer, global.bgWhiteSoft],
               }}
-              text={`Correo Electronico`}
-              icon={require("@/utils/images/email.png")}
+              text={`Correo electronico`}
+              // icon={require("@/utils/images/email.png")}
               rules={{
                 required: es.authentication.register.email.rules,
               }}
@@ -115,9 +115,10 @@ const Login = ({ navigation }) => {
                 error: styles.errorInput,
                 placeholder: styles.placeholder,
                 input: [styles.inputContainer, global.bgWhiteSoft],
+                security: styles.security
               }}
               text={`Contraseña`}
-              icon={require("@/utils/images/password.png")}
+              // icon={require("@/utils/images/password.png")}
               security={true}
               rules={{
                 required: "Contraseña requerida",

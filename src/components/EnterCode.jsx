@@ -1,9 +1,9 @@
-import { View, TextInput, Text } from "react-native";
+import { View, TextInput, Text, TouchableOpacity } from "react-native";
 import React, { useRef } from "react";
 import styles from "@/utils/styles/EnterCode.module.css";
 import { Controller } from "react-hook-form";
 
-const EnterCode = ({ title, subtitle, control }) => {
+const EnterCode = ({ title, subtitle, control, onResendCode }) => {
   const global = require("@/utils/styles/global.js");
 
   const one = useRef();
@@ -104,10 +104,12 @@ const EnterCode = ({ title, subtitle, control }) => {
             )}
           />
         </View>
-        <View>
+        {/* <View>
           <Text style={styles.title}>{title}</Text>
-          <Text style={styles.subtitle}>{subtitle}</Text>
-        </View>
+          <TouchableOpacity onPress={onResendCode}>
+            <Text style={styles.subtitle}>{subtitle}</Text>
+          </TouchableOpacity>
+        </View> */}
       </View>
     </>
   );

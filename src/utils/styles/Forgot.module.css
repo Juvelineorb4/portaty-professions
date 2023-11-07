@@ -5,41 +5,55 @@
 .content {
   flex: 1;
 }
+
 .inputContainer {
+  flex: 1;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
   background-color: #fafafa;
-  padding: 15px 10px;
-  border-radius: 12px;
-  margin-bottom: 15px;
+  border: none;
+  padding: 11px 10px 11px 0px;
+  border-radius: 8px;
+  margin: 3px 0px 10px;
 }
 .labelInput {
-  font-style: normal;
-  font-family: 'light';
-  /* font-weight: 500; */
-  font-size: 15px;
+  font-family: "regular";
+  font-size: 14px;
   color: #404040;
-  margin-bottom: 5px;
 }
 .textInput {
-  font-family: 'light';
-  margin-left: 5px;
-  width: 70%;
-}
-.placeholder {
-  text-align: left;
-  font-family: 'light';
-  width: 70%;
-  margin-left: 5px;
-  font-size: 15px;
+  flex: 1;
+  font-family: "light";
+  margin-left: 10px;
+  color: #fb8500;
 }
 .errorInput {
-  font-family: 'light';
+  font-family: "light";
   color: red;
   font-size: 12px;
   position: relative;
-  top: -15px;
+  top: -10px;
 }
+.errorInputMain {
+  font-family: "light";
+  color: red;
+  font-size: 14px;
+  position: relative;
+  top: -10px;
+}
+.placeholder {
+  flex: 1;
+  margin-left: 10px;
+  color: #8c9199cb;
+  font-size: 12px;
+  font-family: "light";
+}
+.security {
+  position: relative;
+  right: 27px;
+}
+
 
 /* Buttons */
 .continue {

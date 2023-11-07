@@ -82,3 +82,8 @@ export const urlInitalShare = atom({
   key: "urlInitalShareValue",
   default: {},
 });
+/* Code */
+export const codeFields = atom({
+  key: "codeFieldsValue",
+  default: "",
+});
