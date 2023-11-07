@@ -53,12 +53,19 @@ const Profile = ({ route, navigation }) => {
 
   const onCheckChange = () => {
     // si hubo un cambio de informacion habilitar boton
+    console.log(name?.toLowerCase()?.trim());
+    console.log(lastName?.toLowerCase().trim());
+    console.log(user?.name?.toLowerCase().trim());
+    console.log(user?.lastName?.toLowerCase().trim());
     if (
       name?.toLowerCase()?.trim() !== user?.name?.toLowerCase().trim() ||
-      lastName?.toLowerCase().trim() !== user?.lastName?.toLowerCase().trim()
+      lastName?.toLowerCase().trim() !==
+        user["custom:lastName"]?.toLowerCase().trim()
     ) {
+      console.log("hubo cambio");
       setIsSave(true);
     } else {
+      console.log("no hubo cambio");
       setIsSave(false);
     }
   };
