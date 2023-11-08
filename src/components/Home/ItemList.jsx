@@ -39,7 +39,7 @@ const ItemList = ({ data, number, styled }) => {
       }).then((res) => setSelectKey(res));
       setLoading(false);
     } catch (error) {
-      console.log("toy", error);
+      console.log("toy en list", error);
     }
   };
   const fetchFavorite = () => {

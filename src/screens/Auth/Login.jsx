@@ -18,6 +18,7 @@ import CustomInput from "@/components/CustomInput";
 import CustomButton from "@/components/CustomButton";
 import { useForm } from "react-hook-form";
 import { Alert } from "react-native";
+import ModalAlert from "@/components/ModalAlert";
 
 const Login = ({ navigation }) => {
   const { control, handleSubmit } = useForm();
@@ -25,6 +26,8 @@ const Login = ({ navigation }) => {
   const EMAIL_REGEX = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
   const [errorActive, setErrorActive] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [error, setError] = useState("");
   const onHandleLogin = async (data) => {
     const { email, password } = data;
     setErrorActive("");
@@ -34,20 +37,17 @@ const Login = ({ navigation }) => {
     } catch (error) {
       switch (error.message) {
         case "User is not confirmed.":
-          Alert.alert(`Usuario: ${email} no confirmado`, "por favor confirmar");
-          navigation.navigate("Register_App", {
-            screen: "ConfirmRegister",
-            params: { email: email },
-          });
+          setError(`Usuario: ${email} no confirmado, por favor confirmar`);
+          setVisible(true)
           break;
 
         case "User does not exist.":
           setErrorActive(
-            `Usuario: ${email} no registrado por favor resgitrase`
+            `Usuario: ${email} no registrado por favor registrarse`
           );
           break;
         case "Incorrect username or password.":
-          setErrorActive(`Correo y/o Contraseña incorrectos.`);
+          setErrorActive(`Correo y/o contraseña incorrectos.`);
           break;
         default:
           setErrorActive(`Ocurrio un error intente mas tarde.`);
@@ -56,6 +56,14 @@ const Login = ({ navigation }) => {
       setIsLoading(false);
       console.log("ERROR AL LOGEARSE: ", error.message);
     }
+  };
+
+  const CloseModal = () => {
+    navigation.navigate("Register_App", {
+      screen: "ConfirmRegister",
+      params: { email: email },
+    });
+    setVisible(false);
   };
 
   return (
@@ -158,6 +166,12 @@ const Login = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </View>
+      <ModalAlert
+            text={error}
+            close={() => CloseModal()}
+            open={visible}
+            icon={require("@/utils/images/alert.png")}
+          />
     </KeyboardAvoidingView>
   );
 };

@@ -23,6 +23,7 @@ const Register = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [visible, setVisible] = useState(false);
+  const [error, setError] = useState("");
   const global = require("@/utils/styles/global.js");
   const { control, handleSubmit, watch, setValue } = useForm({
     defaultValues: {
@@ -73,15 +74,15 @@ const Register = ({ navigation }) => {
         email: email,
       });
     } catch (error) {
-      console.log("ERROR AL REGISTAR: ", error.message);
       switch (error?.message) {
         case "An account with the given email already exists.":
+          setError(`El correo: ${email}. Ya esta registrado!`);
           setVisible(true);
-          Alert.alert(`El correo: ${email}. Ya esta registrado!`);
           break;
 
         default:
-          Alert.alert(`Ocurrio un Error, Intente mas Tarde!`);
+          setError(`Ocurrio un error, Intente mas tarde!`);
+          setVisible(true);
           break;
       }
     }
@@ -253,7 +254,8 @@ const Register = ({ navigation }) => {
         </View>
       </View>
       <ModalAlert
-        text={`Tu negocio ha sido registrado con exito`}
+        text={error}
+        icon={require("@/utils/images/error.png")}
         close={() => CloseModal()}
         open={visible}
       />

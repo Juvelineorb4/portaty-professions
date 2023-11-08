@@ -6,6 +6,7 @@ import {
   Modal,
   Pressable,
   ActivityIndicator,
+  TouchableWithoutFeedback,
 } from "react-native";
 import React, { useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -32,7 +33,7 @@ const Post = ({ data, image, styled }) => {
       }).then((res) => setSelectKey(res));
       setLoading(false);
     } catch (error) {
-      console.log("toy", error);
+      console.log("toy en post", error);
     }
   };
   const fetchData = async () => {
@@ -58,8 +59,8 @@ const Post = ({ data, image, styled }) => {
 
   useLayoutEffect(() => {
     fetchData();
-    if(!selectKey) getImage();
-    console.log(selectKey);
+    if (!selectKey) getImage();
+    console.log(data.distance);
   }, []);
   if (selectKey)
     return (
@@ -73,12 +74,6 @@ const Post = ({ data, image, styled }) => {
           ]}
           onPress={() => {
             setModalVisible(!modalVisible);
-            // navigation.navigate("SearchPost", {
-            //   data: {
-            //     item: data.id,
-            //     image: image,
-            //   },
-            // });
           }}
         >
           {!selectKey ? (
@@ -102,30 +97,6 @@ const Post = ({ data, image, styled }) => {
                 }}
               >
                 <View style={{ flexDirection: "row" }}>
-                  {/* <View
-                    style={{
-                      backgroundColor: "white",
-                      borderRadius: 8,
-                      borderWidth: 1,
-                      paddingVertical: 2,
-                      paddingHorizontal: 5,
-                      marginLeft: 1,
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <FontAwesome name="building" size={12} color="black" />
-                    <Text
-                      style={{
-                        color: "black",
-                        fontSize: 12,
-                        marginLeft: 1,
-                      }}
-                    >
-                      {data?.name}
-                    </Text>
-                  </View> */}
                   <View
                     style={{
                       backgroundColor: "white",
@@ -156,139 +127,150 @@ const Post = ({ data, image, styled }) => {
             </View>
           )}
         </TouchableOpacity>
-        <Modal animationType="none" transparent={true} visible={modalVisible}>
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <View style={styles.modalTop}>
-                <Pressable
-                  onPress={() => {
-                    setModalVisible(!modalVisible);
-                  }}
-                >
-                  <Image
-                    style={{
-                      width: 25,
-                      height: 25,
-                      resizeMode: "contain",
-                    }}
-                    source={require("@/utils/images/arrow_back.png")}
-                  />
-                </Pressable>
-                <Text
-                  style={styles.modalText}
-                >{`Vista previa del negocio`}</Text>
-              </View>
-              <View style={{ flex: 1 }}>
-                <Image
-                  style={{
-                    width: 260,
-                    height: 260,
-                    resizeMode: "cover",
-                    borderRadius: 5,
-                  }}
-                  source={{ uri: selectKey }}
-                />
-                <View style={{ paddingVertical: 15 }}>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                      marginTop: 5,
-                    }}
-                  >
-                    <Text style={{ fontFamily: "light", fontSize: 14 }}>
-                      Nombre:
-                    </Text>
-                    <Text style={{ fontFamily: "regular", fontSize: 14 }}>
-                      {data?.name}
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                      marginTop: 5,
-                    }}
-                  >
-                    <Text style={{ fontFamily: "light", fontSize: 14 }}>
-                      Actividad:
-                    </Text>
-                    <Text style={{ fontFamily: "regular", fontSize: 14 }}>
-                      {data.activity}
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                      marginTop: 5,
-                    }}
-                  >
-                    <Text style={{ fontFamily: "light", fontSize: 14 }}>
-                      Distancia de ti:
-                    </Text>
-                    <Text
-                      style={{
-                        fontFamily: "regular",
-                        fontSize: 14,
-                        color: "red",
+        <Modal
+          animationType="none"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(!modalVisible)}
+        >
+          <TouchableWithoutFeedback
+            onPress={() => setModalVisible(!modalVisible)}
+          >
+            <View style={styles.modalContainer}>
+              <TouchableWithoutFeedback>
+                <View style={styles.modalContent}>
+                  <View style={styles.modalTop}>
+                    <Pressable
+                      onPress={() => {
+                        setModalVisible(!modalVisible);
                       }}
                     >
-                      {roundNumber(data.distance) === "0.0"
-                        ? "Muy Cerca"
-                        : `${roundNumber(item)}Km`}
-                    </Text>
+                      <Image
+                        style={{
+                          width: 25,
+                          height: 25,
+                          resizeMode: "contain",
+                        }}
+                        source={require("@/utils/images/arrow_back.png")}
+                      />
+                    </Pressable>
+                    <Text
+                      style={styles.modalText}
+                    >{`Vista previa del negocio`}</Text>
                   </View>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                      marginTop: 5,
-                    }}
-                  >
-                    <Text style={{ fontFamily: "light", fontSize: 14 }}>
-                      Favoritos:
-                    </Text>
-                    <Text style={{ fontFamily: "regular", fontSize: 14 }}>
-                      {post.favorites?.items.length}
-                    </Text>
+                  <View style={{ flex: 1 }}>
+                    <Image
+                      style={{
+                        width: 260,
+                        height: 260,
+                        resizeMode: "cover",
+                        borderRadius: 5,
+                      }}
+                      source={{ uri: selectKey }}
+                    />
+                    <View style={{ paddingVertical: 15 }}>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          marginTop: 5,
+                        }}
+                      >
+                        <Text style={{ fontFamily: "light", fontSize: 14 }}>
+                          Nombre:
+                        </Text>
+                        <Text style={{ fontFamily: "regular", fontSize: 14 }}>
+                          {data?.name}
+                        </Text>
+                      </View>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          marginTop: 5,
+                        }}
+                      >
+                        <Text style={{ fontFamily: "light", fontSize: 14 }}>
+                          Actividad:
+                        </Text>
+                        <Text style={{ fontFamily: "regular", fontSize: 14 }}>
+                          {data.activity}
+                        </Text>
+                      </View>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          marginTop: 5,
+                        }}
+                      >
+                        <Text style={{ fontFamily: "light", fontSize: 14 }}>
+                          Distancia de ti:
+                        </Text>
+                        <Text
+                          style={{
+                            fontFamily: "regular",
+                            fontSize: 14,
+                            color: "red",
+                          }}
+                        >
+                          {roundNumber(data.distance) === "0.0"
+                            ? "Muy Cerca"
+                            : `${roundNumber(data.distance)}Km`}
+                        </Text>
+                      </View>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          marginTop: 5,
+                        }}
+                      >
+                        <Text style={{ fontFamily: "light", fontSize: 14 }}>
+                          Favoritos:
+                        </Text>
+                        <Text style={{ fontFamily: "regular", fontSize: 14 }}>
+                          {post.favorites?.items.length}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                  <View style={{}}>
+                    <TouchableOpacity
+                      style={[
+                        global.mainBgColor,
+                        {
+                          borderRadius: 8,
+                          justifyContent: "center",
+                          alignItems: "center",
+                          height: 49,
+                          marginTop: 10,
+                        },
+                      ]}
+                      onPress={() => {
+                        setModalVisible(!modalVisible);
+                        navigation.navigate("SearchPost", {
+                          data: {
+                            item: data,
+                            image: selectKey,
+                          },
+                        });
+                      }}
+                    >
+                      <Text
+                        style={[
+                          global.white,
+                          { fontFamily: "medium", fontSize: 14 },
+                        ]}
+                      >
+                        {`Ver`}
+                      </Text>
+                    </TouchableOpacity>
                   </View>
                 </View>
-              </View>
-              <View style={{}}>
-                <TouchableOpacity
-                  style={[
-                    global.mainBgColor,
-                    {
-                      borderRadius: 8,
-                      justifyContent: "center",
-                      alignItems: "center",
-                      height: 49,
-                      marginTop: 10,
-                    },
-                  ]}
-                  onPress={() => {
-                    setModalVisible(!modalVisible);
-                    navigation.navigate("SearchPost", {
-                      data: {
-                        item: data,
-                        image: selectKey,
-                      },
-                    });
-                  }}
-                >
-                  <Text
-                    style={[
-                      global.white,
-                      { fontFamily: "medium", fontSize: 14 },
-                    ]}
-                  >
-                    {`Ver`}
-                  </Text>
-                </TouchableOpacity>
-              </View>
+              </TouchableWithoutFeedback>
             </View>
-          </View>
+          </TouchableWithoutFeedback>
         </Modal>
       </>
     );

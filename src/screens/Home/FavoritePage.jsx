@@ -26,10 +26,12 @@ import * as queries from "@/graphql/CustomQueries/Favorites";
 import * as customFavorites from "@/graphql/CustomMutations/Favorites";
 import * as customSearch from "@/graphql/CustomQueries/Search";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import ModalAlert from "@/components/ModalAlert";
 
 const FavoritePage = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
   const [post, setPost] = useState([]);
+  const [visible, setVisible] = useState(false);
   const {
     data: { item, image },
   } = route.params;
@@ -182,38 +184,6 @@ const FavoritePage = ({ navigation, route }) => {
             )
           }
         >
-          {/* <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <View
-              style={[
-                {
-                  width: 58,
-                  height: 58,
-                  borderRadius: 10,
-                  alignItems: "center",
-                  justifyContent: "center",
-                },
-                global.mainBgColor,
-              ]}
-            >
-              <FontAwesome name="map-marker" size={25} color="white" />
-            </View>
-            <View style={{ marginLeft: 10 }}>
-              <Text style={{ fontFamily: "light", fontSize: 16 }}>
-                Cómo llegar
-              </Text>
-              <Text style={{ fontFamily: "thin", fontSize: 12, width: 170 }}>
-                Revisa la ubicacion y busca la manera mas facil de llegar
-              </Text>
-            </View>
-          </View>
-          <Image
-            style={{
-              width: 40,
-              height: 40,
-              resizeMode: "cover",
-            }}
-            source={require("@/utils/images/arrow_right.png")}
-          /> */}
 
           <View
             style={{
@@ -615,6 +585,10 @@ const FavoritePage = ({ navigation, route }) => {
           </View>
           <View style={[styles.line, global.bgWhiteSmoke]} />
         </View>
+        <TouchableOpacity onPress={() => setVisible(true)} style={{marginBottom: 100}} >
+          <Text>Modal</Text>
+        </TouchableOpacity>
+        <ModalAlert text={`Tu negocio ha sido registrado con exito`} close={() => setVisible(false)} open={visible} icon={require("@/utils/images/error.png")} />
       </ScrollView>
     </View>
   );

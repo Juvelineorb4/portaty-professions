@@ -37,6 +37,7 @@ const Form = ({ navigation, route }) => {
   const activity = useRecoilValue(activitySelect);
   const tags = useRecoilValue(tagsList);
   const [visible, setVisible] = useState(false);
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   /* Para limpiar */
@@ -79,7 +80,7 @@ const Form = ({ navigation, route }) => {
     setSelectMapBusiness({});
   };
   const onRegisterBusiness = async (data) => {
-    setLoading(true)
+    setLoading(true);
     const { identityId } = await Auth.currentUserCredentials();
     const { company, email, phone, wsme, coordinates } = data;
     const storageFolder = company.replace(/ /g, "");
@@ -113,15 +114,13 @@ const Form = ({ navigation, route }) => {
           },
         },
       });
-      console.log(business)
+      console.log(business);
       setStateProfile(true);
-      setLoading(false)
-      setVisible(true)
-      // Alert.alert("REGISTRO EXITOSO");
-      // navigation.goBack();
+      setLoading(false);
+      setVisible(true);
     } catch (error) {
-      Alert.alert("ERROR AL CARGAR NEGOCIO: ", JSON.stringify(error));
-      console.log("ERROR AL CARGAR NEGOCIO: ", error);
+      setError(`Error al cargar negocio:  ${JSON.stringify(error)}`);
+      setVisible(true);
     }
   };
   const MultipleData = async () => {
@@ -132,10 +131,10 @@ const Form = ({ navigation, route }) => {
   };
 
   const CloseModal = () => {
-    setVisible(false)
+    setVisible(false);
     BlankInputs();
     navigation.goBack();
-  }
+  };
   useEffect(() => {
     MultipleData();
     BlankInputs();
@@ -276,31 +275,37 @@ const Form = ({ navigation, route }) => {
         }}
         onPress={pickImage}
       >
-        <View style={{
-          width: 100, height: 100, alignItems: 'center', justifyContent: 'center', borderWidth: 0.5, borderStyle: 'dashed', borderRadius: 5
-        }}>
-        {image ? (
-          <Image
-            style={{
-              width: 95,
-              height: 95,
-              borderRadius: 5,
-            }}
-            source={{ uri: image }}
-          />
-        ) :
-        <Image
+        <View
           style={{
-            width: 27,
-            height: 27,
-            resizeMode: "contain",
+            width: 100,
+            height: 100,
+            alignItems: "center",
+            justifyContent: "center",
+            borderWidth: 0.5,
+            borderStyle: "dashed",
+            borderRadius: 5,
           }}
-          source={require("@/utils/images/cameraadd.png")}
-        />
-        }
+        >
+          {image ? (
+            <Image
+              style={{
+                width: 95,
+                height: 95,
+                borderRadius: 5,
+              }}
+              source={{ uri: image }}
+            />
+          ) : (
+            <Image
+              style={{
+                width: 27,
+                height: 27,
+                resizeMode: "contain",
+              }}
+              source={require("@/utils/images/cameraadd.png")}
+            />
+          )}
         </View>
-
-        
       </TouchableOpacity>
       <Text
         style={{
@@ -327,11 +332,30 @@ const Form = ({ navigation, route }) => {
         ]}
         onPress={handleSubmit(onRegisterBusiness)}
       >
-        {loading ? <ActivityIndicator size='small' color='#ffffff'/> : <Text style={[global.white, { fontFamily: "medium", fontSize: 14 }]}>
-          {`Registrar`}
-        </Text>}
+        {loading ? (
+          <ActivityIndicator size="small" color="#ffffff" />
+        ) : (
+          <Text style={[global.white, { fontFamily: "medium", fontSize: 14 }]}>
+            {`Registrar`}
+          </Text>
+        )}
       </TouchableOpacity>
-      <ModalAlert text={`Tu negocio ha sido registrado con exito`} close={() => CloseModal()} open={visible} />
+      <ModalAlert
+        text={error ? error : `Tu negocio ha sido registrado con exito`}
+        close={() => {
+          if (error) {
+            setVisible(false);
+          } else {
+            CloseModal();
+          }
+        }}
+        icon={
+          error
+            ? require("@/utils/images/error.png")
+            : require("@/utils/images/successful.png")
+        }
+        open={visible}
+      />
     </ScrollView>
   );
 };

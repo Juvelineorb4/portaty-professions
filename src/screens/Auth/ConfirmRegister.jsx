@@ -20,10 +20,13 @@ import { Alert } from "react-native";
 import CustomCodeField from "@/components/CustomCodeField";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { codeFields } from "@/atoms";
+import ModalAlert from "@/components/ModalAlert";
 
 const ConfirmRegister = ({ navigation, route }) => {
   const [time, setTime] = useState(10 * 60); // 10 minutos
   const [loading, setLoading] = useState(false); // 10 minutos
+  const [visible, setVisible] = useState(false);
+  const [error, setError] = useState("");
   const { email } = route.params;
   const [codeInputs, setCodeInputs] = useRecoilState(codeFields);
   const global = require("@/utils/styles/global.js");
@@ -35,20 +38,22 @@ const ConfirmRegister = ({ navigation, route }) => {
 
   const onHandleConfirm = async (data) => {
     const { email } = data;
-    setLoading(true)
+    setLoading(true);
     try {
-      // if (!code.lenght === 6) return console.log("no tiene 6");
       await Auth.confirmSignUp(email, codeInputs);
-      Alert.alert("Usuario Registrado Exitosamente");
-      navigation.replace("Login_Welcome", { screen: "Login" });
+      setVisible(true);
       setCodeInputs("");
     } catch (error) {
-      console.log("ERROR AL CONFIRMAR USUARIO: ", error);
+      setError(`Error al confirmar usuario: ${error}`)
+      setVisible(true)
     }
-    setLoading(false)
-
+    setLoading(false);
   };
 
+  const CloseModal = () => {
+    navigation.replace("Login_Welcome", { screen: "Login" });
+    setVisible(false);
+  };
   const formatTime = (time) => {
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
@@ -101,17 +106,34 @@ const ConfirmRegister = ({ navigation, route }) => {
           </ScrollView>
           <View style={{ height: 60 }}>
             <CustomButton
-            
-              text={loading ? (
-                <ActivityIndicator color={`#ffffff`}/>
-              ) : (
-                es.authentication.account.button
-              )}
+              text={
+                loading ? (
+                  <ActivityIndicator color={`#ffffff`} />
+                ) : (
+                  es.authentication.account.button
+                )
+              }
               handlePress={handleSubmit(onHandleConfirm)}
               textStyles={[styles.textContinue, global.white]}
               buttonStyles={[styles.continue, global.mainBgColor]}
             />
           </View>
+          <ModalAlert
+            text={error ? error : "Usuario registrado exitosamente"}
+            close={() => {
+              if (error) {
+                setVisible(false)
+              } else {
+                CloseModal()
+              }
+            }}
+            open={visible}
+            icon={
+              error
+                ? require("@/utils/images/error.png")
+                : require("@/utils/images/successful.png")
+            }
+          />
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
