@@ -5,10 +5,13 @@ import ViewShot, { captureRef } from "react-native-view-shot";
 import * as Sharing from "expo-sharing";
 import styles from "@/utils/styles/CustomQR.module.css";
 import { AntDesign } from '@expo/vector-icons';
+import ModalAlert from "./ModalAlert";
 const CustomQR = ({ route, navigation }) => {
   const global = require("@/utils/styles/global.js");
   const { id, name } = route.params;
   const [file, setFile] = useState(null);
+  const [visible, setVisible] = useState(false);
+  const [error, setError] = useState('');
   const ref = useRef();
   const messageText = "Portaty";
   const options = {
@@ -25,7 +28,8 @@ const CustomQR = ({ route, navigation }) => {
     try {
       Sharing.shareAsync(file, options);
     } catch (error) {
-      Alert.alert(error.message);
+      setVisible(true)
+      setError(error.message)
     }
   };
   return (
@@ -65,6 +69,7 @@ const CustomQR = ({ route, navigation }) => {
         <AntDesign name="sharealt" size={24} color="white" />
         <Text style={[styles.textInput, global.white]}>Compartir</Text>
       </TouchableOpacity>
+      <ModalAlert text={error} close={() => setVisible(false)} open={visible} icon={require("@/utils/images/alert.png")} />
     </View>
   );
 };

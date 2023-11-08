@@ -104,12 +104,12 @@ const EnterCode = ({ title, subtitle, control, onResendCode }) => {
             )}
           />
         </View>
-        <View>
+        {/* <View>
           <Text style={styles.title}>{title}</Text>
           <TouchableOpacity onPress={onResendCode}>
             <Text style={styles.subtitle}>{subtitle}</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
     </>
   );

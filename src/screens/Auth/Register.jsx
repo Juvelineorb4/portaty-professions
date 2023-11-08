@@ -23,6 +23,7 @@ const Register = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [visible, setVisible] = useState(false);
+  const [error, setError] = useState("");
   const global = require("@/utils/styles/global.js");
   const { control, handleSubmit, watch, setValue } = useForm({
     defaultValues: {
@@ -73,15 +74,15 @@ const Register = ({ navigation }) => {
         email: email,
       });
     } catch (error) {
-      console.log("ERROR AL REGISTAR: ", error.message);
       switch (error?.message) {
         case "An account with the given email already exists.":
+          setError(`El correo: ${email}. Ya esta registrado!`);
           setVisible(true);
-          Alert.alert(`El correo: ${email}. Ya esta registrado!`);
           break;
 
         default:
-          Alert.alert(`Ocurrio un Error, Intente mas Tarde!`);
+          setError(`Ocurrio un error, Intente mas tarde!`);
+          setVisible(true);
           break;
       }
     }
@@ -112,18 +113,17 @@ const Register = ({ navigation }) => {
               name={`name`}
               placeholder={es.authentication.register.name.placeholder}
               styled={{
-                text: styles.textInputRow,
+                text: styles.textInput,
                 label: styles.labelInput,
                 error: styles.errorInput,
-                placeholder: styles.placeholderRow,
+                placeholder: styles.placeholder,
                 input: [
                   styles.inputContainer,
                   global.bgWhiteSoft,
-                  styles.inputContainerRow,
                 ],
               }}
               text={`Nombre`}
-              icon={require("@/utils/images/profile_default.png")}
+              // icon={require("@/utils/images/profile_default.png")}
               rules={{
                 required: es.authentication.register.name.rules,
               }}
@@ -133,18 +133,17 @@ const Register = ({ navigation }) => {
               name={`lastName`}
               placeholder={es.authentication.register.lastName.placeholder}
               styled={{
-                text: styles.textInputRow,
+                text: styles.textInput,
                 label: styles.labelInput,
                 error: styles.errorInput,
-                placeholder: styles.placeholderRow,
+                placeholder: styles.placeholder,
                 input: [
                   styles.inputContainer,
                   global.bgWhiteSoft,
-                  styles.inputContainerRow,
                 ],
               }}
               text={`Apellido`}
-              icon={require("@/utils/images/profile_default.png")}
+              // icon={require("@/utils/images/profile_default.png")}
               rules={{
                 required: es.authentication.register.lastName.rules,
               }}
@@ -162,8 +161,8 @@ const Register = ({ navigation }) => {
                 placeholder: styles.placeholder,
                 input: [styles.inputContainer, global.bgWhiteSoft],
               }}
-              text={`Correo Electronico`}
-              icon={require("@/utils/images/email.png")}
+              text={`Correo electronico`}
+              // icon={require("@/utils/images/email.png")}
               rules={{
                 required: es.authentication.register.email.rules,
               }}
@@ -180,8 +179,8 @@ const Register = ({ navigation }) => {
                 placeholder: styles.placeholder,
                 input: [styles.inputContainer, global.bgWhiteSoft],
               }}
-              text={`Fecha de Nacimiento`}
-              icon={require("@/utils/images/calendar.png")}
+              text={`Fecha de nacimiento`}
+              // icon={require("@/utils/images/calendar.png")}
               rules={{
                 required: es.authentication.register.birthday.rules,
               }}
@@ -196,9 +195,10 @@ const Register = ({ navigation }) => {
                 error: styles.errorInput,
                 placeholder: styles.placeholder,
                 input: [styles.inputContainer, global.bgWhiteSoft],
+                security: styles.security
               }}
               text={`Contraseña`}
-              icon={require("@/utils/images/password.png")}
+              // icon={require("@/utils/images/password.png")}
               security={true}
               rules={{
                 required: es.authentication.register.password.rules,
@@ -218,9 +218,10 @@ const Register = ({ navigation }) => {
                 error: styles.errorInput,
                 placeholder: styles.placeholder,
                 input: [styles.inputContainer, global.bgWhiteSoft],
+                security: styles.security
               }}
               text={`Repetir contraseña`}
-              icon={require("@/utils/images/password.png")}
+              // icon={require("@/utils/images/password.png")}
               security={true}
               rules={{
                 required: es.authentication.register.repeat.rules,
@@ -240,7 +241,7 @@ const Register = ({ navigation }) => {
           <CustomButton
             text={
               isLoading ? (
-                <ActivityIndicator />
+                <ActivityIndicator color={`#ffffff`} />
               ) : (
                 es.authentication.register.button
               )
@@ -253,7 +254,8 @@ const Register = ({ navigation }) => {
         </View>
       </View>
       <ModalAlert
-        text={`Tu negocio ha sido registrado con exito`}
+        text={error}
+        icon={require("@/utils/images/error.png")}
         close={() => CloseModal()}
         open={visible}
       />

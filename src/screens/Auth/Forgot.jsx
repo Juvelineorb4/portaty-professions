@@ -88,7 +88,7 @@ const Forgot = ({ navigation }) => {
                 placeholder: styles.placeholder,
                 input: [styles.inputContainer, global.bgWhiteSoft],
               }}
-              icon={require("@/utils/images/email.png")}
+              // icon={require("@/utils/images/email.png")}
               text={es.authentication.forgot.email.title}
               rules={{
                 required: "requiere correo electronico",
@@ -108,9 +108,10 @@ const Forgot = ({ navigation }) => {
                 error: styles.errorInput,
                 placeholder: styles.placeholder,
                 input: [styles.inputContainer, global.bgWhiteSoft],
+                security: styles.security
               }}
               text={es.authentication.forgot.password.title}
-              icon={require("@/utils/images/password.png")}
+              // icon={require("@/utils/images/password.png")}
               security={true}
               rules={{
                 required: es.authentication.forgot.password.rules,
@@ -130,9 +131,10 @@ const Forgot = ({ navigation }) => {
                 error: styles.errorInput,
                 placeholder: styles.placeholder,
                 input: [styles.inputContainer, global.bgWhiteSoft],
+                security: styles.security
               }}
               text={es.authentication.forgot.repeat.title}
-              icon={require("@/utils/images/password.png")}
+              // icon={require("@/utils/images/password.png")}
               security={true}
               rules={{
                 required: es.authentication.forgot.repeat.rules,
@@ -144,7 +146,7 @@ const Forgot = ({ navigation }) => {
             <CustomButton
               text={
                 isLoading ? (
-                  <ActivityIndicator />
+                  <ActivityIndicator color={`#ffffff`}/>
                 ) : (
                   es.authentication.forgot.button
                 )

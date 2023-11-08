@@ -12,6 +12,8 @@ import * as WebBrowser from "expo-web-browser";
 import SkeletonUnprofile from "@/components/SkeletonUnprofile";
 import { Skeleton } from "@rneui/themed";
 import { useEffect } from "react";
+import { setStatusBarNetworkActivityIndicatorVisible } from "expo-status-bar";
+import ModalAlert from "@/components/ModalAlert";
 const Unprofile = ({ navigation, route }) => {
   const { buttons } = settings;
   const global = require("@/utils/styles/global.js");
@@ -19,6 +21,8 @@ const Unprofile = ({ navigation, route }) => {
   const userAuth = useRecoilValue(userAuthenticated);
   const [user, setUser] = useState([]);
   const [business, setBusiness] = useState([]);
+  const [visible, setVisible] = useState(false);
+  const [error, setError] = useState("");
   const status = useRecoilValue(profileState);
   const onHandleLogout = async () => {
     await Auth.signOut();
@@ -91,7 +95,8 @@ const Unprofile = ({ navigation, route }) => {
         activeOpacity={1}
         onPress={() => {
           if (business.length !== 0) {
-            Alert.alert("Ya tienes un negocio registrado");
+            setError("Ya tienes un negocio registrado");
+            setVisible(true)
           } else {
             navigation.navigate("Form", {
               user: user[0]["custom:userTableID"],
@@ -149,7 +154,6 @@ const Unprofile = ({ navigation, route }) => {
           }}
         />
       </TouchableOpacity>
-      {/* <View style={[styles.line, global.bgWhiteSmoke]} /> */}
       <View style={styles.content}>
         <Text style={[styles.titleSettings, global.black, { marginTop: 20 }]}>
           {`Configuracion`}
@@ -219,6 +223,12 @@ const Unprofile = ({ navigation, route }) => {
           </View>
         ))}
       </View>
+      <ModalAlert
+        text={error}
+        icon={require("@/utils/images/alert.png")}
+        close={() => setVisible(false)}
+        open={visible}
+      />
     </ScrollView>
   );
 };

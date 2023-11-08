@@ -63,7 +63,7 @@ export const es = {
     forgot: {
       title: "Restablecer contraseña",
       email: {
-        title: "Correo Electronico",
+        title: "Correo electronico",
         placeholder: "ejemplo@email.com",
       },
       phone: {
@@ -72,12 +72,12 @@ export const es = {
       code: "Te enviaremos un código de seguridad de 6 dígitos a tu correo",
       button: "Confirmar código",
       password: {
-        title: "Nueva Contraseña",
+        title: "Nueva contraseña",
         placeholder: "***********",
         rules: "Requerido",
       },
       repeat: {
-        title: "Repita Nueva Contraseña",
+        title: "Repita nueva contraseña",
         placeholder: "***********",
         rules: "Requerido",
       },
