@@ -26,6 +26,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import * as Location from "expo-location";
 import * as queries from "@/graphql/CustomQueries/Favorites";
 import useLocation from "@/hooks/useLocation";
+import SkeletonSearch from "@/components/SkeletonSearch";
 const Search = ({ route }) => {
   const global = require("@/utils/styles/global.js");
   const [moreItems, setMoreItems] = useState(1);
@@ -38,6 +39,7 @@ const Search = ({ route }) => {
   const [statusFilter, setStatusFilter] = useState(false);
   const [filterRadio, setFilterRadio] = useRecoilState(kmRadio);
   const { location } = useLocation();
+
   const kilometers = [1, 5, 10, 20, 50, 100];
   let number = 26 * moreItems;
   const getData = async () => {
@@ -83,6 +85,8 @@ const Search = ({ route }) => {
     // espero que me traiga algo de location
     if (location) getData();
   }, [location, moreItems]);
+
+  // if (!location) return <SkeletonSearch />;
 
   if (searchActive) {
     return (

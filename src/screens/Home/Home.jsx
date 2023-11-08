@@ -39,15 +39,15 @@ const Home = ({ navigation, route }) => {
       query: queries.userByEmail,
       authMode: "AMAZON_COGNITO_USER_POOLS",
       variables: {
-        email: attributes.email,
+        email: attributes?.email,
       },
     });
-    console.log(result.data.userByEmail.items[0])
-    setFavoritesList(result.data.userByEmail.items[0].favorites.items);
-    if (result.data.userByEmail.items[0].favorites.items.length === 0)
+
+    setFavoritesList(result?.data?.userByEmail?.items[0]?.favorites?.items);
+    if (result?.data?.userByEmail?.items[0]?.favorites?.items?.length === 0)
       setNothing(true);
     if (inputFavorite !== "") {
-      result.data.userByEmail.items[0].favorites.items.map((item, index) => {
+      result?.data?.userByEmail?.items[0]?.favorites?.items?.map((item, index) => {
         if (item.business.activity === inputFavorite) temporalList.push(item);
       });
       if (temporalList.length !== 0) {

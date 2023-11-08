@@ -27,6 +27,7 @@ const ConfirmRegister = ({ navigation, route }) => {
   });
 
   const onHandleConfirm = async (data) => {
+    console.log("HOLA")
     const { code, email } = data;
     let newCode = "";
     code.forEach((item) => {

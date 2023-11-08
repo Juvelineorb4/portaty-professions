@@ -9,7 +9,7 @@ const useDeepLinkInital = (checkRender) => {
   const navigation = useNavigation();
 
   const returnNavigationScreen = async () => {
-    console.log(initalUrl);
+    console.log("UTL INICIAL: ",initalUrl);
     const { path, queryParams } = initalUrl;
     if (path === "share/list" && queryParams?.id) {
       console.log("TE VAS OARA SHARE/LIST", initalUrl);
@@ -26,7 +26,7 @@ const useDeepLinkInital = (checkRender) => {
   };
 
   useEffect(() => {
-    console.log("se disparo return ", checkRender);
+    console.log("se disparo checkRender ", checkRender);
     if (!checkRender) returnNavigationScreen();
   }, [checkRender]);
 };
