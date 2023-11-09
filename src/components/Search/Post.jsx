@@ -53,8 +53,7 @@ const Post = ({ data, image, styled }) => {
 
   const roundNumber = (num) => {
     const numero = parseFloat(num);
-    // Usar toFixed para mostrar dos decimales
-    return numero.toFixed(1);
+    return numero.toFixed(3);
   };
 
   useLayoutEffect(() => {
@@ -117,9 +116,9 @@ const Post = ({ data, image, styled }) => {
                         fontSize: 12,
                       }}
                     >
-                      {roundNumber(data.distance) === "0.0"
-                        ? "Muy Cerca"
-                        : `${roundNumber(data.distance)}Km`}
+                      {roundNumber(data.distance) < "1.0"
+                        ? `${roundNumber(data.distance) * 1000} m`
+                        : `${roundNumber(data.distance)} km`}
                     </Text>
                   </View>
                 </View>
@@ -211,12 +210,11 @@ const Post = ({ data, image, styled }) => {
                           style={{
                             fontFamily: "regular",
                             fontSize: 14,
-                            color: "red",
                           }}
                         >
-                          {roundNumber(data.distance) === "0.0"
-                            ? "Muy Cerca"
-                            : `${roundNumber(data.distance)}Km`}
+                          {roundNumber(data.distance) < "1.0"
+                            ? `${roundNumber(data.distance) * 1000} m`
+                            : `${roundNumber(data.distance)} km`}
                         </Text>
                       </View>
                       <View
