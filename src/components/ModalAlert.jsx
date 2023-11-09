@@ -45,7 +45,7 @@ const ModalAlert = ({ text, icon, close, open }) => {
                   style={[
                     global.mainBgColor,
                     {
-                      marginTop: 50,
+                      marginTop: 30,
                       padding: 10,
                       borderRadius: 6,
                       width: 80,

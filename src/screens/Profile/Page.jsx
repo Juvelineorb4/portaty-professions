@@ -9,8 +9,9 @@ import {
   ActivityIndicator,
   Platform,
   Linking,
+  Alert,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import CustomSelect from "@/components/CustomSelect";
 import styles from "@/utils/styles/Unprofile.module.css";
 import {
@@ -27,13 +28,20 @@ import * as queries from "@/graphql/CustomQueries/Favorites";
 import * as customFavorites from "@/graphql/CustomMutations/Favorites";
 import MapView, { Marker } from "react-native-maps";
 import SkeletonPage from "@/components/SkeletonPage";
+import * as ImagePicker from "expo-image-picker";
+import ModalAlert from "@/components/ModalAlert";
+import Swiper from "react-native-swiper";
+import { useEffect } from "react";
+
 const Page = ({ route, navigation }) => {
   /*  */
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [visible, setVisible] = useState(false);
   const global = require("@/utils/styles/global.js");
   const {
     data: { item, image },
   } = route.params;
-  console.log(item, "toy");
 
   const onOpenMap = (lat, lng, name) => {
     let url = "";
@@ -52,6 +60,58 @@ const Page = ({ route, navigation }) => {
       });
     } catch (error) {
       console.error("Error sharing:", error);
+    }
+  };
+
+  const selectImages = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsMultipleSelection: true,
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      if (result.assets.length > 4) {
+        setVisible(true);
+      } else {
+        setSelectedImages(result.assets.map((i) => i.uri));
+        uploadImages(result.assets);
+      }
+    }
+  };
+  function urlToBlob(url) {
+    return new Promise((resolve, reject) => {
+      var xhr = new XMLHttpRequest();
+      xhr.onerror = reject;
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4) {
+          resolve(xhr.response);
+        }
+      };
+      xhr.open("GET", url);
+      xhr.responseType = "blob";
+      xhr.send();
+    });
+  }
+  const uploadImages = async (images) => {
+    for (let image of images) {
+      const blob = await urlToBlob(image.uri);
+      const storageFolder = item.name.replace(/ /g, "");
+      try {
+        const { key } = await Storage.put(
+          `business/${storageFolder}/image_${image.assetId}.jpg`,
+          blob,
+          {
+            level: "protected",
+            contentType: "image/jpeg",
+          }
+        );
+        console.log(key);
+      } catch (error) {
+        console.log("aqui", error);
+      }
     }
   };
 
@@ -76,30 +136,138 @@ const Page = ({ route, navigation }) => {
             },
           ]}
         >
-          <View
-            style={{
-              width: 330,
-              height: 250,
-              borderRadius: 5,
-              borderColor: "#efeded",
-              borderWidth: 1,
-              overflow: "hidden",
-              padding: 10,
-              marginBottom: 20,
-              marginTop: 20,
-            }}
-          >
-            <Image
+          {selectedImages.length !== 0 ? (
+            <Swiper
               style={{
-                width: "100%",
-                height: "100%",
-                resizeMode: "cover",
-                borderRadius: 5,
-                backgroundColor: "#fff",
+                // width: 340,
+                height: 260,
+                alignItems: "center",
+                justifyContent: "center",
               }}
-              source={{ uri: image }}
-            />
-          </View>
+              showsButtons={true}
+              loop={false}
+              onIndexChanged={(index) => setCurrentIndex(index)}
+              onMomentumScrollEnd={(e, state) => setCurrentIndex(state.index)}
+              nextButton={
+                <Text style={{ color: currentIndex < selectedImages.length - 1 ? "#fb8500" : "transparent", fontSize: 50 }}>›</Text>
+              }
+              prevButton={
+                <Text style={{ color: currentIndex > 0 ? "#fb8500" : "transparent", fontSize: 50 }}>‹</Text>
+              }
+              activeDotColor="#000"
+            >
+              {selectedImages.map((item, index) => (
+                <View
+                  style={{
+                    width: 310,
+                    height: 230,
+                    borderRadius: 5,
+                    borderColor: "#efeded",
+                    borderWidth: 1,
+                    overflow: "hidden",
+                    padding: 10,
+                    marginBottom: 20,
+                    marginTop: 20,
+                    position: "relative",
+                  }}
+                  key={index}
+                >
+                  <Image
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      resizeMode: "cover",
+                      borderRadius: 5,
+                      backgroundColor: "#fff",
+                    }}
+                    source={{ uri: item }}
+                  />
+                  <TouchableOpacity
+                    style={[
+                      {
+                        position: "absolute",
+                        padding: 8,
+                        borderRadius: 5,
+                        opacity: 0.95,
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        columnGap: 5,
+                        alignItems: "center",
+                        bottom: 0,
+                        right: 0,
+                      },
+                      global.mainBgColor,
+                    ]}
+                    onPress={selectImages}
+                    activeOpacity={1}
+                  >
+                    <MaterialCommunityIcons
+                      name="camera-plus-outline"
+                      size={23}
+                      color="white"
+                    />
+                    <Text style={[{ fontFamily: "medium" }, global.white]}>
+                      agregar mas fotos
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </Swiper>
+          ) : (
+            <View
+              style={{
+                width: 310,
+                height: 230,
+                borderRadius: 5,
+                borderColor: "#efeded",
+                borderWidth: 1,
+                overflow: "hidden",
+                padding: 10,
+                marginBottom: 20,
+                marginTop: 20,
+                position: "relative",
+              }}
+            >
+              <Image
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  resizeMode: "cover",
+                  borderRadius: 5,
+                  backgroundColor: "#fff",
+                }}
+                source={{ uri: image }}
+              />
+              <TouchableOpacity
+                style={[
+                  {
+                    position: "absolute",
+                    padding: 8,
+                    borderRadius: 5,
+                    opacity: 0.95,
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    columnGap: 5,
+                    alignItems: "center",
+                    bottom: 0,
+                    right: 0,
+                  },
+                  global.mainBgColor,
+                ]}
+                onPress={selectImages}
+                activeOpacity={1}
+              >
+                <MaterialCommunityIcons
+                  name="camera-plus-outline"
+                  size={23}
+                  color="white"
+                />
+                <Text style={[{ fontFamily: "medium" }, global.white]}>
+                  agregar mas fotos
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
         <View
           style={{
@@ -482,6 +650,12 @@ const Page = ({ route, navigation }) => {
           </View>
           <View style={[styles.line, global.bgWhiteSmoke]} />
         </View>
+        <ModalAlert
+          text={`Error al guardar imagenes. Por favor, selecciona un máximo de 4 imágenes`}
+          close={() => setVisible(false)}
+          icon={require("@/utils/images/alert.png")}
+          open={visible}
+        />
       </ScrollView>
     </View>
   );
