@@ -9,7 +9,7 @@ import {
   Linking,
   Platform,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import CustomSelect from "@/components/CustomSelect";
 import styles from "@/utils/styles/Unprofile.module.css";
 import {
@@ -27,15 +27,18 @@ import * as customFavorites from "@/graphql/CustomMutations/Favorites";
 import * as customSearch from "@/graphql/CustomQueries/Search";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import ModalAlert from "@/components/ModalAlert";
+import Swiper from "react-native-swiper";
+import SkeletonExample from "@/components/SkeletonExample";
 
 const FavoritePage = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
   const [post, setPost] = useState([]);
+  const [storageImages, setStorageImages] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [visible, setVisible] = useState(false);
   const {
     data: { item, image },
   } = route.params;
-  console.log("toy aqui manito", item.business.name);
   const fetchData = async () => {
     try {
       const business = await API.graphql({
@@ -45,13 +48,11 @@ const FavoritePage = ({ navigation, route }) => {
         },
         authMode: "AWS_IAM",
       });
-      console.log(business.data.getBusiness);
       setPost(business.data.getBusiness);
     } catch (error) {
       console.log(error);
     }
   };
-  // console.log(item.business.favorites)
   const onDeleteFavorite = async () => {
     const favorites = await API.graphql({
       query: customFavorites.deleteFavorites,
@@ -89,10 +90,33 @@ const FavoritePage = ({ navigation, route }) => {
     Linking.openURL(url);
   };
 
-  useEffect(() => {
+  const AllImages = async () => {
+    try {
+      const result = await Storage.list(`business/${item.businessID}/extras/`, {
+        level: "protected",
+        identityId: item.business.identityID,
+        pageSize: 10,
+      });
+      const urls = await Promise.all(
+        result.results.map((item) =>
+          Storage.get(item.key, { level: "protected" })
+            .then((url) => url)
+            .catch((err) => console.log(err))
+        )
+      );
+      setStorageImages([image, ...urls]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useLayoutEffect(() => {
     fetchData();
+    AllImages();
+    console.log(storageImages);
   }, []);
 
+  if (!item || storageImages.length === 0) return <SkeletonExample />;
   return (
     <View
       style={[
@@ -113,30 +137,101 @@ const FavoritePage = ({ navigation, route }) => {
             },
           ]}
         >
-          <View
-            style={{
-              width: 330,
-              height: 250,
-              borderRadius: 5,
-              borderColor: "#efeded",
-              borderWidth: 1,
-              overflow: "hidden",
-              padding: 10,
-              marginBottom: 20,
-              marginTop: 20,
-            }}
-          >
-            <Image
+          {storageImages.length !== 0 && (
+            <Swiper
               style={{
-                width: "100%",
-                height: "100%",
-                resizeMode: "cover",
-                borderRadius: 5,
-                backgroundColor: "#fff",
+                // width: 340,
+                height: 260,
+                alignItems: "center",
+                justifyContent: "center",
               }}
-              source={{ uri: image }}
-            />
-          </View>
+              showsButtons={true}
+              loop={false}
+              onIndexChanged={(index) => setCurrentIndex(index)}
+              onMomentumScrollEnd={(e, state) => setCurrentIndex(state.index)}
+              nextButton={
+                <Text
+                  style={{
+                    color:
+                      currentIndex < storageImages.length - 1
+                        ? "#fb8500"
+                        : "transparent",
+                    fontSize: 50,
+                  }}
+                >
+                  ›
+                </Text>
+              }
+              prevButton={
+                <Text
+                  style={{
+                    color: currentIndex > 0 ? "#fb8500" : "transparent",
+                    fontSize: 50,
+                  }}
+                >
+                  ‹
+                </Text>
+              }
+              activeDotColor="#000"
+            >
+              {storageImages.map((item, index) => (
+                <View
+                  style={{
+                    width: 310,
+                    height: 230,
+                    borderRadius: 5,
+                    borderColor: "#efeded",
+                    borderWidth: 1,
+                    overflow: "hidden",
+                    padding: 10,
+                    marginBottom: 20,
+                    marginTop: 20,
+                    position: "relative",
+                  }}
+                  key={index}
+                >
+                  <Image
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      resizeMode: "cover",
+                      borderRadius: 5,
+                      backgroundColor: "#fff",
+                    }}
+                    source={{ uri: item }}
+                  />
+                  {/* <TouchableOpacity
+                    style={[
+                      {
+                        position: "absolute",
+                        padding: 8,
+                        borderRadius: 5,
+                        opacity: 0.95,
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        columnGap: 5,
+                        alignItems: "center",
+                        bottom: 0,
+                        right: 0,
+                      },
+                      global.mainBgColor,
+                    ]}
+                    onPress={selectImages}
+                    activeOpacity={1}
+                  >
+                    <MaterialCommunityIcons
+                      name="camera-plus-outline"
+                      size={23}
+                      color="white"
+                    />
+                    <Text style={[{ fontFamily: "medium" }, global.white]}>
+                      agregar mas fotos
+                    </Text>
+                  </TouchableOpacity> */}
+                </View>
+              ))}
+            </Swiper>
+          )}
         </View>
         <View
           style={{
@@ -184,7 +279,6 @@ const FavoritePage = ({ navigation, route }) => {
             )
           }
         >
-
           <View
             style={{
               flex: 1,
@@ -585,10 +679,18 @@ const FavoritePage = ({ navigation, route }) => {
           </View>
           <View style={[styles.line, global.bgWhiteSmoke]} />
         </View>
-        <TouchableOpacity onPress={() => setVisible(true)} style={{marginBottom: 100}} >
+        <TouchableOpacity
+          onPress={() => setVisible(true)}
+          style={{ marginBottom: 100 }}
+        >
           <Text>Modal</Text>
         </TouchableOpacity>
-        <ModalAlert text={`Tu negocio ha sido registrado con exito`} close={() => setVisible(false)} open={visible} icon={require("@/utils/images/error.png")} />
+        <ModalAlert
+          text={`Tu negocio ha sido registrado con exito`}
+          close={() => setVisible(false)}
+          open={visible}
+          icon={require("@/utils/images/error.png")}
+        />
       </ScrollView>
     </View>
   );

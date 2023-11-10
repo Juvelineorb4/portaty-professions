@@ -16,7 +16,7 @@ import * as ImagePicker from "expo-image-picker";
 import { Auth, API, Storage } from "aws-amplify";
 import * as queries from "@/graphql/queries";
 import * as customProfile from "@/graphql/CustomQueries/Profile";
-import * as mutations from "@/graphql/mutations";
+import * as mutations from "@/graphql/CustomMutations/Profile";
 import CustomActivities from "@/components/CustomActivities";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { activitySelect, mapBusiness, profileState, tagsList } from "@/atoms";
@@ -83,16 +83,8 @@ const Form = ({ navigation, route }) => {
     setLoading(true);
     const { identityId } = await Auth.currentUserCredentials();
     const { company, email, phone, wsme, coordinates } = data;
-    const storageFolder = company.replace(/ /g, "");
     try {
-      const { key } = await Storage.put(
-        `business/${storageFolder}/profile.jpg`,
-        blobImage,
-        {
-          level: "protected",
-          contentType: "image/jpeg",
-        }
-      );
+      
       const business = await API.graphql({
         query: mutations.createBusiness,
         authMode: "AMAZON_COGNITO_USER_POOLS",
@@ -103,7 +95,7 @@ const Form = ({ navigation, route }) => {
             email: email,
             phone: phone,
             whatsapp: wsme,
-            image: key,
+            image: '',
             identityID: identityId,
             coordinates: {
               lat: coordinates.latitude,
@@ -114,7 +106,26 @@ const Form = ({ navigation, route }) => {
           },
         },
       });
+      const { key } = await Storage.put(
+        `business/${business?.data?.createBusiness?.id}/profile.jpg`,
+        blobImage,
+        {
+          level: "protected",
+          contentType: "image/jpeg",
+        }
+      );
+      const businessUpdate = await API.graphql({
+        query: mutations.updateBusiness,
+        authMode: "AMAZON_COGNITO_USER_POOLS",
+        variables: {
+          input: {
+            id: business?.data?.createBusiness?.id,
+            image: key,
+          },
+        },
+      });
       console.log(business);
+      console.log(businessUpdate);
       setStateProfile(true);
       setLoading(false);
       setVisible(true);

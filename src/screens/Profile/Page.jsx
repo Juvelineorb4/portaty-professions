@@ -11,7 +11,7 @@ import {
   Linking,
   Alert,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import CustomSelect from "@/components/CustomSelect";
 import styles from "@/utils/styles/Unprofile.module.css";
 import {
@@ -31,18 +31,18 @@ import SkeletonPage from "@/components/SkeletonPage";
 import * as ImagePicker from "expo-image-picker";
 import ModalAlert from "@/components/ModalAlert";
 import Swiper from "react-native-swiper";
-import { useEffect } from "react";
 
 const Page = ({ route, navigation }) => {
   /*  */
   const [selectedImages, setSelectedImages] = useState([]);
+  const [storageImages, setStorageImages] = useState([]);
+  const [storagePaths, setStoragePaths] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visible, setVisible] = useState(false);
   const global = require("@/utils/styles/global.js");
   const {
     data: { item, image },
   } = route.params;
-
   const onOpenMap = (lat, lng, name) => {
     let url = "";
     if (Platform.OS === "android") {
@@ -98,10 +98,9 @@ const Page = ({ route, navigation }) => {
   const uploadImages = async (images) => {
     for (let image of images) {
       const blob = await urlToBlob(image.uri);
-      const storageFolder = item.name.replace(/ /g, "");
       try {
         const { key } = await Storage.put(
-          `business/${storageFolder}/image_${image.assetId}.jpg`,
+          `business/${item.id}/extras/image_${image.assetId}.jpg`,
           blob,
           {
             level: "protected",
@@ -115,7 +114,35 @@ const Page = ({ route, navigation }) => {
     }
   };
 
-  if (!item) return <SkeletonPage />;
+  const AllImages = async () => {
+    // setStorageImages([image])
+    const { identityId } = await Auth.currentUserCredentials();
+    try {
+      const result = await Storage.list(`business/${item.id}/extras/`, {
+        level: "protected",
+        identityId: identityId,
+        pageSize: 10,
+      });
+      setStoragePaths(result.results)
+      const urls = await Promise.all(
+        result.results.map((item) => 
+          Storage.get(item.key, { level: "protected" })
+            .then((url) => url)
+            .catch((err) => console.log(err))
+        )
+      );
+      setStorageImages([image, ...urls])
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useLayoutEffect(() => {
+    AllImages()
+    console.log(storageImages)
+  }, []);
+
+  if (!item || storageImages.length === 0) return <SkeletonPage />;
   return (
     <View
       style={[
@@ -136,7 +163,7 @@ const Page = ({ route, navigation }) => {
             },
           ]}
         >
-          {selectedImages.length !== 0 ? (
+          {storageImages.length !== 0 && (
             <Swiper
               style={{
                 // width: 340,
@@ -149,14 +176,31 @@ const Page = ({ route, navigation }) => {
               onIndexChanged={(index) => setCurrentIndex(index)}
               onMomentumScrollEnd={(e, state) => setCurrentIndex(state.index)}
               nextButton={
-                <Text style={{ color: currentIndex < selectedImages.length - 1 ? "#fb8500" : "transparent", fontSize: 50 }}>›</Text>
+                <Text
+                  style={{
+                    color:
+                      currentIndex < storageImages.length - 1
+                        ? "#fb8500"
+                        : "transparent",
+                    fontSize: 50,
+                  }}
+                >
+                  ›
+                </Text>
               }
               prevButton={
-                <Text style={{ color: currentIndex > 0 ? "#fb8500" : "transparent", fontSize: 50 }}>‹</Text>
+                <Text
+                  style={{
+                    color: currentIndex > 0 ? "#fb8500" : "transparent",
+                    fontSize: 50,
+                  }}
+                >
+                  ‹
+                </Text>
               }
               activeDotColor="#000"
             >
-              {selectedImages.map((item, index) => (
+              {storageImages.map((item, index) => (
                 <View
                   style={{
                     width: 310,
@@ -213,61 +257,8 @@ const Page = ({ route, navigation }) => {
                 </View>
               ))}
             </Swiper>
-          ) : (
-            <View
-              style={{
-                width: 310,
-                height: 230,
-                borderRadius: 5,
-                borderColor: "#efeded",
-                borderWidth: 1,
-                overflow: "hidden",
-                padding: 10,
-                marginBottom: 20,
-                marginTop: 20,
-                position: "relative",
-              }}
-            >
-              <Image
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  resizeMode: "cover",
-                  borderRadius: 5,
-                  backgroundColor: "#fff",
-                }}
-                source={{ uri: image }}
-              />
-              <TouchableOpacity
-                style={[
-                  {
-                    position: "absolute",
-                    padding: 8,
-                    borderRadius: 5,
-                    opacity: 0.95,
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    columnGap: 5,
-                    alignItems: "center",
-                    bottom: 0,
-                    right: 0,
-                  },
-                  global.mainBgColor,
-                ]}
-                onPress={selectImages}
-                activeOpacity={1}
-              >
-                <MaterialCommunityIcons
-                  name="camera-plus-outline"
-                  size={23}
-                  color="white"
-                />
-                <Text style={[{ fontFamily: "medium" }, global.white]}>
-                  agregar mas fotos
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )}
+          ) 
+          }
         </View>
         <View
           style={{
