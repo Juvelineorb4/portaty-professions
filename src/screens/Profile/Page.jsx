@@ -100,6 +100,8 @@ const Page = ({ route, navigation }) => {
     for (let image of images) {
       const blob = await urlToBlob(image.uri);
       const storageFolder = item.name.replace(/ /g, "");
+      console.log("NOMBRE DE: ", image.assetId);
+      return;
       try {
         const { key } = await Storage.put(
           `business/${storageFolder}/image_${image.assetId}.jpg`,
