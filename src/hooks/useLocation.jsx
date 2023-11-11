@@ -45,7 +45,7 @@ const useLocation = () => {
           },
           (locationResult) => {
             const { latitude, longitude } = locationResult.coords;
-            console.log("COORDENADAS OBTENIDAS: ", { latitude, longitude });
+            // console.log("COORDENADAS OBTENIDAS: ", { latitude, longitude });
             setLocation({ latitude, longitude });
             setUserLocation({ latitude, longitude });
           }
