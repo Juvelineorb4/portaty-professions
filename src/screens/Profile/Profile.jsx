@@ -36,7 +36,7 @@ const Profile = ({ route, navigation }) => {
   const [editActive, setEditActive] = useState(false);
   const [isSave, setIsSave] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  console.log("PROFILE: ", user);
+  // console.log("PROFILE: ", user);
   const onShare = async () => {
     try {
       await Share.share({
@@ -52,20 +52,13 @@ const Profile = ({ route, navigation }) => {
   }, [name, lastName]);
 
   const onCheckChange = () => {
-    // si hubo un cambio de informacion habilitar boton
-    console.log(name?.toLowerCase()?.trim());
-    console.log(lastName?.toLowerCase().trim());
-    console.log(user?.name?.toLowerCase().trim());
-    console.log(user?.lastName?.toLowerCase().trim());
     if (
       name?.toLowerCase()?.trim() !== user?.name?.toLowerCase().trim() ||
       lastName?.toLowerCase().trim() !==
         user["custom:lastName"]?.toLowerCase().trim()
     ) {
-      console.log("hubo cambio");
       setIsSave(true);
     } else {
-      console.log("no hubo cambio");
       setIsSave(false);
     }
   };
@@ -74,7 +67,7 @@ const Profile = ({ route, navigation }) => {
     setIsLoading(true);
     const data = await Auth.currentAuthenticatedUser();
     const tableID = data?.attributes["custom:userTableID"];
-    console.log("ID DE TABLAA  CAMBAIR: ", tableID);
+    // console.log("ID DE TABLAA  CAMBAIR: ", tableID);
 
     try {
       // Cambiar en Cognito
@@ -95,7 +88,7 @@ const Profile = ({ route, navigation }) => {
           },
         },
       });
-      console.log("ACTUALIZAR: ", result);
+      // console.log("ACTUALIZAR: ", result);
     } catch (error) {
       const { message } = new Error(error);
       console.log("ERROR AL ACTUALIZAR ATRIBUTO IDENTITY ID: ", message);

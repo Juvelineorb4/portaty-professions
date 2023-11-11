@@ -8,6 +8,7 @@ import {
   Text,
   TouchableOpacity,
   Button,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -44,8 +45,8 @@ const ConfirmRegister = ({ navigation, route }) => {
       setVisible(true);
       setCodeInputs("");
     } catch (error) {
-      setError(`Error al confirmar usuario: ${error}`)
-      setVisible(true)
+      setError(`Error al confirmar usuario: ${error}`);
+      setVisible(true);
     }
     setLoading(false);
   };
@@ -122,9 +123,9 @@ const ConfirmRegister = ({ navigation, route }) => {
             text={error ? error : "Usuario registrado exitosamente"}
             close={() => {
               if (error) {
-                setVisible(false)
+                setVisible(false);
               } else {
-                CloseModal()
+                CloseModal();
               }
             }}
             open={visible}

@@ -21,7 +21,8 @@ import { Alert } from "react-native";
 import ModalAlert from "@/components/ModalAlert";
 
 const Login = ({ navigation }) => {
-  const { control, handleSubmit } = useForm();
+  const { control, handleSubmit, watch } = useForm();
+  const emailForm = watch("email");
   const global = require("@/utils/styles/global.js");
   const EMAIL_REGEX = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
   const [errorActive, setErrorActive] = useState("");
@@ -38,7 +39,8 @@ const Login = ({ navigation }) => {
       switch (error.message) {
         case "User is not confirmed.":
           setError(`Usuario: ${email} no confirmado, por favor confirmar`);
-          setVisible(true)
+          setVisible(true);
+
           break;
 
         case "User does not exist.":
@@ -61,7 +63,7 @@ const Login = ({ navigation }) => {
   const CloseModal = () => {
     navigation.navigate("Register_App", {
       screen: "ConfirmRegister",
-      params: { email: email },
+      params: { email: emailForm },
     });
     setVisible(false);
   };
@@ -123,7 +125,7 @@ const Login = ({ navigation }) => {
                 error: styles.errorInput,
                 placeholder: styles.placeholder,
                 input: [styles.inputContainer, global.bgWhiteSoft],
-                security: styles.security
+                security: styles.security,
               }}
               text={`Contraseña`}
               // icon={require("@/utils/images/password.png")}
@@ -167,11 +169,11 @@ const Login = ({ navigation }) => {
         </View>
       </View>
       <ModalAlert
-            text={error}
-            close={() => CloseModal()}
-            open={visible}
-            icon={require("@/utils/images/alert.png")}
-          />
+        text={error}
+        close={() => CloseModal()}
+        open={visible}
+        icon={require("@/utils/images/alert.png")}
+      />
     </KeyboardAvoidingView>
   );
 };

@@ -58,7 +58,7 @@ const SearchPost = ({ route, navigation }) => {
         },
         authMode: "AMAZON_COGNITO_USER_POOLS",
       });
-      console.log(favorites?.data?.createFavorites?.id);
+      // console.log(favorites?.data?.createFavorites?.id);
       setSave(favorites?.data?.createFavorites?.id);
     } catch (error) {
       console.log("ERRO AL CARGAR UN FAVORITO: ", error);
@@ -144,19 +144,25 @@ const SearchPost = ({ route, navigation }) => {
 
   const AllImages = async () => {
     try {
+      const IdentityIDRef = item.identityID;
+      console.log("IDENTITY: ", IdentityIDRef);
       const result = await Storage.list(`business/${item.id}/extras/`, {
         level: "protected",
-        identityId: item.identityID,
+        identityId: IdentityIDRef,
         pageSize: 10,
       });
+
+      result.results.map((item) => console.log("Paths: ", item.key));
       const urls = await Promise.all(
-        result.results.map((item) => 
-          Storage.get(item.key, { level: "protected" })
-            .then((url) => url)
-            .catch((err) => console.log(err))
+        result.results.map((item) =>
+          Storage.get(item.key, {
+            level: "protected",
+            identityId: IdentityIDRef,
+          })
         )
       );
-      setStorageImages([image, ...urls])
+
+      setStorageImages([image, ...urls]);
     } catch (error) {
       console.log(error);
     }
@@ -165,11 +171,8 @@ const SearchPost = ({ route, navigation }) => {
   useLayoutEffect(() => {
     fetchFavorite();
     fetchData();
-    AllImages()
-    console.log(storageImages)
+    AllImages();
   }, []);
-
-
 
   if (!post || storageImages.length === 0) return <SkeletonExample />;
   return (
@@ -258,8 +261,7 @@ const SearchPost = ({ route, navigation }) => {
                 </View>
               ))}
             </Swiper>
-          ) 
-          }
+          )}
         </View>
         {showAgg && (
           <View
