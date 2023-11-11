@@ -9,7 +9,7 @@ import {
   Linking,
   Platform,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import * as customSearch from "@/graphql/CustomQueries/Search";
 import CustomSelect from "@/components/CustomSelect";
 import styles from "@/utils/styles/Unprofile.module.css";
@@ -31,9 +31,12 @@ import SkeletonExample from "@/components/SkeletonExample";
 // recoil
 import { useRecoilValue } from "recoil";
 import { userAuthenticated } from "@/atoms/index";
+import Swiper from "react-native-swiper";
 const SearchPost = ({ route, navigation }) => {
   const userAuth = useRecoilValue(userAuthenticated);
   const [post, setPost] = useState(null);
+  const [storageImages, setStorageImages] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [save, setSave] = useState("");
   const [showAgg, setShowAgg] = useState(false);
   const global = require("@/utils/styles/global.js");
@@ -138,12 +141,37 @@ const SearchPost = ({ route, navigation }) => {
     const url = `tel://${post?.phone}`;
     Linking.openURL(url);
   };
-  useEffect(() => {
+
+  const AllImages = async () => {
+    try {
+      const result = await Storage.list(`business/${item.id}/extras/`, {
+        level: "protected",
+        identityId: item.identityID,
+        pageSize: 10,
+      });
+      const urls = await Promise.all(
+        result.results.map((item) => 
+          Storage.get(item.key, { level: "protected" })
+            .then((url) => url)
+            .catch((err) => console.log(err))
+        )
+      );
+      setStorageImages([image, ...urls])
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useLayoutEffect(() => {
     fetchFavorite();
     fetchData();
+    AllImages()
+    console.log(storageImages)
   }, []);
 
-  if (!post) return <SkeletonExample />;
+
+
+  if (!post || storageImages.length === 0) return <SkeletonExample />;
   return (
     <View
       style={[
@@ -164,35 +192,74 @@ const SearchPost = ({ route, navigation }) => {
             },
           ]}
         >
-          <View
-            style={{
-              width: 330,
-              height: 250,
-              borderRadius: 5,
-              borderColor: "#efeded",
-              borderWidth: 1,
-              overflow: "hidden",
-              padding: 10,
-              marginBottom: 20,
-              marginTop: 20,
-            }}
-          >
-            <Image
+          {storageImages.length !== 0 && (
+            <Swiper
               style={{
-                width: "100%",
-                height: "100%",
-                resizeMode: "cover",
-                borderRadius: 5,
-                backgroundColor: "#fff",
+                // width: 340,
+                height: 260,
+                alignItems: "center",
+                justifyContent: "center",
               }}
-              source={{ uri: image }}
-            />
-          </View>
-          {/* <View>
-          <Fontisto name="heart" size={23} color="#e31b23" />
-          <Text>Agregado a favoritos</Text>
-
-          </View> */}
+              showsButtons={true}
+              loop={false}
+              onIndexChanged={(index) => setCurrentIndex(index)}
+              onMomentumScrollEnd={(e, state) => setCurrentIndex(state.index)}
+              nextButton={
+                <Text
+                  style={{
+                    color:
+                      currentIndex < storageImages.length - 1
+                        ? "#fb8500"
+                        : "transparent",
+                    fontSize: 50,
+                  }}
+                >
+                  ›
+                </Text>
+              }
+              prevButton={
+                <Text
+                  style={{
+                    color: currentIndex > 0 ? "#fb8500" : "transparent",
+                    fontSize: 50,
+                  }}
+                >
+                  ‹
+                </Text>
+              }
+              activeDotColor="#000"
+            >
+              {storageImages.map((item, index) => (
+                <View
+                  style={{
+                    width: 310,
+                    height: 230,
+                    borderRadius: 5,
+                    borderColor: "#efeded",
+                    borderWidth: 1,
+                    overflow: "hidden",
+                    padding: 10,
+                    marginBottom: 20,
+                    marginTop: 20,
+                    position: "relative",
+                  }}
+                  key={index}
+                >
+                  <Image
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      resizeMode: "cover",
+                      borderRadius: 5,
+                      backgroundColor: "#fff",
+                    }}
+                    source={{ uri: item }}
+                  />
+                </View>
+              ))}
+            </Swiper>
+          ) 
+          }
         </View>
         {showAgg && (
           <View
