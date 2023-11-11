@@ -74,7 +74,6 @@ const Page = ({ route, navigation }) => {
 
     if (!result.canceled) {
       if (result.assets.length > 4) {
-        console.log(result.assets);
         setVisible(true);
       } else {
         setSelectedImages(result.assets.map((i) => i.uri));
@@ -100,8 +99,6 @@ const Page = ({ route, navigation }) => {
     for (let image of images) {
       const blob = await urlToBlob(image.uri);
       const storageFolder = item.name.replace(/ /g, "");
-      console.log("NOMBRE DE: ", image.assetId);
-      return;
       try {
         const { key } = await Storage.put(
           `business/${storageFolder}/image_${image.assetId}.jpg`,
@@ -152,27 +149,10 @@ const Page = ({ route, navigation }) => {
               onIndexChanged={(index) => setCurrentIndex(index)}
               onMomentumScrollEnd={(e, state) => setCurrentIndex(state.index)}
               nextButton={
-                <Text
-                  style={{
-                    color:
-                      currentIndex < selectedImages.length - 1
-                        ? "#fb8500"
-                        : "transparent",
-                    fontSize: 50,
-                  }}
-                >
-                  ›
-                </Text>
+                <Text style={{ color: currentIndex < selectedImages.length - 1 ? "#fb8500" : "transparent", fontSize: 50 }}>›</Text>
               }
               prevButton={
-                <Text
-                  style={{
-                    color: currentIndex > 0 ? "#fb8500" : "transparent",
-                    fontSize: 50,
-                  }}
-                >
-                  ‹
-                </Text>
+                <Text style={{ color: currentIndex > 0 ? "#fb8500" : "transparent", fontSize: 50 }}>‹</Text>
               }
               activeDotColor="#000"
             >
