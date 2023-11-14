@@ -27,6 +27,7 @@ import * as Location from "expo-location";
 import * as queries from "@/graphql/CustomQueries/Favorites";
 import useLocation from "@/hooks/useLocation";
 import SkeletonSearch from "@/components/SkeletonSearch";
+import SkeletonMoreItems from "@/components/SkeletonMoreItems";
 const Search = ({ route }) => {
   const global = require("@/utils/styles/global.js");
   const [moreItems, setMoreItems] = useState(1);
@@ -86,7 +87,7 @@ const Search = ({ route }) => {
     if (location) getData();
   }, [location, moreItems]);
 
-  // if (!location) return <SkeletonSearch />;
+  // if (true) return <SkeletonSearch />;
 
   if (searchActive) {
     return (
@@ -253,10 +254,12 @@ const Search = ({ route }) => {
                 {/* {totalData > totalLimit && (
                 <ActivityIndicator size="large" color="#5E2129" />
               )} */}
-                {totalData === totalLimit && (
+                {totalData === totalLimit ? (
                   <Text style={{ fontFamily: "light", fontSize: 14 }}>
                     No hay mas negocios por mostrar
                   </Text>
+                ) : (
+                  <SkeletonMoreItems />
                 )}
               </View>
             )}
@@ -286,10 +289,12 @@ const Search = ({ route }) => {
                   {/* {totalData > totalLimit && (
                     <ActivityIndicator size="large" color="#5E2129" />
                   )} */}
-                  {totalData === totalLimit && (
+                  {totalData === totalLimit ? (
                     <Text style={{ fontFamily: "light", fontSize: 14 }}>
                       No hay mas negocios por mostrar
                     </Text>
+                  ) : (
+                    <SkeletonMoreItems />
                   )}
                 </View>
               )}
@@ -310,7 +315,7 @@ const Search = ({ route }) => {
           global.bgWhite,
         ]}
       >
-        <ActivityIndicator size="large" color="#fb8500" />
+       <SkeletonSearch/>
       </View>
     );
   }
