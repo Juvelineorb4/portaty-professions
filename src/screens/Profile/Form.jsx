@@ -135,8 +135,9 @@ const Form = ({ navigation, route }) => {
       const bucketName = Storage._config.AWSS3.bucket;
       const level = "protected";
       const identityID = userAuth?.attributes["custom:identityID"];
-      const url = `https://${bucketName}.s3.amazonaws.com/${level}/${identityID}/business/${business?.data?.createBusiness?.id}/profile.jpg`;
+      const url = `https://${bucketName}.s3.amazonaws.com/${level}/${identityID}/${key}`;
       console.log(url);
+      console.log(key);
       setStateProfile(true);
       setLoading(false);
       setVisible(true);
