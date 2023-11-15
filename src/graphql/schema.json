@@ -10752,7 +10752,11 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
+<<<<<<< HEAD
         "name" : "SearchableFloatFilterInput",
+=======
+        "name" : "ModelSubscriptionBooleanInput",
+>>>>>>> 11b8098d82b833cac6f0bf1bede86e0604931101
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -10760,6 +10764,7 @@
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
+<<<<<<< HEAD
             "name" : "Float",
             "ofType" : null
           },
@@ -10797,6 +10802,9 @@
           "type" : {
             "kind" : "SCALAR",
             "name" : "Float",
+=======
+            "name" : "Boolean",
+>>>>>>> 11b8098d82b833cac6f0bf1bede86e0604931101
             "ofType" : null
           },
           "defaultValue" : null
@@ -10805,6 +10813,7 @@
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
+<<<<<<< HEAD
             "name" : "Float",
             "ofType" : null
           },
@@ -10822,6 +10831,12 @@
             }
           },
           "defaultValue" : null
+=======
+            "name" : "Boolean",
+            "ofType" : null
+          },
+          "defaultValue" : null
+>>>>>>> 11b8098d82b833cac6f0bf1bede86e0604931101
         } ],
         "interfaces" : null,
         "enumValues" : null,
@@ -10873,7 +10888,11 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
+<<<<<<< HEAD
         "name" : "ModelFloatInput",
+=======
+        "name" : "SearchableIntFilterInput",
+>>>>>>> 11b8098d82b833cac6f0bf1bede86e0604931101
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -10881,6 +10900,7 @@
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
+<<<<<<< HEAD
             "name" : "Float",
             "ofType" : null
           },
@@ -10918,6 +10938,9 @@
           "type" : {
             "kind" : "SCALAR",
             "name" : "Float",
+=======
+            "name" : "Int",
+>>>>>>> 11b8098d82b833cac6f0bf1bede86e0604931101
             "ofType" : null
           },
           "defaultValue" : null
@@ -10926,23 +10949,72 @@
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
+<<<<<<< HEAD
             "name" : "Float",
+=======
+            "name" : "Int",
+>>>>>>> 11b8098d82b833cac6f0bf1bede86e0604931101
             "ofType" : null
           },
           "defaultValue" : null
         }, {
+<<<<<<< HEAD
           "name" : "between",
+=======
+          "name" : "lt",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "Int",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "gte",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "Int",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "lte",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "Int",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "eq",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "Int",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "range",
+>>>>>>> 11b8098d82b833cac6f0bf1bede86e0604931101
           "description" : null,
           "type" : {
             "kind" : "LIST",
             "name" : null,
             "ofType" : {
               "kind" : "SCALAR",
+<<<<<<< HEAD
               "name" : "Float",
+=======
+              "name" : "Int",
+>>>>>>> 11b8098d82b833cac6f0bf1bede86e0604931101
               "ofType" : null
             }
           },
           "defaultValue" : null
+<<<<<<< HEAD
         }, {
           "name" : "attributeExists",
           "description" : null,
@@ -10988,6 +11060,8 @@
             "ofType" : null
           },
           "defaultValue" : null
+=======
+>>>>>>> 11b8098d82b833cac6f0bf1bede86e0604931101
         } ],
         "interfaces" : null,
         "enumValues" : null,
@@ -11123,7 +11197,38 @@
         "possibleTypes" : null
       }, {
         "kind" : "INPUT_OBJECT",
+<<<<<<< HEAD
         "name" : "SearchableIntFilterInput",
+=======
+        "name" : "SearchableBooleanFilterInput",
+        "description" : null,
+        "fields" : null,
+        "inputFields" : [ {
+          "name" : "eq",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "Boolean",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "ne",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "Boolean",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        } ],
+        "interfaces" : null,
+        "enumValues" : null,
+        "possibleTypes" : null
+      }, {
+        "kind" : "INPUT_OBJECT",
+        "name" : "SearchableFloatFilterInput",
+>>>>>>> 11b8098d82b833cac6f0bf1bede86e0604931101
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
@@ -11131,7 +11236,11 @@
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
+<<<<<<< HEAD
             "name" : "Int",
+=======
+            "name" : "Float",
+>>>>>>> 11b8098d82b833cac6f0bf1bede86e0604931101
             "ofType" : null
           },
           "defaultValue" : null
@@ -11140,7 +11249,11 @@
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
+<<<<<<< HEAD
             "name" : "Int",
+=======
+            "name" : "Float",
+>>>>>>> 11b8098d82b833cac6f0bf1bede86e0604931101
             "ofType" : null
           },
           "defaultValue" : null
@@ -11149,7 +11262,11 @@
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
+<<<<<<< HEAD
             "name" : "Int",
+=======
+            "name" : "Float",
+>>>>>>> 11b8098d82b833cac6f0bf1bede86e0604931101
             "ofType" : null
           },
           "defaultValue" : null
@@ -11158,7 +11275,11 @@
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
+<<<<<<< HEAD
             "name" : "Int",
+=======
+            "name" : "Float",
+>>>>>>> 11b8098d82b833cac6f0bf1bede86e0604931101
             "ofType" : null
           },
           "defaultValue" : null
@@ -11167,7 +11288,11 @@
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
+<<<<<<< HEAD
             "name" : "Int",
+=======
+            "name" : "Float",
+>>>>>>> 11b8098d82b833cac6f0bf1bede86e0604931101
             "ofType" : null
           },
           "defaultValue" : null
@@ -11176,7 +11301,11 @@
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
+<<<<<<< HEAD
             "name" : "Int",
+=======
+            "name" : "Float",
+>>>>>>> 11b8098d82b833cac6f0bf1bede86e0604931101
             "ofType" : null
           },
           "defaultValue" : null
@@ -11188,7 +11317,11 @@
             "name" : null,
             "ofType" : {
               "kind" : "SCALAR",
+<<<<<<< HEAD
               "name" : "Int",
+=======
+              "name" : "Float",
+>>>>>>> 11b8098d82b833cac6f0bf1bede86e0604931101
               "ofType" : null
             }
           },
@@ -11981,16 +12114,58 @@
         "onFragment" : false,
         "onField" : true
       }, {
+<<<<<<< HEAD
         "name" : "aws_iam",
         "description" : "Tells the service this field/object has access authorized by sigv4 signing.",
+=======
+        "name" : "aws_oidc",
+        "description" : "Tells the service this field/object has access authorized by an OIDC token.",
         "locations" : [ "OBJECT", "FIELD_DEFINITION" ],
         "args" : [ ],
         "onOperation" : false,
         "onFragment" : false,
         "onField" : false
       }, {
-        "name" : "aws_oidc",
-        "description" : "Tells the service this field/object has access authorized by an OIDC token.",
+        "name" : "aws_cognito_user_pools",
+        "description" : "Tells the service this field/object has access authorized by a Cognito User Pools token.",
+        "locations" : [ "OBJECT", "FIELD_DEFINITION" ],
+        "args" : [ {
+          "name" : "cognito_groups",
+          "description" : "List of cognito user pool groups which have access on this field",
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        } ],
+        "onOperation" : false,
+        "onFragment" : false,
+        "onField" : false
+      }, {
+        "name" : "deprecated",
+        "description" : null,
+        "locations" : [ "FIELD_DEFINITION", "ENUM_VALUE" ],
+        "args" : [ {
+          "name" : "reason",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "defaultValue" : "\"No longer supported\""
+        } ],
+        "onOperation" : false,
+        "onFragment" : false,
+        "onField" : false
+      }, {
+        "name" : "aws_iam",
+        "description" : "Tells the service this field/object has access authorized by sigv4 signing.",
         "locations" : [ "OBJECT", "FIELD_DEFINITION" ],
         "args" : [ ],
         "onOperation" : false,
@@ -12017,6 +12192,71 @@
         "onOperation" : false,
         "onFragment" : false,
         "onField" : false
+      }, {
+        "name" : "aws_auth",
+        "description" : "Directs the schema to enforce authorization on a field",
+        "locations" : [ "FIELD_DEFINITION" ],
+        "args" : [ {
+          "name" : "cognito_groups",
+          "description" : "List of cognito user pool groups which have access on this field",
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        } ],
+        "onOperation" : false,
+        "onFragment" : false,
+        "onField" : false
+      }, {
+        "name" : "aws_api_key",
+        "description" : "Tells the service this field/object has access authorized by an API key.",
+>>>>>>> 11b8098d82b833cac6f0bf1bede86e0604931101
+        "locations" : [ "OBJECT", "FIELD_DEFINITION" ],
+        "args" : [ ],
+        "onOperation" : false,
+        "onFragment" : false,
+        "onField" : false
+      }, {
+<<<<<<< HEAD
+        "name" : "aws_oidc",
+        "description" : "Tells the service this field/object has access authorized by an OIDC token.",
+=======
+        "name" : "aws_lambda",
+        "description" : "Tells the service this field/object has access authorized by a Lambda Authorizer.",
+>>>>>>> 11b8098d82b833cac6f0bf1bede86e0604931101
+        "locations" : [ "OBJECT", "FIELD_DEFINITION" ],
+        "args" : [ ],
+        "onOperation" : false,
+        "onFragment" : false,
+        "onField" : false
+      }, {
+        "name" : "aws_subscribe",
+        "description" : "Tells the service which mutation triggers this subscription.",
+        "locations" : [ "FIELD_DEFINITION" ],
+        "args" : [ {
+          "name" : "mutations",
+          "description" : "List of mutations which will trigger this subscription when they are called.",
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        } ],
+        "onOperation" : false,
+        "onFragment" : false,
+        "onField" : false
+<<<<<<< HEAD
       }, {
         "name" : "aws_subscribe",
         "description" : "Tells the service which mutation triggers this subscription.",
@@ -12113,6 +12353,8 @@
         "onOperation" : false,
         "onFragment" : false,
         "onField" : false
+=======
+>>>>>>> 11b8098d82b833cac6f0bf1bede86e0604931101
       } ]
     }
   }

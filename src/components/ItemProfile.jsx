@@ -7,28 +7,9 @@ import {
 } from "react-native";
 import React, { useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { Auth, API, Storage } from "aws-amplify";
-import * as queries from "@/graphql/CustomQueries/Favorites";
-import * as customFavorites from "@/graphql/CustomMutations/Favorites";
 import { Ionicons } from "@expo/vector-icons";
 const ItemProfile = ({ data, identityID, styled }) => {
-  const [selectKey, setSelectKey] = useState("");
   const navigation = useNavigation();
-  console.log(identityID);
-  const getImage = async () => {
-    try {
-      await Storage.get(data.image, {
-        level: "protected",
-        identityId: identityID,
-      }).then((res) => setSelectKey(res));
-    } catch (error) {
-      console.log("toy", error);
-    }
-  };
-  useLayoutEffect(() => {
-    console.log(selectKey);
-    getImage();
-  }, []);
   if (identityID)
     return (
       <TouchableOpacity
@@ -37,7 +18,7 @@ const ItemProfile = ({ data, identityID, styled }) => {
           navigation.navigate("Page", {
             data: {
               item: data,
-              image: selectKey,
+              image: data.images[0].url,
             },
           })
         }
@@ -46,11 +27,8 @@ const ItemProfile = ({ data, identityID, styled }) => {
           style={{
             justifyContent: "space-between",
             marginLeft: 10,
-            // alignItems: 'center',
-            // justifyContent: 'center'
           }}
         >
-          {selectKey !== "" ? (
             <Image
               style={{
                 width: 100,
@@ -58,13 +36,8 @@ const ItemProfile = ({ data, identityID, styled }) => {
                 resizeMode: "cover",
                 borderRadius: 2,
               }}
-              source={{ uri: selectKey }}
+              source={{ uri: data.thumbnail }}
             />
-          ) : (
-            <View style={{ paddingTop: 40 }}>
-              <ActivityIndicator />
-            </View>
-          )}
           <View
             style={{
               flexDirection: "row",

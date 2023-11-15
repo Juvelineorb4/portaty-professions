@@ -14,6 +14,7 @@ import { Skeleton } from "@rneui/themed";
 import { useEffect } from "react";
 import { setStatusBarNetworkActivityIndicatorVisible } from "expo-status-bar";
 import ModalAlert from "@/components/ModalAlert";
+
 const Unprofile = ({ navigation, route }) => {
   const { buttons } = settings;
   const global = require("@/utils/styles/global.js");

@@ -40,7 +40,8 @@ const Search = ({ route }) => {
   const [statusFilter, setStatusFilter] = useState(false);
   const [filterRadio, setFilterRadio] = useRecoilState(kmRadio);
   const { location } = useLocation();
-
+  console.log(searchCacheActive)
+  console.log(items)
   const kilometers = [1, 5, 10, 20, 50, 100];
   let number = 26 * moreItems;
   const getData = async () => {
