@@ -16,26 +16,22 @@ import * as customSearch from "@/graphql/CustomQueries/Search";
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { Image as ExpoImage } from "expo-image";
+import { useRecoilValue } from "recoil";
+import { userAuthenticated } from "@/atoms";
+
 const Post = ({ data, image, styled }) => {
   const global = require("@/utils/styles/global.js");
   const navigation = useNavigation();
   const [post, setPost] = useState([]);
+  const userAuth = useRecoilValue(userAuthenticated);
   const [selectKey, setSelectKey] = useState("");
   const [loading, setLoading] = useState(false);
-  // console.log(data)
+  /* Image */
+  const bucketName = Storage._config.AWSS3.bucket;
+  const level = "protected";
+  const identityID = userAuth?.attributes["custom:identityID"];
+  const url = `https://${bucketName}.s3.amazonaws.com/${level}/${identityID}/business/${data.id}/profile-thumbnail.jpg`;
   const [modalVisible, setModalVisible] = useState(false);
-  const getImage = async () => {
-    setLoading(true);
-    try {
-      await Storage.get(data.path, {
-        level: "protected",
-        identityId: data.identityID,
-      }).then((res) => setSelectKey(res));
-      setLoading(false);
-    } catch (error) {
-      console.log("toy en post", error);
-    }
-  };
   const fetchData = async () => {
     try {
       const business = await API.graphql({
@@ -58,10 +54,10 @@ const Post = ({ data, image, styled }) => {
 
   useLayoutEffect(() => {
     fetchData();
-    if (!selectKey) getImage();
+    // if (!selectKey) getImage();
     console.log(data.distance);
   }, []);
-  if (selectKey)
+  // if (url)
     return (
       <>
         <TouchableOpacity
@@ -75,9 +71,9 @@ const Post = ({ data, image, styled }) => {
             setModalVisible(!modalVisible);
           }}
         >
-          {!selectKey ? (
+          {/* {!url ? (
             <ActivityIndicator size={`large`} color={`#fb8500`} />
-          ) : (
+          ) : ( */}
             <View style={{ height: "100%", width: "100%" }}>
               <ExpoImage
                 style={{
@@ -88,7 +84,7 @@ const Post = ({ data, image, styled }) => {
                 }}
                 cachePolicy="memory"
                 transition={500}
-                source={{ uri: selectKey }}
+                source={{ uri: url }}
               />
               <View
                 style={{
@@ -126,7 +122,7 @@ const Post = ({ data, image, styled }) => {
                 </View>
               </View>
             </View>
-          )}
+          {/* )} */}
         </TouchableOpacity>
         <Modal
           animationType="none"

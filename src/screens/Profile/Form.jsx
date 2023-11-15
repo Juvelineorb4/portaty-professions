@@ -122,22 +122,22 @@ const Form = ({ navigation, route }) => {
           contentType: "image/jpeg",
         }
       );
+      const bucketName = Storage._config.AWSS3.bucket;
+      const level = "protected";
+      const identityID = userAuth?.attributes["custom:identityID"];
+      const url = `https://${bucketName}.s3.amazonaws.com/${level}/${identityID}/${key}`;
+
       const businessUpdate = await API.graphql({
         query: mutations.updateBusiness,
         authMode: "AMAZON_COGNITO_USER_POOLS",
         variables: {
           input: {
             id: business?.data?.createBusiness?.id,
-            image: key,
+            image: url,
           },
         },
       });
-      const bucketName = Storage._config.AWSS3.bucket;
-      const level = "protected";
-      const identityID = userAuth?.attributes["custom:identityID"];
-      const url = `https://${bucketName}.s3.amazonaws.com/${level}/${identityID}/${key}`;
-      console.log(url);
-      console.log(key);
+      
       setStateProfile(true);
       setLoading(false);
       setVisible(true);

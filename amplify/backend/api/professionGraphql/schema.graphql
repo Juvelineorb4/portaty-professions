@@ -42,8 +42,6 @@ type Business
   identityID: String
   name: String
   image: String
-  thumbnail: String
-  path: String
   email: String
   phone: String
   whatsapp: String
