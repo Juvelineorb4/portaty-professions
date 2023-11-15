@@ -280,6 +280,7 @@ export const onCreateUsers = /* GraphQL */ `
           identityID
           name
           image
+          thumbnail
           email
           phone
           whatsapp
@@ -336,6 +337,7 @@ export const onUpdateUsers = /* GraphQL */ `
           identityID
           name
           image
+          thumbnail
           email
           phone
           whatsapp
@@ -392,6 +394,7 @@ export const onDeleteUsers = /* GraphQL */ `
           identityID
           name
           image
+          thumbnail
           email
           phone
           whatsapp
@@ -446,6 +449,12 @@ export const onCreateBusiness = /* GraphQL */ `
       identityID
       name
       image
+      images {
+        key
+        url
+        __typename
+      }
+      thumbnail
       email
       phone
       whatsapp
@@ -511,6 +520,12 @@ export const onUpdateBusiness = /* GraphQL */ `
       identityID
       name
       image
+      images {
+        key
+        url
+        __typename
+      }
+      thumbnail
       email
       phone
       whatsapp
@@ -576,6 +591,12 @@ export const onDeleteBusiness = /* GraphQL */ `
       identityID
       name
       image
+      images {
+        key
+        url
+        __typename
+      }
+      thumbnail
       email
       phone
       whatsapp
@@ -636,6 +657,12 @@ export const onCreateFavorites = /* GraphQL */ `
         identityID
         name
         image
+        images {
+          key
+          url
+          __typename
+        }
+        thumbnail
         email
         phone
         whatsapp
@@ -713,6 +740,12 @@ export const onUpdateFavorites = /* GraphQL */ `
         identityID
         name
         image
+        images {
+          key
+          url
+          __typename
+        }
+        thumbnail
         email
         phone
         whatsapp
@@ -790,6 +823,12 @@ export const onDeleteFavorites = /* GraphQL */ `
         identityID
         name
         image
+        images {
+          key
+          url
+          __typename
+        }
+        thumbnail
         email
         phone
         whatsapp

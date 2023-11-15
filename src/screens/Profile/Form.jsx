@@ -120,6 +120,9 @@ const Form = ({ navigation, route }) => {
         {
           level: "protected",
           contentType: "image/jpeg",
+          metadata:{
+            "businessid": business?.data?.createBusiness?.id
+          }
         }
       );
       const businessUpdate = await API.graphql({
