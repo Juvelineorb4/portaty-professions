@@ -161,7 +161,7 @@ const SearchPost = ({ route, navigation }) => {
           })
         )
       );
-
+        console.log()
       setStorageImages([image, ...urls]);
     } catch (error) {
       console.log(error);

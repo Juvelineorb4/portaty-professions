@@ -15,7 +15,7 @@ import styles from "@/utils/styles/Post.module.css";
 import * as customSearch from "@/graphql/CustomQueries/Search";
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
-
+import { Image as ExpoImage } from "expo-image";
 const Post = ({ data, image, styled }) => {
   const global = require("@/utils/styles/global.js");
   const navigation = useNavigation();
@@ -79,13 +79,15 @@ const Post = ({ data, image, styled }) => {
             <ActivityIndicator size={`large`} color={`#fb8500`} />
           ) : (
             <View style={{ height: "100%", width: "100%" }}>
-              <Image
+              <ExpoImage
                 style={{
                   width: "100%",
                   height: "100%",
                   resizeMode: "cover",
                   borderRadius: 2,
                 }}
+                cachePolicy="memory"
+                transition={500}
                 source={{ uri: selectKey }}
               />
               <View

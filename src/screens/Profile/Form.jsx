@@ -19,13 +19,20 @@ import * as customProfile from "@/graphql/CustomQueries/Profile";
 import * as mutations from "@/graphql/CustomMutations/Profile";
 import CustomActivities from "@/components/CustomActivities";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { activitySelect, mapBusiness, profileState, tagsList } from "@/atoms";
+import {
+  activitySelect,
+  mapBusiness,
+  profileState,
+  tagsList,
+  userAuthenticated,
+} from "@/atoms";
 import MapMarketBusiness from "@/components/MapMarketBusiness";
 // hooks
 import useLocation from "@/hooks/useLocation";
 // lengaujhe
 import { es } from "@/utils/constants/lenguage";
 import ModalAlert from "@/components/ModalAlert";
+
 const Form = ({ navigation, route }) => {
   const { location } = useLocation();
   const global = require("@/utils/styles/global.js");
@@ -36,6 +43,7 @@ const Form = ({ navigation, route }) => {
   const [activitiesList, setActivitiesList] = useState([]);
   const activity = useRecoilValue(activitySelect);
   const tags = useRecoilValue(tagsList);
+  const userAuth = useRecoilValue(userAuthenticated);
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -83,8 +91,8 @@ const Form = ({ navigation, route }) => {
     setLoading(true);
     const { identityId } = await Auth.currentUserCredentials();
     const { company, email, phone, wsme, coordinates } = data;
+
     try {
-      
       const business = await API.graphql({
         query: mutations.createBusiness,
         authMode: "AMAZON_COGNITO_USER_POOLS",
@@ -95,7 +103,7 @@ const Form = ({ navigation, route }) => {
             email: email,
             phone: phone,
             whatsapp: wsme,
-            image: '',
+            image: "",
             identityID: identityId,
             coordinates: {
               lat: coordinates.latitude,
@@ -124,8 +132,12 @@ const Form = ({ navigation, route }) => {
           },
         },
       });
-      console.log(business);
-      console.log(businessUpdate);
+      const bucketName = Storage._config.AWSS3.bucket;
+      const level = "protected";
+      const identityID = userAuth?.attributes["custom:identityID"];
+      const url = `https://${bucketName}.s3.amazonaws.com/${level}/${identityID}/${key}`;
+      console.log(url);
+      console.log(key);
       setStateProfile(true);
       setLoading(false);
       setVisible(true);
