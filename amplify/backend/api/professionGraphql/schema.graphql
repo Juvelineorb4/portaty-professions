@@ -43,7 +43,7 @@ type Business
   name: String
   image: String
   images: [ImageBusiness]
-  thumbnail: AWSURL
+  thumbnail: String
   email: String
   phone: String
   whatsapp: String
@@ -59,7 +59,7 @@ type Business
 
 type ImageBusiness {
   key: Int
-  url: AWSURL
+  url: String
 }
 
 type Tags @model @auth(rules: [{ allow: private, provider: iam }]) {
