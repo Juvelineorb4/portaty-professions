@@ -46,7 +46,6 @@ export const searchBusinessByDistance = /* GraphQL */ `
         images {
           key
           url
-          __typename
         }
         thumbnail
         email
@@ -429,7 +428,6 @@ export const getBusiness = /* GraphQL */ `
       images {
         key
         url
-        __typename
       }
       thumbnail
       email
@@ -489,7 +487,6 @@ export const listBusinesses = /* GraphQL */ `
         images {
           key
           url
-          __typename
         }
         thumbnail
         email
@@ -550,7 +547,6 @@ export const businessesByUserID = /* GraphQL */ `
         images {
           key
           url
-          __typename
         }
         thumbnail
         email
@@ -613,7 +609,6 @@ export const searchBusinesses = /* GraphQL */ `
         images {
           key
           url
-          __typename
         }
         thumbnail
         email
@@ -679,7 +674,6 @@ export const getFavorites = /* GraphQL */ `
         images {
           key
           url
-          __typename
         }
         thumbnail
         email

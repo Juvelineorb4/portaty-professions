@@ -15,7 +15,6 @@ import styles from "@/utils/styles/Post.module.css";
 import * as customSearch from "@/graphql/CustomQueries/Search";
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
-import { Image as ExpoImage } from "expo-image";
 import { useRecoilValue } from "recoil";
 import { userAuthenticated } from "@/atoms";
 
@@ -23,14 +22,8 @@ const Post = ({ data, image, styled }) => {
   const global = require("@/utils/styles/global.js");
   const navigation = useNavigation();
   const [post, setPost] = useState([]);
-  const userAuth = useRecoilValue(userAuthenticated);
-  const [selectKey, setSelectKey] = useState("");
   const [loading, setLoading] = useState(false);
-  /* Image */
-  const bucketName = Storage._config.AWSS3.bucket;
-  const level = "protected";
-  const identityID = userAuth?.attributes["custom:identityID"];
-  const url = `https://${bucketName}.s3.amazonaws.com/${level}/${identityID}/business/${data.id}/profile-thumbnail.jpg`;
+
   const [modalVisible, setModalVisible] = useState(false);
   const fetchData = async () => {
     try {
@@ -54,8 +47,6 @@ const Post = ({ data, image, styled }) => {
 
   useLayoutEffect(() => {
     fetchData();
-    // if (!selectKey) getImage();
-    console.log(data.distance);
   }, []);
   // if (url)
     return (
@@ -75,16 +66,14 @@ const Post = ({ data, image, styled }) => {
             <ActivityIndicator size={`large`} color={`#fb8500`} />
           ) : ( */}
             <View style={{ height: "100%", width: "100%" }}>
-              <ExpoImage
+              <Image
                 style={{
                   width: "100%",
                   height: "100%",
                   resizeMode: "cover",
                   borderRadius: 2,
                 }}
-                cachePolicy="memory"
-                transition={500}
-                source={{ uri: url }}
+                source={{ uri: image }}
               />
               <View
                 style={{
@@ -163,7 +152,7 @@ const Post = ({ data, image, styled }) => {
                         resizeMode: "cover",
                         borderRadius: 5,
                       }}
-                      source={{ uri: selectKey }}
+                      source={{ uri: image }}
                     />
                     <View style={{ paddingVertical: 15 }}>
                       <View
@@ -248,7 +237,7 @@ const Post = ({ data, image, styled }) => {
                         navigation.navigate("SearchPost", {
                           data: {
                             item: data,
-                            image: selectKey,
+                            image: image,
                           },
                         });
                       }}

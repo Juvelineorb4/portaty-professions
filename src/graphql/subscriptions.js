@@ -401,7 +401,6 @@ export const onCreateBusiness = /* GraphQL */ `
       images {
         key
         url
-        __typename
       }
       thumbnail
       email
@@ -465,7 +464,6 @@ export const onUpdateBusiness = /* GraphQL */ `
       images {
         key
         url
-        __typename
       }
       thumbnail
       email
@@ -529,7 +527,6 @@ export const onDeleteBusiness = /* GraphQL */ `
       images {
         key
         url
-        __typename
       }
       thumbnail
       email
@@ -590,7 +587,6 @@ export const onCreateFavorites = /* GraphQL */ `
         images {
           key
           url
-          __typename
         }
         thumbnail
         email
@@ -665,7 +661,6 @@ export const onUpdateFavorites = /* GraphQL */ `
         images {
           key
           url
-          __typename
         }
         thumbnail
         email
@@ -740,7 +735,6 @@ export const onDeleteFavorites = /* GraphQL */ `
         images {
           key
           url
-          __typename
         }
         thumbnail
         email
