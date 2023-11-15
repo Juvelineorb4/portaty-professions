@@ -73,30 +73,58 @@ export const getBusiness = /* GraphQL */ `
     getBusiness(id: $id) {
       id
       userID
+      user {
+        id
+        cognitoID
+        name
+        lastName
+        email
+        identityID
+        favorites {
+          nextToken
+        }
+        business {
+          nextToken
+        }
+        owner
+        createdAt
+        updatedAt
+      }
+      identityID
       name
       image
+      images {
+        key
+        url
+      }
+      thumbnail
       email
       phone
       whatsapp
       instagram
       facebook
       page
-      identityID
       coordinates {
         lat
         lon
-        __typename
       }
       activity
       tags
       favorites {
         items {
           id
+          businessID
+          userID
+          position
+          owner
+          createdAt
+          updatedAt
         }
+        nextToken
       }
       createdAt
       updatedAt
-      __typename
+      owner
     }
   }
 `;

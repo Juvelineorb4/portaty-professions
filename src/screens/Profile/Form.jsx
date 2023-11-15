@@ -136,13 +136,12 @@ const Form = ({ navigation, route }) => {
         variables: {
           input: {
             id: business?.data?.createBusiness?.id,
-            // images: [{ key: 0, url: `${url}/profile.jpg` }],
-            // thumbnail: `${url}/thumbnail.jpg`,
-            image: `${url}/thumbnail.jpg`,
+            images: [{ key: 0, url: `${url}/profile.jpg` }],
+            thumbnail: `${url}/thumbnail.jpg`,
           },
         },
       });
-
+      console.log(businessUpdate)
       setStateProfile(true);
       setLoading(false);
       setVisible(true);

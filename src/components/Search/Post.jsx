@@ -23,7 +23,7 @@ const Post = ({ data, image, styled }) => {
   const navigation = useNavigation();
   const [post, setPost] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  console.log(image)
   const [modalVisible, setModalVisible] = useState(false);
   const fetchData = async () => {
     try {
