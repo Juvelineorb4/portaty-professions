@@ -43,8 +43,12 @@ export const searchBusinessByDistance = /* GraphQL */ `
         identityID
         name
         image
+        images {
+          key
+          url
+          __typename
+        }
         thumbnail
-        path
         email
         phone
         whatsapp
@@ -313,7 +317,6 @@ export const getUsers = /* GraphQL */ `
           name
           image
           thumbnail
-          path
           email
           phone
           whatsapp
@@ -423,8 +426,12 @@ export const getBusiness = /* GraphQL */ `
       identityID
       name
       image
+      images {
+        key
+        url
+        __typename
+      }
       thumbnail
-      path
       email
       phone
       whatsapp
@@ -479,8 +486,12 @@ export const listBusinesses = /* GraphQL */ `
         identityID
         name
         image
+        images {
+          key
+          url
+          __typename
+        }
         thumbnail
-        path
         email
         phone
         whatsapp
@@ -536,8 +547,12 @@ export const businessesByUserID = /* GraphQL */ `
         identityID
         name
         image
+        images {
+          key
+          url
+          __typename
+        }
         thumbnail
-        path
         email
         phone
         whatsapp
@@ -595,8 +610,12 @@ export const searchBusinesses = /* GraphQL */ `
         identityID
         name
         image
+        images {
+          key
+          url
+          __typename
+        }
         thumbnail
-        path
         email
         phone
         whatsapp
@@ -657,8 +676,12 @@ export const getFavorites = /* GraphQL */ `
         identityID
         name
         image
+        images {
+          key
+          url
+          __typename
+        }
         thumbnail
-        path
         email
         phone
         whatsapp
@@ -720,7 +743,6 @@ export const listFavorites = /* GraphQL */ `
           name
           image
           thumbnail
-          path
           email
           phone
           whatsapp
@@ -781,7 +803,6 @@ export const favoritesByBusinessID = /* GraphQL */ `
           name
           image
           thumbnail
-          path
           email
           phone
           whatsapp
@@ -840,7 +861,6 @@ export const favoritesByUserID = /* GraphQL */ `
           name
           image
           thumbnail
-          path
           email
           phone
           whatsapp

@@ -267,7 +267,6 @@ export const createUsers = /* GraphQL */ `
           name
           image
           thumbnail
-          path
           email
           phone
           whatsapp
@@ -320,7 +319,6 @@ export const updateUsers = /* GraphQL */ `
           name
           image
           thumbnail
-          path
           email
           phone
           whatsapp
@@ -373,7 +371,6 @@ export const deleteUsers = /* GraphQL */ `
           name
           image
           thumbnail
-          path
           email
           phone
           whatsapp
@@ -422,8 +419,12 @@ export const createBusiness = /* GraphQL */ `
       identityID
       name
       image
+      images {
+        key
+        url
+        __typename
+      }
       thumbnail
-      path
       email
       phone
       whatsapp
@@ -482,8 +483,12 @@ export const updateBusiness = /* GraphQL */ `
       identityID
       name
       image
+      images {
+        key
+        url
+        __typename
+      }
       thumbnail
-      path
       email
       phone
       whatsapp
@@ -542,8 +547,12 @@ export const deleteBusiness = /* GraphQL */ `
       identityID
       name
       image
+      images {
+        key
+        url
+        __typename
+      }
       thumbnail
-      path
       email
       phone
       whatsapp
@@ -599,8 +608,12 @@ export const createFavorites = /* GraphQL */ `
         identityID
         name
         image
+        images {
+          key
+          url
+          __typename
+        }
         thumbnail
-        path
         email
         phone
         whatsapp
@@ -670,8 +683,12 @@ export const updateFavorites = /* GraphQL */ `
         identityID
         name
         image
+        images {
+          key
+          url
+          __typename
+        }
         thumbnail
-        path
         email
         phone
         whatsapp
@@ -741,8 +758,12 @@ export const deleteFavorites = /* GraphQL */ `
         identityID
         name
         image
+        images {
+          key
+          url
+          __typename
+        }
         thumbnail
-        path
         email
         phone
         whatsapp

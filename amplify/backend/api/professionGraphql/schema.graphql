@@ -42,6 +42,8 @@ type Business
   identityID: String
   name: String
   image: String
+  images: [ImageBusiness]
+  thumbnail: AWSURL
   email: String
   phone: String
   whatsapp: String
@@ -53,6 +55,11 @@ type Business
   tags: [String]
   favorites: [Favorites]
     @hasMany(indexName: "byBusinessFavorites", fields: ["id"])
+}
+
+type ImageBusiness {
+  key: Int
+  url: AWSURL
 }
 
 type Tags @model @auth(rules: [{ allow: private, provider: iam }]) {

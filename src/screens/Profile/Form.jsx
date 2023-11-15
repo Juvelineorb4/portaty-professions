@@ -120,24 +120,27 @@ const Form = ({ navigation, route }) => {
         {
           level: "protected",
           contentType: "image/jpeg",
+          metadata:{
+            "businessid": business?.data?.createBusiness?.id
+          }
         }
       );
-      const bucketName = Storage._config.AWSS3.bucket;
-      const level = "protected";
-      const identityID = userAuth?.attributes["custom:identityID"];
-      const url = `https://${bucketName}.s3.amazonaws.com/${level}/${identityID}/${key}`;
-
-      const businessUpdate = await API.graphql({
-        query: mutations.updateBusiness,
-        authMode: "AMAZON_COGNITO_USER_POOLS",
-        variables: {
-          input: {
-            id: business?.data?.createBusiness?.id,
-            image: url,
-          },
-        },
-      });
-      
+      // const businessUpdate = await API.graphql({
+      //   query: mutations.updateBusiness,
+      //   authMode: "AMAZON_COGNITO_USER_POOLS",
+      //   variables: {
+      //     input: {
+      //       id: business?.data?.createBusiness?.id,
+      //       image: key,
+      //     },
+      //   },
+      // });
+      // const bucketName = Storage._config.AWSS3.bucket;
+      // const level = "protected";
+      // const identityID = userAuth?.attributes["custom:identityID"];
+      // const url = `https://${bucketName}.s3.amazonaws.com/${level}/${identityID}/${key}`;
+      // console.log(url);
+      // console.log(key);
       setStateProfile(true);
       setLoading(false);
       setVisible(true);
