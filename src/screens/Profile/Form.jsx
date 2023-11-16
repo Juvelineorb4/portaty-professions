@@ -130,18 +130,19 @@ const Form = ({ navigation, route }) => {
       const level = "protected";
       const identityID = userAuth?.attributes["custom:identityID"];
       const url = `https://${bucketName}.s3.amazonaws.com/${level}/${identityID}/business/${business?.data?.createBusiness?.id}`;
+
       const businessUpdate = await API.graphql({
         query: mutations.updateBusiness,
         authMode: "AMAZON_COGNITO_USER_POOLS",
         variables: {
           input: {
             id: business?.data?.createBusiness?.id,
-            images: [{ key: 0, url: `${url}/profile.jpg` }],
+            // images: [{ key: 0, url: `${url}/profile.jpg` }],
             thumbnail: `${url}/thumbnail.jpg`,
           },
         },
       });
-      console.log(businessUpdate)
+      console.log(businessUpdate);
       setStateProfile(true);
       setLoading(false);
       setVisible(true);

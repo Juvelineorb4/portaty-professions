@@ -73,23 +73,6 @@ export const getBusiness = /* GraphQL */ `
     getBusiness(id: $id) {
       id
       userID
-      user {
-        id
-        cognitoID
-        name
-        lastName
-        email
-        identityID
-        favorites {
-          nextToken
-        }
-        business {
-          nextToken
-        }
-        owner
-        createdAt
-        updatedAt
-      }
       identityID
       name
       image
