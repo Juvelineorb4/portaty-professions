@@ -144,24 +144,22 @@ const SearchPost = ({ route, navigation }) => {
 
   const AllImages = async () => {
     try {
-      // const IdentityIDRef = item.identityID;
-      // console.log("IDENTITY: ", IdentityIDRef);
-      // const result = await Storage.list(`business/${item.id}/extras/`, {
-      //   level: "protected",
-      //   identityId: IdentityIDRef,
-      //   pageSize: 10,
-      // });
+      const result = await Storage.list(`business/${item.id}/extras/`, {
+        level: "protected",
+        identityId: item.identityID,
+        pageSize: 10,
+      });
 
-      // result.results.map((item) => console.log("Paths: ", item.key));
-      // const urls = await Promise.all(
-      //   result.results.map((item) =>
-      //     Storage.get(item.key, {
-      //       level: "protected",
-      //       identityId: IdentityIDRef,
-      //     })
-      //   )
-      // );
-      setStorageImages([image]);
+      result.results.map((item) => console.log("Paths: ", item.key));
+      const urls = await Promise.all(
+        result.results.map((item) =>
+          Storage.get(item.key, {
+            level: "protected",
+            identityId: item.identityID,
+          })
+        )
+      );
+      setStorageImages([image, ...urls])
     } catch (error) {
       console.log(error);
     }

@@ -14,7 +14,6 @@ import { Ionicons } from "@expo/vector-icons";
 const ItemList = ({ data, number, styled }) => {
   const navigation = useNavigation();
   const [save, setSave] = useState("");
-  const [selectKey, setSelectKey] = useState("");
   const [loading, setLoading] = useState(false);
   console.log(data.business.image);
   const onDeleteFavorite = async () => {
@@ -30,24 +29,12 @@ const ItemList = ({ data, number, styled }) => {
     console.log(favorites);
     setSave("");
   };
-  const getImage = async () => {
-    setLoading(true);
-    try {
-      await Storage.get(data.business.image, {
-        level: "protected",
-        identityId: data.business.identityID,
-      }).then((res) => setSelectKey(res));
-      setLoading(false);
-    } catch (error) {
-      console.log("toy en list", error);
-    }
-  };
+
   const fetchFavorite = () => {
     setSave(data.id);
   };
   useLayoutEffect(() => {
     fetchFavorite();
-    getImage();
   }, []);
   if (save)
     return (
@@ -57,7 +44,7 @@ const ItemList = ({ data, number, styled }) => {
           navigation.navigate("FavoritePage", {
             data: {
               item: data,
-              image: selectKey,
+              image: data.business.images[0].url,
             },
           })
         }
@@ -68,17 +55,6 @@ const ItemList = ({ data, number, styled }) => {
             marginLeft: 10,
           }}
         >
-          {!selectKey ? (
-            <View
-              style={{
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <ActivityIndicator size={`small`} color="fb8500" />
-            </View>
-          ) : (
             <Image
               style={{
                 width: "100%",
@@ -86,15 +62,13 @@ const ItemList = ({ data, number, styled }) => {
                 resizeMode: "cover",
                 borderRadius: 2,
               }}
-              source={{ uri: selectKey }}
+              source={{ uri: data.business.thumbnail }}
             />
-          )}
           <View
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
               marginTop: 5,
-              // paddingBottom: 5
             }}
           >
             <TouchableOpacity
