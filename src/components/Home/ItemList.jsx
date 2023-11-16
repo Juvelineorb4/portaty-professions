@@ -44,7 +44,7 @@ const ItemList = ({ data, number, styled }) => {
           navigation.navigate("FavoritePage", {
             data: {
               item: data,
-              image: data.business.images[0].url,
+              image: data.business.image,
             },
           })
         }

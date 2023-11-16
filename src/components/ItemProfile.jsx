@@ -18,7 +18,7 @@ const ItemProfile = ({ data, identityID, styled }) => {
           navigation.navigate("Page", {
             data: {
               item: data,
-              image: data.images[0].url,
+              image: data.image,
             },
           })
         }
