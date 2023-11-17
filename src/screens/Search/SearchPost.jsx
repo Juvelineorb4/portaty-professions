@@ -44,8 +44,6 @@ const SearchPost = ({ route, navigation }) => {
     data: { item, image },
   } = route.params;
 
-  console.log(post)
-
   const onCreateFavorite = async () => {
     try {
       const { attributes } = await Auth.currentAuthenticatedUser();
@@ -152,7 +150,6 @@ const SearchPost = ({ route, navigation }) => {
         pageSize: 10,
       });
 
-      result.results.map((item) => console.log("Paths: ", item.key));
       const urls = await Promise.all(
         result.results.map((item) =>
           Storage.get(item.key, {
@@ -161,17 +158,23 @@ const SearchPost = ({ route, navigation }) => {
           })
         )
       );
-      setStorageImages([post?.image, ...urls])
+      setStorageImages([...urls]);
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    fetchFavorite();
-    fetchData();
-    AllImages();
-  }, []);
+    if (!save) fetchFavorite();
+    if (!post) fetchData();
+    if (!storageImages) AllImages();
+    if (post) {
+      console.log('aqui1', storageImages)
+      let url = JSON.parse(post?.images[0]).url;
+      setStorageImages([url, ...storageImages]);
+      console.log('aqui2', storageImages)
+    }
+  }, [post]);
 
   if (!post || storageImages.length === 0) return <SkeletonExample />;
   return (

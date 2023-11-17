@@ -22,7 +22,7 @@ const ItemGrid = ({ data, number, styled }) => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const selectionFavorite = selection.some((item) => item === data.id);
-  console.log(data.business.identityID, data.business.image);
+  
   const onDeleteFavorite = async () => {
     const favorites = await API.graphql({
       query: customFavorites.deleteFavorites,
@@ -47,7 +47,7 @@ const ItemGrid = ({ data, number, styled }) => {
             navigation.navigate("FavoritePage", {
               data: {
                 item: data,
-                image: data.business.image,
+                image: JSON.parse(data.business.images[0]).url,
               },
             });
           }
