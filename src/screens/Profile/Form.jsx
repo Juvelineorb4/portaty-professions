@@ -137,7 +137,10 @@ const Form = ({ navigation, route }) => {
         variables: {
           input: {
             id: business?.data?.createBusiness?.id,
-            image: `${url}/profile.jpg`,
+            images: JSON.stringify({
+              key: 0,
+              url: `${url}/profile.jpg`
+            }),
             thumbnail: `${url}/thumbnail.jpg`,
           },
         },
