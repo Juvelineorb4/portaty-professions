@@ -37,10 +37,7 @@ export const createBusiness = /* GraphQL */ `
       identityID
       name
       image
-      images {
-        key
-        url
-      }
+      images
       thumbnail
       email
       phone
