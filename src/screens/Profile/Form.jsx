@@ -109,7 +109,7 @@ const Form = ({ navigation, route }) => {
               lon: coordinates.longitude,
             },
             activity: activity.name,
-            tags: tags,
+            tags: [`[${company}]`, ...tags],
           },
         },
       });
