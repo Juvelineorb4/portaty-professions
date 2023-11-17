@@ -29,10 +29,7 @@ export const userByEmail = /* GraphQL */ `
               userID
               name
               image
-              images {
-                key
-                url
-              }
+              images
               thumbnail
               email
               phone
