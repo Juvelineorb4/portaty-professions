@@ -91,7 +91,6 @@ const Form = ({ navigation, route }) => {
     setLoading(true);
     const { identityId } = await Auth.currentUserCredentials();
     const { company, email, phone, wsme, coordinates } = data;
-
     try {
       const business = await API.graphql({
         query: mutations.createBusiness,
@@ -115,7 +114,7 @@ const Form = ({ navigation, route }) => {
         },
       });
       const { key } = await Storage.put(
-        `business/${business?.data?.createBusiness?.id}/profile.jpg`,
+        `business/${business?.data?.createBusiness?.id}/incoming/profile.jpg`,
         blobImage,
         {
           level: "protected",
@@ -125,34 +124,15 @@ const Form = ({ navigation, route }) => {
           },
         }
       );
-
-      const bucketName = Storage._config.AWSS3.bucket;
-      const level = "protected";
-      const identityID = userAuth?.attributes["custom:identityID"];
-      const url = `https://${bucketName}.s3.amazonaws.com/${level}/${identityID}/business/${business?.data?.createBusiness?.id}`;
-
-      const businessUpdate = await API.graphql({
-        query: mutations.updateBusiness,
-        authMode: "AMAZON_COGNITO_USER_POOLS",
-        variables: {
-          input: {
-            id: business?.data?.createBusiness?.id,
-            images: JSON.stringify({
-              key: 0,
-              url: `${url}/profile.jpg`
-            }),
-            thumbnail: `${url}/thumbnail.jpg`,
-          },
-        },
-      });
-      console.log(businessUpdate);
       setStateProfile(true);
       setLoading(false);
       setVisible(true);
     } catch (error) {
       setError(`Error al cargar negocio:  ${JSON.stringify(error)}`);
+      console.log(`Error al cargar negocio:  ${JSON.stringify(error)}`);
       setVisible(true);
     }
+    setLoading(false);
   };
   const MultipleData = async () => {
     const activities = await API.graphql({

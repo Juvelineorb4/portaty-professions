@@ -76,10 +76,7 @@ export const getBusiness = /* GraphQL */ `
       identityID
       name
       image
-      images {
-        key
-        url
-      }
+      images
       thumbnail
       email
       phone

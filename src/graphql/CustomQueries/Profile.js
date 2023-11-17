@@ -51,10 +51,7 @@ export const userByEmail = /* GraphQL */ `
             name
             image
             thumbnail
-            images {
-              key
-              url
-            }
+            images
             email
             phone
             whatsapp

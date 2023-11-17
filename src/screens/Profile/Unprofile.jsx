@@ -24,7 +24,9 @@ const Unprofile = ({ navigation, route }) => {
   const [business, setBusiness] = useState([]);
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState("");
+
   const status = useRecoilValue(profileState);
+
   const onHandleLogout = async () => {
     await Auth.signOut();
   };
@@ -43,6 +45,15 @@ const Unprofile = ({ navigation, route }) => {
   useEffect(() => {
     setUser([userAuth?.attributes]);
     User();
+
+    const unsubscribe = navigation.addListener("focus", () => {
+      console.log("Busco usuario");
+      // Este código se ejecutará cuando la PantallaPrincipal obtenga el enfoque
+      User();
+      // Aquí puedes realizar las acciones que necesitas al volver de la PantallaHijo
+    });
+
+    return unsubscribe;
   }, [status, userAuth]);
 
   const _handlePressButtonAsync = async () => {
@@ -97,7 +108,7 @@ const Unprofile = ({ navigation, route }) => {
         onPress={() => {
           if (business.length !== 0) {
             setError("Ya tienes un negocio registrado");
-            setVisible(true)
+            setVisible(true);
           } else {
             navigation.navigate("Form", {
               user: user[0]["custom:userTableID"],

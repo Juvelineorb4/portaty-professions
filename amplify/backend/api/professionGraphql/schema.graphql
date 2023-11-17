@@ -42,7 +42,7 @@ type Business
   identityID: String
   name: String
   image: String
-  images: [ImageBusiness]
+  images: [String]
   thumbnail: String
   email: String
   phone: String
