@@ -15,7 +15,7 @@ const ItemList = ({ data, number, styled }) => {
   const navigation = useNavigation();
   const [save, setSave] = useState("");
   const [loading, setLoading] = useState(false);
-  console.log(data.business.image);
+
   const onDeleteFavorite = async () => {
     const favorites = await API.graphql({
       query: customFavorites.deleteFavorites,
@@ -44,7 +44,7 @@ const ItemList = ({ data, number, styled }) => {
           navigation.navigate("FavoritePage", {
             data: {
               item: data,
-              image: data.business.image,
+              image: JSON.parse(data.business.images[0]).url,
             },
           })
         }
