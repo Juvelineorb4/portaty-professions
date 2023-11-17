@@ -132,7 +132,7 @@ const Form = ({ navigation, route }) => {
       console.log(`Error al cargar negocio:  ${JSON.stringify(error)}`);
       setVisible(true);
     }
-   
+    setLoading(false);
   };
   const MultipleData = async () => {
     const activities = await API.graphql({

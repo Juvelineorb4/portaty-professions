@@ -44,6 +44,8 @@ const SearchPost = ({ route, navigation }) => {
     data: { item, image },
   } = route.params;
 
+  console.log(post)
+
   const onCreateFavorite = async () => {
     try {
       const { attributes } = await Auth.currentAuthenticatedUser();
@@ -159,7 +161,7 @@ const SearchPost = ({ route, navigation }) => {
           })
         )
       );
-      setStorageImages([image, ...urls])
+      setStorageImages([post?.image, ...urls])
     } catch (error) {
       console.log(error);
     }

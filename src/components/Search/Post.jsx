@@ -14,16 +14,13 @@ import { API, Storage } from "aws-amplify";
 import styles from "@/utils/styles/Post.module.css";
 import * as customSearch from "@/graphql/CustomQueries/Search";
 import { Entypo } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
-import { useRecoilValue } from "recoil";
-import { userAuthenticated } from "@/atoms";
 
 const Post = ({ data, image, styled }) => {
   const global = require("@/utils/styles/global.js");
   const navigation = useNavigation();
   const [post, setPost] = useState([]);
   const [loading, setLoading] = useState(false);
-  console.log(image)
+
   const [modalVisible, setModalVisible] = useState(false);
   const fetchData = async () => {
     try {
