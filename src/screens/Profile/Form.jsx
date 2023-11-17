@@ -121,6 +121,7 @@ const Form = ({ navigation, route }) => {
           contentType: "image/jpeg",
           metadata: {
             businessid: business?.data?.createBusiness?.id,
+            imagetype: "profile",
           },
         }
       );
