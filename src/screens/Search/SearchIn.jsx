@@ -27,7 +27,7 @@ const SearchIn = () => {
           },
         ]}
       >
-        <View
+        {/* <View
           style={[
             {
               flexDirection: "row",
@@ -54,7 +54,7 @@ const SearchIn = () => {
             style={[{ fontFamily: "regular", fontSize: 14 }, global.black]}
           >
             X
-          </Text>
+          </Text> */}
       </View>
     </View>
   );

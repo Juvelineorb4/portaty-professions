@@ -174,9 +174,9 @@ const SearchOut = ({ route }) => {
                     maximumValue={100}
                     onValueChange={(e) => setFilterRadio(e)}
                     step={1}
-                    minimumTrackTintColor="#5E2129"
+                    minimumTrackTintColor="#fb8500"
                     maximumTrackTintColor="#1f1f1f"
-                    thumbTintColor="#5E2129"
+                    thumbTintColor="#fb8500"
                     value={filterRadio}
                   />
                   <Text
@@ -221,7 +221,7 @@ const SearchOut = ({ route }) => {
               global.bgWhite,
             ]}
           >
-            <ActivityIndicator size="large" color="#5E2129" />
+            <ActivityIndicator size="large" color="#fb8500" />
           </View>
         ) : (
           items !== 0 && (
@@ -242,7 +242,7 @@ const SearchOut = ({ route }) => {
                   }}
                 >
                   {totalData > totalLimit && (
-                    <ActivityIndicator size="large" color="#5E2129" />
+                    <ActivityIndicator size="large" color="#fb8500" />
                   )}
                   {totalData === totalLimit && (
                     <Text style={{ fontFamily: "light", fontSize: 14 }}>
@@ -291,7 +291,7 @@ const SearchOut = ({ route }) => {
           global.bgWhite,
         ]}
       >
-        <ActivityIndicator size="large" color="#5E2129" />
+        <ActivityIndicator size="large" color="#fb8500" />
       </View>
     );
   }
