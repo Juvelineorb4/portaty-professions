@@ -80,3 +80,40 @@ export const userByEmail = /* GraphQL */ `
   }
 `;
 
+
+export const getBusiness = /* GraphQL */ `
+  query GetBusiness($id: ID!) {
+    getBusiness(id: $id) {
+      id
+      userID
+      identityID
+      name
+      image
+      images
+      thumbnail
+      email
+      phone
+      whatsapp
+      instagram
+      facebook
+      page
+      coordinates {
+        lat
+        lon
+        __typename
+      }
+      activity
+      tags
+      favorites {
+        items {
+          id
+        }
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
