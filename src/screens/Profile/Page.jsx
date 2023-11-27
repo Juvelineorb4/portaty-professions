@@ -10,8 +10,9 @@ import {
   Platform,
   Linking,
   Alert,
+  RefreshControl,
 } from "react-native";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect, useState, useEffect } from "react";
 import CustomSelect from "@/components/CustomSelect";
 import styles from "@/utils/styles/Unprofile.module.css";
 import {
@@ -31,18 +32,25 @@ import SkeletonPage from "@/components/SkeletonPage";
 import * as ImagePicker from "expo-image-picker";
 import ModalAlert from "@/components/ModalAlert";
 import Swiper from "react-native-swiper";
+// amplify
+import { getBusiness } from "@/graphql/CustomQueries/Profile";
 
 const Page = ({ route, navigation }) => {
   /*  */
+  const { data } = route.params;
   const [selectedImages, setSelectedImages] = useState([]);
   const [storageImages, setStorageImages] = useState([]);
+  const [viewImag, setViewImg] = useState([]);
   const [storagePaths, setStoragePaths] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visible, setVisible] = useState(false);
+  const [refreshing, setRefreshing] = React.useState(false);
+  const [item, setItem] = useState(data?.item);
   const global = require("@/utils/styles/global.js");
-  const {
-    data: { item, image },
-  } = route.params;
+  // const {
+  //   data: { item, image },
+  // } = route.params;
+
   const onOpenMap = (lat, lng, name) => {
     let url = "";
     if (Platform.OS === "android") {
@@ -96,53 +104,149 @@ const Page = ({ route, navigation }) => {
     });
   }
   const uploadImages = async (images) => {
-    for (let image of images) {
+    images.forEach(async (image, index) => {
       const blob = await urlToBlob(image.uri);
       try {
         const { key } = await Storage.put(
-          `business/${item.id}/extras/image_${image.assetId}.jpg`,
+          `business/${item.id}/incoming/image_${image.assetId}.jpg`,
           blob,
           {
             level: "protected",
             contentType: "image/jpeg",
+            metadata: {
+              businessid: item.id,
+              imagetype: "extras",
+              key: index + 1,
+            },
           }
         );
         console.log(key);
       } catch (error) {
         console.log("aqui", error);
       }
-    }
+    });
   };
 
   const AllImages = async () => {
-    // setStorageImages([image])
-    const { identityId } = await Auth.currentUserCredentials();
     try {
-      const result = await Storage.list(`business/${item.id}/extras/`, {
-        level: "protected",
-        identityId: identityId,
-        pageSize: 10,
-      });
-      setStoragePaths(result.results)
-      const urls = await Promise.all(
-        result.results.map((item) => 
-          Storage.get(item.key, { level: "protected" })
-            .then((url) => url)
-            .catch((err) => console.log(err))
-        )
-      );
-      setStorageImages([image, ...urls])
+      const arregloDeObjetos = item?.images
+        ?.map((image) => JSON.parse(image))
+        .sort((a, b) => a.key - b.key)
+        .map((image) => {
+          return image.url;
+        });
+      const ejemplo = item?.images
+        ?.map((image) => JSON.parse(image))
+        .sort((a, b) => a.key - b.key)
+        .map((image, index) => {
+          return <ImageCarousel uri={image.url} />;
+        });
+      setStorageImages(arregloDeObjetos);
+      if (ejemplo?.length < 4) ejemplo.push(<AddImageView />);
+      setViewImg(ejemplo);
     } catch (error) {
       console.log(error);
     }
   };
 
-  useLayoutEffect(() => {
-    AllImages()
-    console.log(storageImages)
+  const ImageCarousel = ({ uri, index }) => {
+    return (
+      <View
+        style={{
+          // width: 310,
+          // height: 230,
+          borderRadius: 5,
+          borderColor: "#efeded",
+          borderWidth: 1,
+          overflow: "hidden",
+          padding: 10,
+          marginBottom: 20,
+          marginTop: 20,
+          // position: "relative",
+        }}
+        // key={index}
+      >
+        <Image
+          style={{
+            width: "100%",
+            height: "100%",
+            resizeMode: "cover",
+            borderRadius: 5,
+            backgroundColor: "#fff",
+          }}
+          source={{ uri: uri }}
+        />
+      </View>
+    );
+  };
+
+  const AddImageView = () => {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <TouchableOpacity
+          style={[
+            {
+              flexDirection: "row",
+              padding: 8,
+              borderRadius: 5,
+              opacity: 0.95,
+              alignItems: "center",
+            },
+            global.mainBgColor,
+          ]}
+          onPress={selectImages}
+        >
+          <MaterialCommunityIcons
+            name="camera-plus-outline"
+            size={23}
+            color="white"
+            style={{ marginRight: 5 }}
+          />
+          <Text style={[{ fontFamily: "medium" }, global.white]}>
+            agregar mas fotos
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  useEffect(() => {
+    if (item) {
+      AllImages();
+    }
+  }, [item]);
+
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    await onRefreshBusiness(item?.id);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
   }, []);
 
-  if (!item || storageImages.length === 0) return <SkeletonPage />;
+  const onRefreshBusiness = async (id) => {
+    console.log(id);
+    try {
+      const result = await API.graphql({
+        query: getBusiness,
+        authMode: "AMAZON_COGNITO_USER_POOLS",
+        variables: {
+          id,
+        },
+      });
+      // setItem(result?);
+      setItem(result?.data?.getBusiness)
+      // console.log(result?.data?.getBusiness);
+    } catch (error) {}
+  };
+
+  if (!item || storageImages?.length === 0) return <SkeletonPage />;
   return (
     <View
       style={[
@@ -152,7 +256,12 @@ const Page = ({ route, navigation }) => {
         global.bgWhite,
       ]}
     >
-      <ScrollView style={{ flex: 1, marginTop: 30 }}>
+      <ScrollView
+        style={{ flex: 1, marginTop: 30 }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <View
           style={[
             {
@@ -163,7 +272,7 @@ const Page = ({ route, navigation }) => {
             },
           ]}
         >
-          {storageImages.length !== 0 && (
+          {viewImag?.length !== 0 && (
             <Swiper
               style={{
                 // width: 340,
@@ -179,7 +288,7 @@ const Page = ({ route, navigation }) => {
                 <Text
                   style={{
                     color:
-                      currentIndex < storageImages.length - 1
+                      currentIndex < storageImages?.length - 1
                         ? "#fb8500"
                         : "transparent",
                     fontSize: 50,
@@ -200,65 +309,41 @@ const Page = ({ route, navigation }) => {
               }
               activeDotColor="#000"
             >
-              {storageImages.map((item, index) => (
-                <View
-                  style={{
-                    width: 310,
-                    height: 230,
-                    borderRadius: 5,
-                    borderColor: "#efeded",
-                    borderWidth: 1,
-                    overflow: "hidden",
-                    padding: 10,
-                    marginBottom: 20,
-                    marginTop: 20,
-                    position: "relative",
-                  }}
-                  key={index}
-                >
-                  <Image
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      resizeMode: "cover",
-                      borderRadius: 5,
-                      backgroundColor: "#fff",
-                    }}
-                    source={{ uri: item }}
-                  />
-                  <TouchableOpacity
-                    style={[
-                      {
-                        position: "absolute",
-                        padding: 8,
-                        borderRadius: 5,
-                        opacity: 0.95,
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        columnGap: 5,
-                        alignItems: "center",
-                        bottom: 0,
-                        right: 0,
-                      },
-                      global.mainBgColor,
-                    ]}
-                    onPress={selectImages}
-                    activeOpacity={1}
-                  >
-                    <MaterialCommunityIcons
-                      name="camera-plus-outline"
-                      size={23}
-                      color="white"
-                    />
-                    <Text style={[{ fontFamily: "medium" }, global.white]}>
-                      agregar mas fotos
-                    </Text>
-                  </TouchableOpacity>
+              {viewImag?.map((item, index) => (
+                <View style={{ flex: 1 }} key={index}>
+                  {item}
                 </View>
               ))}
+              {/* <TouchableOpacity
+                style={[
+                  {
+                    position: "absolute",
+                    padding: 8,
+                    borderRadius: 5,
+                    opacity: 0.95,
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    columnGap: 5,
+                    alignItems: "center",
+                    bottom: 0,
+                    right: 0,
+                  },
+                  global.mainBgColor,
+                ]}
+                onPress={selectImages}
+                activeOpacity={1}
+              >
+                <MaterialCommunityIcons
+                  name="camera-plus-outline"
+                  size={23}
+                  color="white"
+                />
+                <Text style={[{ fontFamily: "medium" }, global.white]}>
+                  agregar mas fotos
+                </Text>
+              </TouchableOpacity> */}
             </Swiper>
-          ) 
-          }
+          )}
         </View>
         <View
           style={{
@@ -268,7 +353,7 @@ const Page = ({ route, navigation }) => {
           }}
         >
           <Text style={{ fontSize: 26, fontFamily: "thin" }}>
-            {item.favorites?.items.length}
+            {item.favorites?.items?.length}
           </Text>
           <Text style={{ fontSize: 22, fontFamily: "thin" }}>Favoritos</Text>
         </View>

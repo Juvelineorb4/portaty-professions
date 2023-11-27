@@ -38,7 +38,7 @@ const Unprofile = ({ navigation, route }) => {
         email: userAuth?.attributes?.email,
       },
     });
-    if (result.data.userByEmail.items[0].business.items.length !== 0)
+    if (result?.data?.userByEmail?.items[0]?.business?.items?.length !== 0)
       setBusiness(result.data.userByEmail.items[0].business.items);
   };
 
@@ -59,6 +59,7 @@ const Unprofile = ({ navigation, route }) => {
   const _handlePressButtonAsync = async () => {
     let result = await WebBrowser.openBrowserAsync("https://www.portaty.com");
   };
+  console.log(business.length);
   if (!user[0]) return <SkeletonUnprofile />;
   return (
     <ScrollView
@@ -106,7 +107,7 @@ const Unprofile = ({ navigation, route }) => {
       <TouchableOpacity
         activeOpacity={1}
         onPress={() => {
-          if (business.length !== 0) {
+          if (business?.length !== 0) {
             setError("Ya tienes un negocio registrado");
             setVisible(true);
           } else {
@@ -136,36 +137,38 @@ const Unprofile = ({ navigation, route }) => {
           }}
         />
       </TouchableOpacity>
+      {business.length > 0 && (
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={() =>
+            navigation.navigate("List", {
+              data: business,
+              user: user[0],
+            })
+          }
+        >
+          <View style={[styles.line, global.bgWhiteSmoke]} />
+          <CustomSelect
+            title={`Lista de tus negocios`}
+            subtitle={`Mira todos los negocios que tienes publicados`}
+            styled={{
+              text: {
+                container: styles.textContainerSelect,
+                title: [styles.textTitleSelect, global.black],
+                subtitle: [styles.textSubtitleSelect, global.topGray],
+              },
+              container: styles.containerSelect,
+              iconLeft: [styles.iconLeft, global.mainBgColor],
+              iconRight: styles.iconRight,
+            }}
+            icon={{
+              left: require("@/utils/images/order.png"),
+              right: require("@/utils/images/arrow_right.png"),
+            }}
+          />
+        </TouchableOpacity>
+      )}
 
-      <TouchableOpacity
-        activeOpacity={1}
-        onPress={() =>
-          navigation.navigate("List", {
-            data: business,
-            user: user[0],
-          })
-        }
-      >
-        <View style={[styles.line, global.bgWhiteSmoke]} />
-        <CustomSelect
-          title={`Lista de tus negocios`}
-          subtitle={`Mira todos los negocios que tienes publicados`}
-          styled={{
-            text: {
-              container: styles.textContainerSelect,
-              title: [styles.textTitleSelect, global.black],
-              subtitle: [styles.textSubtitleSelect, global.topGray],
-            },
-            container: styles.containerSelect,
-            iconLeft: [styles.iconLeft, global.mainBgColor],
-            iconRight: styles.iconRight,
-          }}
-          icon={{
-            left: require("@/utils/images/order.png"),
-            right: require("@/utils/images/arrow_right.png"),
-          }}
-        />
-      </TouchableOpacity>
       <View style={styles.content}>
         <Text style={[styles.titleSettings, global.black, { marginTop: 20 }]}>
           {`Configuracion`}
