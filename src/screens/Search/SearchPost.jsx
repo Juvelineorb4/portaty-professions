@@ -8,6 +8,7 @@ import {
   Share,
   Linking,
   Platform,
+  FlatList,
 } from "react-native";
 import React, { useState, useEffect, useLayoutEffect } from "react";
 import * as customSearch from "@/graphql/CustomQueries/Search";
@@ -95,7 +96,7 @@ const SearchPost = ({ route, navigation }) => {
       } else {
         setShowAgg(true);
       }
-      setPost(business?.data?.getBusiness);
+      return setPost(business?.data?.getBusiness);
     } catch (error) {
       console.log(error);
     }
@@ -143,40 +144,22 @@ const SearchPost = ({ route, navigation }) => {
   };
 
   const AllImages = async () => {
-    try {
-      const result = await Storage.list(`business/${item.id}/extras/`, {
-        level: "protected",
-        identityId: item.identityID,
-        pageSize: 10,
-      });
-
-      const urls = await Promise.all(
-        result.results.map((item) =>
-          Storage.get(item.key, {
-            level: "protected",
-            identityId: item.identityID,
-          })
-        )
-      );
-      setStorageImages([...urls]);
-    } catch (error) {
-      console.log(error);
-    }
+    const list = post?.images
+      ?.map((image) => JSON.parse(image))
+      .sort((a, b) => a.key - b.key);
+    setStorageImages(list);
   };
 
   useEffect(() => {
-    if (!save) fetchFavorite();
-    if (!post) fetchData();
-    if (!storageImages) AllImages();
-    if (post) {
-      console.log('aqui1', storageImages)
-      let url = JSON.parse(post?.images[0]).url;
-      setStorageImages([url, ...storageImages]);
-      console.log('aqui2', storageImages)
-    }
+    const fetchDataAsync = async () => {
+      if (!save) fetchFavorite();
+      await fetchData();
+      AllImages();
+    };
+    fetchDataAsync();
   }, [post]);
 
-  if (!post || storageImages.length === 0) return <SkeletonExample />;
+  if (!post) return <SkeletonExample />;
   return (
     <View
       style={[
@@ -197,58 +180,12 @@ const SearchPost = ({ route, navigation }) => {
             },
           ]}
         >
-          {storageImages.length !== 0 && (
-            <Swiper
-              style={{
-                // width: 340,
-                height: 260,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-              showsButtons={true}
-              loop={false}
-              onIndexChanged={(index) => setCurrentIndex(index)}
-              onMomentumScrollEnd={(e, state) => setCurrentIndex(state.index)}
-              nextButton={
-                <Text
-                  style={{
-                    color:
-                      currentIndex < storageImages.length - 1
-                        ? "#fb8500"
-                        : "transparent",
-                    fontSize: 50,
-                  }}
-                >
-                  ›
-                </Text>
-              }
-              prevButton={
-                <Text
-                  style={{
-                    color: currentIndex > 0 ? "#fb8500" : "transparent",
-                    fontSize: 50,
-                  }}
-                >
-                  ‹
-                </Text>
-              }
-              activeDotColor="#000"
-            >
-              {storageImages.map((item, index) => (
+            <FlatList
+              horizontal
+              data={storageImages}
+              renderItem={({ item, index }) => (
                 <View
-                  style={{
-                    width: 310,
-                    height: 230,
-                    borderRadius: 5,
-                    borderColor: "#efeded",
-                    borderWidth: 1,
-                    overflow: "hidden",
-                    padding: 10,
-                    marginBottom: 20,
-                    marginTop: 20,
-                    position: "relative",
-                  }}
-                  key={index}
+                  style={{ flex: 1, width: 300, height: 250, marginRight: 5 }}
                 >
                   <Image
                     style={{
@@ -258,12 +195,12 @@ const SearchPost = ({ route, navigation }) => {
                       borderRadius: 5,
                       backgroundColor: "#fff",
                     }}
-                    source={{ uri: item }}
+                    source={{ uri: item.url }}
                   />
                 </View>
-              ))}
-            </Swiper>
-          )}
+              )}
+              keyExtractor={(item, index) => index}
+            />
         </View>
         {showAgg && (
           <View

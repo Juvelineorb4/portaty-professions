@@ -137,7 +137,6 @@ const Unprofile = ({ navigation, route }) => {
           }}
         />
       </TouchableOpacity>
-      {business.length > 0 && (
         <TouchableOpacity
           activeOpacity={1}
           onPress={() =>
@@ -167,8 +166,6 @@ const Unprofile = ({ navigation, route }) => {
             }}
           />
         </TouchableOpacity>
-      )}
-
       <View style={styles.content}>
         <Text style={[styles.titleSettings, global.black, { marginTop: 20 }]}>
           {`Configuracion`}

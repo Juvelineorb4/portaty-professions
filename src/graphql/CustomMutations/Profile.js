@@ -76,10 +76,7 @@ export const updateBusiness = /* GraphQL */ `
   ) {
     updateBusiness(input: $input, condition: $condition) {
       id
-      images {
-        key
-        url
-      }
+      images
       thumbnail
     }
   }
