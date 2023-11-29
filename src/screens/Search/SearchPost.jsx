@@ -27,22 +27,22 @@ import {
 import { Auth, API, Storage } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Favorites";
 import * as customFavorites from "@/graphql/CustomMutations/Favorites";
+import * as subscriptions from "@/graphql/CustomSubscriptions/Search";
 import MapView, { Marker } from "react-native-maps";
 import SkeletonExample from "@/components/SkeletonExample";
 // recoil
 import { useRecoilValue } from "recoil";
 import { userAuthenticated } from "@/atoms/index";
-import Swiper from "react-native-swiper";
+
 const SearchPost = ({ route, navigation }) => {
   const userAuth = useRecoilValue(userAuthenticated);
   const [post, setPost] = useState(null);
-  const [storageImages, setStorageImages] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [save, setSave] = useState("");
+  const [numberFavorite, setNumberFavorite] = useState(0);
   const [showAgg, setShowAgg] = useState(false);
   const global = require("@/utils/styles/global.js");
   const {
-    data: { item, image },
+    data: { item, images },
   } = route.params;
 
   const onCreateFavorite = async () => {
@@ -61,6 +61,7 @@ const SearchPost = ({ route, navigation }) => {
       });
       // console.log(favorites?.data?.createFavorites?.id);
       setSave(favorites?.data?.createFavorites?.id);
+      setNumberFavorite(post?.favorites?.items?.length + 1);
     } catch (error) {
       console.log("ERRO AL CARGAR UN FAVORITO: ", error);
     }
@@ -77,6 +78,7 @@ const SearchPost = ({ route, navigation }) => {
       authMode: "AMAZON_COGNITO_USER_POOLS",
     });
     setSave("");
+    setNumberFavorite(0);
   };
 
   const fetchData = async () => {
@@ -143,20 +145,9 @@ const SearchPost = ({ route, navigation }) => {
     Linking.openURL(url);
   };
 
-  const AllImages = async () => {
-    const list = post?.images
-      ?.map((image) => JSON.parse(image))
-      .sort((a, b) => a.key - b.key);
-    setStorageImages(list);
-  };
-
   useEffect(() => {
-    const fetchDataAsync = async () => {
-      if (!save) fetchFavorite();
-      await fetchData();
-      AllImages();
-    };
-    fetchDataAsync();
+    if (!save) fetchFavorite();
+    fetchData();
   }, [post]);
 
   if (!post) return <SkeletonExample />;
@@ -180,27 +171,33 @@ const SearchPost = ({ route, navigation }) => {
             },
           ]}
         >
-            <FlatList
-              horizontal
-              data={storageImages}
-              renderItem={({ item, index }) => (
-                <View
-                  style={{ flex: 1, width: 300, height: 250, marginRight: 5 }}
-                >
-                  <Image
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      resizeMode: "cover",
-                      borderRadius: 5,
-                      backgroundColor: "#fff",
-                    }}
-                    source={{ uri: item.url }}
-                  />
-                </View>
-              )}
-              keyExtractor={(item, index) => index}
-            />
+          <FlatList
+            horizontal
+            data={images}
+            renderItem={({ item, index }) => (
+              <View
+                style={{
+                  flex: 1,
+                  width: 300,
+                  height: 250,
+                  marginRight: 5,
+                  marginVertical: 10,
+                }}
+              >
+                <Image
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    resizeMode: "cover",
+                    borderRadius: 5,
+                    backgroundColor: "#fff",
+                  }}
+                  source={{ uri: item.url }}
+                />
+              </View>
+            )}
+            keyExtractor={(item, index) => index}
+          />
         </View>
         {showAgg && (
           <View
@@ -219,7 +216,9 @@ const SearchPost = ({ route, navigation }) => {
               }}
             >
               <Text style={{ fontSize: 26, fontFamily: "thin" }}>
-                {post?.favorites?.items?.length}
+                {numberFavorite
+                  ? numberFavorite
+                  : post?.favorites?.items?.length}
               </Text>
               <Text style={{ fontSize: 22, fontFamily: "thin" }}>
                 Favoritos

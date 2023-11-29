@@ -8,6 +8,7 @@ import {
   Share,
   Linking,
   Platform,
+  FlatList
 } from "react-native";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import CustomSelect from "@/components/CustomSelect";
@@ -33,12 +34,14 @@ import SkeletonExample from "@/components/SkeletonExample";
 const FavoritePage = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
   const [post, setPost] = useState([]);
-  const [storageImages, setStorageImages] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visible, setVisible] = useState(false);
   const {
     data: { item, image },
   } = route.params;
+  const list = item?.business?.images
+        .map((image) => JSON.parse(image))
+        .sort((a, b) => a.key - b.key);
   const fetchData = async () => {
     try {
       const business = await API.graphql({
@@ -90,33 +93,14 @@ const FavoritePage = ({ navigation, route }) => {
     Linking.openURL(url);
   };
 
-  const AllImages = async () => {
-    try {
-      const result = await Storage.list(`business/${item.businessID}/extras/`, {
-        level: "protected",
-        identityId: item.business.identityID,
-        pageSize: 10,
-      });
-      const urls = await Promise.all(
-        result.results.map((item) =>
-          Storage.get(item.key, { level: "protected" })
-            .then((url) => url)
-            .catch((err) => console.log(err))
-        )
-      );
-      setStorageImages([image, ...urls]);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  
 
   useLayoutEffect(() => {
     fetchData();
-    AllImages();
-    console.log(storageImages);
+
   }, []);
 
-  if (!item || storageImages.length === 0) return <SkeletonExample />;
+  if (!item) return <SkeletonExample />;
   return (
     <View
       style={[
@@ -137,101 +121,27 @@ const FavoritePage = ({ navigation, route }) => {
             },
           ]}
         >
-          {storageImages.length !== 0 && (
-            <Swiper
-              style={{
-                // width: 340,
-                height: 260,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-              showsButtons={true}
-              loop={false}
-              onIndexChanged={(index) => setCurrentIndex(index)}
-              onMomentumScrollEnd={(e, state) => setCurrentIndex(state.index)}
-              nextButton={
-                <Text
+          <FlatList
+            horizontal
+            data={list}
+            renderItem={({ item, index }) => (
+              <View
+                style={{ flex: 1, width: 300, height: 250, marginRight: 5, marginVertical: 10 }}
+              >
+                <Image
                   style={{
-                    color:
-                      currentIndex < storageImages.length - 1
-                        ? "#fb8500"
-                        : "transparent",
-                    fontSize: 50,
-                  }}
-                >
-                  ›
-                </Text>
-              }
-              prevButton={
-                <Text
-                  style={{
-                    color: currentIndex > 0 ? "#fb8500" : "transparent",
-                    fontSize: 50,
-                  }}
-                >
-                  ‹
-                </Text>
-              }
-              activeDotColor="#000"
-            >
-              {storageImages.map((item, index) => (
-                <View
-                  style={{
-                    width: 310,
-                    height: 230,
+                    width: "100%",
+                    height: "100%",
+                    resizeMode: "cover",
                     borderRadius: 5,
-                    borderColor: "#efeded",
-                    borderWidth: 1,
-                    overflow: "hidden",
-                    padding: 10,
-                    marginBottom: 20,
-                    marginTop: 20,
-                    position: "relative",
+                    backgroundColor: "#fff",
                   }}
-                  key={index}
-                >
-                  <Image
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      resizeMode: "cover",
-                      borderRadius: 5,
-                      backgroundColor: "#fff",
-                    }}
-                    source={{ uri: item }}
-                  />
-                  {/* <TouchableOpacity
-                    style={[
-                      {
-                        position: "absolute",
-                        padding: 8,
-                        borderRadius: 5,
-                        opacity: 0.95,
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        columnGap: 5,
-                        alignItems: "center",
-                        bottom: 0,
-                        right: 0,
-                      },
-                      global.mainBgColor,
-                    ]}
-                    onPress={selectImages}
-                    activeOpacity={1}
-                  >
-                    <MaterialCommunityIcons
-                      name="camera-plus-outline"
-                      size={23}
-                      color="white"
-                    />
-                    <Text style={[{ fontFamily: "medium" }, global.white]}>
-                      agregar mas fotos
-                    </Text>
-                  </TouchableOpacity> */}
-                </View>
-              ))}
-            </Swiper>
-          )}
+                  source={{ uri: item.url }}
+                />
+              </View>
+            )}
+            keyExtractor={(item, index) => index}
+          />
         </View>
         <View
           style={{

@@ -116,6 +116,7 @@ const Page = ({ route, navigation }) => {
           }
         );
         console.log(key);
+        navigation.navigate("Unprofile");
       } catch (error) {
         console.log("aqui", error);
       }
@@ -135,7 +136,63 @@ const Page = ({ route, navigation }) => {
     }
   };
 
-  const changeImage = (image) => {};
+  const changeImage = async (image) => {
+    console.log(image.key);
+    let pathId = image.url.split("image_")[1].split(".")[0];
+
+    console.log(pathId);
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 1,
+    });
+
+    console.log("Antes", result.assets[0].uri);
+
+    if (!result.canceled) {
+      const blob = await urlToBlob(result.assets[0].uri);
+      try {
+        const { key } = await Storage.put(
+          `business/${item.id}/incoming/image_${pathId}.jpg`,
+          blob,
+          {
+            level: "protected",
+            contentType: "image/jpeg",
+            metadata: {
+              businessid: item.id,
+              imagetype: "extras",
+              key: image?.key,
+            },
+          }
+        );
+        console.log(key);
+
+        let newArray = arrayImages;
+        newArray = newArray.map(JSON.parse);
+        let index = newArray.findIndex((obj) => obj.key === image.key);
+        if (index !== -1) {
+          newArray.splice(index, 1);
+        }
+        newArray = newArray.map(JSON.stringify);
+
+        const update = await API.graphql({
+          query: mutation.updateBusiness,
+          authMode: "AMAZON_COGNITO_USER_POOLS",
+          variables: {
+            input: {
+              id: item.id,
+              images: newArray,
+            },
+          },
+        });
+        console.log(update.data.updateBusiness.images);
+        setOpen(!open);
+        setImageView(null);
+        navigation.navigate("Unprofile");
+      } catch (error) {
+        console.log("aqui", error);
+      }
+    }
+  };
 
   const deleteImage = async (image) => {
     let path = image.url.substring(image.url.indexOf("business"));
