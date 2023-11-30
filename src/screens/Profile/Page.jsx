@@ -129,19 +129,25 @@ const Page = ({ route, navigation }) => {
 
   const AllImages = async () => {
     try {
+      // en realidad el arreglo de Objectos no sirve pa mucho
       const arregloDeObjetos = item?.images
         ?.map((image) => JSON.parse(image))
         .sort((a, b) => a.key - b.key)
         .map((image) => {
           return image.url;
         });
+      // aqui agarre lo que estaba en item.images lo organice por la key y lo meti en
+      // ImageCarousel que es un componente
       const ejemplo = item?.images
         ?.map((image) => JSON.parse(image))
         .sort((a, b) => a.key - b.key)
         .map((image, index) => {
           return <ImageCarousel uri={image.url} />;
         });
+
       setStorageImages(arregloDeObjetos);
+
+      // si habia mas de cuatro imagenes no coloco la vista agregar mas fotos
       if (ejemplo?.length < 4) ejemplo.push(<AddImageView />);
       setViewImg(ejemplo);
     } catch (error) {
@@ -241,7 +247,7 @@ const Page = ({ route, navigation }) => {
         },
       });
       // setItem(result?);
-      setItem(result?.data?.getBusiness)
+      setItem(result?.data?.getBusiness);
       // console.log(result?.data?.getBusiness);
     } catch (error) {}
   };
