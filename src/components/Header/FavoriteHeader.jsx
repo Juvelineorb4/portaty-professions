@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, Image, TextInput } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-import { favoriteSelection, favoritesState } from "@/atoms";
+import { favoriteSelection, favoritesState, inputFavoritesSearch } from "@/atoms";
 import { Auth, API, Storage } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Favorites";
 import * as customFavorites from "@/graphql/CustomMutations/Favorites";
@@ -14,6 +14,9 @@ const FavoriteHeader = ({ multiple = false }) => {
   const [statusFavorite, setStatusFavorite] = useRecoilState(favoritesState);
   const [favoritesList, setFavoritesList] = useState([]);
   const isThere = favoritesList.some((obj) => obj.id === selection[0] && obj.position > 0)
+  const [inputFavorites, setInputFavorites] =
+  useRecoilState(inputFavoritesSearch);
+
   const fetchFavorites = async () => {
     const { attributes } = await Auth.currentAuthenticatedUser();
     const result = await API.graphql({
@@ -41,6 +44,7 @@ const FavoriteHeader = ({ multiple = false }) => {
         authMode: "AMAZON_COGNITO_USER_POOLS",
       });
       console.log(deleteFavorite);
+      setInputFavorites("")
     } catch (error) {
       console.log(error);
     }
@@ -67,6 +71,7 @@ const FavoriteHeader = ({ multiple = false }) => {
         authMode: "AMAZON_COGNITO_USER_POOLS",
       });
       console.log(updateFavoritesTrue);
+      setInputFavorites("")
     } else {
       const updateFavoritesFalse = await API.graphql({
         query: customFavorites.updateFavorites,
@@ -98,6 +103,7 @@ const FavoriteHeader = ({ multiple = false }) => {
           authMode: "AMAZON_COGNITO_USER_POOLS",
         });
         console.log(deleteFavorite);
+        setInputFavorites("")
       } catch (error) {
         console.log(error);
       }

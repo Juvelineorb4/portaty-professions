@@ -30,12 +30,16 @@ import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import ModalAlert from "@/components/ModalAlert";
 import Swiper from "react-native-swiper";
 import SkeletonExample from "@/components/SkeletonExample";
+import { useRecoilState } from "recoil";
+import { updateListFavorites } from "@/atoms";
 
 const FavoritePage = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
   const [post, setPost] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visible, setVisible] = useState(false);
+  const [listUpdate, setListUpdate] =
+    useRecoilState(updateListFavorites)
   const {
     data: { item, image },
   } = route.params;
@@ -66,6 +70,7 @@ const FavoritePage = ({ navigation, route }) => {
       },
       authMode: "AMAZON_COGNITO_USER_POOLS",
     });
+    setListUpdate(!listUpdate)
     navigation.goBack();
   };
 
