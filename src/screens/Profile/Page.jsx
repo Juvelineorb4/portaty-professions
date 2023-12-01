@@ -33,6 +33,8 @@ import MapView, { Marker } from "react-native-maps";
 import SkeletonPage from "@/components/SkeletonPage";
 import * as ImagePicker from "expo-image-picker";
 import ModalAlert from "@/components/ModalAlert";
+import { updateProfile } from "@/atoms";
+import { useRecoilState } from "recoil";
 
 const Page = ({ route, navigation }) => {
   const {
@@ -45,6 +47,8 @@ const Page = ({ route, navigation }) => {
   const [arrayImages, setArrayImages] = useState(item?.images);
   const [visible, setVisible] = useState(false);
   const global = require("@/utils/styles/global.js");
+  const [statusProfile, setStatusProfile] =
+  useRecoilState(updateProfile);
 
   const onOpenMap = (lat, lng, name) => {
     let url = "";
@@ -73,7 +77,6 @@ const Page = ({ route, navigation }) => {
       quality: 1,
     });
 
-    console.log(result);
 
     if (!result.canceled) {
       if (result.assets.length > 4) {
@@ -115,7 +118,7 @@ const Page = ({ route, navigation }) => {
             },
           }
         );
-        console.log(key);
+        setStatusProfile(!statusProfile)
         navigation.navigate("Unprofile");
       } catch (error) {
         console.log("aqui", error);
@@ -124,12 +127,10 @@ const Page = ({ route, navigation }) => {
   };
 
   const AllImages = async () => {
-    console.log(arrayImages);
     try {
       const list = arrayImages
         .map((image) => JSON.parse(image))
         .sort((a, b) => a.key - b.key);
-      // console.log(list)
       setStorageImages(list);
     } catch (error) {
       console.log(error);
@@ -137,16 +138,11 @@ const Page = ({ route, navigation }) => {
   };
 
   const changeImage = async (image) => {
-    console.log(image.key);
     let pathId = image.url.split("image_")[1].split(".")[0];
-
-    console.log(pathId);
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 1,
     });
-
-    console.log("Antes", result.assets[0].uri);
 
     if (!result.canceled) {
       const blob = await urlToBlob(result.assets[0].uri);
@@ -164,7 +160,6 @@ const Page = ({ route, navigation }) => {
             },
           }
         );
-        console.log(key);
 
         let newArray = arrayImages;
         newArray = newArray.map(JSON.parse);
@@ -184,9 +179,9 @@ const Page = ({ route, navigation }) => {
             },
           },
         });
-        console.log(update.data.updateBusiness.images);
         setOpen(!open);
         setImageView(null);
+        setStatusProfile(!statusProfile)
         navigation.navigate("Unprofile");
       } catch (error) {
         console.log("aqui", error);
@@ -220,7 +215,6 @@ const Page = ({ route, navigation }) => {
           },
         },
       });
-      console.log(update);
       setOpen(!open);
       setImageView(null);
     } catch (error) {

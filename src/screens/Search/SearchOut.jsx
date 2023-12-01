@@ -34,10 +34,6 @@ const SearchOut = ({ route }) => {
   const location = useRecoilValue(mapUser);
 
   const getData = async () => {
-    console.log({
-      lat: location.latitude,
-      lon: location.longitude,
-    });
     const api = "api-professions-gateway";
     const path = "/searchBusinessByDistance";
     const params = {

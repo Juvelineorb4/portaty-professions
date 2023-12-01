@@ -27,7 +27,6 @@ const ShareListPage = ({ route, navigation }) => {
           id: params?.id,
         },
       });
-      console.log(result.data.getUsers.favorites.items);
       setFavoritesList(result.data.getUsers.favorites.items);
       if (result.data.getUsers.favorites.items.length === 0) setNothing(true);
       setError(false);

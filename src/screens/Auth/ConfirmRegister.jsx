@@ -98,7 +98,7 @@ const ConfirmRegister = ({ navigation, route }) => {
               <Text style={styles.titleAlert}>
                 {es.authentication.account.code.title}
               </Text>
-              <TouchableOpacity onPress={() => console.log("Aun no esta")}>
+              <TouchableOpacity >
                 <Text style={styles.subtitleAlert}>
                   {es.authentication.account.code.subtitle}
                 </Text>

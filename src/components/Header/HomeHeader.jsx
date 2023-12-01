@@ -10,7 +10,6 @@ const HomeHeader = () => {
   const [inputFavorites, setInputFavorites] = useRecoilState(inputFavoritesSearch);
   const handleKeyPress = (input) => {
     setInputFavorites(input.trim())
-    console.log(input)
   }
   return (
     <View style={[styles.home, global.bgWhite]}>

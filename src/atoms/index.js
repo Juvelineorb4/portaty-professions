@@ -92,3 +92,8 @@ export const updateListFavorites = atom({
   key: "updateListFavoritesValue",
   default: false,
 });
+
+export const updateProfile = atom({
+  key: "updateProfileValue",
+  default: false,
+});

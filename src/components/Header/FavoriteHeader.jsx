@@ -26,11 +26,9 @@ const FavoriteHeader = ({ multiple = false }) => {
         email: attributes.email,
       },
     });
-    console.log(result.data.userByEmail.items[0].favorites.items);
     setFavoritesList(result.data.userByEmail.items[0].favorites.items);
   };
   function handleKeyPress() {
-    console.log("You pressed a key.");
   }
   const onDeleteFavorite = async () => {
     try {
@@ -43,7 +41,6 @@ const FavoriteHeader = ({ multiple = false }) => {
         },
         authMode: "AMAZON_COGNITO_USER_POOLS",
       });
-      console.log(deleteFavorite);
       setInputFavorites("")
     } catch (error) {
       console.log(error);
@@ -51,13 +48,11 @@ const FavoriteHeader = ({ multiple = false }) => {
   };
   const onAnchorFavorite = async () => {
 
-    console.log(selection[0])
     let newPosition = 1;
     
     while (favoritesList.some((obj) => obj.position === newPosition)) {
       newPosition += 1;
     }
-    console.log(newPosition);
     try {
     if (isThere) {
       const updateFavoritesTrue = await API.graphql({
@@ -70,7 +65,6 @@ const FavoriteHeader = ({ multiple = false }) => {
         },
         authMode: "AMAZON_COGNITO_USER_POOLS",
       });
-      console.log(updateFavoritesTrue);
       setInputFavorites("")
     } else {
       const updateFavoritesFalse = await API.graphql({
@@ -83,7 +77,6 @@ const FavoriteHeader = ({ multiple = false }) => {
         },
         authMode: "AMAZON_COGNITO_USER_POOLS",
       });
-      console.log(updateFavoritesFalse);
     }
 
     } catch (error) {
@@ -102,7 +95,6 @@ const FavoriteHeader = ({ multiple = false }) => {
           },
           authMode: "AMAZON_COGNITO_USER_POOLS",
         });
-        console.log(deleteFavorite);
         setInputFavorites("")
       } catch (error) {
         console.log(error);
@@ -111,8 +103,6 @@ const FavoriteHeader = ({ multiple = false }) => {
   };
   useEffect(() => {
     fetchFavorites();
-    console.log('yes', isThere)
-
   }, []);
 
   return (

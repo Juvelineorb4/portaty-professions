@@ -36,7 +36,6 @@ const Profile = ({ route, navigation }) => {
   const [editActive, setEditActive] = useState(false);
   const [isSave, setIsSave] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  // console.log("PROFILE: ", user);
   const onShare = async () => {
     try {
       await Share.share({
@@ -67,7 +66,6 @@ const Profile = ({ route, navigation }) => {
     setIsLoading(true);
     const data = await Auth.currentAuthenticatedUser();
     const tableID = data?.attributes["custom:userTableID"];
-    // console.log("ID DE TABLAA  CAMBAIR: ", tableID);
 
     try {
       // Cambiar en Cognito
@@ -75,7 +73,6 @@ const Profile = ({ route, navigation }) => {
         name: name,
         "custom:lastName": lastName,
       });
-      navigation.goBack();
       // Cambiar en tabla
       const result = await API.graphql({
         query: mutations.updateUsers,
@@ -88,7 +85,7 @@ const Profile = ({ route, navigation }) => {
           },
         },
       });
-      // console.log("ACTUALIZAR: ", result);
+      navigation.navigate('Unprofile');
     } catch (error) {
       const { message } = new Error(error);
       console.log("ERROR AL ACTUALIZAR ATRIBUTO IDENTITY ID: ", message);
@@ -327,20 +324,20 @@ const Profile = ({ route, navigation }) => {
               />
             </View>
           </View>
-          <View style={{ height: 60 }}>
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             {editActive && (
               <CustomButton
-                text={isLoading ? <ActivityIndicator /> : "Guardar"}
+                text={isLoading ? <ActivityIndicator color={`#fff`} /> : "Guardar"}
                 handlePress={onSaveChange}
-                textStyles={[global.white]}
+                textStyles={[global.white, {fontFamily: 'medium', marginLeft: 25}]}
                 buttonStyles={[
                   {
-                    paddingVertical: 10,
-                    margin: 10,
-                    marginHorizontal: 80,
+                    width: 200,
+                    height: 50,
                     borderRadius: 6,
-                    flexDirection: "row",
-                    justifyContent: "center",
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center'
                   },
                   isSave ? global.mainBgColor : global.bgWhiteSoft,
                   ,
