@@ -105,3 +105,35 @@
     color: white;
     font-size: 15px;
   }
+
+  .modalContainer {
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(52, 52, 52, 0.5);
+  }
+  .modalTop {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .modalText {
+    /* font-weight: 600; */
+    font-family: "regular";
+    font-size: 14px;
+    margin-left: 5px;
+  }
+  .modalContent {
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px;
+    width: 320px;
+    height: 450px;
+  }
+  .modalTextSelect {
+    font-family: "light";
+    /* font-weight: 500; */
+    font-size: 14px;
+    color: #8c9199;
+    text-transform: capitalize;
+  }

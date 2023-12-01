@@ -45,21 +45,10 @@ const Unprofile = ({ navigation, route }) => {
   useEffect(() => {
     setUser([userAuth?.attributes]);
     User();
+    console.log('activado')
+  }, [route]);
 
-    const unsubscribe = navigation.addListener("focus", () => {
-      console.log("Busco usuario");
-      // Este código se ejecutará cuando la PantallaPrincipal obtenga el enfoque
-      User();
-      // Aquí puedes realizar las acciones que necesitas al volver de la PantallaHijo
-    });
 
-    return unsubscribe;
-  }, [status, userAuth]);
-
-  const _handlePressButtonAsync = async () => {
-    let result = await WebBrowser.openBrowserAsync("https://www.portaty.com");
-  };
-  console.log(business.length);
   if (!user[0]) return <SkeletonUnprofile />;
   return (
     <ScrollView
@@ -137,7 +126,6 @@ const Unprofile = ({ navigation, route }) => {
           }}
         />
       </TouchableOpacity>
-      {business.length > 0 && (
         <TouchableOpacity
           activeOpacity={1}
           onPress={() =>
@@ -167,8 +155,6 @@ const Unprofile = ({ navigation, route }) => {
             }}
           />
         </TouchableOpacity>
-      )}
-
       <View style={styles.content}>
         <Text style={[styles.titleSettings, global.black, { marginTop: 20 }]}>
           {`Configuracion`}
@@ -197,7 +183,7 @@ const Unprofile = ({ navigation, route }) => {
                 />
               </TouchableOpacity>
             ) : button.web ? (
-              <TouchableOpacity onPress={_handlePressButtonAsync}>
+              <TouchableOpacity>
                 <View style={[styles.line, global.bgWhiteSmoke]} />
                 <CustomSelect
                   title={button.title}

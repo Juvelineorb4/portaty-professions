@@ -8,6 +8,7 @@ import {
   Share,
   Linking,
   Platform,
+  FlatList,
 } from "react-native";
 import React, { useState, useEffect, useLayoutEffect } from "react";
 import * as customSearch from "@/graphql/CustomQueries/Search";
@@ -26,22 +27,22 @@ import {
 import { Auth, API, Storage } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Favorites";
 import * as customFavorites from "@/graphql/CustomMutations/Favorites";
+import * as subscriptions from "@/graphql/CustomSubscriptions/Search";
 import MapView, { Marker } from "react-native-maps";
 import SkeletonExample from "@/components/SkeletonExample";
 // recoil
 import { useRecoilValue } from "recoil";
 import { userAuthenticated } from "@/atoms/index";
-import Swiper from "react-native-swiper";
+
 const SearchPost = ({ route, navigation }) => {
   const userAuth = useRecoilValue(userAuthenticated);
   const [post, setPost] = useState(null);
-  const [storageImages, setStorageImages] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [save, setSave] = useState("");
+  const [numberFavorite, setNumberFavorite] = useState(0);
   const [showAgg, setShowAgg] = useState(false);
   const global = require("@/utils/styles/global.js");
   const {
-    data: { item, image },
+    data: { item, images },
   } = route.params;
 
   const onCreateFavorite = async () => {
@@ -60,6 +61,7 @@ const SearchPost = ({ route, navigation }) => {
       });
       // console.log(favorites?.data?.createFavorites?.id);
       setSave(favorites?.data?.createFavorites?.id);
+      setNumberFavorite(post?.favorites?.items?.length + 1);
     } catch (error) {
       console.log("ERRO AL CARGAR UN FAVORITO: ", error);
     }
@@ -76,6 +78,7 @@ const SearchPost = ({ route, navigation }) => {
       authMode: "AMAZON_COGNITO_USER_POOLS",
     });
     setSave("");
+    setNumberFavorite(0);
   };
 
   const fetchData = async () => {
@@ -95,7 +98,7 @@ const SearchPost = ({ route, navigation }) => {
       } else {
         setShowAgg(true);
       }
-      setPost(business?.data?.getBusiness);
+      return setPost(business?.data?.getBusiness);
     } catch (error) {
       console.log(error);
     }
@@ -142,41 +145,12 @@ const SearchPost = ({ route, navigation }) => {
     Linking.openURL(url);
   };
 
-  const AllImages = async () => {
-    try {
-      const result = await Storage.list(`business/${item.id}/extras/`, {
-        level: "protected",
-        identityId: item.identityID,
-        pageSize: 10,
-      });
-
-      const urls = await Promise.all(
-        result.results.map((item) =>
-          Storage.get(item.key, {
-            level: "protected",
-            identityId: item.identityID,
-          })
-        )
-      );
-      setStorageImages([...urls]);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
     if (!save) fetchFavorite();
-    if (!post) fetchData();
-    if (!storageImages) AllImages();
-    if (post) {
-      console.log('aqui1', storageImages)
-      let url = JSON.parse(post?.images[0]).url;
-      setStorageImages([url, ...storageImages]);
-      console.log('aqui2', storageImages)
-    }
+    fetchData();
   }, [post]);
 
-  if (!post || storageImages.length === 0) return <SkeletonExample />;
+  if (!post) return <SkeletonExample />;
   return (
     <View
       style={[
@@ -197,73 +171,33 @@ const SearchPost = ({ route, navigation }) => {
             },
           ]}
         >
-          {storageImages.length !== 0 && (
-            <Swiper
-              style={{
-                // width: 340,
-                height: 260,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-              showsButtons={true}
-              loop={false}
-              onIndexChanged={(index) => setCurrentIndex(index)}
-              onMomentumScrollEnd={(e, state) => setCurrentIndex(state.index)}
-              nextButton={
-                <Text
+          <FlatList
+            horizontal
+            data={images}
+            renderItem={({ item, index }) => (
+              <View
+                style={{
+                  flex: 1,
+                  width: 300,
+                  height: 250,
+                  marginRight: 5,
+                  marginVertical: 10,
+                }}
+              >
+                <Image
                   style={{
-                    color:
-                      currentIndex < storageImages.length - 1
-                        ? "#fb8500"
-                        : "transparent",
-                    fontSize: 50,
-                  }}
-                >
-                  ›
-                </Text>
-              }
-              prevButton={
-                <Text
-                  style={{
-                    color: currentIndex > 0 ? "#fb8500" : "transparent",
-                    fontSize: 50,
-                  }}
-                >
-                  ‹
-                </Text>
-              }
-              activeDotColor="#000"
-            >
-              {storageImages.map((item, index) => (
-                <View
-                  style={{
-                    width: 310,
-                    height: 230,
+                    width: "100%",
+                    height: "100%",
+                    resizeMode: "cover",
                     borderRadius: 5,
-                    borderColor: "#efeded",
-                    borderWidth: 1,
-                    overflow: "hidden",
-                    padding: 10,
-                    marginBottom: 20,
-                    marginTop: 20,
-                    position: "relative",
+                    backgroundColor: "#fff",
                   }}
-                  key={index}
-                >
-                  <Image
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      resizeMode: "cover",
-                      borderRadius: 5,
-                      backgroundColor: "#fff",
-                    }}
-                    source={{ uri: item }}
-                  />
-                </View>
-              ))}
-            </Swiper>
-          )}
+                  source={{ uri: item.url }}
+                />
+              </View>
+            )}
+            keyExtractor={(item, index) => index}
+          />
         </View>
         {showAgg && (
           <View
@@ -282,7 +216,9 @@ const SearchPost = ({ route, navigation }) => {
               }}
             >
               <Text style={{ fontSize: 26, fontFamily: "thin" }}>
-                {post?.favorites?.items?.length}
+                {numberFavorite
+                  ? numberFavorite
+                  : post?.favorites?.items?.length}
               </Text>
               <Text style={{ fontSize: 22, fontFamily: "thin" }}>
                 Favoritos

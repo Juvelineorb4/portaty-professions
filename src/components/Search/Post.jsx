@@ -20,6 +20,10 @@ const Post = ({ data, image, styled }) => {
   const navigation = useNavigation();
   const [post, setPost] = useState([]);
   const [loading, setLoading] = useState(false);
+  const list = data?.images
+  ?.map((image) => JSON.parse(image))
+  .sort((a, b) => a.key - b.key);
+  console.log(list)
 
   const [modalVisible, setModalVisible] = useState(false);
   const fetchData = async () => {
@@ -234,7 +238,7 @@ const Post = ({ data, image, styled }) => {
                         navigation.navigate("SearchPost", {
                           data: {
                             item: data,
-                            image: image,
+                            images: list,
                           },
                         });
                       }}

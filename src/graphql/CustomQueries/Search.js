@@ -94,17 +94,12 @@ export const getBusiness = /* GraphQL */ `
         items {
           id
           businessID
-          userID
           position
-          owner
-          createdAt
-          updatedAt
         }
         nextToken
       }
       createdAt
       updatedAt
-      owner
     }
   }
 `;

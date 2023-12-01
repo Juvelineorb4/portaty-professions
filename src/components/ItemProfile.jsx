@@ -11,7 +11,6 @@ import { Ionicons } from "@expo/vector-icons";
 const ItemProfile = ({ data, identityID, styled }) => {
   const navigation = useNavigation();
   if (identityID)
-  console.log("DATA ITEM: ", data.images)
     return (
       <TouchableOpacity
         style={styled.column}

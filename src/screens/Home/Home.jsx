@@ -10,10 +10,11 @@ import { Auth, API } from "aws-amplify";
 import { searchBusinessByDistance, searchByDistance } from "@/graphql/queries";
 import Grid from "@/components/Home/Grid";
 import List from "@/components/Home/List";
-import { favoritesState, inputFavoritesSearch, mapUser } from "@/atoms";
+import { favoritesState, inputFavoritesSearch, mapUser, userAuthenticated } from "@/atoms";
 import { useRecoilState, useRecoilValue } from "recoil";
 import * as Location from "expo-location";
 import * as queries from "@/graphql/CustomQueries/Favorites";
+import * as subscriptions from "@/graphql/CustomSubscriptions/Favorites";
 import CustomButton from "@/components/CustomButton";
 import styles from "@/utils/styles/Home.module.css";
 import { Ionicons } from "@expo/vector-icons";
@@ -29,17 +30,16 @@ const Home = ({ navigation, route }) => {
     useRecoilState(inputFavoritesSearch);
   const [favoritesList, setFavoritesList] = useState([]);
   const [nothing, setNothing] = useState(false);
-
+  const userAuth = useRecoilValue(userAuthenticated);
   const [resultNothing, setResultNothing] = useState(false);
   const [loading, setLoading] = useState(false);
   const fetchFavorites = async () => {
     setLoading(true);
-    const { attributes } = await Auth.currentAuthenticatedUser();
     const result = await API.graphql({
       query: queries.userByEmail,
       authMode: "AMAZON_COGNITO_USER_POOLS",
       variables: {
-        email: attributes?.email,
+        email: userAuth?.attributes?.email,
       },
     });
 
@@ -63,6 +63,23 @@ const Home = ({ navigation, route }) => {
   };
   useLayoutEffect(() => {
     fetchFavorites();
+    const updateSub = API.graphql({
+      query: subscriptions.onUpdateUsers,
+      authMode: "AMAZON_COGNITO_USER_POOLS",
+      variables: {
+        filter: {
+          email: { eq: userAuth?.attributes?.email },
+        },
+      },
+    }).subscribe({
+      next: ({ provider, value: { data } }) => {
+        console.log("EL SUBS", data);
+      },
+      error: (error) => console.warn(error),
+    });
+    return () => {
+      updateSub.unsubscribe();
+    };
   }, [route, statusFavorites, inputFavorite]);
 
   if (loading && !resultNothing)

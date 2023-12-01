@@ -13,7 +13,6 @@ import React, { useEffect, useState } from "react";
 import GridSearch from "@/components/Search/GridSearch";
 import * as customSearch from "@/graphql/CustomQueries/Search";
 import { Auth, API, Storage } from "aws-amplify";
-import Slider from "@react-native-community/slider";
 import styles from "@/utils/styles/Tags.module.css";
 import {
   mapUser,
@@ -28,6 +27,7 @@ import * as queries from "@/graphql/CustomQueries/Favorites";
 import useLocation from "@/hooks/useLocation";
 import SkeletonSearch from "@/components/SkeletonSearch";
 import SkeletonMoreItems from "@/components/SkeletonMoreItems";
+
 const Search = ({ route }) => {
   const global = require("@/utils/styles/global.js");
   const [moreItems, setMoreItems] = useState(1);

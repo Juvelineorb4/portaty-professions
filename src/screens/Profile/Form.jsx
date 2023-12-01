@@ -121,7 +121,9 @@ const Form = ({ navigation, route }) => {
           contentType: "image/jpeg",
           metadata: {
             businessid: business?.data?.createBusiness?.id,
-            imagetype: "profile",
+            action: "create",
+            type: "profile",
+            key: 0,
           },
         }
       );
@@ -130,7 +132,7 @@ const Form = ({ navigation, route }) => {
       setVisible(true);
     } catch (error) {
       setError(`Error al cargar negocio:  ${JSON.stringify(error)}`);
-      console.log(`Error al cargar negocio:  ${JSON.stringify(error)}`);
+      console.log(`Error al cargar negocio:  ${error}`);
       setVisible(true);
     }
     setLoading(false);

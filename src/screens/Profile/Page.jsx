@@ -2,16 +2,17 @@ import {
   View,
   Text,
   Image,
-  TextInput,
   ScrollView,
   TouchableOpacity,
   Share,
-  ActivityIndicator,
   Platform,
   Linking,
-  Alert,
-  RefreshControl,
+  FlatList,
+  Modal,
+  Pressable,
+  TouchableWithoutFeedback,
 } from "react-native";
+import ExpoImage from "expo-image";
 import React, { useLayoutEffect, useState, useEffect } from "react";
 import CustomSelect from "@/components/CustomSelect";
 import styles from "@/utils/styles/Unprofile.module.css";
@@ -26,30 +27,25 @@ import {
 } from "@expo/vector-icons";
 import { Auth, API, Storage } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Favorites";
+import * as mutation from "@/graphql/CustomMutations/Profile";
+import * as subscriptions from "@/graphql/CustomSubscriptions/Profile";
 import * as customFavorites from "@/graphql/CustomMutations/Favorites";
 import MapView, { Marker } from "react-native-maps";
 import SkeletonPage from "@/components/SkeletonPage";
 import * as ImagePicker from "expo-image-picker";
 import ModalAlert from "@/components/ModalAlert";
-import Swiper from "react-native-swiper";
-// amplify
-import { getBusiness } from "@/graphql/CustomQueries/Profile";
 
 const Page = ({ route, navigation }) => {
-  /*  */
-  const { data } = route.params;
+  const {
+    data: { item, image },
+  } = route.params;
   const [selectedImages, setSelectedImages] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [imageView, setImageView] = useState(null);
   const [storageImages, setStorageImages] = useState([]);
-  const [viewImag, setViewImg] = useState([]);
-  const [storagePaths, setStoragePaths] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [arrayImages, setArrayImages] = useState(item?.images);
   const [visible, setVisible] = useState(false);
-  const [refreshing, setRefreshing] = React.useState(false);
-  const [item, setItem] = useState(data?.item);
   const global = require("@/utils/styles/global.js");
-  // const {
-  //   data: { item, image },
-  // } = route.params;
 
   const onOpenMap = (lat, lng, name) => {
     let url = "";
@@ -115,12 +111,14 @@ const Page = ({ route, navigation }) => {
             contentType: "image/jpeg",
             metadata: {
               businessid: item.id,
-              imagetype: "extras",
+              action: "create",
+              type: "extras",
               key: index + 1,
             },
           }
         );
         console.log(key);
+        navigation.navigate("Unprofile");
       } catch (error) {
         console.log("aqui", error);
       }
@@ -128,130 +126,126 @@ const Page = ({ route, navigation }) => {
   };
 
   const AllImages = async () => {
+    console.log(arrayImages);
     try {
-      // en realidad el arreglo de Objectos no sirve pa mucho
-      const arregloDeObjetos = item?.images
-        ?.map((image) => JSON.parse(image))
-        .sort((a, b) => a.key - b.key)
-        .map((image) => {
-          return image.url;
-        });
-      // aqui agarre lo que estaba en item.images lo organice por la key y lo meti en
-      // ImageCarousel que es un componente
-      const ejemplo = item?.images
-        ?.map((image) => JSON.parse(image))
-        .sort((a, b) => a.key - b.key)
-        .map((image, index) => {
-          return <ImageCarousel uri={image.url} />;
-        });
-
-      setStorageImages(arregloDeObjetos);
-
-      // si habia mas de cuatro imagenes no coloco la vista agregar mas fotos
-      if (ejemplo?.length < 4) ejemplo.push(<AddImageView />);
-      setViewImg(ejemplo);
+      const list = arrayImages
+        .map((image) => JSON.parse(image))
+        .sort((a, b) => a.key - b.key);
+      console.log(list);
+      setStorageImages(list);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const ImageCarousel = ({ uri, index }) => {
-    return (
-      <View
-        style={{
-          // width: 310,
-          // height: 230,
-          borderRadius: 5,
-          borderColor: "#efeded",
-          borderWidth: 1,
-          overflow: "hidden",
-          padding: 10,
-          marginBottom: 20,
-          marginTop: 20,
-          // position: "relative",
-        }}
-        // key={index}
-      >
-        <Image
-          style={{
-            width: "100%",
-            height: "100%",
-            resizeMode: "cover",
-            borderRadius: 5,
-            backgroundColor: "#fff",
-          }}
-          source={{ uri: uri }}
-        />
-      </View>
-    );
-  };
+  const changeImage = async (image) => {
+    console.log(image.key);
 
-  const AddImageView = () => {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <TouchableOpacity
-          style={[
-            {
-              flexDirection: "row",
-              padding: 8,
-              borderRadius: 5,
-              opacity: 0.95,
-              alignItems: "center",
-            },
-            global.mainBgColor,
-          ]}
-          onPress={selectImages}
-        >
-          <MaterialCommunityIcons
-            name="camera-plus-outline"
-            size={23}
-            color="white"
-            style={{ marginRight: 5 }}
-          />
-          <Text style={[{ fontFamily: "medium" }, global.white]}>
-            agregar mas fotos
-          </Text>
-        </TouchableOpacity>
-      </View>
-    );
-  };
+    // abrimos la libreria y cambiamos la foto
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 1,
+    });
 
-  useEffect(() => {
-    if (item) {
-      AllImages();
+    let pathId = "";
+    let type = "";
+    if (image.key === "0") {
+      pathId = `profile_${result.assets[0].assetId}`;
+      type = "profile";
+    } else {
+      pathId = `image_${result.assets[0].assetId}`;
+      type = "extras";
     }
-  }, [item]);
+    console.log(`PAth: ${pathId}, tipo: ${type}`);
 
-  const onRefresh = React.useCallback(async () => {
-    setRefreshing(true);
-    await onRefreshBusiness(item?.id);
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000);
-  }, []);
+    if (!result.canceled) {
+      const blob = await urlToBlob(result.assets[0].uri);
+      try {
+        // cargamos la imagen
+        const { key } = await Storage.put(
+          `business/${item.id}/incoming/${pathId}.jpg`,
+          blob,
+          {
+            level: "protected",
+            contentType: "image/jpeg",
+            metadata: {
+              businessid: item.id,
+              action: "update",
+              type,
+              key: image?.key,
+            },
+          }
+        );
+        console.log(key);
+        setOpen(!open);
+        setImageView(null);
+        navigation.navigate("Unprofile");
+      } catch (error) {
+        console.log("aqui", error);
+      }
+    }
+  };
 
-  const onRefreshBusiness = async (id) => {
-    console.log(id);
+  const deleteImage = async (image) => {
+    let path = image.url.substring(image.url.indexOf("business"));
+
     try {
-      const result = await API.graphql({
-        query: getBusiness,
+      const result = await Storage.remove(path, {
+        level: "protected",
+      });
+
+      let newArray = arrayImages;
+      newArray = newArray.map(JSON.parse);
+      let index = newArray.findIndex((obj) => obj.key === image.key);
+      if (index !== -1) {
+        newArray.splice(index, 1);
+      }
+      newArray = newArray.map(JSON.stringify);
+
+      const update = await API.graphql({
+        query: mutation.updateBusiness,
         authMode: "AMAZON_COGNITO_USER_POOLS",
         variables: {
-          id,
+          input: {
+            id: item.id,
+            images: newArray,
+          },
         },
       });
-      // setItem(result?);
-      setItem(result?.data?.getBusiness);
-      // console.log(result?.data?.getBusiness);
-    } catch (error) {}
-  };
+      console.log(update);
+      setOpen(!open);
+      setImageView(null);
+    } catch (error) {
+      console.log(error);
+    }
 
+    // Convertir los objetos de nuevo a cadenas JSON
+  };
+  useEffect(() => {
+    AllImages();
+    const updateSub = API.graphql({
+      query: subscriptions.onUpdateBusiness,
+      authMode: "AMAZON_COGNITO_USER_POOLS",
+      variables: {
+        filter: {
+          id: { eq: item.id },
+        },
+      },
+    }).subscribe({
+      next: ({ provider, value: { data } }) => {
+        console.log("EL SUBS", data);
+        const list = data?.onUpdateBusiness?.images
+          .map((image) => JSON.parse(image))
+          .sort((a, b) => a.key - b.key);
+        setStorageImages(list);
+        setArrayImages(data.onUpdateBusiness.images);
+      },
+      error: (error) => console.warn(error),
+    });
+    return () => {
+      updateSub.unsubscribe();
+    };
+  }, []);
   if (!item || storageImages?.length === 0) return <SkeletonPage />;
   return (
     <View
@@ -262,12 +256,7 @@ const Page = ({ route, navigation }) => {
         global.bgWhite,
       ]}
     >
-      <ScrollView
-        style={{ flex: 1, marginTop: 30 }}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
+      <ScrollView style={{ flex: 1, marginTop: 30 }}>
         <View
           style={[
             {
@@ -278,77 +267,95 @@ const Page = ({ route, navigation }) => {
             },
           ]}
         >
-          {viewImag?.length !== 0 && (
-            <Swiper
-              style={{
-                // width: 340,
-                height: 260,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-              showsButtons={true}
-              loop={false}
-              onIndexChanged={(index) => setCurrentIndex(index)}
-              onMomentumScrollEnd={(e, state) => setCurrentIndex(state.index)}
-              nextButton={
-                <Text
-                  style={{
-                    color:
-                      currentIndex < storageImages?.length - 1
-                        ? "#fb8500"
-                        : "transparent",
-                    fontSize: 50,
-                  }}
+          {storageImages.length !== 0 && (
+            <FlatList
+              horizontal
+              data={storageImages}
+              renderItem={({ item, index }) => (
+                <View
+                  style={{ flex: 1, width: 300, height: 250, marginRight: 5 }}
                 >
-                  ›
-                </Text>
-              }
-              prevButton={
-                <Text
-                  style={{
-                    color: currentIndex > 0 ? "#fb8500" : "transparent",
-                    fontSize: 50,
-                  }}
-                >
-                  ‹
-                </Text>
-              }
-              activeDotColor="#000"
-            >
-              {viewImag?.map((item, index) => (
-                <View style={{ flex: 1 }} key={index}>
-                  {item}
+                  <Image
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      resizeMode: "cover",
+                      borderRadius: 5,
+                      backgroundColor: "#fff",
+                    }}
+                    source={{ uri: `${item.url}` }}
+                  />
+                  <TouchableOpacity
+                    style={[
+                      {
+                        flexDirection: "row",
+                        padding: 8,
+                        borderRadius: 5,
+                        opacity: 0.7,
+                        alignItems: "center",
+                        marginBottom: 5,
+                        position: "absolute",
+                        right: 0,
+                      },
+                      global.mainBgColor,
+                    ]}
+                    onPress={() => {
+                      setOpen(!open);
+                      setImageView(item);
+                    }}
+                  >
+                    <Text style={[{ fontFamily: "medium" }, global.white]}>
+                      Ver foto
+                    </Text>
+                    <MaterialCommunityIcons
+                      name="image-search-outline"
+                      size={24}
+                      color="white"
+                      style={{ marginLeft: 5 }}
+                    />
+                  </TouchableOpacity>
                 </View>
-              ))}
-              {/* <TouchableOpacity
+              )}
+              keyExtractor={(item, index) => index}
+            />
+          )}
+          {storageImages.length < 5 && (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: 10,
+              }}
+            >
+              <TouchableOpacity
                 style={[
                   {
-                    position: "absolute",
+                    flexDirection: "row",
                     padding: 8,
                     borderRadius: 5,
                     opacity: 0.95,
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    columnGap: 5,
                     alignItems: "center",
-                    bottom: 0,
-                    right: 0,
+                    marginBottom: 5,
                   },
                   global.mainBgColor,
                 ]}
                 onPress={selectImages}
-                activeOpacity={1}
               >
+                <Text style={[{ fontFamily: "medium" }, global.white]}>
+                  Agregar mas fotos
+                </Text>
                 <MaterialCommunityIcons
                   name="camera-plus-outline"
                   size={23}
                   color="white"
+                  style={{ marginLeft: 5 }}
                 />
-                <Text style={[{ fontFamily: "medium" }, global.white]}>
-                  agregar mas fotos
-                </Text>
-              </TouchableOpacity> */}
-            </Swiper>
+              </TouchableOpacity>
+              <Text style={{ fontFamily: "light" }}>
+                Solo puedes tener 5 fotos como maximo
+              </Text>
+            </View>
           )}
         </View>
         <View
@@ -732,6 +739,142 @@ const Page = ({ route, navigation }) => {
           </View>
           <View style={[styles.line, global.bgWhiteSmoke]} />
         </View>
+        <Modal
+          animationType="none"
+          transparent={true}
+          visible={open}
+          onRequestClose={() => {
+            setOpen(!open);
+            setImageView(null);
+          }}
+        >
+          <TouchableWithoutFeedback
+            onPress={() => {
+              setOpen(!open);
+              setImageView(null);
+            }}
+          >
+            <View style={styles.modalContainer}>
+              <TouchableWithoutFeedback>
+                <View style={styles.modalContent}>
+                  <View style={styles.modalTop}>
+                    <Pressable
+                      onPress={() => {
+                        setOpen(!open);
+                        setImageView(null);
+                      }}
+                    >
+                      <Image
+                        style={{
+                          width: 35,
+                          height: 35,
+                          resizeMode: "contain",
+                        }}
+                        source={require("@/utils/images/arrow_back.png")}
+                      />
+                    </Pressable>
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Image
+                      style={{
+                        width: "100%",
+                        height: "70%",
+                        resizeMode: "cover",
+                        borderRadius: 5,
+                      }}
+                      source={{ uri: imageView?.url }}
+                    />
+                    <View style={{ flex: 1, paddingVertical: 15 }}>
+                      {imageView?.key === "0" && (
+                        <Text
+                          style={{
+                            fontFamily: "light",
+                            fontSize: 12,
+                            textAlign: "center",
+                          }}
+                        >
+                          Tu imagen principal solo la puedes cambiar
+                        </Text>
+                      )}
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          columnGap: 5,
+                        }}
+                      >
+                        <TouchableOpacity
+                          style={[
+                            global.bgYellow,
+                            {
+                              borderRadius: 8,
+                              flex: 1,
+                              justifyContent: "center",
+                              alignItems: "center",
+                              height: 49,
+                              marginTop: 10,
+                              flexDirection: "row",
+                            },
+                          ]}
+                          onPress={() => changeImage(imageView)}
+                        >
+                          <Text
+                            style={[
+                              global.white,
+                              {
+                                fontFamily: "medium",
+                                fontSize: 14,
+                                marginRight: 3,
+                              },
+                            ]}
+                          >
+                            {`Cambiar`}
+                          </Text>
+                          <MaterialCommunityIcons
+                            name="image-edit-outline"
+                            size={24}
+                            color="white"
+                          />
+                        </TouchableOpacity>
+                        {imageView?.key !== "0" && (
+                          <TouchableOpacity
+                            style={[
+                              {
+                                flex: 1,
+                                borderRadius: 8,
+                                justifyContent: "center",
+                                alignItems: "center",
+                                height: 49,
+                                marginTop: 10,
+                                backgroundColor: "#c81d11",
+                                flexDirection: "row",
+                              },
+                            ]}
+                            onPress={() => deleteImage(imageView)}
+                          >
+                            <Text
+                              style={[
+                                global.white,
+                                { fontFamily: "medium", fontSize: 14 },
+                              ]}
+                            >
+                              {`Eliminar`}
+                            </Text>
+                            <MaterialCommunityIcons
+                              name="delete-outline"
+                              size={24}
+                              color="white"
+                            />
+                          </TouchableOpacity>
+                        )}
+                      </View>
+                    </View>
+                  </View>
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
         <ModalAlert
           text={`Error al guardar imagenes. Por favor, selecciona un máximo de 4 imágenes`}
           close={() => setVisible(false)}
