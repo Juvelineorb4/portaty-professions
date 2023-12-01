@@ -31,8 +31,8 @@ import * as subscriptions from "@/graphql/CustomSubscriptions/Search";
 import MapView, { Marker } from "react-native-maps";
 import SkeletonExample from "@/components/SkeletonExample";
 // recoil
-import { useRecoilValue } from "recoil";
-import { userAuthenticated } from "@/atoms/index";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { updateListFavorites, userAuthenticated } from "@/atoms/index";
 
 const SearchPost = ({ route, navigation }) => {
   const userAuth = useRecoilValue(userAuthenticated);
@@ -40,6 +40,8 @@ const SearchPost = ({ route, navigation }) => {
   const [save, setSave] = useState("");
   const [numberFavorite, setNumberFavorite] = useState(0);
   const [showAgg, setShowAgg] = useState(false);
+  const [listUpdate, setListUpdate] =
+    useRecoilState(updateListFavorites);
   const global = require("@/utils/styles/global.js");
   const {
     data: { item, images },
@@ -62,6 +64,7 @@ const SearchPost = ({ route, navigation }) => {
       // console.log(favorites?.data?.createFavorites?.id);
       setSave(favorites?.data?.createFavorites?.id);
       setNumberFavorite(post?.favorites?.items?.length + 1);
+      setListUpdate(!listUpdate)
     } catch (error) {
       console.log("ERRO AL CARGAR UN FAVORITO: ", error);
     }

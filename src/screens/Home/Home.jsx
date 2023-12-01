@@ -10,7 +10,7 @@ import { Auth, API } from "aws-amplify";
 import { searchBusinessByDistance, searchByDistance } from "@/graphql/queries";
 import Grid from "@/components/Home/Grid";
 import List from "@/components/Home/List";
-import { favoritesState, inputFavoritesSearch, mapUser, userAuthenticated } from "@/atoms";
+import { favoritesState, inputFavoritesSearch, mapUser, userAuthenticated, updateListFavorites } from "@/atoms";
 import { useRecoilState, useRecoilValue } from "recoil";
 import * as Location from "expo-location";
 import * as queries from "@/graphql/CustomQueries/Favorites";
@@ -26,6 +26,7 @@ const Home = ({ navigation, route }) => {
   const [userLocation, setUserLocation] = useRecoilState(mapUser);
   const statusFavorites = useRecoilValue(favoritesState);
   const inputFavorite = useRecoilValue(inputFavoritesSearch);
+  const updateFavorite = useRecoilValue(updateListFavorites);
   const [inputFavorites, setInputFavorites] =
     useRecoilState(inputFavoritesSearch);
   const [favoritesList, setFavoritesList] = useState([]);
@@ -42,13 +43,17 @@ const Home = ({ navigation, route }) => {
         email: userAuth?.attributes?.email,
       },
     });
-
+    let temporalList = []
     setFavoritesList(result?.data?.userByEmail?.items[0]?.favorites?.items);
     if (result?.data?.userByEmail?.items[0]?.favorites?.items?.length === 0)
       setNothing(true);
     if (inputFavorite !== "") {
       result?.data?.userByEmail?.items[0]?.favorites?.items?.map((item, index) => {
-        if (item.business.activity === inputFavorite) temporalList.push(item);
+        let newArray = item?.business?.tags?.map(cadena => cadena.replace(/\[|\]/g, ""));
+        newArray.map((newItem, newIndex) => {
+          console.log(newItem, newItem.trim().toLowerCase().includes(inputFavorite.trim().toLowerCase()))
+          if (newItem.trim().toLowerCase().includes(inputFavorite.trim().toLowerCase())) temporalList.push(item)
+        })
       });
       if (temporalList.length !== 0) {
         setFavoritesList(temporalList);
@@ -78,9 +83,10 @@ const Home = ({ navigation, route }) => {
       error: (error) => console.warn(error),
     });
     return () => {
+      fetchFavorites()
       updateSub.unsubscribe();
     };
-  }, [route, statusFavorites, inputFavorite]);
+  }, [route, statusFavorites, inputFavorite, updateFavorite]);
 
   if (loading && !resultNothing)
     return (
@@ -94,7 +100,7 @@ const Home = ({ navigation, route }) => {
       </View>
     );
 
-  if (resultNothing)
+  if (resultNothing && inputFavorite !== "")
     return (
       <View
         style={[
@@ -114,7 +120,6 @@ const Home = ({ navigation, route }) => {
         <CustomButton
           text={`Refrescar`}
           handlePress={() => {
-            setInputFavorites("");
             setResultNothing(false);
           }}
           textStyles={[styles.textSearch, global.white]}

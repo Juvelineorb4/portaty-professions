@@ -87,3 +87,8 @@ export const codeFields = atom({
   key: "codeFieldsValue",
   default: "",
 });
+
+export const updateListFavorites = atom({
+  key: "updateListFavoritesValue",
+  default: false,
+});
