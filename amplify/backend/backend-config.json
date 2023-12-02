@@ -59,6 +59,41 @@
       "service": "Cognito"
     }
   },
+  "function": {
+    "customGraphql": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ],
+          "category": "api",
+          "resourceName": "professionGraphql"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_customGraphql_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "customGraphql"
+        }
+      ]
+    },
+    "AMPLIFY_function_customGraphql_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "customGraphql"
+        }
+      ]
+    }
+  },
   "storage": {
     "s3Professions": {
       "dependsOn": [],
