@@ -24,6 +24,7 @@ import {
   mapBusiness,
   profileState,
   tagsList,
+  updateProfile,
   userAuthenticated,
 } from "@/atoms";
 import MapMarketBusiness from "@/components/MapMarketBusiness";
@@ -47,6 +48,8 @@ const Form = ({ navigation, route }) => {
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [statusProfile, setStatusProfile] =
+    useRecoilState(updateProfile);
 
   /* Para limpiar */
   const [selectTagsList, setSelectTagsList] = useRecoilState(tagsList);
@@ -127,6 +130,7 @@ const Form = ({ navigation, route }) => {
           },
         }
       );
+
       setStateProfile(true);
       setLoading(false);
       setVisible(true);

@@ -34,6 +34,8 @@ import MapView, { Marker } from "react-native-maps";
 import SkeletonPage from "@/components/SkeletonPage";
 import * as ImagePicker from "expo-image-picker";
 import ModalAlert from "@/components/ModalAlert";
+import { updateProfile } from "@/atoms";
+import { useRecoilState } from "recoil";
 
 const Page = ({ route, navigation }) => {
   const {
@@ -46,6 +48,8 @@ const Page = ({ route, navigation }) => {
   const [arrayImages, setArrayImages] = useState(item?.images);
   const [visible, setVisible] = useState(false);
   const global = require("@/utils/styles/global.js");
+  const [statusProfile, setStatusProfile] =
+  useRecoilState(updateProfile);
 
   const onOpenMap = (lat, lng, name) => {
     let url = "";
@@ -74,7 +78,6 @@ const Page = ({ route, navigation }) => {
       quality: 1,
     });
 
-    console.log(result);
 
     if (!result.canceled) {
       if (result.assets.length > 4) {
@@ -126,12 +129,10 @@ const Page = ({ route, navigation }) => {
   };
 
   const AllImages = async () => {
-    console.log(arrayImages);
     try {
       const list = arrayImages
         .map((image) => JSON.parse(image))
         .sort((a, b) => a.key - b.key);
-      console.log(list);
       setStorageImages(list);
     } catch (error) {
       console.log(error);
@@ -186,6 +187,7 @@ const Page = ({ route, navigation }) => {
     }
   };
 
+
   const deleteImage = async (image) => {
     let path = image.url.substring(image.url.indexOf("business"));
 
@@ -212,7 +214,6 @@ const Page = ({ route, navigation }) => {
           },
         },
       });
-      console.log(update);
       setOpen(!open);
       setImageView(null);
     } catch (error) {

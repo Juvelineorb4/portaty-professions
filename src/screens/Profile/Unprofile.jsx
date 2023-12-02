@@ -7,7 +7,7 @@ import { useRecoilValue } from "recoil";
 import { Auth, API, Storage } from "aws-amplify";
 import * as customProfile from "@/graphql/CustomQueries/Profile";
 import * as mutations from "@/graphql/mutations";
-import { profileState, userAuthenticated } from "@/atoms";
+import { profileState, updateProfile, userAuthenticated } from "@/atoms";
 import * as WebBrowser from "expo-web-browser";
 import SkeletonUnprofile from "@/components/SkeletonUnprofile";
 import { Skeleton } from "@rneui/themed";
@@ -19,13 +19,14 @@ const Unprofile = ({ navigation, route }) => {
   const { buttons } = settings;
   const global = require("@/utils/styles/global.js");
   const [selectKey, setSelectKey] = useState("");
+  const [disabled, setDisabled] = useState(true);
   const userAuth = useRecoilValue(userAuthenticated);
   const [user, setUser] = useState([]);
   const [business, setBusiness] = useState([]);
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState("");
 
-  const status = useRecoilValue(profileState);
+  const status = useRecoilValue(updateProfile);
 
   const onHandleLogout = async () => {
     await Auth.signOut();
@@ -40,13 +41,14 @@ const Unprofile = ({ navigation, route }) => {
     });
     if (result?.data?.userByEmail?.items[0]?.business?.items?.length !== 0)
       setBusiness(result.data.userByEmail.items[0].business.items);
+      console.log(result.data.userByEmail)
+      setDisabled(false)
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setUser([userAuth?.attributes]);
     User();
-    console.log('activado')
-  }, [route]);
+  }, [userAuth, status]);
 
 
   if (!user[0]) return <SkeletonUnprofile />;
@@ -96,6 +98,7 @@ const Unprofile = ({ navigation, route }) => {
       <TouchableOpacity
         activeOpacity={1}
         onPress={() => {
+          if (disabled) return;
           if (business?.length !== 0) {
             setError("Ya tienes un negocio registrado");
             setVisible(true);
@@ -128,11 +131,14 @@ const Unprofile = ({ navigation, route }) => {
       </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={1}
-          onPress={() =>
+          onPress={() => {
+            if (disabled) return;
             navigation.navigate("List", {
               data: business,
               user: user[0],
             })
+          }
+            
           }
         >
           <View style={[styles.line, global.bgWhiteSmoke]} />

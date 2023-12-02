@@ -6,25 +6,6 @@ import { mapUser } from "@/atoms";
 const useLocation = () => {
   const [location, setLocation] = useState(null);
   const setUserLocation = useSetRecoilState(mapUser);
-  // const getLocation = async () => {
-  //   let { status } = await Location.requestForegroundPermissionsAsync();
-  //   if (status !== "granted") {
-  //     console.log("Permission to access location was denied");
-  //     return;
-  //   }
-  //   console.log("STATUS DE LOCATION: ", status);
-  //   const locationData = await Location.getCurrentPositionAsync({
-  //     accuracy: Location.Accuracy.Lowest,
-  //     mayShowUserSettingsDialog: true,
-  //   });
-  //   console.log("COORDENADAS OBTENIDAS: ", locationData.coords);
-  //   setLocation(locationData.coords);
-  //   setUserLocation(locationData.coords);
-  // };
-  // useEffect(() => {
-  //   getLocation();
-  // }, []);
-
   useEffect(() => {
     let subscription;
 
@@ -45,7 +26,6 @@ const useLocation = () => {
           },
           (locationResult) => {
             const { latitude, longitude } = locationResult.coords;
-            // console.log("COORDENADAS OBTENIDAS: ", { latitude, longitude });
             setLocation({ latitude, longitude });
             setUserLocation({ latitude, longitude });
           }

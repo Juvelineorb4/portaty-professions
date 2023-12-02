@@ -23,8 +23,6 @@ const Post = ({ data, image, styled }) => {
   const list = data?.images
   ?.map((image) => JSON.parse(image))
   .sort((a, b) => a.key - b.key);
-  console.log(list)
-
   const [modalVisible, setModalVisible] = useState(false);
   const fetchData = async () => {
     try {

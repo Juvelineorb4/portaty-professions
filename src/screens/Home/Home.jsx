@@ -51,7 +51,6 @@ const Home = ({ navigation, route }) => {
       result?.data?.userByEmail?.items[0]?.favorites?.items?.map((item, index) => {
         let newArray = item?.business?.tags?.map(cadena => cadena.replace(/\[|\]/g, ""));
         newArray.map((newItem, newIndex) => {
-          console.log(newItem, newItem.trim().toLowerCase().includes(inputFavorite.trim().toLowerCase()))
           if (newItem.trim().toLowerCase().includes(inputFavorite.trim().toLowerCase())) temporalList.push(item)
         })
       });

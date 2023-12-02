@@ -33,7 +33,6 @@ const ItemGrid = ({ data, number, styled }) => {
       },
       authMode: "AMAZON_COGNITO_USER_POOLS",
     });
-    console.log(favorites);
   };
 
     return (

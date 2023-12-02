@@ -91,8 +91,6 @@ const MapMarketBusiness = ({
     }, 2000);
   };
   useEffect(() => {
-    console.log(marketLocation);
-    console.log(initialLocation);
   }, []);
 
   return (
