@@ -1,5 +1,3 @@
-import * as FileSystem from "expo-file-system";
-import { StorageAccessFramework } from "expo-file-system";
 import {
   View,
   Text,
@@ -37,7 +35,6 @@ const Profile = ({ route, navigation }) => {
   const [editActive, setEditActive] = useState(false);
   const [isSave, setIsSave] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [pdfUri, setPdfUri] = useState("");
   const onShare = async () => {
     try {
       await Share.share({
@@ -94,59 +91,6 @@ const Profile = ({ route, navigation }) => {
     setIsLoading(false);
   };
 
-  const getPdf = async () => {
-    const permissions =
-      await StorageAccessFramework.requestDirectoryPermissionsAsync();
-    if (!permissions.granted) {
-      return;
-    }
-
-    const api = "api-professions-gateway";
-    const path = "/documentqr";
-    const params = {
-      headers: {},
-      queryStringParameters:{
-        businessID: "123456789"
-      }
-    };
-
-    try {
-      const response = await API.get(api, path);
-      console.log(response["pdf_base64"]);
-
-      await StorageAccessFramework.createFileAsync(
-        permissions.directoryUri,
-        "qr.pdf",
-        "application/pdf"
-      )
-        .then(async (uri) => {
-          await FileSystem.writeAsStringAsync(uri, response["pdf_base64"], {
-            encoding: FileSystem.EncodingType.Base64,
-          });
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-      return;
-      // const pdfBytes = response.pdf_bytes;
-      // const pdfDataUri = `data:application/pdf;base64,${pdfBytes.toString(
-      //   "base64"
-      // )}`;
-      // console.log(pdfDataUri);
-
-      // Guardar el PDF localmente
-      const pdfUri = `${FileSystem.documentDirectory}qr.pdf`;
-      await FileSystem.writeAsStringAsync(pdfUri, response["pdf_base64"], {
-        encoding: FileSystem.EncodingType.Base64,
-      });
-
-      // Abrir el PDF con la aplicación predeterminada de PDF
-      await MediaLibrary.openAsync({ mediaUri: pdfUri });
-    } catch (error) {
-      console.log("Error en pdf: ", error.message);
-    }
-  };
-  getPdf();
 
   return (
     <View
@@ -166,7 +110,6 @@ const Profile = ({ route, navigation }) => {
             marginBottom: 20,
           }}
         >
-          {pdfUri && <PDFReader source={{ uri: pdfUri }} />}
           <Text style={{ fontSize: 26, fontFamily: "thin" }}>0</Text>
           <Text style={{ fontSize: 22, fontFamily: "thin" }}>
             Mis Favoritos
