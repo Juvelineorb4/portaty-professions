@@ -87,7 +87,6 @@ const Profile = ({ route, navigation }) => {
           },
         },
       });
-      navigation.goBack("Unprofile");
     } catch (error) {
       const { message } = new Error(error);
       console.log("ERROR AL ACTUALIZAR ATRIBUTO IDENTITY ID: ", message);
