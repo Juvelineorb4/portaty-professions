@@ -47,8 +47,7 @@ const Page = ({ route, navigation }) => {
   const [arrayImages, setArrayImages] = useState(item?.images);
   const [visible, setVisible] = useState(false);
   const global = require("@/utils/styles/global.js");
-  const [statusProfile, setStatusProfile] =
-  useRecoilState(updateProfile);
+  const [statusProfile, setStatusProfile] = useRecoilState(updateProfile);
 
   const onOpenMap = (lat, lng, name) => {
     let url = "";
@@ -76,7 +75,6 @@ const Page = ({ route, navigation }) => {
       allowsMultipleSelection: true,
       quality: 1,
     });
-
 
     if (!result.canceled) {
       if (result.assets.length > 4) {
@@ -113,12 +111,13 @@ const Page = ({ route, navigation }) => {
             contentType: "image/jpeg",
             metadata: {
               businessid: item.id,
-              imagetype: "extras",
+              action: "create",
+              type: "extras",
               key: index + 1,
             },
           }
         );
-        setStatusProfile(!statusProfile)
+        setStatusProfile(!statusProfile);
         navigation.navigate("Unprofile");
       } catch (error) {
         console.log("aqui", error);
@@ -138,12 +137,24 @@ const Page = ({ route, navigation }) => {
   };
 
   const changeImage = async (image) => {
-    let pathId = image.url.split("image_")[1].split(".")[0];
+    console.log(image.key);
+
+    // abrimos la libreria y cambiamos la foto
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 1,
     });
 
+    let pathId = "";
+    let type = "";
+    if (image.key === "0") {
+      pathId = `profile_${result.assets[0].assetId}`;
+      type = "profile";
+    } else {
+      pathId = `image_${result.assets[0].assetId}`;
+      type = "extras";
+    }
+    console.log(`PAth: ${pathId}, tipo: ${type}`);
     if (!result.canceled) {
       const blob = await urlToBlob(result.assets[0].uri);
       try {
@@ -155,33 +166,15 @@ const Page = ({ route, navigation }) => {
             contentType: "image/jpeg",
             metadata: {
               businessid: item.id,
-              imagetype: "extras",
+              action: "update",
+              type,
               key: image?.key,
             },
           }
         );
-
-        let newArray = arrayImages;
-        newArray = newArray.map(JSON.parse);
-        let index = newArray.findIndex((obj) => obj.key === image.key);
-        if (index !== -1) {
-          newArray.splice(index, 1);
-        }
-        newArray = newArray.map(JSON.stringify);
-
-        const update = await API.graphql({
-          query: mutation.updateBusiness,
-          authMode: "AMAZON_COGNITO_USER_POOLS",
-          variables: {
-            input: {
-              id: item.id,
-              images: newArray,
-            },
-          },
-        });
         setOpen(!open);
         setImageView(null);
-        setStatusProfile(!statusProfile)
+        setStatusProfile(!statusProfile);
         navigation.navigate("Unprofile");
       } catch (error) {
         console.log("aqui", error);
