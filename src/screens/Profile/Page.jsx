@@ -105,7 +105,8 @@ const Page = ({ route, navigation }) => {
   }
   const uploadImages = async (images) => {
     setLoading(true);
-
+    console.log(images);
+    return;
     images.forEach(async (image, index) => {
       const blob = await urlToBlob(image.uri);
       try {
@@ -958,8 +959,8 @@ const Page = ({ route, navigation }) => {
             backgroundColor: "#000",
             opacity: 0.5,
             position: "absolute",
-            width: '100%',
-            height: '100%'
+            width: "100%",
+            height: "100%",
           }}
         >
           <ActivityIndicator color={`#fff`} size={`large`} />
