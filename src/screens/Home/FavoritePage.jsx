@@ -8,7 +8,7 @@ import {
   Share,
   Linking,
   Platform,
-  FlatList
+  FlatList,
 } from "react-native";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import CustomSelect from "@/components/CustomSelect";
@@ -32,20 +32,57 @@ import Swiper from "react-native-swiper";
 import SkeletonExample from "@/components/SkeletonExample";
 import { useRecoilState } from "recoil";
 import { updateListFavorites } from "@/atoms";
+import * as FileSystem from "expo-file-system";
+import { StorageAccessFramework } from "expo-file-system";
 
 const FavoritePage = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
   const [post, setPost] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visible, setVisible] = useState(false);
-  const [listUpdate, setListUpdate] =
-    useRecoilState(updateListFavorites)
+  const [listUpdate, setListUpdate] = useRecoilState(updateListFavorites);
   const {
     data: { item, image },
   } = route.params;
   const list = item?.business?.images
-        .map((image) => JSON.parse(image))
-        .sort((a, b) => a.key - b.key);
+    .map((image) => JSON.parse(image))
+    .sort((a, b) => a.key - b.key);
+
+  const getPdf = async () => {
+    const permissions =
+      await StorageAccessFramework.requestDirectoryPermissionsAsync();
+    if (!permissions.granted) {
+      return;
+    }
+
+    const api = "api-professions-gateway";
+    const path = "/documentqr";
+    const params = {
+      headers: {},
+      queryStringParameters: {
+        path: `https://www.portaty.com/share/business?id=${item.businessID}`,
+      },
+    };
+
+    try {
+      const response = await API.get(api, path, params);
+      await StorageAccessFramework.createFileAsync(
+        permissions.directoryUri,
+        "qr.pdf",
+        "application/pdf"
+      )
+        .then(async (uri) => {
+          await FileSystem.writeAsStringAsync(uri, response["pdf_base64"], {
+            encoding: FileSystem.EncodingType.Base64,
+          });
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    } catch (error) {
+      console.log("Error en pdf: ", error.message);
+    }
+  };
   const fetchData = async () => {
     try {
       const business = await API.graphql({
@@ -70,7 +107,7 @@ const FavoritePage = ({ navigation, route }) => {
       },
       authMode: "AMAZON_COGNITO_USER_POOLS",
     });
-    setListUpdate(!listUpdate)
+    setListUpdate(!listUpdate);
     navigation.goBack();
   };
 
@@ -98,11 +135,8 @@ const FavoritePage = ({ navigation, route }) => {
     Linking.openURL(url);
   };
 
-  
-
   useLayoutEffect(() => {
     fetchData();
-
   }, []);
 
   if (!item) return <SkeletonExample />;
@@ -131,7 +165,13 @@ const FavoritePage = ({ navigation, route }) => {
             data={list}
             renderItem={({ item, index }) => (
               <View
-                style={{ flex: 1, width: 300, height: 250, marginRight: 5, marginVertical: 10 }}
+                style={{
+                  flex: 1,
+                  width: 300,
+                  height: 250,
+                  marginRight: 5,
+                  marginVertical: 10,
+                }}
               >
                 <Image
                   style={{
@@ -278,12 +318,7 @@ const FavoritePage = ({ navigation, route }) => {
             alignItems: "center",
             marginTop: -27,
           }}
-          onPress={() => {
-            navigation.navigate("ViewQR", {
-              id: `https://www.portaty.com/share/business?id=${item.businessID}`,
-              name: item.business.name,
-            });
-          }}
+          onPress={getPdf}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <View
@@ -305,9 +340,9 @@ const FavoritePage = ({ navigation, route }) => {
               />
             </View>
             <View style={{ marginLeft: 10 }}>
-              <Text style={{ fontFamily: "light", fontSize: 16 }}>Ver QR</Text>
+              <Text style={{ fontFamily: "light", fontSize: 16 }}>Descargar QR</Text>
               <Text style={{ fontFamily: "thin", fontSize: 12, width: 150 }}>
-                Compartelo en formato QR para pegarlo en donde quieras
+                Descarga el QR del negocio para pegarlo en donde quieras
               </Text>
             </View>
           </View>
