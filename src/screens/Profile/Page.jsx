@@ -143,50 +143,50 @@ const Page = ({ route, navigation }) => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 1,
     });
+    console.log(result)
+    // if (!result.canceled) {
+    //   const blob = await urlToBlob(result.assets[0].uri);
+    //   try {
+    //     const { key } = await Storage.put(
+    //       `business/${item.id}/incoming/image_${pathId}.jpg`,
+    //       blob,
+    //       {
+    //         level: "protected",
+    //         contentType: "image/jpeg",
+    //         metadata: {
+    //           businessid: item.id,
+    //           imagetype: "extras",
+    //           key: image?.key,
+    //         },
+    //       }
+    //     );
 
-    if (!result.canceled) {
-      const blob = await urlToBlob(result.assets[0].uri);
-      try {
-        const { key } = await Storage.put(
-          `business/${item.id}/incoming/image_${pathId}.jpg`,
-          blob,
-          {
-            level: "protected",
-            contentType: "image/jpeg",
-            metadata: {
-              businessid: item.id,
-              imagetype: "extras",
-              key: image?.key,
-            },
-          }
-        );
+    //     let newArray = arrayImages;
+    //     newArray = newArray.map(JSON.parse);
+    //     let index = newArray.findIndex((obj) => obj.key === image.key);
+    //     if (index !== -1) {
+    //       newArray.splice(index, 1);
+    //     }
+    //     newArray = newArray.map(JSON.stringify);
 
-        let newArray = arrayImages;
-        newArray = newArray.map(JSON.parse);
-        let index = newArray.findIndex((obj) => obj.key === image.key);
-        if (index !== -1) {
-          newArray.splice(index, 1);
-        }
-        newArray = newArray.map(JSON.stringify);
-
-        const update = await API.graphql({
-          query: mutation.updateBusiness,
-          authMode: "AMAZON_COGNITO_USER_POOLS",
-          variables: {
-            input: {
-              id: item.id,
-              images: newArray,
-            },
-          },
-        });
-        setOpen(!open);
-        setImageView(null);
-        setStatusProfile(!statusProfile)
-        navigation.navigate("Unprofile");
-      } catch (error) {
-        console.log("aqui", error);
-      }
-    }
+    //     const update = await API.graphql({
+    //       query: mutation.updateBusiness,
+    //       authMode: "AMAZON_COGNITO_USER_POOLS",
+    //       variables: {
+    //         input: {
+    //           id: item.id,
+    //           images: newArray,
+    //         },
+    //       },
+    //     });
+    //     setOpen(!open);
+    //     setImageView(null);
+    //     setStatusProfile(!statusProfile)
+    //     // navigation.navigate("Unprofile");
+    //   } catch (error) {
+    //     console.log("aqui", error);
+    //   }
+    // }
   };
 
   const deleteImage = async (image) => {
