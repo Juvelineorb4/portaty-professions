@@ -11,6 +11,7 @@ import {
   Modal,
   Pressable,
   TouchableWithoutFeedback,
+  ActivityIndicator,
 } from "react-native";
 import React, { useLayoutEffect, useState, useEffect } from "react";
 import CustomSelect from "@/components/CustomSelect";
@@ -35,6 +36,7 @@ import * as ImagePicker from "expo-image-picker";
 import ModalAlert from "@/components/ModalAlert";
 import { updateProfile } from "@/atoms";
 import { useRecoilState } from "recoil";
+import * as customProfile from "@/graphql/CustomQueries/Profile";
 
 const Page = ({ route, navigation }) => {
   const {
@@ -46,9 +48,10 @@ const Page = ({ route, navigation }) => {
   const [storageImages, setStorageImages] = useState([]);
   const [arrayImages, setArrayImages] = useState(item?.images);
   const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [loadingExtras, setLoadingExtras] = useState(0);
   const global = require("@/utils/styles/global.js");
-  const [statusProfile, setStatusProfile] =
-  useRecoilState(updateProfile);
+  const [statusProfile, setStatusProfile] = useRecoilState(updateProfile);
 
   const onOpenMap = (lat, lng, name) => {
     let url = "";
@@ -77,7 +80,6 @@ const Page = ({ route, navigation }) => {
       quality: 1,
     });
 
-
     if (!result.canceled) {
       if (result.assets.length > 4) {
         setVisible(true);
@@ -102,10 +104,12 @@ const Page = ({ route, navigation }) => {
     });
   }
   const uploadImages = async (images) => {
+    setLoading(true);
+
     images.forEach(async (image, index) => {
       const blob = await urlToBlob(image.uri);
       try {
-        const { key } = await Storage.put(
+        const { key } = Storage.put(
           `business/${item.id}/incoming/image_${image.assetId}.jpg`,
           blob,
           {
@@ -113,13 +117,30 @@ const Page = ({ route, navigation }) => {
             contentType: "image/jpeg",
             metadata: {
               businessid: item.id,
-              imagetype: "extras",
-              key: index + 1,
+              action: "create",
+              type: "extras",
+              key: storageImages.length,
+            },
+            resumable: true,
+            completeCallback: (event) => {
+              console.log(`Successfully uploaded ${event.key}`);
+              let start = Date.now();
+              let timerId = setTimeout(function () {
+                let end = Date.now();
+                let elapsed = end - start;
+                console.log(
+                  "Tiempo transcurrido en segundos: " + elapsed / 1000
+                );
+                imagesArray();
+                setImageView(null);
+                setStatusProfile(!statusProfile);
+                setTimeout(() => {
+                  setLoading(false);
+                }, 1000);
+              }, 5000);
             },
           }
         );
-        setStatusProfile(!statusProfile)
-        navigation.navigate("Unprofile");
       } catch (error) {
         console.log("aqui", error);
       }
@@ -138,55 +159,60 @@ const Page = ({ route, navigation }) => {
   };
 
   const changeImage = async (image) => {
-    let pathId = image.url.split("image_")[1].split(".")[0];
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 1,
     });
-    console.log(result)
-    // if (!result.canceled) {
-    //   const blob = await urlToBlob(result.assets[0].uri);
-    //   try {
-    //     const { key } = await Storage.put(
-    //       `business/${item.id}/incoming/image_${pathId}.jpg`,
-    //       blob,
-    //       {
-    //         level: "protected",
-    //         contentType: "image/jpeg",
-    //         metadata: {
-    //           businessid: item.id,
-    //           imagetype: "extras",
-    //           key: image?.key,
-    //         },
-    //       }
-    //     );
-
-    //     let newArray = arrayImages;
-    //     newArray = newArray.map(JSON.parse);
-    //     let index = newArray.findIndex((obj) => obj.key === image.key);
-    //     if (index !== -1) {
-    //       newArray.splice(index, 1);
-    //     }
-    //     newArray = newArray.map(JSON.stringify);
-
-    //     const update = await API.graphql({
-    //       query: mutation.updateBusiness,
-    //       authMode: "AMAZON_COGNITO_USER_POOLS",
-    //       variables: {
-    //         input: {
-    //           id: item.id,
-    //           images: newArray,
-    //         },
-    //       },
-    //     });
-    //     setOpen(!open);
-    //     setImageView(null);
-    //     setStatusProfile(!statusProfile)
-    //     // navigation.navigate("Unprofile");
-    //   } catch (error) {
-    //     console.log("aqui", error);
-    //   }
-    // }
+    setOpen(!open);
+    setLoadingExtras(image.key);
+    let pathId = "";
+    let type = "";
+    if (image.key === "0") {
+      pathId = `profile_${result.assets[0].assetId}`;
+      type = "profile";
+    } else {
+      pathId = `image_${result.assets[0].assetId}`;
+      type = "extras";
+    }
+    if (!result.canceled) {
+      const blob = await urlToBlob(result.assets[0].uri);
+      try {
+        const { key } = Storage.put(
+          `business/${item.id}/incoming/image_${pathId}.jpg`,
+          blob,
+          {
+            level: "protected",
+            contentType: "image/jpeg",
+            metadata: {
+              businessid: item.id,
+              action: "update",
+              type,
+              key: image?.key,
+            },
+            resumable: true,
+            completeCallback: (event) => {
+              console.log(`Successfully uploaded ${event.key}`);
+              let start = Date.now();
+              let timerId = setTimeout(function () {
+                let end = Date.now();
+                let elapsed = end - start;
+                console.log(
+                  "Tiempo transcurrido en segundos: " + elapsed / 1000
+                );
+                imagesArray();
+                setImageView(null);
+                setStatusProfile(!statusProfile);
+                setTimeout(() => {
+                  setLoadingExtras(0);
+                }, 1000);
+              }, 1500);
+            },
+          }
+        );
+      } catch (error) {
+        console.log("aqui", error);
+      }
+    }
   };
 
   const deleteImage = async (image) => {
@@ -220,11 +246,26 @@ const Page = ({ route, navigation }) => {
     } catch (error) {
       console.log(error);
     }
-
-    // Convertir los objetos de nuevo a cadenas JSON
   };
+
+  const imagesArray = async () => {
+    const result = await API.graphql({
+      query: customProfile.getImages,
+      authMode: "AMAZON_COGNITO_USER_POOLS",
+      variables: {
+        id: item?.id,
+      },
+    });
+    const list = result?.data?.getBusiness?.images
+      .map((image) => JSON.parse(image))
+      .sort((a, b) => a.key - b.key);
+    console.log(list);
+    setStorageImages(list);
+  };
+
   useEffect(() => {
     AllImages();
+    imagesArray();
     const updateSub = API.graphql({
       query: subscriptions.onUpdateBusiness,
       authMode: "AMAZON_COGNITO_USER_POOLS",
@@ -276,7 +317,13 @@ const Page = ({ route, navigation }) => {
               data={storageImages}
               renderItem={({ item, index }) => (
                 <View
-                  style={{ flex: 1, width: 300, height: 250, marginRight: 5 }}
+                  style={{
+                    flex: 1,
+                    width: 300,
+                    height: 250,
+                    marginRight: 5,
+                    position: "relative",
+                  }}
                 >
                   <Image
                     style={{
@@ -288,6 +335,22 @@ const Page = ({ route, navigation }) => {
                     }}
                     source={{ uri: item.url }}
                   />
+                  {item.key === loadingExtras && (
+                    <View
+                      style={{
+                        flex: 1,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        backgroundColor: "#000",
+                        opacity: 0.5,
+                        position: "absolute",
+                        width: "100%",
+                        height: "100%",
+                      }}
+                    >
+                      <ActivityIndicator color={`#fff`} size={`large`} />
+                    </View>
+                  )}
                   <TouchableOpacity
                     style={[
                       {
@@ -787,6 +850,7 @@ const Page = ({ route, navigation }) => {
                       }}
                       source={{ uri: imageView?.url }}
                     />
+
                     <View style={{ flex: 1, paddingVertical: 15 }}>
                       {imageView?.key === "0" && (
                         <Text
@@ -885,6 +949,22 @@ const Page = ({ route, navigation }) => {
           open={visible}
         />
       </ScrollView>
+      {loading && (
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "#000",
+            opacity: 0.5,
+            position: "absolute",
+            width: '100%',
+            height: '100%'
+          }}
+        >
+          <ActivityIndicator color={`#fff`} size={`large`} />
+        </View>
+      )}
     </View>
   );
 };

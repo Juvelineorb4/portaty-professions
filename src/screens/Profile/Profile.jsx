@@ -323,20 +323,27 @@ const Profile = ({ route, navigation }) => {
               />
             </View>
           </View>
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          >
             {editActive && (
               <CustomButton
-                text={isLoading ? <ActivityIndicator color={`#fff`} /> : "Guardar"}
+                text={
+                  isLoading ? <ActivityIndicator color={`#fff`} /> : "Guardar"
+                }
                 handlePress={onSaveChange}
-                textStyles={[global.white, {fontFamily: 'medium', marginLeft: 25}]}
+                textStyles={[
+                  global.white,
+                  { fontFamily: "medium", marginLeft: 25 },
+                ]}
                 buttonStyles={[
                   {
                     width: 200,
                     height: 50,
                     borderRadius: 6,
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center'
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
                   },
                   isSave ? global.mainBgColor : global.bgWhiteSoft,
                   ,

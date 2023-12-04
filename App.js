@@ -8,7 +8,6 @@ import { RecoilRoot } from "recoil";
 import { useFonts } from "expo-font";
 import { Platform, SafeAreaView as SafeAreaIOS } from "react-native";
 import Navigation from "@/routes/Navigation";
-
 // amplify
 import { Amplify } from "aws-amplify";
 import awsconfig from "./src/aws-exports.js";

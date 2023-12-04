@@ -117,3 +117,12 @@ export const getBusiness = /* GraphQL */ `
     }
   }
 `;
+
+export const getImages = /* GraphQL */ `
+  query GetBusiness($id: ID!) {
+    getBusiness(id: $id) {
+      id
+      images
+    }
+  }
+`;
