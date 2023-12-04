@@ -33,6 +33,8 @@ import SkeletonExample from "@/components/SkeletonExample";
 // recoil
 import { useRecoilState, useRecoilValue } from "recoil";
 import { updateListFavorites, userAuthenticated } from "@/atoms/index";
+import * as FileSystem from "expo-file-system";
+import { StorageAccessFramework } from "expo-file-system";
 
 const SearchPost = ({ route, navigation }) => {
   const userAuth = useRecoilValue(userAuthenticated);
@@ -46,6 +48,43 @@ const SearchPost = ({ route, navigation }) => {
   const {
     data: { item, images },
   } = route.params;
+
+
+  const getPdf = async () => {
+    const permissions =
+      await StorageAccessFramework.requestDirectoryPermissionsAsync();
+    if (!permissions.granted) {
+      return;
+    }
+
+    const api = "api-professions-gateway";
+    const path = "/documentqr";
+    const params = {
+      headers: {},
+      queryStringParameters: {
+        path: `https://www.portaty.com/share/business?id=${item.id}`,
+      },
+    };
+
+    try {
+      const response = await API.get(api, path, params);
+      await StorageAccessFramework.createFileAsync(
+        permissions.directoryUri,
+        "qr.pdf",
+        "application/pdf"
+      )
+        .then(async (uri) => {
+          await FileSystem.writeAsStringAsync(uri, response["pdf_base64"], {
+            encoding: FileSystem.EncodingType.Base64,
+          });
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    } catch (error) {
+      console.log("Error en pdf: ", error.message);
+    }
+  };
 
   const onCreateFavorite = async () => {
     try {
@@ -351,12 +390,7 @@ const SearchPost = ({ route, navigation }) => {
             alignItems: "center",
             marginTop: -25,
           }}
-          onPress={() => {
-            navigation.navigate("ViewQR", {
-              id: `https://www.portaty.com/share/business?id=${item.id}`,
-              name: post?.name,
-            });
-          }}
+          onPress={getPdf}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <View
@@ -378,9 +412,9 @@ const SearchPost = ({ route, navigation }) => {
               />
             </View>
             <View style={{ marginLeft: 10 }}>
-              <Text style={{ fontFamily: "light", fontSize: 16 }}>Ver QR</Text>
+              <Text style={{ fontFamily: "light", fontSize: 16 }}>Descargar QR</Text>
               <Text style={{ fontFamily: "thin", fontSize: 12, width: 150 }}>
-                Compartelo en formato QR para pegarlo en donde quieras
+                Descarga el QR del negocio para pegarlo en donde quieras
               </Text>
             </View>
           </View>

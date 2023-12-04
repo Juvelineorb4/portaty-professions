@@ -54,8 +54,6 @@ const CustomQR = ({ route, navigation }) => {
 
     try {
       const response = await API.get(api, path, params);
-      console.log(response["pdf_base64"]);
-
       await StorageAccessFramework.createFileAsync(
         permissions.directoryUri,
         "qr.pdf",

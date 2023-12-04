@@ -37,6 +37,8 @@ import ModalAlert from "@/components/ModalAlert";
 import { updateProfile } from "@/atoms";
 import { useRecoilState } from "recoil";
 import * as customProfile from "@/graphql/CustomQueries/Profile";
+import * as FileSystem from "expo-file-system";
+import { StorageAccessFramework } from "expo-file-system";
 
 const Page = ({ route, navigation }) => {
   const {
@@ -52,6 +54,42 @@ const Page = ({ route, navigation }) => {
   const [loadingExtras, setLoadingExtras] = useState(0);
   const global = require("@/utils/styles/global.js");
   const [statusProfile, setStatusProfile] = useRecoilState(updateProfile);
+
+  const getPdf = async () => {
+    const permissions =
+      await StorageAccessFramework.requestDirectoryPermissionsAsync();
+    if (!permissions.granted) {
+      return;
+    }
+
+    const api = "api-professions-gateway";
+    const path = "/documentqr";
+    const params = {
+      headers: {},
+      queryStringParameters: {
+        path: `https://www.portaty.com/share/business?id=${item.id}`,
+      },
+    };
+
+    try {
+      const response = await API.get(api, path, params);
+      await StorageAccessFramework.createFileAsync(
+        permissions.directoryUri,
+        "qr.pdf",
+        "application/pdf"
+      )
+        .then(async (uri) => {
+          await FileSystem.writeAsStringAsync(uri, response["pdf_base64"], {
+            encoding: FileSystem.EncodingType.Base64,
+          });
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    } catch (error) {
+      console.log("Error en pdf: ", error.message);
+    }
+  };
 
   const onOpenMap = (lat, lng, name) => {
     let url = "";
@@ -103,15 +141,23 @@ const Page = ({ route, navigation }) => {
       xhr.send();
     });
   }
+
+  const Randomizer = () => {
+    let numero = "";
+    for (let i = 0; i < 10; i++) {
+      numero += Math.floor(Math.random() * 10);
+    }
+    return numero;
+  };
+
   const uploadImages = async (images) => {
     setLoading(true);
-    console.log(images);
-    return;
     images.forEach(async (image, index) => {
       const blob = await urlToBlob(image.uri);
+      let numero = Randomizer();
       try {
         const { key } = Storage.put(
-          `business/${item.id}/incoming/image_${image.assetId}.jpg`,
+          `business/${item.id}/incoming/image_${numero}.jpg`,
           blob,
           {
             level: "protected",
@@ -166,20 +212,12 @@ const Page = ({ route, navigation }) => {
     });
     setOpen(!open);
     setLoadingExtras(image.key);
-    let pathId = "";
-    let type = "";
-    if (image.key === "0") {
-      pathId = `profile_${result.assets[0].assetId}`;
-      type = "profile";
-    } else {
-      pathId = `image_${result.assets[0].assetId}`;
-      type = "extras";
-    }
     if (!result.canceled) {
       const blob = await urlToBlob(result.assets[0].uri);
+      let numero = Randomizer();
       try {
         const { key } = Storage.put(
-          `business/${item.id}/incoming/image_${pathId}.jpg`,
+          `business/${item.id}/incoming/image_${numero}.jpg`,
           blob,
           {
             level: "protected",
@@ -187,7 +225,7 @@ const Page = ({ route, navigation }) => {
             metadata: {
               businessid: item.id,
               action: "update",
-              type,
+              type: image.key === "0" ? "profile" : "extras",
               key: image?.key,
             },
             resumable: true,
@@ -531,12 +569,7 @@ const Page = ({ route, navigation }) => {
             alignItems: "center",
             marginTop: -25,
           }}
-          onPress={() => {
-            navigation.navigate("ViewQR", {
-              id: `https://www.portaty.com/share/business?id=${item.id}`,
-              name: item.name,
-            });
-          }}
+          onPress={getPdf}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <View
@@ -558,9 +591,9 @@ const Page = ({ route, navigation }) => {
               />
             </View>
             <View style={{ marginLeft: 10 }}>
-              <Text style={{ fontFamily: "light", fontSize: 16 }}>Ver QR</Text>
+              <Text style={{ fontFamily: "light", fontSize: 16 }}>Descargar QR</Text>
               <Text style={{ fontFamily: "thin", fontSize: 12, width: 150 }}>
-                Compartelo en formato QR para pegarlo en donde quieras
+                Descarga tu QR para pegarlo en donde quieras
               </Text>
             </View>
           </View>
