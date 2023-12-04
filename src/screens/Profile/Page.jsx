@@ -80,14 +80,14 @@ const Page = ({ route, navigation }) => {
       quality: 1,
     });
 
-    if (!result.canceled) {
-      if (result.assets.length > 4) {
-        setVisible(true);
-      } else {
-        setSelectedImages(result.assets.map((i) => i.uri));
-        uploadImages(result.assets);
-      }
-    }
+    // if (!result.canceled) {
+    //   if (result.assets.length > 4) {
+    //     setVisible(true);
+    //   } else {
+    //     setSelectedImages(result.assets.map((i) => i.uri));
+    //     uploadImages(result.assets);
+    //   }
+    // }
   };
   function urlToBlob(url) {
     return new Promise((resolve, reject) => {
@@ -103,14 +103,23 @@ const Page = ({ route, navigation }) => {
       xhr.send();
     });
   }
+
+  const Randomizer = () => {
+    let numero = "";
+    for (let i = 0; i < 10; i++) {
+      numero += Math.floor(Math.random() * 10);
+    }
+    return numero;
+  }
+
   const uploadImages = async (images) => {
     setLoading(true);
-
     images.forEach(async (image, index) => {
       const blob = await urlToBlob(image.uri);
+      let numero = Randomizer()
       try {
         const { key } = Storage.put(
-          `business/${item.id}/incoming/image_${image.assetId}.jpg`,
+          `business/${item.id}/incoming/image_${numero}.jpg`,
           blob,
           {
             level: "protected",
@@ -165,20 +174,12 @@ const Page = ({ route, navigation }) => {
     });
     setOpen(!open);
     setLoadingExtras(image.key);
-    let pathId = "";
-    let type = "";
-    if (image.key === "0") {
-      pathId = `profile_${result.assets[0].assetId}`;
-      type = "profile";
-    } else {
-      pathId = `image_${result.assets[0].assetId}`;
-      type = "extras";
-    }
     if (!result.canceled) {
       const blob = await urlToBlob(result.assets[0].uri);
+      let numero = Randomizer()
       try {
         const { key } = Storage.put(
-          `business/${item.id}/incoming/image_${pathId}.jpg`,
+          `business/${item.id}/incoming/image_${numero}.jpg`,
           blob,
           {
             level: "protected",
@@ -186,7 +187,7 @@ const Page = ({ route, navigation }) => {
             metadata: {
               businessid: item.id,
               action: "update",
-              type,
+              type: image.key === "0" ? "profile" : "extras",
               key: image?.key,
             },
             resumable: true,
@@ -958,8 +959,8 @@ const Page = ({ route, navigation }) => {
             backgroundColor: "#000",
             opacity: 0.5,
             position: "absolute",
-            width: '100%',
-            height: '100%'
+            width: "100%",
+            height: "100%",
           }}
         >
           <ActivityIndicator color={`#fff`} size={`large`} />
