@@ -12,7 +12,6 @@ import {
   Pressable,
   TouchableWithoutFeedback,
 } from "react-native";
-import ExpoImage from "expo-image";
 import React, { useLayoutEffect, useState, useEffect } from "react";
 import CustomSelect from "@/components/CustomSelect";
 import styles from "@/utils/styles/Unprofile.module.css";
@@ -48,8 +47,7 @@ const Page = ({ route, navigation }) => {
   const [arrayImages, setArrayImages] = useState(item?.images);
   const [visible, setVisible] = useState(false);
   const global = require("@/utils/styles/global.js");
-  const [statusProfile, setStatusProfile] =
-  useRecoilState(updateProfile);
+  const [statusProfile, setStatusProfile] = useRecoilState(updateProfile);
 
   const onOpenMap = (lat, lng, name) => {
     let url = "";
@@ -77,7 +75,6 @@ const Page = ({ route, navigation }) => {
       allowsMultipleSelection: true,
       quality: 1,
     });
-
 
     if (!result.canceled) {
       if (result.assets.length > 4) {
@@ -120,7 +117,7 @@ const Page = ({ route, navigation }) => {
             },
           }
         );
-        console.log(key);
+        setStatusProfile(!statusProfile);
         navigation.navigate("Unprofile");
       } catch (error) {
         console.log("aqui", error);
@@ -158,13 +155,11 @@ const Page = ({ route, navigation }) => {
       type = "extras";
     }
     console.log(`PAth: ${pathId}, tipo: ${type}`);
-
     if (!result.canceled) {
       const blob = await urlToBlob(result.assets[0].uri);
       try {
-        // cargamos la imagen
         const { key } = await Storage.put(
-          `business/${item.id}/incoming/${pathId}.jpg`,
+          `business/${item.id}/incoming/image_${pathId}.jpg`,
           blob,
           {
             level: "protected",
@@ -177,16 +172,15 @@ const Page = ({ route, navigation }) => {
             },
           }
         );
-        console.log(key);
         setOpen(!open);
         setImageView(null);
+        setStatusProfile(!statusProfile);
         navigation.navigate("Unprofile");
       } catch (error) {
         console.log("aqui", error);
       }
     }
   };
-
 
   const deleteImage = async (image) => {
     let path = image.url.substring(image.url.indexOf("business"));
@@ -247,6 +241,7 @@ const Page = ({ route, navigation }) => {
       updateSub.unsubscribe();
     };
   }, []);
+
   if (!item || storageImages?.length === 0) return <SkeletonPage />;
   return (
     <View
@@ -284,7 +279,7 @@ const Page = ({ route, navigation }) => {
                       borderRadius: 5,
                       backgroundColor: "#fff",
                     }}
-                    source={{ uri: `${item.url}` }}
+                    source={{ uri: item.url }}
                   />
                   <TouchableOpacity
                     style={[
