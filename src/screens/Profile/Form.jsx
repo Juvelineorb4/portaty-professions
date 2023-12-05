@@ -132,7 +132,6 @@ const Form = ({ navigation, route }) => {
         }, // replace this with attributes you need
         headers: {}, // OPTIONAL
       };
-
       const result = await API.post(apiName, path, myInit);
       console.log(result);
       setStateProfile(true);
