@@ -21,8 +21,7 @@ const CustomActivities = ({ data }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const { control } = useForm();
   const activity = useRecoilValue(activitySelect);
-  useEffect(() => {
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <ScrollView
@@ -37,9 +36,9 @@ const CustomActivities = ({ data }) => {
         >
           <View style={{ flex: 1, flexDirection: "row" }}>
             {activity.name ? (
-                <View style={styles.containerTag}>
-                  <Text style={styles.textTag}>{activity.name}</Text>
-                </View>
+              <View style={styles.containerTag}>
+                <Text style={styles.textTag}>{activity.name}</Text>
+              </View>
             ) : (
               <Text style={styles.textInputTag}>
                 Selecciona tu actividad laboral
@@ -88,6 +87,12 @@ const CustomActivities = ({ data }) => {
                       columnWrapperStyle={{ justifyContent: "space-between" }}
                     />
                   </View>
+                    <TouchableOpacity
+                      onPress={() => setModalVisible(!modalVisible)}
+                      style={[{alignItems: 'center', justifyContent: 'center', padding: 10, borderRadius: 8}, global.mainBgColor]}
+                    >
+                      <Text style={{fontFamily: 'medium', color: '#fff', textAlign: 'center'}}>Aceptar</Text>
+                    </TouchableOpacity>
                 </View>
               </View>
             </View>

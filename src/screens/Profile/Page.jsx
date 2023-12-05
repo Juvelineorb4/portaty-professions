@@ -12,6 +12,7 @@ import {
   Pressable,
   TouchableWithoutFeedback,
   ActivityIndicator,
+  RefreshControl
 } from "react-native";
 import React, { useLayoutEffect, useState, useEffect } from "react";
 import CustomSelect from "@/components/CustomSelect";
@@ -41,6 +42,7 @@ import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
 import { StorageAccessFramework } from "expo-file-system";
 import * as Sharing from "expo-sharing";
+import { useCallback } from "react";
 
 const Page = ({ route, navigation }) => {
   const {
@@ -56,6 +58,14 @@ const Page = ({ route, navigation }) => {
   const [loadingExtras, setLoadingExtras] = useState(0);
   const global = require("@/utils/styles/global.js");
   const [statusProfile, setStatusProfile] = useRecoilState(updateProfile);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 1000);
+  }, []);
 
   const getPdf = async () => {
     const permissions =
@@ -363,6 +373,9 @@ const Page = ({ route, navigation }) => {
         },
         global.bgWhite,
       ]}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
     >
       <ScrollView style={{ flex: 1, marginTop: 30 }}>
         <View

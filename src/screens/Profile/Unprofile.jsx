@@ -1,4 +1,4 @@
-import { ScrollView, View, Text, TouchableOpacity, Alert } from "react-native";
+import { ScrollView, View, Text, TouchableOpacity, Alert, RefreshControl } from "react-native";
 import React, { useLayoutEffect, useState } from "react";
 import styles from "@/utils/styles/Unprofile.module.css";
 import CustomSelect from "@/components/CustomSelect";
@@ -7,13 +7,14 @@ import { useRecoilValue } from "recoil";
 import { Auth, API, Storage } from "aws-amplify";
 import * as customProfile from "@/graphql/CustomQueries/Profile";
 import * as mutations from "@/graphql/mutations";
-import { profileState, updateProfile, userAuthenticated } from "@/atoms";
+import { profileState, userAuthenticated } from "@/atoms";
 import * as WebBrowser from "expo-web-browser";
 import SkeletonUnprofile from "@/components/SkeletonUnprofile";
 import { Skeleton } from "@rneui/themed";
 import { useEffect } from "react";
 import { setStatusBarNetworkActivityIndicatorVisible } from "expo-status-bar";
 import ModalAlert from "@/components/ModalAlert";
+import { useCallback } from "react";
 
 const Unprofile = ({ navigation, route }) => {
   const { buttons } = settings;
@@ -25,8 +26,17 @@ const Unprofile = ({ navigation, route }) => {
   const [business, setBusiness] = useState([]);
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState("");
+  const [refreshing, setRefreshing] = useState(false);
 
-  const status = useRecoilValue(updateProfile);
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 1000);
+  }, []);
+
+
+  const status = useRecoilValue(profileState);
 
   const onHandleLogout = async () => {
     await Auth.signOut();
@@ -48,7 +58,7 @@ const Unprofile = ({ navigation, route }) => {
   useLayoutEffect(() => {
     setUser([userAuth?.attributes]);
     User();
-  }, [userAuth, status]);
+  }, [userAuth, status, refreshing]);
 
 
   if (!user[0]) return <SkeletonUnprofile />;
@@ -56,6 +66,9 @@ const Unprofile = ({ navigation, route }) => {
     <ScrollView
       style={[styles.container, global.bgWhite]}
       showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
     >
       <View>
         <Text style={[styles.titleSettings, global.black, { marginTop: 20 }]}>
