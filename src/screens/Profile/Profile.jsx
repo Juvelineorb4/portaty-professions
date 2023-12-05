@@ -35,7 +35,6 @@ const Profile = ({ route, navigation }) => {
   const [editActive, setEditActive] = useState(false);
   const [isSave, setIsSave] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [pdfUri, setPdfUri] = useState("");
   const onShare = async () => {
     try {
       await Share.share({
@@ -90,7 +89,9 @@ const Profile = ({ route, navigation }) => {
       console.log("ERROR AL ACTUALIZAR ATRIBUTO IDENTITY ID: ", message);
     }
     setIsLoading(false);
+    setEditActive(!editActive)
   };
+
 
   return (
     <View
@@ -110,7 +111,6 @@ const Profile = ({ route, navigation }) => {
             marginBottom: 20,
           }}
         >
-          {pdfUri && <PDFReader source={{ uri: pdfUri }} />}
           <Text style={{ fontSize: 26, fontFamily: "thin" }}>0</Text>
           <Text style={{ fontSize: 22, fontFamily: "thin" }}>
             Mis Favoritos

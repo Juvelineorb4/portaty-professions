@@ -155,7 +155,7 @@ const Form = ({ navigation, route }) => {
   const CloseModal = () => {
     setVisible(false);
     BlankInputs();
-    navigation.goBack();
+    navigation.navigate('Unprofile');
   };
   useEffect(() => {
     MultipleData();
