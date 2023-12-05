@@ -12,7 +12,7 @@ import {
   Pressable,
   TouchableWithoutFeedback,
   ActivityIndicator,
-  RefreshControl
+  RefreshControl,
 } from "react-native";
 import React, { useLayoutEffect, useState, useEffect } from "react";
 import CustomSelect from "@/components/CustomSelect";
@@ -412,6 +412,14 @@ const Page = ({ route, navigation }) => {
                     }}
                     source={{ uri: item.url }}
                   />
+                
+                  {
+                    console.log("Loading: ", loadingExtras)
+                   
+                  }
+                  {
+                     console.log("Key: ", item.key)
+                  }
                   {item.key === loadingExtras && (
                     <View
                       style={{

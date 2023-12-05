@@ -48,8 +48,7 @@ const Form = ({ navigation, route }) => {
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [statusProfile, setStatusProfile] =
-    useRecoilState(updateProfile);
+  const [statusProfile, setStatusProfile] = useRecoilState(updateProfile);
 
   /* Para limpiar */
   const [selectTagsList, setSelectTagsList] = useRecoilState(tagsList);
@@ -116,20 +115,22 @@ const Form = ({ navigation, route }) => {
           },
         },
       });
-      const { key } = await Storage.put(
-        `business/${business?.data?.createBusiness?.id}/incoming/profile.jpg`,
-        blobImage,
-        {
-          level: "protected",
-          contentType: "image/jpeg",
-          metadata: {
-            businessid: business?.data?.createBusiness?.id,
-            action: "create",
-            type: "profile",
-            key: 0,
-          },
-        }
-      );
+
+      const apiName = "api-professions-gateway"; // replace this with your api name.
+      const path = "/thumbnailgenerator"; //replace this with the path you have configured on your API
+      const myInit = {
+        body: {
+          identityid: identityId,
+          businessid: business?.data?.createBusiness?.id,
+          action: "create",
+          type: "profile",
+          key: 0,
+          image: imageB64,
+        }, // replace this with attributes you need
+        headers: {}, // OPTIONAL
+      };
+      const result = await API.post(apiName, path, myInit);
+      console.log(result);
 
       setStateProfile(true);
       setLoading(false);
@@ -151,7 +152,7 @@ const Form = ({ navigation, route }) => {
   const CloseModal = () => {
     setVisible(false);
     BlankInputs();
-    navigation.navigate('Unprofile');
+    navigation.navigate("Unprofile");
   };
   useEffect(() => {
     MultipleData();
