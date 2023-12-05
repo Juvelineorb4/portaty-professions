@@ -55,7 +55,7 @@ const Page = ({ route, navigation }) => {
   const [arrayImages, setArrayImages] = useState(item?.images);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [loadingExtras, setLoadingExtras] = useState(0);
+  const [loadingExtras, setLoadingExtras] = useState(5);
   const global = require("@/utils/styles/global.js");
   const [statusProfile, setStatusProfile] = useRecoilState(updateProfile);
   const [refreshing, setRefreshing] = useState(false);
@@ -275,7 +275,7 @@ const Page = ({ route, navigation }) => {
                 setImageView(null);
                 setStatusProfile(!statusProfile);
                 setTimeout(() => {
-                  setLoadingExtras(0);
+                  setLoadingExtras(5);
                 }, 1000);
               }, 1500);
             },
@@ -412,9 +412,6 @@ const Page = ({ route, navigation }) => {
                     }}
                     source={{ uri: item.url }}
                   />
-
-                  {console.log("Loading: ", loadingExtras)}
-                  {console.log("Key: ", item.key)}
                   {item.key === loadingExtras && (
                     <View
                       style={{
