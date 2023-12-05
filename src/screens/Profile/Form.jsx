@@ -49,7 +49,6 @@ const Form = ({ navigation, route }) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [statusProfile, setStatusProfile] = useRecoilState(updateProfile);
-  const [imageB64, setImageB64] = useState("");
 
   /* Para limpiar */
   const [selectTagsList, setSelectTagsList] = useRecoilState(tagsList);
@@ -77,10 +76,8 @@ const Form = ({ navigation, route }) => {
       allowsEditing: true,
       aspect: [6, 4],
       quality: 1,
-      base64: true,
     });
     if (!result.canceled) {
-      setImageB64(result?.assets[0]?.base64);
       const { uri } = result.assets[0];
       const blobData = await urlToBlob(uri);
       setBlobImage(blobData);
@@ -134,6 +131,7 @@ const Form = ({ navigation, route }) => {
       };
       const result = await API.post(apiName, path, myInit);
       console.log(result);
+
       setStateProfile(true);
       setLoading(false);
       setVisible(true);
@@ -154,7 +152,7 @@ const Form = ({ navigation, route }) => {
   const CloseModal = () => {
     setVisible(false);
     BlankInputs();
-    navigation.navigate('Unprofile');
+    navigation.navigate("Unprofile");
   };
   useEffect(() => {
     MultipleData();
