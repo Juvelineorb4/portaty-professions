@@ -38,7 +38,9 @@ import { updateProfile } from "@/atoms";
 import { useRecoilState } from "recoil";
 import * as customProfile from "@/graphql/CustomQueries/Profile";
 import * as FileSystem from "expo-file-system";
+import * as MediaLibrary from "expo-media-library";
 import { StorageAccessFramework } from "expo-file-system";
+import * as Sharing from "expo-sharing";
 
 const Page = ({ route, navigation }) => {
   const {
@@ -70,7 +72,7 @@ const Page = ({ route, navigation }) => {
         path: `https://www.portaty.com/share/business?id=${item.id}`,
       },
     };
-
+    let fileUri = "";
     try {
       const response = await API.get(api, path, params);
       await StorageAccessFramework.createFileAsync(
@@ -79,6 +81,7 @@ const Page = ({ route, navigation }) => {
         "application/pdf"
       )
         .then(async (uri) => {
+          fileUri = uri;
           await FileSystem.writeAsStringAsync(uri, response["pdf_base64"], {
             encoding: FileSystem.EncodingType.Base64,
           });
@@ -89,6 +92,7 @@ const Page = ({ route, navigation }) => {
     } catch (error) {
       console.log("Error en pdf: ", error.message);
     }
+    return fileUri;
   };
 
   const onOpenMap = (lat, lng, name) => {
@@ -111,6 +115,24 @@ const Page = ({ route, navigation }) => {
     }
   };
 
+  const onSharePdf = async (contentUri) => {
+    const options = {
+      mimeType: "application/pdf",
+      dialogTitle: "Portaty",
+    };
+    try {
+      const localUri = FileSystem.documentDirectory + "qr.pdf";
+      await FileSystem.copyAsync({
+        from: contentUri,
+        to: localUri,
+      });
+
+      Sharing.shareAsync(localUri, options);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   const selectImages = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -125,6 +147,8 @@ const Page = ({ route, navigation }) => {
         setSelectedImages(result.assets.map((i) => i.uri));
         uploadImages(result.assets);
       }
+    } else {
+      console.log("cancelaste");
     }
   };
   function urlToBlob(url) {
@@ -155,6 +179,7 @@ const Page = ({ route, navigation }) => {
     images.forEach(async (image, index) => {
       const blob = await urlToBlob(image.uri);
       let numero = Randomizer();
+      console.log(index + 1);
       try {
         const { key } = Storage.put(
           `business/${item.id}/incoming/image_${numero}.jpg`,
@@ -166,7 +191,7 @@ const Page = ({ route, navigation }) => {
               businessid: item.id,
               action: "create",
               type: "extras",
-              key: storageImages.length,
+              key: index + 1,
             },
             resumable: true,
             completeCallback: (event) => {
@@ -179,8 +204,6 @@ const Page = ({ route, navigation }) => {
                   "Tiempo transcurrido en segundos: " + elapsed / 1000
                 );
                 imagesArray();
-                setImageView(null);
-                setStatusProfile(!statusProfile);
                 setTimeout(() => {
                   setLoading(false);
                 }, 1000);
@@ -210,9 +233,9 @@ const Page = ({ route, navigation }) => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 1,
     });
-    setOpen(!open);
-    setLoadingExtras(image.key);
     if (!result.canceled) {
+      setOpen(!open);
+      setLoadingExtras(image.key);
       const blob = await urlToBlob(result.assets[0].uri);
       let numero = Randomizer();
       try {
@@ -251,6 +274,8 @@ const Page = ({ route, navigation }) => {
       } catch (error) {
         console.log("aqui", error);
       }
+    } else {
+      console.log("cancelaste");
     }
   };
 
@@ -569,7 +594,11 @@ const Page = ({ route, navigation }) => {
             alignItems: "center",
             marginTop: -25,
           }}
-          onPress={getPdf}
+          onPress={() =>
+            getPdf().then((fileUri) => {
+              onSharePdf(fileUri);
+            })
+          }
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <View
@@ -591,7 +620,9 @@ const Page = ({ route, navigation }) => {
               />
             </View>
             <View style={{ marginLeft: 10 }}>
-              <Text style={{ fontFamily: "light", fontSize: 16 }}>Descargar QR</Text>
+              <Text style={{ fontFamily: "light", fontSize: 16 }}>
+                Descargar QR
+              </Text>
               <Text style={{ fontFamily: "thin", fontSize: 12, width: 150 }}>
                 Descarga tu QR para pegarlo en donde quieras
               </Text>

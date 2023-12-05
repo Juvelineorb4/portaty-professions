@@ -89,6 +89,7 @@ const Profile = ({ route, navigation }) => {
       console.log("ERROR AL ACTUALIZAR ATRIBUTO IDENTITY ID: ", message);
     }
     setIsLoading(false);
+    setEditActive(!editActive)
   };
 
 
