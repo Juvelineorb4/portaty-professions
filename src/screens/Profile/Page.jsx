@@ -408,7 +408,7 @@ const Page = ({ route, navigation }) => {
                     }}
                   >
                     <Text style={[{ fontFamily: "medium" }, global.white]}>
-                      Ver foto
+                      •••
                     </Text>
                     <MaterialCommunityIcons
                       name="image-search-outline"
