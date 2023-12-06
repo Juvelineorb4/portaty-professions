@@ -55,6 +55,7 @@ type Business
   tags: [String]
   favorites: [Favorites]
     @hasMany(indexName: "byBusinessFavorites", fields: ["id"])
+  description: String
 }
 
 type ImageBusiness {

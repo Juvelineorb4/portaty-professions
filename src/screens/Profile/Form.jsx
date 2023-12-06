@@ -49,7 +49,7 @@ const Form = ({ navigation, route }) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [statusProfile, setStatusProfile] = useRecoilState(updateProfile);
-
+  const [imageB64, setImageB64] = useState("");
   /* Para limpiar */
   const [selectTagsList, setSelectTagsList] = useRecoilState(tagsList);
   const [selectActivity, setSelectActivity] = useRecoilState(activitySelect);
@@ -76,8 +76,10 @@ const Form = ({ navigation, route }) => {
       allowsEditing: true,
       aspect: [6, 4],
       quality: 1,
+      base64: true,
     });
     if (!result.canceled) {
+      setImageB64(result.assets[0].base64)
       const { uri } = result.assets[0];
       const blobData = await urlToBlob(uri);
       setBlobImage(blobData);

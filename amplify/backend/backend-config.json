@@ -59,23 +59,7 @@
       "service": "Cognito"
     }
   },
-  "function": {
-    "customGraphql": {
-      "build": true,
-      "dependsOn": [
-        {
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput"
-          ],
-          "category": "api",
-          "resourceName": "professionGraphql"
-        }
-      ],
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    }
-  },
+  "function": {},
   "parameters": {
     "AMPLIFY_function_customGraphql_deploymentBucketName": {
       "usedBy": [
