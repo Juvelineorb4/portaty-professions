@@ -41,6 +41,7 @@ export const createBusiness = /* GraphQL */ `
       thumbnail
       email
       phone
+      description
       whatsapp
       instagram
       facebook

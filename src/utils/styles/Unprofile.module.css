@@ -128,7 +128,7 @@
     border-radius: 12px;
     padding: 20px;
     width: 320px;
-    height: 450px;
+    /* height: 450px; */
   }
   .modalTextSelect {
     font-family: "light";

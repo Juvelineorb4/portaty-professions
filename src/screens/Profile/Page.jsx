@@ -14,7 +14,7 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from "react-native";
-import React, { useLayoutEffect, useState, useEffect } from "react";
+import React, { useLayoutEffect, useState, useEffect, useRef } from "react";
 import CustomSelect from "@/components/CustomSelect";
 import styles from "@/utils/styles/Unprofile.module.css";
 import {
@@ -25,6 +25,7 @@ import {
   Foundation,
   EvilIcons,
   Feather,
+  Entypo,
 } from "@expo/vector-icons";
 import { Auth, API, Storage } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Favorites";
@@ -43,6 +44,9 @@ import * as MediaLibrary from "expo-media-library";
 import { StorageAccessFramework } from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import { useCallback } from "react";
+import { TextInput } from "react-native";
+// import { FlatListSlider } from "react-native-flatlist-slider";
+// import Preview from "@/components/Preview";
 
 const Page = ({ route, navigation }) => {
   const {
@@ -50,10 +54,12 @@ const Page = ({ route, navigation }) => {
   } = route.params;
   const [selectedImages, setSelectedImages] = useState([]);
   const [open, setOpen] = useState(false);
+  const [dimensionsImages, setDimensionsImages] = useState(0);
   const [imageView, setImageView] = useState(null);
   const [storageImages, setStorageImages] = useState([]);
   const [arrayImages, setArrayImages] = useState(item?.images);
   const [visible, setVisible] = useState(false);
+  const [descriptionImage, setDescriptionImage] = useState("");
   const [loading, setLoading] = useState(false);
   const [loadingExtras, setLoadingExtras] = useState(5);
   const global = require("@/utils/styles/global.js");
@@ -152,13 +158,9 @@ const Page = ({ route, navigation }) => {
     });
 
     if (!result.canceled) {
-      uploadImages(result.assets[0].base64);
-      // if (result.assets.length > 4) {
-      //   setVisible(true);
-      // } else {
-      //   setSelectedImages(result.assets.map((i) => i.uri));
-      //   uploadImages(result.assets.map((i) => i.base64));
-      // }
+      setImageView(result.assets[0]);
+      setOpen(!open);
+      // uploadImages(result.assets[0].base64);
     } else {
       console.log("cancelaste");
     }
@@ -186,7 +188,13 @@ const Page = ({ route, navigation }) => {
     return numero;
   };
 
-  const uploadImages = async (imageB64) => {
+  const onViewRef = useRef((viewableItems) => {
+    if (viewableItems.changed[0].isViewable)
+      setDimensionsImages(viewableItems.changed[0].item.key);
+  });
+  const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 20 });
+
+  const uploadImages = async (imageB64, description) => {
     setLoading(true);
     const { identityId } = await Auth.currentUserCredentials();
     const apiName = "api-professions-gateway"; // replace this with your api name.
@@ -199,11 +207,13 @@ const Page = ({ route, navigation }) => {
         type: "extras",
         key: storageImages.length,
         image: imageB64,
+        description: description
       }, // replace this with attributes you need
       headers: {}, // OPTIONAL
     };
     const result = await API.post(apiName, path, myInit);
     imagesArray();
+    setDescriptionImage('')
     setLoading(false);
   };
 
@@ -218,7 +228,7 @@ const Page = ({ route, navigation }) => {
     }
   };
 
-  const changeImage = async (image) => {
+  const changeImage = async (image, description) => {
     const { identityId } = await Auth.currentUserCredentials();
     const apiName = "api-professions-gateway"; // replace this with your api name.
     const path = "/thumbnailgenerator"; //replace this with the path you have configured on your API
@@ -239,6 +249,7 @@ const Page = ({ route, navigation }) => {
           type: image.key === 0 ? "profile" : "extras",
           key: image?.key,
           image: imageB64,
+          description: description
         }, // replace this with attributes you need
         headers: {}, // OPTIONAL
       };
@@ -246,6 +257,7 @@ const Page = ({ route, navigation }) => {
       try {
         const resultAPI = await API.post(apiName, path, myInit);
         console.log(resultAPI);
+        setDescriptionImage('')
         imagesArray();
         setLoadingExtras(5);
       } catch (error) {
@@ -275,6 +287,7 @@ const Page = ({ route, navigation }) => {
       const resultAPI = await API.post(apiName, path, myInit);
       console.log(resultAPI);
       imagesArray();
+      setDescriptionImage('')
       setOpen(!open);
       setImageView(null);
     } catch (error) {
@@ -342,12 +355,57 @@ const Page = ({ route, navigation }) => {
           style={[
             {
               flex: 1,
-              paddingHorizontal: 20,
               alignItems: "center",
               justifyContent: "center",
+              alignSelf: "center",
+              width: 320,
+              height: 250,
+              position: "relative",
             },
           ]}
         >
+          {storageImages.length !== 1 &&
+            dimensionsImages + 1 > 1 &&
+            dimensionsImages <= 3 && (
+              <View
+                style={[
+                  global.mainBgColor,
+                  {
+                    width: 25,
+                    height: 25,
+                    position: "absolute",
+                    zIndex: 10,
+                    left: 0,
+                    top: "50%",
+                    opacity: 0.85,
+                    borderRadius: 5,
+                  },
+                ]}
+              >
+                <Entypo name="triangle-left" size={24} color="white" />
+              </View>
+            )}
+          {storageImages.length !== 1 &&
+            dimensionsImages >= 0 &&
+            dimensionsImages < storageImages.length - 1 && (
+              <View
+                style={[
+                  global.mainBgColor,
+                  {
+                    width: 25,
+                    height: 25,
+                    position: "absolute",
+                    zIndex: 10,
+                    top: "50%",
+                    right: 0,
+                    opacity: 0.85,
+                    borderRadius: 5,
+                  },
+                ]}
+              >
+                <Entypo name="triangle-right" size={24} color="white" />
+              </View>
+            )}
           {storageImages.length !== 0 && (
             <FlatList
               horizontal
@@ -356,10 +414,10 @@ const Page = ({ route, navigation }) => {
                 <View
                   style={{
                     flex: 1,
-                    width: 300,
+                    width: 320,
                     height: 250,
-                    marginRight: 5,
-                    position: "relative",
+                    // position: "relative",
+                    // zIndex: 3
                   }}
                 >
                   <Image
@@ -372,6 +430,7 @@ const Page = ({ route, navigation }) => {
                     }}
                     source={{ uri: item.url }}
                   />
+
                   {item.key === loadingExtras && (
                     <View
                       style={{
@@ -407,12 +466,17 @@ const Page = ({ route, navigation }) => {
                       setImageView(item);
                     }}
                   >
-                    <Text style={[{ fontFamily: "medium" }, global.white]}>
-                      •••
+                    <Text
+                      style={[
+                        { fontFamily: "medium", fontSize: 17 },
+                        global.white,
+                      ]}
+                    >
+                      {item.key + 1}/{storageImages.length}
                     </Text>
                     <MaterialCommunityIcons
                       name="image-search-outline"
-                      size={24}
+                      size={20}
                       color="white"
                       style={{ marginLeft: 5 }}
                     />
@@ -420,47 +484,49 @@ const Page = ({ route, navigation }) => {
                 </View>
               )}
               keyExtractor={(item, index) => index}
+              viewabilityConfig={viewConfigRef.current}
+              onViewableItemsChanged={onViewRef.current}
             />
           )}
-          {storageImages.length < 5 && (
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-                marginTop: 10,
-              }}
-            >
-              <TouchableOpacity
-                style={[
-                  {
-                    flexDirection: "row",
-                    padding: 8,
-                    borderRadius: 5,
-                    opacity: 0.95,
-                    alignItems: "center",
-                    marginBottom: 5,
-                  },
-                  global.mainBgColor,
-                ]}
-                onPress={selectImages}
-              >
-                <Text style={[{ fontFamily: "medium" }, global.white]}>
-                  Agregar mas fotos
-                </Text>
-                <MaterialCommunityIcons
-                  name="camera-plus-outline"
-                  size={23}
-                  color="white"
-                  style={{ marginLeft: 5 }}
-                />
-              </TouchableOpacity>
-              <Text style={{ fontFamily: "light" }}>
-                Solo puedes tener 5 fotos como maximo
-              </Text>
-            </View>
-          )}
         </View>
+        {storageImages.length < 5 && (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: 10,
+            }}
+          >
+            <TouchableOpacity
+              style={[
+                {
+                  flexDirection: "row",
+                  padding: 8,
+                  borderRadius: 5,
+                  opacity: 0.95,
+                  alignItems: "center",
+                  marginBottom: 5,
+                },
+                global.mainBgColor,
+              ]}
+              onPress={selectImages}
+            >
+              <Text style={[{ fontFamily: "medium" }, global.white]}>
+                Agregar mas fotos
+              </Text>
+              <MaterialCommunityIcons
+                name="camera-plus-outline"
+                size={23}
+                color="white"
+                style={{ marginLeft: 5 }}
+              />
+            </TouchableOpacity>
+            <Text style={{ fontFamily: "light" }}>
+              Solo puedes tener 5 fotos como maximo
+            </Text>
+          </View>
+        )}
         <View
           style={{
             padding: 20,
@@ -850,22 +916,27 @@ const Page = ({ route, navigation }) => {
           onRequestClose={() => {
             setOpen(!open);
             setImageView(null);
+            setDescriptionImage('')
           }}
         >
           <TouchableWithoutFeedback
             onPress={() => {
               setOpen(!open);
               setImageView(null);
+              setDescriptionImage('')
             }}
           >
             <View style={styles.modalContainer}>
               <TouchableWithoutFeedback>
-                <View style={styles.modalContent}>
+                <View style={[styles.modalContent, {
+                  height: imageView?.url ? 520 : 450
+                } ]}>
                   <View style={styles.modalTop}>
                     <Pressable
                       onPress={() => {
                         setOpen(!open);
                         setImageView(null);
+                        setDescriptionImage('')
                       }}
                     >
                       <Image
@@ -882,25 +953,121 @@ const Page = ({ route, navigation }) => {
                     <Image
                       style={{
                         width: "100%",
-                        height: "70%",
+                        height: "60%",
                         resizeMode: "cover",
                         borderRadius: 5,
                       }}
-                      source={{ uri: imageView?.url }}
+                      source={{
+                        uri: imageView?.url ? imageView?.url : imageView?.uri,
+                      }}
                     />
 
-                    <View style={{ flex: 1, paddingVertical: 15 }}>
-                      {imageView?.key === 0 && (
-                        <Text
+                    {imageView?.url && (
+                      <View style={{ flex: 1, paddingVertical: 15 }}>
+                        {imageView?.key === 0 && (
+                          <Text
+                            style={{
+                              fontFamily: "light",
+                              fontSize: 12,
+                              textAlign: "center",
+                            }}
+                          >
+                            Tu imagen principal solo la puedes cambiar
+                          </Text>
+                        )}
+                        <View style={{ flex: 1, flexDirection: "row", borderColor: '#444', borderWidth: 0.4, paddingHorizontal: 10, borderRadius: 8, marginTop: 10}}>
+                          <TextInput
+                            value={imageView?.key === 0 ? item.description : imageView?.description}
+                            onChangeText={(e) => setDescriptionImage(e)}
+                            // onBlur={onBlur}
+                            placeholder={'Coloca una descripcion para tu imagen'}
+                            placeholderTextColor={'#333'}
+                            style={{
+                              flex: 1,
+                              // width: 100,
+                              fontFamily: 'light',
+                              fontSize: 12,
+                              alignItems: 'flex-start'
+                            }}
+                            multiline={true}
+                            numberOfLines={5}
+                          />
+                        </View>
+                        <View
                           style={{
-                            fontFamily: "light",
-                            fontSize: 12,
-                            textAlign: "center",
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            columnGap: 5,
                           }}
                         >
-                          Tu imagen principal solo la puedes cambiar
-                        </Text>
-                      )}
+                          <TouchableOpacity
+                            style={[
+                              global.bgYellow,
+                              {
+                                borderRadius: 8,
+                                flex: 1,
+                                justifyContent: "center",
+                                alignItems: "center",
+                                height: 49,
+                                marginTop: 10,
+                                flexDirection: "row",
+                              },
+                            ]}
+                            onPress={() => changeImage(imageView, descriptionImage)}
+                          >
+                            <Text
+                              style={[
+                                global.white,
+                                {
+                                  fontFamily: "medium",
+                                  fontSize: 14,
+                                  marginRight: 3,
+                                },
+                              ]}
+                            >
+                              {`Cambiar`}
+                            </Text>
+                            <MaterialCommunityIcons
+                              name="image-edit-outline"
+                              size={24}
+                              color="white"
+                            />
+                          </TouchableOpacity>
+                          {imageView?.key !== 0 && (
+                            <TouchableOpacity
+                              style={[
+                                {
+                                  flex: 1,
+                                  borderRadius: 8,
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                  height: 49,
+                                  marginTop: 10,
+                                  backgroundColor: "#c81d11",
+                                  flexDirection: "row",
+                                },
+                              ]}
+                              onPress={() => deleteImage(imageView)}
+                            >
+                              <Text
+                                style={[
+                                  global.white,
+                                  { fontFamily: "medium", fontSize: 14 },
+                                ]}
+                              >
+                                {`Eliminar`}
+                              </Text>
+                              <MaterialCommunityIcons
+                                name="delete-outline"
+                                size={24}
+                                color="white"
+                              />
+                            </TouchableOpacity>
+                          )}
+                        </View>
+                      </View>
+                    )}
+                    {imageView?.base64 && (
                       <View
                         style={{
                           flexDirection: "row",
@@ -908,20 +1075,40 @@ const Page = ({ route, navigation }) => {
                           columnGap: 5,
                         }}
                       >
+                        <View style={{ flex: 1, flexDirection: "row", borderColor: '#444', borderWidth: 0.4, paddingHorizontal: 10, borderRadius: 8, marginTop: 10}}>
+                          <TextInput
+                            value={descriptionImage}
+                            onChangeText={(e) => setDescriptionImage(e)}
+                            // onBlur={onBlur}
+                            placeholder={'Coloca una descripcion para tu imagen'}
+                            placeholderTextColor={'#333'}
+                            style={{
+                              flex: 1,
+                              // width: 100,
+                              fontFamily: 'light',
+                              fontSize: 12,
+                              alignItems: 'flex-start'
+                            }}
+                            multiline={true}
+                            numberOfLines={5}
+                          />
+                        </View>
                         <TouchableOpacity
                           style={[
                             global.bgYellow,
                             {
                               borderRadius: 8,
-                              flex: 1,
+                              // flex: 1,
                               justifyContent: "center",
                               alignItems: "center",
-                              height: 49,
+                              height: 70,
                               marginTop: 10,
                               flexDirection: "row",
                             },
                           ]}
-                          onPress={() => changeImage(imageView)}
+                          onPress={() =>
+                            uploadImages(imageView?.base64, descriptionImage)
+                          }
                         >
                           <Text
                             style={[
@@ -930,50 +1117,15 @@ const Page = ({ route, navigation }) => {
                                 fontFamily: "medium",
                                 fontSize: 14,
                                 marginRight: 3,
+                                paddingHorizontal: 15
                               },
                             ]}
                           >
-                            {`Cambiar`}
+                            {`Agregar`}
                           </Text>
-                          <MaterialCommunityIcons
-                            name="image-edit-outline"
-                            size={24}
-                            color="white"
-                          />
                         </TouchableOpacity>
-                        {imageView?.key !== 0 && (
-                          <TouchableOpacity
-                            style={[
-                              {
-                                flex: 1,
-                                borderRadius: 8,
-                                justifyContent: "center",
-                                alignItems: "center",
-                                height: 49,
-                                marginTop: 10,
-                                backgroundColor: "#c81d11",
-                                flexDirection: "row",
-                              },
-                            ]}
-                            onPress={() => deleteImage(imageView)}
-                          >
-                            <Text
-                              style={[
-                                global.white,
-                                { fontFamily: "medium", fontSize: 14 },
-                              ]}
-                            >
-                              {`Eliminar`}
-                            </Text>
-                            <MaterialCommunityIcons
-                              name="delete-outline"
-                              size={24}
-                              color="white"
-                            />
-                          </TouchableOpacity>
-                        )}
                       </View>
-                    </View>
+                    )}
                   </View>
                 </View>
               </TouchableWithoutFeedback>

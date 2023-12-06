@@ -37,6 +37,7 @@ export const searchBusinesses = /* GraphQL */ `
         name
         image
         email
+        description
         phone
         whatsapp
         instagram
@@ -82,6 +83,7 @@ export const getBusiness = /* GraphQL */ `
       phone
       whatsapp
       instagram
+      description
       facebook
       page
       coordinates {
