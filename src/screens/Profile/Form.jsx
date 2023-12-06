@@ -75,7 +75,7 @@ const Form = ({ navigation, route }) => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [6, 4],
-      quality: 1,
+      quality: 0.1,
       base64: true,
     });
     if (!result.canceled) {
@@ -128,6 +128,7 @@ const Form = ({ navigation, route }) => {
           action: "create",
           type: "profile",
           key: 0,
+          description,
           image: imageB64,
         }, // replace this with attributes you need
         headers: {}, // OPTIONAL

@@ -153,7 +153,9 @@ const Page = ({ route, navigation }) => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       // allowsMultipleSelection: true,
-      quality: 1,
+      aspect: [6, 4],
+      allowsEditing: true,
+      quality: 0.1,
       base64: true,
     });
 
@@ -195,6 +197,7 @@ const Page = ({ route, navigation }) => {
   const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 20 });
 
   const uploadImages = async (imageB64, description) => {
+    setOpen(!open);
     setLoading(true);
     const { identityId } = await Auth.currentUserCredentials();
     const apiName = "api-professions-gateway"; // replace this with your api name.
@@ -206,14 +209,16 @@ const Page = ({ route, navigation }) => {
         action: "create",
         type: "extras",
         key: storageImages.length,
+        description: description,
         image: imageB64,
-        description: description
       }, // replace this with attributes you need
       headers: {}, // OPTIONAL
     };
+
     const result = await API.post(apiName, path, myInit);
     imagesArray();
-    setDescriptionImage('')
+    setDescriptionImage("");
+
     setLoading(false);
   };
 
@@ -234,7 +239,9 @@ const Page = ({ route, navigation }) => {
     const path = "/thumbnailgenerator"; //replace this with the path you have configured on your API
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 1,
+      allowsEditing: true,
+      aspect: [6, 4],
+      quality: 0.1,
       base64: true,
     });
     if (!result.canceled) {
@@ -248,8 +255,8 @@ const Page = ({ route, navigation }) => {
           action: "update",
           type: image.key === 0 ? "profile" : "extras",
           key: image?.key,
+          description: description,
           image: imageB64,
-          description: description
         }, // replace this with attributes you need
         headers: {}, // OPTIONAL
       };
@@ -257,8 +264,9 @@ const Page = ({ route, navigation }) => {
       try {
         const resultAPI = await API.post(apiName, path, myInit);
         console.log(resultAPI);
-        setDescriptionImage('')
+        setDescriptionImage("");
         imagesArray();
+        setOpen(!open);
         setLoadingExtras(5);
       } catch (error) {
         console.log("ERROR EN API: ", error);
@@ -287,7 +295,7 @@ const Page = ({ route, navigation }) => {
       const resultAPI = await API.post(apiName, path, myInit);
       console.log(resultAPI);
       imagesArray();
-      setDescriptionImage('')
+      setDescriptionImage("");
       setOpen(!open);
       setImageView(null);
     } catch (error) {
@@ -916,27 +924,32 @@ const Page = ({ route, navigation }) => {
           onRequestClose={() => {
             setOpen(!open);
             setImageView(null);
-            setDescriptionImage('')
+            setDescriptionImage("");
           }}
         >
           <TouchableWithoutFeedback
             onPress={() => {
               setOpen(!open);
               setImageView(null);
-              setDescriptionImage('')
+              setDescriptionImage("");
             }}
           >
             <View style={styles.modalContainer}>
               <TouchableWithoutFeedback>
-                <View style={[styles.modalContent, {
-                  height: imageView?.url ? 520 : 450
-                } ]}>
+                <View
+                  style={[
+                    styles.modalContent,
+                    {
+                      height: imageView?.url ? 520 : 450,
+                    },
+                  ]}
+                >
                   <View style={styles.modalTop}>
                     <Pressable
                       onPress={() => {
                         setOpen(!open);
                         setImageView(null);
-                        setDescriptionImage('')
+                        setDescriptionImage("");
                       }}
                     >
                       <Image
@@ -975,19 +988,35 @@ const Page = ({ route, navigation }) => {
                             Tu imagen principal solo la puedes cambiar
                           </Text>
                         )}
-                        <View style={{ flex: 1, flexDirection: "row", borderColor: '#444', borderWidth: 0.4, paddingHorizontal: 10, borderRadius: 8, marginTop: 10}}>
+                        <View
+                          style={{
+                            flex: 1,
+                            flexDirection: "row",
+                            borderColor: "#444",
+                            borderWidth: 0.4,
+                            paddingHorizontal: 10,
+                            borderRadius: 8,
+                            marginTop: 10,
+                          }}
+                        >
                           <TextInput
-                            value={imageView?.key === 0 ? item.description : imageView?.description}
+                            value={
+                              imageView?.key === 0
+                                ? item.description
+                                : imageView?.description
+                            }
                             onChangeText={(e) => setDescriptionImage(e)}
                             // onBlur={onBlur}
-                            placeholder={'Coloca una descripcion para tu imagen'}
-                            placeholderTextColor={'#333'}
+                            placeholder={
+                              "Coloca una descripcion para tu imagen"
+                            }
+                            placeholderTextColor={"#333"}
                             style={{
                               flex: 1,
                               // width: 100,
-                              fontFamily: 'light',
+                              fontFamily: "light",
                               fontSize: 12,
-                              alignItems: 'flex-start'
+                              alignItems: "flex-start",
                             }}
                             multiline={true}
                             numberOfLines={5}
@@ -1013,7 +1042,9 @@ const Page = ({ route, navigation }) => {
                                 flexDirection: "row",
                               },
                             ]}
-                            onPress={() => changeImage(imageView, descriptionImage)}
+                            onPress={() =>
+                              changeImage(imageView, descriptionImage)
+                            }
                           >
                             <Text
                               style={[
@@ -1075,19 +1106,31 @@ const Page = ({ route, navigation }) => {
                           columnGap: 5,
                         }}
                       >
-                        <View style={{ flex: 1, flexDirection: "row", borderColor: '#444', borderWidth: 0.4, paddingHorizontal: 10, borderRadius: 8, marginTop: 10}}>
+                        <View
+                          style={{
+                            flex: 1,
+                            flexDirection: "row",
+                            borderColor: "#444",
+                            borderWidth: 0.4,
+                            paddingHorizontal: 10,
+                            borderRadius: 8,
+                            marginTop: 10,
+                          }}
+                        >
                           <TextInput
                             value={descriptionImage}
                             onChangeText={(e) => setDescriptionImage(e)}
                             // onBlur={onBlur}
-                            placeholder={'Coloca una descripcion para tu imagen'}
-                            placeholderTextColor={'#333'}
+                            placeholder={
+                              "Coloca una descripcion para tu imagen"
+                            }
+                            placeholderTextColor={"#333"}
                             style={{
                               flex: 1,
                               // width: 100,
-                              fontFamily: 'light',
+                              fontFamily: "light",
                               fontSize: 12,
-                              alignItems: 'flex-start'
+                              alignItems: "flex-start",
                             }}
                             multiline={true}
                             numberOfLines={5}
@@ -1117,7 +1160,7 @@ const Page = ({ route, navigation }) => {
                                 fontFamily: "medium",
                                 fontSize: 14,
                                 marginRight: 3,
-                                paddingHorizontal: 15
+                                paddingHorizontal: 15,
                               },
                             ]}
                           >
