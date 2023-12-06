@@ -290,6 +290,7 @@ export const onCreateUsers = /* GraphQL */ `
           page
           activity
           tags
+          description
           createdAt
           updatedAt
           owner
@@ -348,6 +349,7 @@ export const onUpdateUsers = /* GraphQL */ `
           page
           activity
           tags
+          description
           createdAt
           updatedAt
           owner
@@ -406,6 +408,7 @@ export const onDeleteUsers = /* GraphQL */ `
           page
           activity
           tags
+          description
           createdAt
           updatedAt
           owner
@@ -481,6 +484,7 @@ export const onCreateBusiness = /* GraphQL */ `
         nextToken
         __typename
       }
+      description
       createdAt
       updatedAt
       owner
@@ -548,6 +552,7 @@ export const onUpdateBusiness = /* GraphQL */ `
         nextToken
         __typename
       }
+      description
       createdAt
       updatedAt
       owner
@@ -615,6 +620,7 @@ export const onDeleteBusiness = /* GraphQL */ `
         nextToken
         __typename
       }
+      description
       createdAt
       updatedAt
       owner
@@ -667,6 +673,7 @@ export const onCreateFavorites = /* GraphQL */ `
           nextToken
           __typename
         }
+        description
         createdAt
         updatedAt
         owner
@@ -746,6 +753,7 @@ export const onUpdateFavorites = /* GraphQL */ `
           nextToken
           __typename
         }
+        description
         createdAt
         updatedAt
         owner
@@ -825,6 +833,7 @@ export const onDeleteFavorites = /* GraphQL */ `
           nextToken
           __typename
         }
+        description
         createdAt
         updatedAt
         owner

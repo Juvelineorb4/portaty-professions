@@ -66,6 +66,7 @@ export const searchBusinessByDistance = /* GraphQL */ `
           nextToken
           __typename
         }
+        description
         createdAt
         updatedAt
         owner
@@ -361,6 +362,7 @@ export const getUsers = /* GraphQL */ `
           page
           activity
           tags
+          description
           createdAt
           updatedAt
           owner
@@ -505,6 +507,7 @@ export const getBusiness = /* GraphQL */ `
         nextToken
         __typename
       }
+      description
       createdAt
       updatedAt
       owner
@@ -556,6 +559,7 @@ export const listBusinesses = /* GraphQL */ `
           nextToken
           __typename
         }
+        description
         createdAt
         updatedAt
         owner
@@ -618,6 +622,7 @@ export const businessesByUserID = /* GraphQL */ `
           nextToken
           __typename
         }
+        description
         createdAt
         updatedAt
         owner
@@ -682,6 +687,7 @@ export const searchBusinesses = /* GraphQL */ `
           nextToken
           __typename
         }
+        description
         createdAt
         updatedAt
         owner
@@ -751,6 +757,7 @@ export const getFavorites = /* GraphQL */ `
           nextToken
           __typename
         }
+        description
         createdAt
         updatedAt
         owner
@@ -811,6 +818,7 @@ export const listFavorites = /* GraphQL */ `
           page
           activity
           tags
+          description
           createdAt
           updatedAt
           owner
@@ -876,6 +884,7 @@ export const favoritesByBusinessID = /* GraphQL */ `
           page
           activity
           tags
+          description
           createdAt
           updatedAt
           owner
@@ -939,6 +948,7 @@ export const favoritesByUserID = /* GraphQL */ `
           page
           activity
           tags
+          description
           createdAt
           updatedAt
           owner
