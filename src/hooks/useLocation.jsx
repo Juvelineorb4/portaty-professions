@@ -20,11 +20,11 @@ const useLocation = () => {
 
         subscription = await Location.watchPositionAsync(
           {
-            accuracy: Location.Accuracy.BestForNavigation,
-            timeInterval: 30000, // Actualizar cada 5 segundos (ajusta según tus necesidades)
-            distanceInterval: 10, // Actualizar si el usuario se mueve al menos 10 metros
+            accuracy: Location.Accuracy.High,
+            mayShowUserSettingsDialog: true,
           },
           (locationResult) => {
+            console.log(locationResult);
             const { latitude, longitude } = locationResult.coords;
             setLocation({ latitude, longitude });
             setUserLocation({ latitude, longitude });
