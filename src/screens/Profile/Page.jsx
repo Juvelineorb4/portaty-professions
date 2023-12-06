@@ -55,7 +55,7 @@ const Page = ({ route, navigation }) => {
   const [arrayImages, setArrayImages] = useState(item?.images);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [loadingExtras, setLoadingExtras] = useState(0);
+  const [loadingExtras, setLoadingExtras] = useState(5);
   const global = require("@/utils/styles/global.js");
   const [statusProfile, setStatusProfile] = useRecoilState(updateProfile);
   const [refreshing, setRefreshing] = useState(false);
@@ -146,17 +146,19 @@ const Page = ({ route, navigation }) => {
   const selectImages = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsMultipleSelection: true,
+      // allowsMultipleSelection: true,
       quality: 1,
+      base64: true,
     });
 
     if (!result.canceled) {
-      if (result.assets.length > 4) {
-        setVisible(true);
-      } else {
-        setSelectedImages(result.assets.map((i) => i.uri));
-        uploadImages(result.assets);
-      }
+      uploadImages(result.assets[0].base64);
+      // if (result.assets.length > 4) {
+      //   setVisible(true);
+      // } else {
+      //   setSelectedImages(result.assets.map((i) => i.uri));
+      //   uploadImages(result.assets.map((i) => i.base64));
+      // }
     } else {
       console.log("cancelaste");
     }
@@ -184,47 +186,25 @@ const Page = ({ route, navigation }) => {
     return numero;
   };
 
-  const uploadImages = async (images) => {
+  const uploadImages = async (imageB64) => {
     setLoading(true);
-    images.forEach(async (image, index) => {
-      const blob = await urlToBlob(image.uri);
-      let numero = Randomizer();
-      console.log(index + 1);
-      try {
-        const { key } = Storage.put(
-          `business/${item.id}/incoming/image_${numero}.jpg`,
-          blob,
-          {
-            level: "protected",
-            contentType: "image/jpeg",
-            metadata: {
-              businessid: item.id,
-              action: "create",
-              type: "extras",
-              key: index + 1,
-            },
-            resumable: true,
-            completeCallback: (event) => {
-              console.log(`Successfully uploaded ${event.key}`);
-              let start = Date.now();
-              let timerId = setTimeout(function () {
-                let end = Date.now();
-                let elapsed = end - start;
-                console.log(
-                  "Tiempo transcurrido en segundos: " + elapsed / 1000
-                );
-                imagesArray();
-                setTimeout(() => {
-                  setLoading(false);
-                }, 1000);
-              }, 5000);
-            },
-          }
-        );
-      } catch (error) {
-        console.log("aqui", error);
-      }
-    });
+    const { identityId } = await Auth.currentUserCredentials();
+    const apiName = "api-professions-gateway"; // replace this with your api name.
+    const path = "/thumbnailgenerator"; //replace this with the path you have configured on your API
+    const myInit = {
+      body: {
+        identityid: identityId,
+        businessid: item.id,
+        action: "create",
+        type: "extras",
+        key: storageImages.length,
+        image: imageB64,
+      }, // replace this with attributes you need
+      headers: {}, // OPTIONAL
+    };
+    const result = await API.post(apiName, path, myInit);
+    imagesArray();
+    setLoading(false);
   };
 
   const AllImages = async () => {
@@ -239,50 +219,37 @@ const Page = ({ route, navigation }) => {
   };
 
   const changeImage = async (image) => {
+    const { identityId } = await Auth.currentUserCredentials();
+    const apiName = "api-professions-gateway"; // replace this with your api name.
+    const path = "/thumbnailgenerator"; //replace this with the path you have configured on your API
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 1,
+      base64: true,
     });
     if (!result.canceled) {
       setOpen(!open);
       setLoadingExtras(image.key);
-      const blob = await urlToBlob(result.assets[0].uri);
-      let numero = Randomizer();
+      const imageB64 = result.assets[0].base64;
+      const myInit = {
+        body: {
+          identityid: identityId,
+          businessid: item.id,
+          action: "update",
+          type: image.key === 0 ? "profile" : "extras",
+          key: image?.key,
+          image: imageB64,
+        }, // replace this with attributes you need
+        headers: {}, // OPTIONAL
+      };
+
       try {
-        const { key } = Storage.put(
-          `business/${item.id}/incoming/image_${numero}.jpg`,
-          blob,
-          {
-            level: "protected",
-            contentType: "image/jpeg",
-            metadata: {
-              businessid: item.id,
-              action: "update",
-              type: image.key === "0" ? "profile" : "extras",
-              key: image?.key,
-            },
-            resumable: true,
-            completeCallback: (event) => {
-              console.log(`Successfully uploaded ${event.key}`);
-              let start = Date.now();
-              let timerId = setTimeout(function () {
-                let end = Date.now();
-                let elapsed = end - start;
-                console.log(
-                  "Tiempo transcurrido en segundos: " + elapsed / 1000
-                );
-                imagesArray();
-                setImageView(null);
-                setStatusProfile(!statusProfile);
-                setTimeout(() => {
-                  setLoadingExtras(0);
-                }, 1000);
-              }, 1500);
-            },
-          }
-        );
+        const resultAPI = await API.post(apiName, path, myInit);
+        console.log(resultAPI);
+        imagesArray();
+        setLoadingExtras(5);
       } catch (error) {
-        console.log("aqui", error);
+        console.log("ERROR EN API: ", error);
       }
     } else {
       console.log("cancelaste");
@@ -290,31 +257,24 @@ const Page = ({ route, navigation }) => {
   };
 
   const deleteImage = async (image) => {
-    let path = image.url.substring(image.url.indexOf("business"));
+    let imagePath = image.url.substring(image.url.indexOf("protected"));
+    const { identityId } = await Auth.currentUserCredentials();
+    const apiName = "api-professions-gateway"; // replace this with your api name.
+    const path = "/thumbnailgenerator"; //replace this with the path you have configured on your API
 
+    const myInit = {
+      body: {
+        action: "delete",
+        path: imagePath,
+        businessid: item.id,
+        key: image.key,
+      }, // replace this with attributes you need
+      headers: {}, // OPTIONAL
+    };
     try {
-      const result = await Storage.remove(path, {
-        level: "protected",
-      });
-
-      let newArray = arrayImages;
-      newArray = newArray.map(JSON.parse);
-      let index = newArray.findIndex((obj) => obj.key === image.key);
-      if (index !== -1) {
-        newArray.splice(index, 1);
-      }
-      newArray = newArray.map(JSON.stringify);
-
-      const update = await API.graphql({
-        query: mutation.updateBusiness,
-        authMode: "AMAZON_COGNITO_USER_POOLS",
-        variables: {
-          input: {
-            id: item.id,
-            images: newArray,
-          },
-        },
-      });
+      const resultAPI = await API.post(apiName, path, myInit);
+      console.log(resultAPI);
+      imagesArray();
       setOpen(!open);
       setImageView(null);
     } catch (error) {
@@ -412,9 +372,6 @@ const Page = ({ route, navigation }) => {
                     }}
                     source={{ uri: item.url }}
                   />
-
-                  {console.log("Loading: ", loadingExtras)}
-                  {console.log("Key: ", item.key)}
                   {item.key === loadingExtras && (
                     <View
                       style={{
@@ -933,7 +890,7 @@ const Page = ({ route, navigation }) => {
                     />
 
                     <View style={{ flex: 1, paddingVertical: 15 }}>
-                      {imageView?.key === "0" && (
+                      {imageView?.key === 0 && (
                         <Text
                           style={{
                             fontFamily: "light",
@@ -984,7 +941,7 @@ const Page = ({ route, navigation }) => {
                             color="white"
                           />
                         </TouchableOpacity>
-                        {imageView?.key !== "0" && (
+                        {imageView?.key !== 0 && (
                           <TouchableOpacity
                             style={[
                               {

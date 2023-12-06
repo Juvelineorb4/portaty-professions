@@ -20,12 +20,6 @@
       },
       "storage": {
         "s3Professions": {}
-      },
-      "function": {
-        "customGraphql": {
-          "deploymentBucketName": "amplify-professions-dev-202858-deployment",
-          "s3Key": "amplify-builds/customGraphql-3656616144534a4b627a-build.zip"
-        }
       }
     }
   }
