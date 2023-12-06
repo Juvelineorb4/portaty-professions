@@ -49,6 +49,7 @@ const Unprofile = ({ navigation, route }) => {
         email: userAuth?.attributes?.email,
       },
     });
+    console.log(result?.data?.userByEmail?.items[0]?.business?.items?.length)
     if (result?.data?.userByEmail?.items[0]?.business?.items?.length !== 0)
       setBusiness(result.data.userByEmail.items[0].business.items);
       console.log(result.data.userByEmail)
@@ -143,7 +144,7 @@ const Unprofile = ({ navigation, route }) => {
         />
       </TouchableOpacity>
         <TouchableOpacity
-          activeOpacity={1}
+       
           onPress={() => {
             if (disabled) return;
             navigation.navigate("List", {

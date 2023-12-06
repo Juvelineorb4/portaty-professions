@@ -79,7 +79,7 @@ const Form = ({ navigation, route }) => {
       base64: true,
     });
     if (!result.canceled) {
-      setImageB64(result.assets[0].base64)
+      setImageB64(result.assets[0].base64);
       const { uri } = result.assets[0];
       const blobData = await urlToBlob(uri);
       setBlobImage(blobData);
@@ -94,7 +94,7 @@ const Form = ({ navigation, route }) => {
   const onRegisterBusiness = async (data) => {
     setLoading(true);
     const { identityId } = await Auth.currentUserCredentials();
-    const { company, email, phone, wsme, coordinates } = data;
+    const { company, email, phone, wsme, coordinates, description } = data;
     try {
       const business = await API.graphql({
         query: mutations.createBusiness,
@@ -106,6 +106,7 @@ const Form = ({ navigation, route }) => {
             email: email,
             phone: phone,
             whatsapp: wsme,
+            description: description,
             image: "",
             identityID: identityId,
             coordinates: {
@@ -271,6 +272,21 @@ const Form = ({ navigation, route }) => {
           text={`Tags`}
         />
       )}
+      <CustomInput
+        control={control}
+        name={`description`}
+        placeholder={`Escribe una descripcion de tu negocio. Hacerla lo mas detallada posible mejorara tu posicionamiento en la busqueda`}
+        styled={{
+          text: styles.textInputDescription,
+          label: [styles.labelInput],
+          error: styles.errorInput,
+          input: [styles.inputContainerDescription],
+          placeholder: styles.placeholderDescription,
+        }}
+        lines={10}
+        area={true}
+        text={`Descripcion`}
+      />
       {location ? (
         <MapMarketBusiness
           control={control}

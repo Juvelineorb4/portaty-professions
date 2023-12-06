@@ -34,6 +34,7 @@ export const userByEmail = /* GraphQL */ `
               email
               phone
               whatsapp
+              description
               instagram
               facebook
               page
@@ -102,6 +103,7 @@ export const favoritesByBusinessID = /* GraphQL */ `
           instagram
           facebook
           page
+          description
           activity
           tags
           createdAt
