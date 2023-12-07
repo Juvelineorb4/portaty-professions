@@ -9,10 +9,13 @@ import {
   Linking,
   Platform,
   FlatList,
+  Modal,
+  TouchableWithoutFeedback,
+  Pressable
 } from "react-native";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import CustomSelect from "@/components/CustomSelect";
-import styles from "@/utils/styles/Unprofile.module.css";
+import styles from "@/utils/styles/FavoritePage.module.css";
 import {
   FontAwesome5,
   MaterialCommunityIcons,
@@ -21,6 +24,7 @@ import {
   Foundation,
   EvilIcons,
   Feather,
+  Entypo,
 } from "@expo/vector-icons";
 import { Auth, API, Storage } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Favorites";
@@ -34,6 +38,7 @@ import { useRecoilState } from "recoil";
 import { updateListFavorites } from "@/atoms";
 import * as FileSystem from "expo-file-system";
 import { StorageAccessFramework } from "expo-file-system";
+import { useRef } from "react";
 
 const FavoritePage = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
@@ -41,12 +46,24 @@ const FavoritePage = ({ navigation, route }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visible, setVisible] = useState(false);
   const [listUpdate, setListUpdate] = useRecoilState(updateListFavorites);
+  const [imageView, setImageView] = useState(null);
+  const [dimensionsImages, setDimensionsImages] = useState(0);
+  const [open, setOpen] = useState(false);
+
   const {
     data: { item, image },
   } = route.params;
+
+  console.log(item.business.description)
   const list = item?.business?.images
     .map((image) => JSON.parse(image))
     .sort((a, b) => a.key - b.key);
+
+  const onViewRef = useRef((viewableItems) => {
+    if (viewableItems.changed[0].isViewable)
+      setDimensionsImages(viewableItems.changed[0].item.key);
+  });
+  const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 20 });
 
   const getPdf = async () => {
     const permissions =
@@ -154,12 +171,57 @@ const FavoritePage = ({ navigation, route }) => {
           style={[
             {
               flex: 1,
-              paddingHorizontal: 20,
               alignItems: "center",
               justifyContent: "center",
+              alignSelf: "center",
+              width: 320,
+              height: 250,
+              position: "relative",
             },
           ]}
         >
+          {list.length !== 1 &&
+            dimensionsImages + 1 > 1 &&
+            dimensionsImages <= 3 && (
+              <View
+                style={[
+                  global.mainBgColor,
+                  {
+                    width: 25,
+                    height: 25,
+                    position: "absolute",
+                    zIndex: 10,
+                    left: 0,
+                    top: "50%",
+                    opacity: 0.85,
+                    borderRadius: 5,
+                  },
+                ]}
+              >
+                <Entypo name="triangle-left" size={24} color="white" />
+              </View>
+            )}
+          {list.length !== 1 &&
+            dimensionsImages >= 0 &&
+            dimensionsImages < list.length - 1 && (
+              <View
+                style={[
+                  global.mainBgColor,
+                  {
+                    width: 25,
+                    height: 25,
+                    position: "absolute",
+                    zIndex: 10,
+                    top: "50%",
+                    right: 0,
+                    opacity: 0.85,
+                    borderRadius: 5,
+                  },
+                ]}
+              >
+                <Entypo name="triangle-right" size={24} color="white" />
+              </View>
+            )}
           <FlatList
             horizontal
             data={list}
@@ -167,10 +229,8 @@ const FavoritePage = ({ navigation, route }) => {
               <View
                 style={{
                   flex: 1,
-                  width: 300,
+                  width: 320,
                   height: 250,
-                  marginRight: 5,
-                  marginVertical: 10,
                 }}
               >
                 <Image
@@ -183,9 +243,45 @@ const FavoritePage = ({ navigation, route }) => {
                   }}
                   source={{ uri: item.url }}
                 />
+                <TouchableOpacity
+                  style={[
+                    {
+                      flexDirection: "row",
+                      padding: 8,
+                      borderRadius: 5,
+                      opacity: 0.7,
+                      alignItems: "center",
+                      marginBottom: 5,
+                      position: "absolute",
+                      right: 0,
+                    },
+                    global.mainBgColor,
+                  ]}
+                  onPress={() => {
+                    setOpen(!open);
+                    setImageView(item);
+                  }}
+                >
+                  <Text
+                    style={[
+                      { fontFamily: "medium", fontSize: 17 },
+                      global.white,
+                    ]}
+                  >
+                    {item.key + 1}/{list.length}
+                  </Text>
+                  <MaterialCommunityIcons
+                    name="image-search-outline"
+                    size={20}
+                    color="white"
+                    style={{ marginLeft: 5 }}
+                  />
+                </TouchableOpacity>
               </View>
             )}
             keyExtractor={(item, index) => index}
+            viewabilityConfig={viewConfigRef.current}
+            onViewableItemsChanged={onViewRef.current}
           />
         </View>
         <View
@@ -340,7 +436,9 @@ const FavoritePage = ({ navigation, route }) => {
               />
             </View>
             <View style={{ marginLeft: 10 }}>
-              <Text style={{ fontFamily: "light", fontSize: 16 }}>Descargar QR</Text>
+              <Text style={{ fontFamily: "light", fontSize: 16 }}>
+                Descargar QR
+              </Text>
               <Text style={{ fontFamily: "thin", fontSize: 12, width: 150 }}>
                 Descarga el QR del negocio para pegarlo en donde quieras
               </Text>
@@ -629,6 +727,94 @@ const FavoritePage = ({ navigation, route }) => {
           </View>
           <View style={[styles.line, global.bgWhiteSmoke]} />
         </View>
+        <Modal
+          animationType="none"
+          transparent={true}
+          visible={open}
+          onRequestClose={() => {
+            setOpen(!open);
+            setImageView(null);
+          }}
+        >
+          <TouchableWithoutFeedback
+            onPress={() => {
+              setOpen(!open);
+              setImageView(null);
+            }}
+          >
+            <View style={styles.modalContainer}>
+              <TouchableWithoutFeedback>
+                <View style={[styles.modalContent]}>
+                  <View style={styles.modalTop}>
+                    <Pressable
+                      onPress={() => {
+                        setOpen(!open);
+                        setImageView(null);
+                      }}
+                    >
+                      <Image
+                        style={{
+                          width: 35,
+                          height: 35,
+                          resizeMode: "contain",
+                        }}
+                        source={require("@/utils/images/arrow_back.png")}
+                      />
+                    </Pressable>
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Image
+                      style={{
+                        width: "100%",
+                        height: "60%",
+                        resizeMode: "cover",
+                        borderRadius: 5,
+                      }}
+                      source={{
+                        uri: imageView?.url ? imageView?.url : imageView?.uri,
+                      }}
+                    />
+                    {console.log(imageView?.url)}
+                    {imageView?.url && (
+                      <View style={{ flex: 1, paddingVertical: 15 }}>
+                        <View
+                          style={{
+                            flex: 1,
+                            flexDirection: "row",
+                            borderColor: "#444",
+                            borderWidth: 0.4,
+                            paddingHorizontal: 10,
+                            borderRadius: 8,
+                            marginTop: 10,
+                          }}
+                        >
+                          <TextInput
+                            value={
+                              imageView.key === 0
+                                ? item?.business?.description
+                                : imageView?.description
+                            }
+                            editable={false}
+                            style={{
+                              flex: 1,
+                              // width: 100,
+                              fontFamily: "light",
+                              fontSize: 14,
+                              alignItems: "flex-start",
+                              color: '#000'
+                            }}
+                            multiline={true}
+                            numberOfLines={5}
+                          />
+                        </View>
+                      </View>
+                    )}
+                  </View>
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
         <TouchableOpacity
           onPress={() => setVisible(true)}
           style={{ marginBottom: 100 }}

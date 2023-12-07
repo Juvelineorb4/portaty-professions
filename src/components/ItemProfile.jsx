@@ -31,47 +31,14 @@ const ItemProfile = ({ data, identityID, styled }) => {
         >
             <Image
               style={{
-                width: 100,
-                height: 100,
+                width: 130,
+                height: 130,
                 resizeMode: "cover",
                 borderRadius: 2,
               }}
               source={{ uri: data?.thumbnail }}
             />
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginTop: 5,
-            }}
-          >
-            <TouchableOpacity
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Ionicons name="trash-outline" size={12} color="black" />
-              <Text
-                style={{ fontSize: 12, fontFamily: "light", marginLeft: 1 }}
-              >
-                Eliminar
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Ionicons name="eye-outline" size={12} color="black" />
-              <Text
-                style={{ fontSize: 12, fontFamily: "light", marginLeft: 1 }}
-              >
-                Ver
-              </Text>
-            </TouchableOpacity>
-          </View>
+         
         </View>
         <View>
           <View
@@ -84,7 +51,7 @@ const ItemProfile = ({ data, identityID, styled }) => {
           >
             <View>
               <Text style={{ fontSize: 13, fontFamily: "light" }}>
-                Razon Social
+                Nombre
               </Text>
               <Text style={{ fontSize: 12, fontFamily: "thin" }}>
                 {data.name}
@@ -92,7 +59,7 @@ const ItemProfile = ({ data, identityID, styled }) => {
             </View>
             <View style={{}}>
               <Text style={{ fontSize: 13, fontFamily: "light" }}>
-                Actividad Laboral
+                Actividad laboral
               </Text>
               <Text style={{ fontSize: 12, fontFamily: "thin" }}>
                 {data.activity}

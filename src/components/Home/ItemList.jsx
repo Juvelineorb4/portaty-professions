@@ -50,54 +50,19 @@ const ItemList = ({ data, number, styled }) => {
       >
         <View
           style={{
-            justifyContent: "space-between",
+            // justifyContent: "space-between",
             marginLeft: 10,
           }}
         >
             <Image
               style={{
-                width: "100%",
-                height: "100%",
+                width: 130,
+                height: 130,
                 resizeMode: "cover",
                 borderRadius: 2,
               }}
-              source={{ uri: data.business.thumbnail }}
+              source={{ uri: data?.business?.thumbnail }}
             />
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginTop: 5,
-            }}
-          >
-            <TouchableOpacity
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Ionicons name="lock-open-outline" size={12} color="black" />
-              <Text
-                style={{ fontSize: 12, fontFamily: "light", marginLeft: 1 }}
-              >
-                Anclar
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-              onPress={onDeleteFavorite}
-            >
-              <Ionicons name="trash-outline" size={12} color="black" />
-              <Text
-                style={{ fontSize: 12, fontFamily: "light", marginLeft: 1 }}
-              >
-                Eliminar
-              </Text>
-            </TouchableOpacity>
-          </View>
         </View>
 
         <View
@@ -118,7 +83,7 @@ const ItemList = ({ data, number, styled }) => {
           >
             <View>
               <Text style={{ fontSize: 13, fontFamily: "light" }}>
-                Razon Social
+                Nombre
               </Text>
               <Text style={{ fontSize: 12, fontFamily: "thin" }}>
                 {data.business.name}
@@ -126,7 +91,7 @@ const ItemList = ({ data, number, styled }) => {
             </View>
             <View style={{}}>
               <Text style={{ fontSize: 13, fontFamily: "light" }}>
-                Actividad Laboral
+                Actividad laboral
               </Text>
               <Text style={{ fontSize: 12, fontFamily: "thin" }}>
                 {data.business.activity}

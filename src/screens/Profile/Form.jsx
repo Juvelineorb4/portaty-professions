@@ -6,6 +6,10 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Alert,
+  Pressable,
+  Modal,
+  FlatList,
+  TextInput
 } from "react-native";
 import styles from "@/utils/styles/RegisterForm.module.css";
 import React, { useEffect, useState } from "react";
@@ -33,6 +37,9 @@ import useLocation from "@/hooks/useLocation";
 // lengaujhe
 import { es } from "@/utils/constants/lenguage";
 import ModalAlert from "@/components/ModalAlert";
+import { AntDesign } from "@expo/vector-icons";
+import * as Cellular from "expo-cellular";
+import SkeletonExample from "@/components/SkeletonForm";
 
 const Form = ({ navigation, route }) => {
   const { location } = useLocation();
@@ -41,12 +48,16 @@ const Form = ({ navigation, route }) => {
   const { control, handleSubmit } = useForm();
   const [image, setImage] = useState(null);
   const [blobImage, setBlobImage] = useState(null);
+  const [country, setCountry] = useState(null);
   const [activitiesList, setActivitiesList] = useState([]);
+  const [countries, setCountries] = useState([]);
+  const [visibleCountries, setVisibleCountries] = useState(false);
   const activity = useRecoilValue(activitySelect);
   const tags = useRecoilValue(tagsList);
   const userAuth = useRecoilValue(userAuthenticated);
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState("");
+  const [searchCountry, setSearchCountry] = useState("");
   const [loading, setLoading] = useState(false);
   const [statusProfile, setStatusProfile] = useRecoilState(updateProfile);
   const [imageB64, setImageB64] = useState("");
@@ -56,6 +67,17 @@ const Form = ({ navigation, route }) => {
   const [selectMapBusiness, setSelectMapBusiness] = useRecoilState(mapBusiness);
   const [stateProfile, setStateProfile] = useRecoilState(profileState);
 
+  async function getCountryCode(array) {
+    const countryCode = await Cellular.getIsoCountryCodeAsync();
+    console.log(countryCode.toUpperCase());
+    array.map((item, index) => {
+      if (item.cca2 === countryCode.toUpperCase()) setCountry(item);
+    });
+  }
+
+  const filteredCountries = countries.filter(item => item?.name?.common.toLowerCase().includes(searchCountry.toLowerCase()));
+
+  
   function urlToBlob(url) {
     return new Promise((resolve, reject) => {
       var xhr = new XMLHttpRequest();
@@ -95,7 +117,15 @@ const Form = ({ navigation, route }) => {
     setLoading(true);
     const { identityId } = await Auth.currentUserCredentials();
     const { company, email, phone, wsme, coordinates, description } = data;
+    let code = country?.idd?.root;
+    console.log(code);
+    for (let i = 0; i < country?.idd?.suffixes.length; i++) {
+      code += country?.idd?.suffixes[i];
+    }
+    console.log(code);
     try {
+      let number = `${code}${phone}`;
+      console.log(number);
       const business = await API.graphql({
         query: mutations.createBusiness,
         authMode: "AMAZON_COGNITO_USER_POOLS",
@@ -104,7 +134,7 @@ const Form = ({ navigation, route }) => {
             userID: user,
             name: company,
             email: email,
-            phone: phone,
+            phone: number,
             whatsapp: wsme,
             description: description,
             image: "",
@@ -161,9 +191,18 @@ const Form = ({ navigation, route }) => {
   useEffect(() => {
     MultipleData();
     BlankInputs();
+    fetch(`https://restcountries.com/v3.1/all?fields=name,flags,idd,cca2`)
+      .then((response) => {
+        return response.json();
+      })
+      .then((item) => {
+        setCountries(item);
+        getCountryCode(item);
+      });
   }, []);
 
   /*  */
+  if (country === null) return <SkeletonExample />;
   return (
     <ScrollView style={[global.bgWhite, styles.container]}>
       <CustomInput
@@ -204,34 +243,166 @@ const Form = ({ navigation, route }) => {
           justifyContent: "space-between",
         }}
       >
+        <View>
+          <Text style={styles.labelInput}>Telefono*</Text>
+
+          <TouchableOpacity
+            style={[
+              styles.inputContainerBot,
+              {
+                height: 50,
+                width: 100,
+                marginRight: 10,
+              },
+            ]}
+            onPress={() => setVisibleCountries(!visibleCountries)}
+          >
+            {/* <View> */}
+            <Image
+              style={{
+                width: 20,
+                height: 20,
+                borderRadius: 30,
+                marginLeft: 10,
+                marginRight: 2,
+                resizeMode: "contain",
+              }}
+              source={{
+                uri: country ? country?.flags?.png : countries[0]?.flags?.png,
+              }}
+            />
+            <Text
+              style={{
+                fontFamily: "medium",
+                fontSize: 14,
+                color: "#000",
+                marginRight: 5,
+                // width: 100,
+              }}
+            >
+              {country?.idd?.root}
+              {country?.idd?.suffixes.map((item) => item)}
+            </Text>
+            <AntDesign name="caretdown" size={15} color="gray" />
+            {/* </View> */}
+            {/* <Text></Text> */}
+          </TouchableOpacity>
+          <Modal
+            animationType="none"
+            transparent={true}
+            visible={visibleCountries}
+            onRequestClose={() => {
+              setVisibleCountries(!visibleCountries);
+            }}
+          >
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContent}>
+                <View style={styles.modalTop}>
+                  <Pressable
+                    onPress={() => {
+                      setVisibleCountries(!visibleCountries);
+                    }}
+                  >
+                    <Image
+                      style={{
+                        margin: 5,
+                        width: 25,
+                        height: 25,
+                        resizeMode: "contain",
+                      }}
+                      source={require("@/utils/images/arrow_back.png")}
+                    />
+                  </Pressable>
+                </View>
+                <View style={{ flex: 1 }}>
+                  {/* <Text style={{ fontFamily: "light", padding: 5 }}>
+                    Elige un codigo de area
+                  </Text> */}
+                  <TextInput
+                    value={searchCountry}
+                    onChangeText={(e) => setSearchCountry(e)}
+                    placeholder={`Busca tu pais`}
+                    defaultValue={searchCountry}
+                    style={{
+                      margin: 5,
+                      borderWidth: 0.4,
+                      borderColor: '#eee',
+                      padding: 5,
+                      fontFamily: 'light',
+                      fontSize: 12,
+                      borderRadius: 5
+                    }}
+                  />
+                  <View style={[{ flex: 1 }]}>
+                    <FlatList
+                      data={searchCountry ? filteredCountries : countries}
+                      renderItem={({ item }) => (
+                        <TouchableOpacity
+                          style={[
+                            // styles.inputContainerBot,
+                            {
+                              height: 40,
+                              width: 210,
+                              flexDirection: "row",
+                              borderWidth: 0.5,
+                              borderColor: "#eee",
+                              alignItems: "center",
+                              marginHorizontal: 5,
+                            },
+                          ]}
+                          onPress={() => {
+                            setCountry(item);
+                            setVisibleCountries(!visibleCountries);
+                          }}
+                        >
+                          <Image
+                            style={{
+                              width: 20,
+                              height: 20,
+                              borderRadius: 10,
+                              marginHorizontal: 10,
+                              resizeMode: "contain",
+                            }}
+                            source={{ uri: item?.flags?.png }}
+                          />
+                          <Text
+                            style={{
+                              fontFamily: "light",
+                              fontSize: 11,
+                              color: "#000",
+                              width: 100,
+                            }}
+                          >
+                            {item?.idd?.root}
+                            {item?.idd?.suffixes.map((item) => item)}{" "}
+                            {item?.name?.common}
+                          </Text>
+                        </TouchableOpacity>
+                      )}
+                      keyExtractor={(item, index) => index}
+                      showsVerticalScrollIndicator={false}
+                    />
+                  </View>
+                </View>
+              </View>
+            </View>
+          </Modal>
+        </View>
         <CustomInput
           control={control}
           name={`phone`}
-          placeholder={`+58 123 4567`}
+          placeholder={`123 4567891011`}
           styled={{
-            text: styles.textInputBot,
-            label: [styles.labelInputBot],
+            text: styles.textInput,
+            label: [styles.labelInput],
             error: styles.errorInput,
-            input: [styles.inputContainerBot],
-            placeholder: styles.placeholderBot,
+            input: [styles.inputContainer],
+            placeholder: styles.placeholder,
           }}
-          text={`Telefono*`}
+          text={` `}
           rules={{
             required: es.businessForm.register.email.rules,
           }}
-        />
-        <CustomInput
-          control={control}
-          name={`wsme`}
-          placeholder={`ws.yourlink.me`}
-          styled={{
-            text: styles.textInputBot,
-            label: [styles.labelInputBot],
-            error: styles.errorInput,
-            input: [styles.inputContainerBot],
-            placeholder: styles.placeholderBot,
-          }}
-          text={`Whats App Me`}
         />
       </View>
 

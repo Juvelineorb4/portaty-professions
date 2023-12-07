@@ -9,11 +9,14 @@ import {
   Linking,
   Platform,
   FlatList,
+  TouchableWithoutFeedback,
+  Modal,
+  Pressable,
 } from "react-native";
 import React, { useState, useEffect, useLayoutEffect } from "react";
 import * as customSearch from "@/graphql/CustomQueries/Search";
 import CustomSelect from "@/components/CustomSelect";
-import styles from "@/utils/styles/Unprofile.module.css";
+import styles from "@/utils/styles/SearchPost.module.css";
 import {
   FontAwesome5,
   MaterialCommunityIcons,
@@ -23,6 +26,7 @@ import {
   EvilIcons,
   Feather,
   Fontisto,
+  Entypo,
 } from "@expo/vector-icons";
 import { Auth, API, Storage } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Favorites";
@@ -35,21 +39,23 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { updateListFavorites, userAuthenticated } from "@/atoms/index";
 import * as FileSystem from "expo-file-system";
 import { StorageAccessFramework } from "expo-file-system";
+import { useRef } from "react";
 
 const SearchPost = ({ route, navigation }) => {
   const userAuth = useRecoilValue(userAuthenticated);
   const [post, setPost] = useState(null);
   const [save, setSave] = useState("");
+  const [open, setOpen] = useState(false);
   const [numberFavorite, setNumberFavorite] = useState(0);
+  const [dimensionsImages, setDimensionsImages] = useState(0);
   const [showAgg, setShowAgg] = useState(false);
-  const [listUpdate, setListUpdate] =
-    useRecoilState(updateListFavorites);
+  const [imageView, setImageView] = useState(null);
+  const [listUpdate, setListUpdate] = useRecoilState(updateListFavorites);
   const global = require("@/utils/styles/global.js");
   const {
     data: { item, images },
   } = route.params;
-
-
+  // console.log(post)
   const getPdf = async () => {
     const permissions =
       await StorageAccessFramework.requestDirectoryPermissionsAsync();
@@ -86,6 +92,12 @@ const SearchPost = ({ route, navigation }) => {
     }
   };
 
+  const onViewRef = useRef((viewableItems) => {
+    if (viewableItems.changed[0].isViewable)
+      setDimensionsImages(viewableItems.changed[0].item.key);
+  });
+  const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 20 });
+
   const onCreateFavorite = async () => {
     try {
       const { attributes } = await Auth.currentAuthenticatedUser();
@@ -103,7 +115,7 @@ const SearchPost = ({ route, navigation }) => {
       // console.log(favorites?.data?.createFavorites?.id);
       setSave(favorites?.data?.createFavorites?.id);
       setNumberFavorite(post?.favorites?.items?.length + 1);
-      setListUpdate(!listUpdate)
+      setListUpdate(!listUpdate);
     } catch (error) {
       console.log("ERRO AL CARGAR UN FAVORITO: ", error);
     }
@@ -190,7 +202,7 @@ const SearchPost = ({ route, navigation }) => {
   useEffect(() => {
     if (!save) fetchFavorite();
     fetchData();
-  }, [post]);
+  }, []);
 
   if (!post) return <SkeletonExample />;
   return (
@@ -207,12 +219,57 @@ const SearchPost = ({ route, navigation }) => {
           style={[
             {
               flex: 1,
-              paddingHorizontal: 20,
               alignItems: "center",
               justifyContent: "center",
+              alignSelf: "center",
+              width: 320,
+              height: 250,
+              position: "relative",
             },
           ]}
         >
+          {images.length !== 1 &&
+            dimensionsImages + 1 > 1 &&
+            dimensionsImages <= 3 && (
+              <View
+                style={[
+                  global.mainBgColor,
+                  {
+                    width: 25,
+                    height: 25,
+                    position: "absolute",
+                    zIndex: 10,
+                    left: 0,
+                    top: "50%",
+                    opacity: 0.85,
+                    borderRadius: 5,
+                  },
+                ]}
+              >
+                <Entypo name="triangle-left" size={24} color="white" />
+              </View>
+            )}
+          {images.length !== 1 &&
+            dimensionsImages >= 0 &&
+            dimensionsImages < images.length - 1 && (
+              <View
+                style={[
+                  global.mainBgColor,
+                  {
+                    width: 25,
+                    height: 25,
+                    position: "absolute",
+                    zIndex: 10,
+                    top: "50%",
+                    right: 0,
+                    opacity: 0.85,
+                    borderRadius: 5,
+                  },
+                ]}
+              >
+                <Entypo name="triangle-right" size={24} color="white" />
+              </View>
+            )}
           <FlatList
             horizontal
             data={images}
@@ -220,10 +277,8 @@ const SearchPost = ({ route, navigation }) => {
               <View
                 style={{
                   flex: 1,
-                  width: 300,
+                  width: 320,
                   height: 250,
-                  marginRight: 5,
-                  marginVertical: 10,
                 }}
               >
                 <Image
@@ -236,9 +291,45 @@ const SearchPost = ({ route, navigation }) => {
                   }}
                   source={{ uri: item.url }}
                 />
+                <TouchableOpacity
+                  style={[
+                    {
+                      flexDirection: "row",
+                      padding: 8,
+                      borderRadius: 5,
+                      opacity: 0.7,
+                      alignItems: "center",
+                      marginBottom: 5,
+                      position: "absolute",
+                      right: 0,
+                    },
+                    global.mainBgColor,
+                  ]}
+                  onPress={() => {
+                    setOpen(!open);
+                    setImageView(item);
+                  }}
+                >
+                  <Text
+                    style={[
+                      { fontFamily: "medium", fontSize: 17 },
+                      global.white,
+                    ]}
+                  >
+                    {item.key + 1}/{images.length}
+                  </Text>
+                  <MaterialCommunityIcons
+                    name="image-search-outline"
+                    size={20}
+                    color="white"
+                    style={{ marginLeft: 5 }}
+                  />
+                </TouchableOpacity>
               </View>
             )}
             keyExtractor={(item, index) => index}
+            viewabilityConfig={viewConfigRef.current}
+            onViewableItemsChanged={onViewRef.current}
           />
         </View>
         {showAgg && (
@@ -412,7 +503,9 @@ const SearchPost = ({ route, navigation }) => {
               />
             </View>
             <View style={{ marginLeft: 10 }}>
-              <Text style={{ fontFamily: "light", fontSize: 16 }}>Descargar QR</Text>
+              <Text style={{ fontFamily: "light", fontSize: 16 }}>
+                Descargar QR
+              </Text>
               <Text style={{ fontFamily: "thin", fontSize: 12, width: 150 }}>
                 Descarga el QR del negocio para pegarlo en donde quieras
               </Text>
@@ -700,6 +793,94 @@ const SearchPost = ({ route, navigation }) => {
             </View>
           </View>
           <View style={[styles.line, global.bgWhiteSmoke]} />
+          <Modal
+            animationType="none"
+            transparent={true}
+            visible={open}
+            onRequestClose={() => {
+              setOpen(!open);
+              setImageView(null);
+            }}
+          >
+            <TouchableWithoutFeedback
+              onPress={() => {
+                setOpen(!open);
+                setImageView(null);
+              }}
+            >
+              <View style={styles.modalContainer}>
+                <TouchableWithoutFeedback>
+                  <View style={[styles.modalContent]}>
+                    <View style={styles.modalTop}>
+                      <Pressable
+                        onPress={() => {
+                          setOpen(!open);
+                          setImageView(null);
+                        }}
+                      >
+                        <Image
+                          style={{
+                            width: 35,
+                            height: 35,
+                            resizeMode: "contain",
+                          }}
+                          source={require("@/utils/images/arrow_back.png")}
+                        />
+                      </Pressable>
+                    </View>
+                    <View style={{ flex: 1 }}>
+                    <Image
+                      style={{
+                        width: "100%",
+                        height: "60%",
+                        resizeMode: "cover",
+                        borderRadius: 5,
+                      }}
+                      source={{
+                        uri: imageView?.url ? imageView?.url : imageView?.uri
+                      }}
+                    />
+                      {console.log(imageView?.url)}
+                      {imageView?.url && (
+                        <View style={{ flex: 1, paddingVertical: 15 }}>
+                          <View
+                            style={{
+                              flex: 1,
+                              flexDirection: "row",
+                              borderColor: "#444",
+                              borderWidth: 0.4,
+                              paddingHorizontal: 10,
+                              borderRadius: 8,
+                              marginTop: 10,
+                            }}
+                          >
+                            <TextInput
+                              value={
+                                imageView.key === 0
+                                  ? post.description
+                                  : imageView?.description
+                              }
+                              editable={false}
+                              style={{
+                                flex: 1,
+                                // width: 100,
+                                fontFamily: "light",
+                                fontSize: 14,
+                              alignItems: "flex-start",
+                              color: '#000'
+                              }}
+                              multiline={true}
+                              numberOfLines={5}
+                            />
+                          </View>
+                        </View>
+                      )}
+                    </View>
+                  </View>
+                </TouchableWithoutFeedback>
+              </View>
+            </TouchableWithoutFeedback>
+          </Modal>
         </View>
       </ScrollView>
     </View>
