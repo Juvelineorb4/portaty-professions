@@ -11,7 +11,7 @@ import {
   FlatList,
   Modal,
   TouchableWithoutFeedback,
-  Pressable
+  Pressable,
 } from "react-native";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import CustomSelect from "@/components/CustomSelect";
@@ -25,6 +25,7 @@ import {
   EvilIcons,
   Feather,
   Entypo,
+  MaterialIcons,
 } from "@expo/vector-icons";
 import { Auth, API, Storage } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Favorites";
@@ -54,7 +55,7 @@ const FavoritePage = ({ navigation, route }) => {
     data: { item, image },
   } = route.params;
 
-  console.log(item.business.description)
+  console.log(item.business.images);
   const list = item?.business?.images
     .map((image) => JSON.parse(image))
     .sort((a, b) => a.key - b.key);
@@ -291,6 +292,7 @@ const FavoritePage = ({ navigation, route }) => {
             alignItems: "center",
             justifyContent: "space-between",
             padding: 20,
+            paddingHorizontal: 100,
           }}
         >
           <View
@@ -304,13 +306,16 @@ const FavoritePage = ({ navigation, route }) => {
             </Text>
             <Text style={{ fontSize: 22, fontFamily: "thin" }}>Favoritos</Text>
           </View>
-          <TouchableOpacity
-            style={[global.bgWhiteSmoke, { padding: 10, borderRadius: 8 }]}
-            onPress={onDeleteFavorite}
-          >
-            <Text style={{ fontSize: 14, fontFamily: "thin" }}>
-              Eliminar de favoritos
-            </Text>
+          <TouchableOpacity onPress={onDeleteFavorite}>
+            <Image
+              style={{
+                width: 45,
+                height: 45,
+                resizeMode: "cover",
+              }}
+              source={require("@/utils/images/sifavorites.png")}
+            />
+            {/* <MaterialIcons name="favorite" size={45} color="red" /> */}
           </TouchableOpacity>
         </View>
         <View style={[styles.line, global.bgWhiteSmoke]} />
@@ -774,7 +779,6 @@ const FavoritePage = ({ navigation, route }) => {
                         uri: imageView?.url ? imageView?.url : imageView?.uri,
                       }}
                     />
-                    {console.log(imageView?.url)}
                     {imageView?.url && (
                       <View style={{ flex: 1, paddingVertical: 15 }}>
                         <View
@@ -801,7 +805,7 @@ const FavoritePage = ({ navigation, route }) => {
                               fontFamily: "light",
                               fontSize: 14,
                               alignItems: "flex-start",
-                              color: '#000'
+                              color: "#000",
                             }}
                             multiline={true}
                             numberOfLines={5}

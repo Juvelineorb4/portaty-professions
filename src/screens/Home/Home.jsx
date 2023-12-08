@@ -10,19 +10,26 @@ import { Auth, API } from "aws-amplify";
 import { searchBusinessByDistance, searchByDistance } from "@/graphql/queries";
 import Grid from "@/components/Home/Grid";
 import List from "@/components/Home/List";
-import { favoritesState, inputFavoritesSearch, mapUser, userAuthenticated, updateListFavorites } from "@/atoms";
+import {
+  favoritesState,
+  inputFavoritesSearch,
+  mapUser,
+  userAuthenticated,
+  updateListFavorites,
+} from "@/atoms";
 import { useRecoilState, useRecoilValue } from "recoil";
 import * as Location from "expo-location";
 import * as queries from "@/graphql/CustomQueries/Favorites";
 import * as subscriptions from "@/graphql/CustomSubscriptions/Favorites";
 import CustomButton from "@/components/CustomButton";
 import styles from "@/utils/styles/Home.module.css";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons, SimpleLineIcons } from "@expo/vector-icons";
 import ModalAlert from "@/components/ModalAlert";
+import News from "@/components/Home/News";
 
 const Home = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
-  const [mode, setMode] = useState(false);
+  const [mode, setMode] = useState(3);
   const [userLocation, setUserLocation] = useRecoilState(mapUser);
   const statusFavorites = useRecoilValue(favoritesState);
   const inputFavorite = useRecoilValue(inputFavoritesSearch);
@@ -43,17 +50,27 @@ const Home = ({ navigation, route }) => {
         email: userAuth?.attributes?.email,
       },
     });
-    let temporalList = []
+    let temporalList = [];
     setFavoritesList(result?.data?.userByEmail?.items[0]?.favorites?.items);
     if (result?.data?.userByEmail?.items[0]?.favorites?.items?.length === 0)
       setNothing(true);
     if (inputFavorite !== "") {
-      result?.data?.userByEmail?.items[0]?.favorites?.items?.map((item, index) => {
-        let newArray = item?.business?.tags?.map(cadena => cadena.replace(/\[|\]/g, ""));
-        newArray.map((newItem, newIndex) => {
-          if (newItem.trim().toLowerCase().includes(inputFavorite.trim().toLowerCase())) temporalList.push(item)
-        })
-      });
+      result?.data?.userByEmail?.items[0]?.favorites?.items?.map(
+        (item, index) => {
+          let newArray = item?.business?.tags?.map((cadena) =>
+            cadena.replace(/\[|\]/g, "")
+          );
+          newArray.map((newItem, newIndex) => {
+            if (
+              newItem
+                .trim()
+                .toLowerCase()
+                .includes(inputFavorite.trim().toLowerCase())
+            )
+              temporalList.push(item);
+          });
+        }
+      );
       if (temporalList.length !== 0) {
         setFavoritesList(temporalList);
       } else {
@@ -82,7 +99,7 @@ const Home = ({ navigation, route }) => {
       error: (error) => console.warn(error),
     });
     return () => {
-      fetchFavorites()
+      fetchFavorites();
       updateSub.unsubscribe();
     };
   }, [route, statusFavorites, inputFavorite, updateFavorite]);
@@ -133,8 +150,9 @@ const Home = ({ navigation, route }) => {
         <View
           style={{
             flexDirection: "row",
-            justifyContent: "flex-end",
+            justifyContent: "space-between",
             marginRight: 10,
+            marginLeft: 20,
           }}
         >
           <TouchableOpacity
@@ -144,47 +162,73 @@ const Home = ({ navigation, route }) => {
                 borderWidth: 0.5,
                 paddingHorizontal: 15,
                 paddingVertical: 8,
-                borderTopLeftRadius: 8,
-                borderBottomLeftRadius: 8,
+                borderRadius: 8,
               },
-              mode ? global.mainBgColor : global.bgWhite,
+              mode === 1 ? global.mainBgColor : global.bgWhite,
             ]}
-            onPress={() => setMode(!mode)}
+            onPress={() => setMode(1)}
           >
-            <Ionicons
-              name="grid-outline"
-              size={18}
-              color={mode ? "#ffffff" : "#fb8500"}
-            />
+            <SimpleLineIcons name="bell" size={18} color={mode === 1 ? "#ffffff" : "#fb8500"} />
           </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              {
-                borderColor: "#1f1f1f",
-                borderWidth: 0.5,
-                padding: 10,
-                borderTopRightRadius: 8,
-                borderBottomRightRadius: 8,
-                paddingHorizontal: 15,
-                paddingVertical: 8,
-              },
-              !mode ? global.mainBgColor : global.bgWhite,
-            ]}
-            onPress={() => setMode(!mode)}
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "flex-end",
+              marginRight: 10,
+            }}
           >
-            <Ionicons
-              name="list-outline"
-              size={18}
-              color={!mode ? "#ffffff" : "#fb8500"}
-            />
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                {
+                  borderColor: "#1f1f1f",
+                  borderWidth: 0.5,
+                  paddingHorizontal: 15,
+                  paddingVertical: 8,
+                  borderTopLeftRadius: 8,
+                  borderBottomLeftRadius: 8,
+                },
+                mode === 2 ? global.mainBgColor : global.bgWhite,
+              ]}
+              onPress={() => setMode(2)}
+            >
+              <Ionicons
+                name="grid-outline"
+                size={18}
+                color={mode === 2 ? "#ffffff" : "#fb8500"}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                {
+                  borderColor: "#1f1f1f",
+                  borderWidth: 0.5,
+                  padding: 10,
+                  borderTopRightRadius: 8,
+                  borderBottomRightRadius: 8,
+                  paddingHorizontal: 15,
+                  paddingVertical: 8,
+                },
+                mode === 3 ? global.mainBgColor : global.bgWhite,
+              ]}
+              onPress={() => setMode(3)}
+            >
+              <Ionicons
+                name="list-outline"
+                size={18}
+                color={mode === 3 ? "#ffffff" : "#fb8500"}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
+
         <View style={{ padding: 10, paddingBottom: 80 }}>
           {!loading ? (
-            mode ? (
+            mode === 2 ? (
               <Grid data={favoritesList} />
-            ) : (
+            ) : mode === 3 ? (
               <List data={favoritesList} />
+            ) : (
+              <News data={favoritesList} />
             )
           ) : (
             <View

@@ -1003,13 +1003,9 @@ const Page = ({ route, navigation }) => {
                             defaultValue={
                               imageView?.key === 0
                                 ? item.description
-                                : imageView?.description 
+                                : imageView?.description
                             }
-                            onChangeText={(e) => {
-                              setDescriptionImage(e);
-                              console.log(e);
-                            }}
-                            // onBlur={onBlur}
+                            onChangeText={(e) => setDescriptionImage(e)}
                             placeholder={
                               "Coloca una descripcion para tu imagen"
                             }

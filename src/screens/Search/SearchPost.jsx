@@ -27,6 +27,7 @@ import {
   Feather,
   Fontisto,
   Entypo,
+  MaterialIcons,
 } from "@expo/vector-icons";
 import { Auth, API, Storage } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Favorites";
@@ -55,7 +56,7 @@ const SearchPost = ({ route, navigation }) => {
   const {
     data: { item, images },
   } = route.params;
-  // console.log(post)
+  console.log(item)
   const getPdf = async () => {
     const permissions =
       await StorageAccessFramework.requestDirectoryPermissionsAsync();
@@ -112,7 +113,6 @@ const SearchPost = ({ route, navigation }) => {
         },
         authMode: "AMAZON_COGNITO_USER_POOLS",
       });
-      // console.log(favorites?.data?.createFavorites?.id);
       setSave(favorites?.data?.createFavorites?.id);
       setNumberFavorite(post?.favorites?.items?.length + 1);
       setListUpdate(!listUpdate);
@@ -340,6 +340,7 @@ const SearchPost = ({ route, navigation }) => {
               alignItems: "center",
               justifyContent: "space-between",
               padding: 20,
+              paddingHorizontal: 100
             }}
           >
             <View
@@ -358,10 +359,6 @@ const SearchPost = ({ route, navigation }) => {
               </Text>
             </View>
             <TouchableOpacity
-              style={[
-                save === "" ? global.mainBgColor : global.bgWhiteSmoke,
-                { padding: 10, borderRadius: 8 },
-              ]}
               onPress={() => {
                 if (save === "") {
                   onCreateFavorite();
@@ -370,14 +367,25 @@ const SearchPost = ({ route, navigation }) => {
                 }
               }}
             >
-              <Text
-                style={[
-                  { fontSize: 14, fontFamily: "thin" },
-                  save === "" ? global.white : global.black,
-                ]}
-              >
-                {save === "" ? "Agregar a favoritos" : "Eliminar de favoritos"}
-              </Text>
+              {save === "" ? (
+                <Image
+                style={{
+                  width: 45,
+                  height: 45,
+                  resizeMode: "cover",
+                }}
+                source={require("@/utils/images/nofavorites.png")}
+              />
+              ) : (
+                <Image
+              style={{
+                width: 45,
+                height: 45,
+                resizeMode: "cover",
+              }}
+              source={require("@/utils/images/sifavorites.png")}
+            />
+              )}
             </TouchableOpacity>
           </View>
         )}
@@ -829,18 +837,17 @@ const SearchPost = ({ route, navigation }) => {
                       </Pressable>
                     </View>
                     <View style={{ flex: 1 }}>
-                    <Image
-                      style={{
-                        width: "100%",
-                        height: "60%",
-                        resizeMode: "cover",
-                        borderRadius: 5,
-                      }}
-                      source={{
-                        uri: imageView?.url ? imageView?.url : imageView?.uri
-                      }}
-                    />
-                      {console.log(imageView?.url)}
+                      <Image
+                        style={{
+                          width: "100%",
+                          height: "60%",
+                          resizeMode: "cover",
+                          borderRadius: 5,
+                        }}
+                        source={{
+                          uri: imageView?.url ? imageView?.url : imageView?.uri,
+                        }}
+                      />
                       {imageView?.url && (
                         <View style={{ flex: 1, paddingVertical: 15 }}>
                           <View
@@ -866,8 +873,8 @@ const SearchPost = ({ route, navigation }) => {
                                 // width: 100,
                                 fontFamily: "light",
                                 fontSize: 14,
-                              alignItems: "flex-start",
-                              color: '#000'
+                                alignItems: "flex-start",
+                                color: "#000",
                               }}
                               multiline={true}
                               numberOfLines={5}
