@@ -97,3 +97,13 @@ export const updateProfile = atom({
   key: "updateProfileValue",
   default: false,
 });
+
+export const activeSearch = atom({
+  key: "activeSearchValue",
+  default: true,
+});
+
+export const textInputSearch = atom({
+  key: "textInputSearchValue",
+  default: '',
+});

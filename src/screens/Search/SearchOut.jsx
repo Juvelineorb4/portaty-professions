@@ -23,11 +23,13 @@ import * as queries from "@/graphql/CustomQueries/Favorites";
 const SearchOut = ({ route }) => {
   const global = require("@/utils/styles/global.js");
   const { input } = route.params;
+  console.log(input)
   const [moreItems, setMoreItems] = useState(1);
   const [items, setItems] = useState([]);
   const [totalData, setTotalData] = useState(2);
   const [totalLimit, setTotalLimit] = useState(1);
   const [modalVisible, setModalVisible] = useState(false);
+  const [notFound, setNotFound] = useState(false);
   const [statusFilter, setStatusFilter] = useState(false);
   const [filterRadio, setFilterRadio] = useState(1);
   let number = 26 * moreItems;
@@ -53,44 +55,15 @@ const SearchOut = ({ route }) => {
       const response = await API.get(api, path, params);
       setTotalData(response.total);
       setTotalLimit(response.limit);
-      // let newItems = [];
       let newRenderItems = [];
       const long = 26;
-      // const { attributes } = await Auth.currentAuthenticatedUser();
-
-      // for (let i = 0; i < response.items.length; i += 1) {
-      //   try {
-      //     let result = await API.graphql({
-      //       query: queries.favoritesByBusinessID,
-      //       authMode: "AMAZON_COGNITO_USER_POOLS",
-      //       variables: {
-      //         businessID: response.items[i].id,
-      //         userID: { eq: attributes["custom:userTableID"] },
-      //       },
-      //     });
-
-      //     if (result.data.favoritesByBusinessID.items.length !== 0) {
-      //       newItems.push({
-      //         favorite: result.data.favoritesByBusinessID.items[0].id,
-      //         item: response.items[i],
-      //       });
-      //     } else {
-      //       newItems.push({
-      //         favorite: "",
-      //         item: response.items[i],
-      //       });
-      //     }
-      //   } catch (error) {
-      //     return;
-      //   }
-      // }
       for (let i = 0; i < response.items.length; i += long) {
         let cut = response.items.slice(i, i + long);
         newRenderItems.push(cut);
       }
       return setItems(newRenderItems);
     } catch (error) {
-      return console.log(error);
+      setNotFound(true)
     }
   };
   const getFilterData = async () => {
@@ -256,7 +229,7 @@ const SearchOut = ({ route }) => {
         )}
       </View>
     );
-  if (totalData === 0) {
+  if (totalData === 0 || notFound) {
     return (
       <View
         style={[
