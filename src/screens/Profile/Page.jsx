@@ -131,22 +131,20 @@ const Page = ({ route, navigation }) => {
     }
   };
 
-  const onSharePdf = async (contentUri) => {
-    const options = {
-      mimeType: "application/pdf",
-      dialogTitle: "Portaty",
-    };
-    try {
-      const localUri = FileSystem.documentDirectory + "qr.pdf";
-      await FileSystem.copyAsync({
-        from: contentUri,
-        to: localUri,
-      });
+  const getFileData = async (contentUri) => {
+    const fileData = await FileSystem.readAsStringAsync(contentUri);
+    return fileData;
+  };
 
-      Sharing.shareAsync(localUri, options);
-    } catch (error) {
-      console.log(error.message);
+  const onSharePdf = async (contentUri) => {
+    const canOpen = await Linking.canOpenURL(contentUri);
+
+    if (!canOpen) {
+      alert(`No se encontró ninguna aplicación para abrir el PDF`);
+      return;
     }
+
+    await Linking.openURL(contentUri);
   };
 
   const selectImages = async () => {
@@ -263,7 +261,7 @@ const Page = ({ route, navigation }) => {
 
       try {
         const resultAPI = await API.post(apiName, path, myInit);
-        console.log(resultAPI);
+        // console.log(resultAPI);
         setDescriptionImage("");
         imagesArray();
         setOpen(!open);
@@ -293,7 +291,7 @@ const Page = ({ route, navigation }) => {
     };
     try {
       const resultAPI = await API.post(apiName, path, myInit);
-      console.log(resultAPI);
+      // console.log(resultAPI);
       imagesArray();
       setDescriptionImage("");
       setOpen(!open);
@@ -314,7 +312,7 @@ const Page = ({ route, navigation }) => {
     const list = result?.data?.getBusiness?.images
       .map((image) => JSON.parse(image))
       .sort((a, b) => a.key - b.key);
-    console.log(list);
+    // console.log(list);
     setStorageImages(list);
   };
 
@@ -331,7 +329,7 @@ const Page = ({ route, navigation }) => {
       },
     }).subscribe({
       next: ({ provider, value: { data } }) => {
-        console.log("EL SUBS", data);
+        // console.log("EL SUBS", data);
         const list = data?.onUpdateBusiness?.images
           .map((image) => JSON.parse(image))
           .sort((a, b) => a.key - b.key);
@@ -642,8 +640,12 @@ const Page = ({ route, navigation }) => {
             marginTop: -25,
           }}
           onPress={() =>
-            getPdf().then((fileUri) => {
-              onSharePdf(fileUri);
+            getPdf().then(async (fileUri) => {
+              if (fileUri) {
+                const localFileUri = await getFileData(fileUri);
+                onSharePdf(localFileUri);
+                // console.log(localFileUri);
+              }
             })
           }
         >
