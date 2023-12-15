@@ -14,24 +14,16 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from "react-native";
-import React, { useLayoutEffect, useState, useEffect, useRef } from "react";
-import CustomSelect from "@/components/CustomSelect";
+import React, { useState, useEffect, useRef } from "react";
 import styles from "@/utils/styles/Unprofile.module.css";
 import {
-  FontAwesome5,
   MaterialCommunityIcons,
   AntDesign,
-  FontAwesome,
-  Foundation,
   EvilIcons,
-  Feather,
   Entypo,
 } from "@expo/vector-icons";
 import { Auth, API, Storage } from "aws-amplify";
-import * as queries from "@/graphql/CustomQueries/Favorites";
-import * as mutation from "@/graphql/CustomMutations/Profile";
 import * as subscriptions from "@/graphql/CustomSubscriptions/Profile";
-import * as customFavorites from "@/graphql/CustomMutations/Favorites";
 import MapView, { Marker } from "react-native-maps";
 import SkeletonPage from "@/components/SkeletonPage";
 import * as ImagePicker from "expo-image-picker";
@@ -39,19 +31,18 @@ import ModalAlert from "@/components/ModalAlert";
 import { updateProfile } from "@/atoms";
 import { useRecoilState } from "recoil";
 import * as customProfile from "@/graphql/CustomQueries/Profile";
-import * as FileSystem from "expo-file-system";
-import * as MediaLibrary from "expo-media-library";
-import { StorageAccessFramework } from "expo-file-system";
-import * as Sharing from "expo-sharing";
 import { useCallback } from "react";
 import { TextInput } from "react-native";
-// import { FlatListSlider } from "react-native-flatlist-slider";
-// import Preview from "@/components/Preview";
+// pdf
+import * as FileSystem from "expo-file-system";
 
+// hooks
+import useOpenFile from "@/hooks/useOpenFile";
 const Page = ({ route, navigation }) => {
   const {
     data: { item, image },
   } = route.params;
+  const { downloadAndOpenFile } = useOpenFile();
   const [selectedImages, setSelectedImages] = useState([]);
   const [open, setOpen] = useState(false);
   const [dimensionsImages, setDimensionsImages] = useState(0);
@@ -74,37 +65,25 @@ const Page = ({ route, navigation }) => {
   }, []);
 
   const getPdf = async () => {
-    const permissions =
-      await StorageAccessFramework.requestDirectoryPermissionsAsync();
-    if (!permissions.granted) {
-      return;
-    }
-
+    const { identityId } = await Auth.currentUserCredentials();
     const api = "api-professions-gateway";
     const path = "/documentqr";
     const params = {
       headers: {},
       queryStringParameters: {
         path: `https://www.portaty.com/share/business?id=${item.id}`,
+        businessid: item.id,
+        identityid: identityId,
       },
     };
     let fileUri = "";
     try {
-      const response = await API.get(api, path, params);
-      await StorageAccessFramework.createFileAsync(
-        permissions.directoryUri,
-        "qr.pdf",
-        "application/pdf"
-      )
-        .then(async (uri) => {
-          fileUri = uri;
-          await FileSystem.writeAsStringAsync(uri, response["pdf_base64"], {
-            encoding: FileSystem.EncodingType.Base64,
-          });
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+      // creo el pdf url
+      const result = await API.get(api, path, params);
+      // la ruta de guardado
+      const localUri = `${FileSystem.documentDirectory}qr.pdf`;
+      // descargo en almacenamiento local y luego abro
+      downloadAndOpenFile(result?.url, localUri, "application/pdf");
     } catch (error) {
       console.log("Error en pdf: ", error.message);
     }
