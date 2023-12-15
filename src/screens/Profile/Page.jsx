@@ -35,7 +35,8 @@ import { useCallback } from "react";
 import { TextInput } from "react-native";
 // pdf
 import * as FileSystem from "expo-file-system";
-
+import * as IntentLauncher from "expo-intent-launcher";
+import * as Sharing from "expo-sharing";
 // hooks
 import useOpenFile from "@/hooks/useOpenFile";
 const Page = ({ route, navigation }) => {
@@ -83,7 +84,22 @@ const Page = ({ route, navigation }) => {
       // la ruta de guardado
       const localUri = `${FileSystem.documentDirectory}qr.pdf`;
       // descargo en almacenamiento local y luego abro
-      downloadAndOpenFile(result?.url, localUri, "application/pdf");
+      const resultDownload = await FileSystem.downloadAsync(
+        result?.url,
+        localUri
+      );
+      FileSystem.getContentUriAsync(resultDownload?.uri).then((cUri) => {
+        if (Platform.OS === "ios") {
+          Sharing.shareAsync(cUri);
+        } else {
+          console.log(cUri);
+          IntentLauncher.startActivityAsync("android.intent.action.VIEW", {
+            data: cUri,
+            flags: 1,
+            type: "application/pdf",
+          }).catch((e) => console.log("ERROR AL ABRIR ARCHIVO: ", e));
+        }
+      });
     } catch (error) {
       console.log("Error en pdf: ", error.message);
     }
