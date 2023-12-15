@@ -34,6 +34,7 @@ import * as customProfile from "@/graphql/CustomQueries/Profile";
 import { useCallback } from "react";
 import { TextInput } from "react-native";
 // pdf
+import { StorageAccessFramework } from "expo-file-system";
 import * as FileSystem from "expo-file-system";
 import * as IntentLauncher from "expo-intent-launcher";
 import * as Sharing from "expo-sharing";
@@ -82,13 +83,18 @@ const Page = ({ route, navigation }) => {
       // creo el pdf url
       const result = await API.get(api, path, params);
       // la ruta de guardado
+      await Linking.openURL(result?.url);
+      return;
       const localUri = `${FileSystem.documentDirectory}qr.pdf`;
-      // descargo en almacenamiento local y luego abro
-      const resultDownload = await FileSystem.downloadAsync(
-        result?.url,
-        localUri
-      );
-      FileSystem.getContentUriAsync(resultDownload?.uri).then((cUri) => {
+      console.log(localUri)
+
+
+      console.log(result)
+      const file = await FileSystem.downloadAsync(result?.url, localUri);
+      console.log(file)
+      console.log('llegue aqui primero')
+
+      FileSystem.getContentUriAsync(file.uri).then((cUri) => {
         if (Platform.OS === "ios") {
           Sharing.shareAsync(cUri);
         } else {
@@ -100,6 +106,10 @@ const Page = ({ route, navigation }) => {
           }).catch((e) => console.log("ERROR AL ABRIR ARCHIVO: ", e));
         }
       });
+      // descargo en almacenamiento local y luego abro
+      // downloadAndOpenFile(result.url, localUri, "application/pdf");
+      console.log('llegue aqui')
+
     } catch (error) {
       console.log("Error en pdf: ", error.message);
     }
@@ -635,7 +645,8 @@ const Page = ({ route, navigation }) => {
             marginTop: -25,
           }}
           onPress={() =>
-            getPdf().then(async (fileUri) => {
+            getPdf()
+            .then(async (fileUri) => {
               if (fileUri) {
                 const localFileUri = await getFileData(fileUri);
                 onSharePdf(localFileUri);

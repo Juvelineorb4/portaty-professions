@@ -6,7 +6,11 @@ const useOpenFile = () => {
   // PANA ESTO LO COPIE DE INTERNET
   // https://stackoverflow.com/questions/59812941/view-or-open-pdf-files-stored-locally-expo-react-native
   // si se nos olvida pailas
+  // console.log('toy')
+  
   const openFile = (uri, contentType) => {
+    console.log(uri)
+
     FileSystem.getContentUriAsync(uri).then((cUri) => {
       if (Platform.OS === "ios") {
         Sharing.shareAsync(cUri);
@@ -24,14 +28,19 @@ const useOpenFile = () => {
   const downloadFile = async (data, uri) => {
     try {
       const result = await FileSystem.downloadAsync(data, uri);
+      console.log(result?.uri)
+
       return result?.uri;
     } catch (error) {
+      console.log(error)
       return null;
     }
   };
 
   const downloadAndOpenFile = async (data, localUri, contentType) => {
     result = await downloadFile(data, localUri);
+    console.log(result)
+    
     openFile(result, contentType);
   };
 
