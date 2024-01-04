@@ -29,7 +29,7 @@ const CustomActivities = ({ data }) => {
       showsVerticalScrollIndicator={false}
     >
       <View>
-        <Text style={styles.labelInputTag}>Actividad Laboral</Text>
+        <Text style={styles.labelInputTag}>Actividad (*)</Text>
         <TouchableOpacity
           style={[styles.inputContainerTag]}
           onPress={() => setModalVisible(!modalVisible)}

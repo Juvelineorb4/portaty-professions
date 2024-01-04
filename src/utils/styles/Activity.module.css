@@ -57,13 +57,14 @@
     background-color: #fafafa;
     border: none;
     /* width: 50%; */
-    padding: 20px 10px;
+    padding: 18px 10px;
     border-radius: 8px;
     margin: 3px 0px 10px;
+    border: 1px solid black;
   }
   
   .labelInputTag {
-    font-family: "regular";
+    font-family: "bold";
     font-size: 14px;
     color: #404040;
     /* text-transform: capitalize; */

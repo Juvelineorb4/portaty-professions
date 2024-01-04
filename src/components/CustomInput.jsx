@@ -91,7 +91,7 @@ const CustomInput = ({
           {error && (
             <Text style={styled.error}>{error.message || "Requerido"}</Text>
           )}
-          {errorPost && (
+          {/* {error && (
             <Text
               style={{
                 color: "red",
@@ -105,7 +105,7 @@ const CustomInput = ({
             >
               Requerido
             </Text>
-          )}
+          )} */}
         </View>
       )}
     />

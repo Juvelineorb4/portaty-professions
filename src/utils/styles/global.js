@@ -47,7 +47,7 @@ module.exports = StyleSheet.create({
     color: '#fb8500'
   },
   mainBgColor: {
-    backgroundColor: '#fb8500'
+    backgroundColor: '#ff9926'
   },
   yellow: {
     color: '#ffb703'
