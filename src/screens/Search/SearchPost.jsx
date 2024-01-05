@@ -481,7 +481,7 @@ const SearchPost = ({ route, navigation }) => {
             source={require("@/utils/images/arrow_right.png")}
           />
         </TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={{
             padding: 20,
             flexDirection: "row",
@@ -527,7 +527,7 @@ const SearchPost = ({ route, navigation }) => {
             }}
             source={require("@/utils/images/arrow_right.png")}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity
           style={{
             padding: 20,
