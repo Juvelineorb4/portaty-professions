@@ -117,6 +117,11 @@ const Unprofile = ({ navigation, route }) => {
       <TouchableOpacity
         activeOpacity={1}
         onPress={() => {
+          if (business.length !== 0) {
+            setError('Ya tienes un negocio registrado')
+            setVisible(true)
+            return
+          }
           navigation.navigate("FormNavigator", {
             user: userAuth?.attributes,
           });

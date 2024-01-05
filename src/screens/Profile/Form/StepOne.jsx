@@ -30,7 +30,7 @@ const StepOne = ({ navigation, route }) => {
   const [visibleCountries, setVisibleCountries] = useState(false);
   const [searchCountry, setSearchCountry] = useState("");
   const animation = useRef(null);
-
+  let data = route.params
   async function getCountryCode(array) {
     const countryCode = await Cellular.getIsoCountryCodeAsync();
     console.log(countryCode.toUpperCase());
@@ -45,11 +45,18 @@ const StepOne = ({ navigation, route }) => {
 
   const StepParams = async (data) => {
     const { company, email, phone } = data;
+    let code = country?.idd?.root;
+    console.log(code);
+    for (let i = 0; i < country?.idd?.suffixes.length; i++) {
+      code += country?.idd?.suffixes[i];
+    }
+    console.log(code);
     let params = {
       name: company,
       email: email,
-      phone: phone,
+      phone: `${code}${phone}`,
     };
+    console.log(params)
     navigation.push("StepTwo", {
       business: params,
     });
@@ -137,10 +144,10 @@ const StepOne = ({ navigation, route }) => {
                     input: [styles.inputContainer],
                     placeholder: styles.placeholder,
                   }}
+                  defaultValue={data === undefined ? '' : data?.business?.name}
                   text={`Nombre del negocio (*)`}
                   rules={{
                     required: es.businessForm.register.company.rules,
-                    
                   }}
                 />
                 <CustomInput
@@ -154,6 +161,7 @@ const StepOne = ({ navigation, route }) => {
                     input: [styles.inputContainer],
                     placeholder: styles.placeholder,
                   }}
+                  defaultValue={data === undefined ? '' : data?.business?.email}
                   text={`Correo electronico (*)`}
                   rules={{
                     required: es.businessForm.register.email.rules,
@@ -221,9 +229,9 @@ const StepOne = ({ navigation, route }) => {
                         setVisibleCountries(!visibleCountries);
                       }}
                     >
-                      <View style={styles.modalContainer}>
-                        <View style={styles.modalContent}>
-                          <View style={styles.modalTop}>
+                      <View style={styles.modalContainerCountries}>
+                        <View style={styles.modalContentCountries}>
+                          <View style={styles.modalTopCountries}>
                             <Pressable
                               onPress={() => {
                                 setVisibleCountries(!visibleCountries);
@@ -231,9 +239,11 @@ const StepOne = ({ navigation, route }) => {
                             >
                               <Image
                                 style={{
-                                  margin: 5,
-                                  width: 25,
-                                  height: 25,
+                                  marginTop: 5,
+                                  marginLeft: 5,
+                                  marginBottom: -20,
+                                  width: 35,
+                                  height: 35,
                                   resizeMode: "contain",
                                 }}
                                 source={require("@/utils/images/arrow_back.png")}
@@ -251,10 +261,10 @@ const StepOne = ({ navigation, route }) => {
                               defaultValue={searchCountry}
                               style={{
                                 margin: 5,
-                                borderWidth: 0.4,
-                                borderColor: "#eee",
+                                borderWidth: 1,
+                                borderColor: "#1f1f1f",
                                 padding: 5,
-                                fontFamily: "light",
+                                fontFamily: "medium",
                                 fontSize: 12,
                                 borderRadius: 5,
                               }}
@@ -273,9 +283,11 @@ const StepOne = ({ navigation, route }) => {
                                         width: 210,
                                         flexDirection: "row",
                                         borderWidth: 0.5,
-                                        borderColor: "#eee",
+                                        borderColor: "#1f1f1f",
                                         alignItems: "center",
                                         marginHorizontal: 5,
+                                        borderRadius: 8,
+                                        marginBottom: 5
                                       },
                                     ]}
                                     onPress={() => {
@@ -295,7 +307,7 @@ const StepOne = ({ navigation, route }) => {
                                     />
                                     <Text
                                       style={{
-                                        fontFamily: "light",
+                                        fontFamily: "regular",
                                         fontSize: 11,
                                         color: "#000",
                                         width: 100,
@@ -329,6 +341,7 @@ const StepOne = ({ navigation, route }) => {
                       input: [styles.inputContainerP],
                       placeholder: styles.placeholder,
                     }}
+                    defaultValue={data === undefined ? '' : data?.business?.phone}
                     text={` `}
                     rules={{
                       required: es.businessForm.register.email.rules,
@@ -360,7 +373,7 @@ const StepOne = ({ navigation, route }) => {
                       { fontFamily: "bold", fontSize: 20, color: "#1f1f1f" },
                     ]}
                   >
-                    1 / 4
+                    1 / 5
                   </Text>
                   <Feather
                     name="arrow-right-circle"

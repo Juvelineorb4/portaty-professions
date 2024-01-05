@@ -16,9 +16,37 @@ export const activitySelect = atom({
   key: "activitySelectValue",
   default: {},
 });
+export const areaSelect = atom({
+  key: "areaSelectValue",
+  default: {},
+});
 export const mapBusiness = atom({
   key: "mapBusinessValue",
   default: {},
+});
+export const selectLocation = atom({
+  key: "selectLocationValue",
+  default: false,
+});
+export const emptyLocation = atom({
+  key: "emptyLocationValue",
+  default: true,
+});
+export const directionBusiness = atom({
+  key: "directionBusinessValue",
+  default: '',
+});
+export const imageBusiness = atom({
+  key: "imageBusinessValue",
+  default: null,
+});
+export const blobBusiness = atom({
+  key: "blobBusinessValue",
+  default: null,
+});
+export const base64Business = atom({
+  key: "base64BusinessValue",
+  default: '',
 });
 export const userAuthenticated = atom({
   key: "userAuthenticatedValue",

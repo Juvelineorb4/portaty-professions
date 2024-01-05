@@ -49,7 +49,7 @@
   color: #8c9199cb;
   /* text-transform: capitalize; */
   font-size: 12px;
-  font-family: "light";
+  font-family: "regular";
 }
 .inputContainerTag {
   flex-direction: row;

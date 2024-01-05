@@ -6,6 +6,8 @@ import StepTwo from "@/screens/Profile/Form/StepTwo";
 import StepThree from "@/screens/Profile/Form/StepThree";
 import StepFour from "@/screens/Profile/Form/StepFour";
 import Form from "@/screens/Profile/Form";
+import StepFive from "@/screens/Profile/Form/StepFive";
+import StepComplete from "@/screens/Profile/Form/StepComplete";
 
 const FormNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -17,6 +19,7 @@ const FormNavigator = () => {
           options={{
             animation: "slide_from_right",
             headerShown: false,
+            presentation: 'transparentModal'
           }}
         />
         <Stack.Screen
@@ -25,6 +28,7 @@ const FormNavigator = () => {
           options={{
             animation: "slide_from_right",
             headerShown: false,
+            presentation: 'transparentModal'
           }}
         />
         <Stack.Screen
@@ -33,6 +37,7 @@ const FormNavigator = () => {
           options={{
             animation: "slide_from_right",
             headerShown: false,
+            presentation: 'transparentModal' 
           }}
         />
         <Stack.Screen
@@ -41,6 +46,25 @@ const FormNavigator = () => {
           options={{
             animation: "slide_from_right",
             headerShown: false,
+            presentation: 'transparentModal'
+          }}
+        />
+         <Stack.Screen
+          name="StepFive"
+          component={StepFive}
+          options={{
+            animation: "slide_from_right",
+            headerShown: false,
+            presentation: 'transparentModal'
+          }}
+        />
+        <Stack.Screen
+          name="StepComplete"
+          component={StepComplete}
+          options={{
+            animation: "slide_from_right",
+            headerShown: false,
+            presentation: 'transparentModal'
           }}
         />
     </Stack.Navigator>

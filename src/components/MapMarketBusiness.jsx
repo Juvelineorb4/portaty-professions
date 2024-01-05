@@ -13,7 +13,7 @@ import {
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from "expo-location";
 import styles from "@/utils/styles/MapMarket.module.css";
-import { mapBusiness } from "@/atoms";
+import { directionBusiness, emptyLocation, mapBusiness, selectLocation } from "@/atoms";
 import { useRecoilState } from "recoil";
 // hook form
 import { Controller } from "react-hook-form";
@@ -53,17 +53,37 @@ const MapMarketBusiness = ({
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectMap, setSelectMap] = useState(false);
+  const [direction, setDirection] = useRecoilState(directionBusiness);
   const [selectMapBusiness, setSelectMapBusiness] = useRecoilState(mapBusiness);
+  const [selectionLocation, setSelectionLocation] =
+    useRecoilState(selectLocation);
+  const [selectionEmptyLocation, setSelectionEmptyLocation] =
+    useRecoilState(emptyLocation);
+
   let mapRef = useRef(null);
   const onHandleMapMarket = async () => {
     setModalVisible(!modalVisible);
+    setSelectionLocation(true);
   };
   const onHandleMarketMove = (e) => {
     let {
       nativeEvent: { coordinate },
     } = e;
   };
-
+  const obtenerDireccion = async (coords) => {
+    console.log(coords);
+    let direcciones = await Location.reverseGeocodeAsync(coords);
+    if (direcciones && direcciones.length > 0) {
+      let direccion = direcciones[0];
+      let direccionString = `${
+        direccion.street === null ? "" : `${direccion.street}, `
+      }${
+        direccion.city === null ? "" : direccion.city
+      } - ${direccion.region === null ? "" : direccion.region}, ${direccion.postalCode === null ? "" : direccion.postalCode} `;
+      setDirection(direccionString);
+      console.log(direccionString);
+    }
+  };
   const onHandleMarkerDragStart = (e) => {
     let {
       nativeEvent: { coordinate },
@@ -83,15 +103,17 @@ const MapMarketBusiness = ({
   const onHandleConfirm = () => {
     if (!marketLocation) return setErrorMap(true);
     setLoading(true);
+    obtenerDireccion(selectMapBusiness);
     setTimeout(() => {
       setLoading(false);
       setErrorMap(false);
       setSelectMap(true);
+      setSelectionLocation(false);
+      setSelectionEmptyLocation(false);
       setModalVisible(!modalVisible);
     }, 2000);
   };
-  useEffect(() => {
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <Controller
@@ -118,7 +140,7 @@ const MapMarketBusiness = ({
             >
               <View
                 style={[
-                  global.mainBgColor,
+                  global.bgYellow,
                   {
                     height: 50,
                     width: 110,
@@ -126,14 +148,16 @@ const MapMarketBusiness = ({
                     justifyContent: "center",
                     borderRadius: 8,
                     marginRight: 35,
+                    borderColor: "#1f1f1f",
+                    borderWidth: 1,
                   },
                 ]}
               >
                 <Text
                   style={[
-                    global.white,
+                    global.black,
                     {
-                      fontFamily: "medium",
+                      fontFamily: "bold",
                       fontSize: 13,
                     },
                   ]}
@@ -142,10 +166,14 @@ const MapMarketBusiness = ({
                 </Text>
               </View>
               <View style={{ flex: 1, flexDirection: "row" }}>
-                {selectMap ? (
+                {direction ? (
                   <Text
                     style={styles.textTag}
-                  >{`Tu ubicacion se agrego exitosamente!`}</Text>
+                  >{`¡Tu ubicacion: ${direction} se agrego exitosamente!`}</Text>
+                ) : selectionLocation ? (
+                  <Text
+                    style={styles.textInputTagError}
+                  >{`No has seleccionado una ubicacion`}</Text>
                 ) : (
                   <Text
                     style={styles.textInputTag}
@@ -168,8 +196,8 @@ const MapMarketBusiness = ({
                     >
                       <Image
                         style={{
-                          width: 40,
-                          height: 40,
+                          width: 45,
+                          height: 45,
                           resizeMode: "contain",
                           marginLeft: 15,
                         }}
@@ -215,10 +243,10 @@ const MapMarketBusiness = ({
                           position: "absolute",
                           bottom: 25,
                           right: 120,
-                          width: 150,
+                          width: 170,
                           fontFamily: "bold",
                           color: "red",
-                          fontSize: 12,
+                          fontSize: 14,
                         }}
                       >
                         Aun no seleccionaste ninguna ubicacion
@@ -234,17 +262,19 @@ const MapMarketBusiness = ({
                           paddingVertical: 15,
                           borderRadius: 5,
                           width: 100,
-                          alignItems: 'center'
+                          alignItems: "center",
+                          borderColor: "#1f1f1f",
+                          borderWidth: 1,
                         },
-                        global.mainBgColor,
+                        global.bgYellow,
                       ]}
                       onPress={onHandleConfirm}
                     >
                       {loading ? (
-                        <ActivityIndicator size="small" color="#ffffff" />
+                        <ActivityIndicator size="small" color="black" />
                       ) : (
                         <Text
-                          style={[global.white, { fontFamily: "light" }]}
+                          style={[global.black, { fontFamily: "bold" }]}
                         >{`Confirmar`}</Text>
                       )}
                     </TouchableOpacity>
@@ -252,11 +282,6 @@ const MapMarketBusiness = ({
                 </View>
               </View>
             </Modal>
-            {error && (
-              <Text style={{ color: "red" }}>
-                No has Selecciona la Ubicacion de tu Negocio
-              </Text>
-            )}
           </View>
         </ScrollView>
       )}
