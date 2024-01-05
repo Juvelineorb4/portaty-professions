@@ -64,7 +64,7 @@ const Unprofile = ({ navigation, route }) => {
   useLayoutEffect(() => {
     // setUser([userAuth?.attributes]);
     User();
-    console.log(userAuth?.attributes["custom:userTableID"])
+    console.log(userAuth?.attributes["custom:userTableID"]);
   }, [userAuth, status, refreshing]);
 
   if (!userAuth?.attributes) return <SkeletonUnprofile />;
@@ -77,9 +77,40 @@ const Unprofile = ({ navigation, route }) => {
       }
     >
       <View>
+        <View style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between'
+        }}>
+
         <Text style={[styles.titleSettings, global.black, { marginTop: 20 }]}>
           {`Perfil`}
         </Text>
+        <View
+          style={[
+            {
+              width: 165,
+              height: 60,
+              justifyContent: "center",
+              alignItems: "center",
+              borderColor: "#1f1f1f",
+              borderRadius: 8,
+              borderWidth: 0.5,
+              marginRight: 10
+            },
+            // global.bgYellow,
+          ]}
+        >
+          <Text
+            style={{
+              fontFamily: "lightItalic",
+              fontSize: 14,
+              color: "#1f1f1f",
+            }}
+          >
+            Usuario no premium
+          </Text>
+        </View>
+        </View>
 
         <View style={[styles.line, global.bgWhiteSmoke]} />
 
@@ -118,9 +149,9 @@ const Unprofile = ({ navigation, route }) => {
         activeOpacity={1}
         onPress={() => {
           if (business.length !== 0) {
-            setError('Ya tienes un negocio registrado')
-            setVisible(true)
-            return
+            setError("Ya tienes un negocio registrado");
+            setVisible(true);
+            return;
           }
           navigation.navigate("FormNavigator", {
             user: userAuth?.attributes,

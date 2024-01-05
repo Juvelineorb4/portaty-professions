@@ -257,7 +257,7 @@ const StepFive = ({ navigation, route }) => {
                     },
                   ]}
                   onPress={() =>
-                    navigation.push("StepFour", { business: business })
+                    navigation.push("StepFour", { business: dataB.business })
                   }
                 >
                   <Feather name="arrow-left-circle" size={30} color="black" />
