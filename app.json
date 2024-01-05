@@ -4,7 +4,7 @@
     "name": "portaty-professions",
     "slug": "portaty-professions",
     "owner": "portaty",
-    "version": "0.6.0.4",
+    "version": "0.6.0.5",
     "orientation": "portrait",
     "icon": "./assets/favicon.png",
     "userInterfaceStyle": "light",
@@ -62,10 +62,6 @@
           "category": ["BROWSABLE", "DEFAULT"]
         }
       ],
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/favicon.png",
-        "backgroundColor": "#FFFFFF"
-      },
       "permissions": [
         "android.permission.RECORD_AUDIO",
         "android.permission.READ_CONTACTS",
@@ -81,6 +77,10 @@
         "android.permission.ACCESS_MEDIA_LOCATION"
       ],
       "package": "com.teamportaty.appdev",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/favicon.png",
+        "backgroundColor": "#FFFFFF"
+      },
       "versionCode": 50
     },
     "web": {
