@@ -1,4 +1,11 @@
-import { ScrollView, View, Text, TouchableOpacity, Alert, RefreshControl } from "react-native";
+import {
+  ScrollView,
+  View,
+  Text,
+  TouchableOpacity,
+  Alert,
+  RefreshControl,
+} from "react-native";
 import React, { useLayoutEffect, useState } from "react";
 import styles from "@/utils/styles/Unprofile.module.css";
 import CustomSelect from "@/components/CustomSelect";
@@ -27,14 +34,12 @@ const Unprofile = ({ navigation, route }) => {
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState("");
   const [refreshing, setRefreshing] = useState(false);
-
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
     }, 1000);
   }, []);
-
 
   const status = useRecoilValue(profileState);
 
@@ -49,20 +54,20 @@ const Unprofile = ({ navigation, route }) => {
         email: userAuth?.attributes?.email,
       },
     });
-    console.log(result?.data?.userByEmail?.items[0]?.business?.items?.length)
+    console.log(result?.data?.userByEmail?.items[0]?.business?.items?.length);
     if (result?.data?.userByEmail?.items[0]?.business?.items?.length !== 0)
       setBusiness(result.data.userByEmail.items[0].business.items);
-      console.log(result.data.userByEmail)
-      setDisabled(false)
+    console.log(result.data.userByEmail);
+    setDisabled(false);
   };
 
   useLayoutEffect(() => {
-    setUser([userAuth?.attributes]);
+    // setUser([userAuth?.attributes]);
     User();
+    console.log(userAuth?.attributes["custom:userTableID"]);
   }, [userAuth, status, refreshing]);
 
-
-  if (!user[0]) return <SkeletonUnprofile />;
+  if (!userAuth?.attributes) return <SkeletonUnprofile />;
   return (
     <ScrollView
       style={[styles.container, global.bgWhite]}
@@ -72,9 +77,40 @@ const Unprofile = ({ navigation, route }) => {
       }
     >
       <View>
+        <View style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between'
+        }}>
+
         <Text style={[styles.titleSettings, global.black, { marginTop: 20 }]}>
           {`Perfil`}
         </Text>
+        <View
+          style={[
+            {
+              width: 165,
+              height: 60,
+              justifyContent: "center",
+              alignItems: "center",
+              borderColor: "#1f1f1f",
+              borderRadius: 8,
+              borderWidth: 0.5,
+              marginRight: 10
+            },
+            // global.bgYellow,
+          ]}
+        >
+          <Text
+            style={{
+              fontFamily: "lightItalic",
+              fontSize: 14,
+              color: "#1f1f1f",
+            }}
+          >
+            Usuario no premium
+          </Text>
+        </View>
+        </View>
 
         <View style={[styles.line, global.bgWhiteSmoke]} />
 
@@ -82,7 +118,7 @@ const Unprofile = ({ navigation, route }) => {
           activeOpacity={1}
           onPress={() =>
             navigation.navigate("Profile", {
-              user: user[0],
+              user: userAuth?.attributes,
             })
           }
         >
@@ -112,15 +148,14 @@ const Unprofile = ({ navigation, route }) => {
       <TouchableOpacity
         activeOpacity={1}
         onPress={() => {
-          if (disabled) return;
-          if (business?.length !== 0) {
+          if (business.length !== 0) {
             setError("Ya tienes un negocio registrado");
             setVisible(true);
-          } else {
-            navigation.navigate("Form", {
-              user: user[0]["custom:userTableID"],
-            });
+            return;
           }
+          navigation.navigate("FormNavigator", {
+            user: userAuth?.attributes,
+          });
         }}
       >
         <View style={[styles.line, global.bgWhiteSmoke]} />
@@ -143,38 +178,35 @@ const Unprofile = ({ navigation, route }) => {
           }}
         />
       </TouchableOpacity>
-        <TouchableOpacity
-       
-          onPress={() => {
-            if (disabled) return;
-            navigation.navigate("List", {
-              data: business,
-              user: user[0],
-            })
-          }
-            
-          }
-        >
-          <View style={[styles.line, global.bgWhiteSmoke]} />
-          <CustomSelect
-            title={`Lista de tus negocios`}
-            subtitle={`Mira todos los negocios que tienes publicados`}
-            styled={{
-              text: {
-                container: styles.textContainerSelect,
-                title: [styles.textTitleSelect, global.black],
-                subtitle: [styles.textSubtitleSelect, global.topGray],
-              },
-              container: styles.containerSelect,
-              iconLeft: [styles.iconLeft, global.mainBgColor],
-              iconRight: styles.iconRight,
-            }}
-            icon={{
-              left: require("@/utils/images/order.png"),
-              right: require("@/utils/images/arrow_right.png"),
-            }}
-          />
-        </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          if (disabled) return;
+          navigation.navigate("List", {
+            data: business,
+            user: userAuth?.attributes,
+          });
+        }}
+      >
+        <View style={[styles.line, global.bgWhiteSmoke]} />
+        <CustomSelect
+          title={`Lista de tus negocios`}
+          subtitle={`Mira todos los negocios que tienes publicados`}
+          styled={{
+            text: {
+              container: styles.textContainerSelect,
+              title: [styles.textTitleSelect, global.black],
+              subtitle: [styles.textSubtitleSelect, global.topGray],
+            },
+            container: styles.containerSelect,
+            iconLeft: [styles.iconLeft, global.mainBgColor],
+            iconRight: styles.iconRight,
+          }}
+          icon={{
+            left: require("@/utils/images/order.png"),
+            right: require("@/utils/images/arrow_right.png"),
+          }}
+        />
+      </TouchableOpacity>
       <View style={styles.content}>
         <Text style={[styles.titleSettings, global.black, { marginTop: 20 }]}>
           {`Configuracion`}

@@ -44,7 +44,7 @@ import SkeletonExample from "@/components/SkeletonForm";
 const Form = ({ navigation, route }) => {
   const { location } = useLocation();
   const global = require("@/utils/styles/global.js");
-  const { user } = route.params;
+  // const { user } = route.params;
   const { control, handleSubmit } = useForm();
   const [image, setImage] = useState(null);
   const [blobImage, setBlobImage] = useState(null);
@@ -114,6 +114,8 @@ const Form = ({ navigation, route }) => {
     setSelectMapBusiness({});
   };
   const onRegisterBusiness = async (data) => {
+
+    return
     setLoading(true);
     const { identityId } = await Auth.currentUserCredentials();
     const { company, email, phone, wsme, coordinates, description } = data;

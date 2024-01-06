@@ -1,15 +1,15 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React, { useEffect } from "react";
-import { activitySelect, tagsList } from "@/atoms";
+import { areaSelect } from "@/atoms";
 import { useRecoilState } from "recoil";
 import { useState } from "react";
 
-const Activity = ({ item }) => {
+const Area = ({ item }) => {
   const global = require("@/utils/styles/global.js");
   const [active, setActive] = useState(false);
-  const [selectActivity, setSelectActivity] = useRecoilState(activitySelect);
+  const [selectArea, setSelectArea] = useRecoilState(areaSelect);
   const onHandleCheckActive = () => {
-      if (selectActivity.id === item.id) {
+      if (selectArea.id === item.id) {
         setActive(true)
     } else {
         setActive(false)
@@ -17,7 +17,7 @@ const Activity = ({ item }) => {
   };
   useEffect(() => {
     onHandleCheckActive()
-  }, [selectActivity]);
+  }, [selectArea]);
 
   return (
     <TouchableOpacity
@@ -36,7 +36,7 @@ const Activity = ({ item }) => {
       ]}
       onPress={() => {
         if (active === false) {
-            setSelectActivity(item);
+            setSelectArea(item);
           setActive(true);
         }
       }}
@@ -53,4 +53,4 @@ const Activity = ({ item }) => {
   );
 };
 
-export default Activity;
+export default Area;

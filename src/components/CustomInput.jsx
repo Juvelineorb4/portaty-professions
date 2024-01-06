@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Controller } from "react-hook-form";
 
 const CustomInput = ({
-  defaultValue,
+  defaultValue = '',
   control,
   name,
   rules = {},
@@ -25,7 +25,7 @@ const CustomInput = ({
       name={name}
       rules={rules}
       render={({
-        field: { value, onChange, onBlur },
+        field: { defaultValue, onChange, onBlur },
         fieldState: { error },
       }) => (
         <View>
@@ -48,12 +48,12 @@ const CustomInput = ({
                 />
               )}
               <TextInput
-                value={value}
+                value={defaultValue}
                 onChangeText={onChange}
                 onBlur={onBlur}
                 placeholder={placeholder}
                 placeholderTextColor={placeholderTextColor}
-                style={value ? styled.text : styled.placeholder}
+                style={defaultValue ? styled.text : styled.placeholder}
                 secureTextEntry={security && securityChange}
                 defaultValue={defaultValue}
                 multiline={area ? true : false}
@@ -91,7 +91,7 @@ const CustomInput = ({
           {error && (
             <Text style={styled.error}>{error.message || "Requerido"}</Text>
           )}
-          {errorPost && (
+          {/* {error && (
             <Text
               style={{
                 color: "red",
@@ -105,7 +105,7 @@ const CustomInput = ({
             >
               Requerido
             </Text>
-          )}
+          )} */}
         </View>
       )}
     />

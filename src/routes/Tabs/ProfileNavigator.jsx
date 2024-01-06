@@ -12,6 +12,7 @@ import About from "@/screens/Profile/About";
 import List from "@/screens/Profile/List";
 import Page from "@/screens/Profile/Page";
 import CustomQR from "@/components/CustomQR";
+import FormNavigator from "../FormNavigation";
 
 const ProfileNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -28,11 +29,11 @@ const ProfileNavigator = () => {
         options={{ header: (props) => <ProfileHeader {...props} /> }}
       />
       <Stack.Screen
-        name="Form"
-        component={Form}
+        name="FormNavigator"
+        component={FormNavigator}
         options={{
           animation: "slide_from_right",
-          header: (props) => <LeftHeader {...props} />,
+          headerShown: false,
         }}
       />
       <Stack.Screen
