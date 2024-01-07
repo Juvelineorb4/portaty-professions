@@ -17,7 +17,9 @@
       "fallbackToCacheTimeout": 0,
       "url": "https://u.expo.dev/b378d102-5cf7-49fc-93f0-b5df7f83d8ad"
     },
-    "assetBundlePatterns": ["*/"],
+    "assetBundlePatterns": [
+      "*/"
+    ],
     "ios": {
       "runtimeVersion": "exposdk:48.0.0",
       "supportsTablet": true,
@@ -59,7 +61,10 @@
               "pathPrefix": "/share/business"
             }
           ],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
       ],
       "permissions": [
@@ -81,14 +86,18 @@
         "foregroundImage": "./assets/favicon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "versionCode": 50
+      "versionCode": 51
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "packagerOpts": {
       "config": "metro.config.js",
-      "sourceExts": ["js", "jsx", "css"]
+      "sourceExts": [
+        "js",
+        "jsx",
+        "css"
+      ]
     },
     "plugins": [
       [
