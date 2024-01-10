@@ -159,16 +159,16 @@ const Home = ({ navigation, route }) => {
             style={[
               {
                 borderColor: "#1f1f1f",
-                borderWidth: 0.5,
+                borderWidth: 0.7,
                 paddingHorizontal: 15,
                 paddingVertical: 8,
                 borderRadius: 8,
               },
-              mode === 1 ? global.mainBgColor : global.bgWhite,
+              mode === 1 ? global.bgYellow : global.bgWhite,
             ]}
             onPress={() => setMode(1)}
           >
-            <SimpleLineIcons name="bell" size={18} color={mode === 1 ? "#ffffff" : "#fb8500"} />
+            <SimpleLineIcons name="bell" size={16} color={mode === 1 ? "#1f1f1f" : "#1f1f1f"} />
           </TouchableOpacity>
           <View
             style={{
@@ -181,47 +181,48 @@ const Home = ({ navigation, route }) => {
               style={[
                 {
                   borderColor: "#1f1f1f",
-                  borderWidth: 0.5,
+                  borderWidth: 0.7,
                   paddingHorizontal: 15,
                   paddingVertical: 8,
                   borderTopLeftRadius: 8,
                   borderBottomLeftRadius: 8,
                 },
-                mode === 2 ? global.mainBgColor : global.bgWhite,
+                mode === 2 ? global.bgYellow : global.bgWhite,
               ]}
               onPress={() => setMode(2)}
             >
               <Ionicons
                 name="grid-outline"
-                size={18}
-                color={mode === 2 ? "#ffffff" : "#fb8500"}
+                size={17}
+                color={mode === 2 ? "#1f1f1f" : "#1f1f1f"}
               />
             </TouchableOpacity>
             <TouchableOpacity
               style={[
                 {
+                  marginLeft: 2,
                   borderColor: "#1f1f1f",
-                  borderWidth: 0.5,
+                  borderWidth: 0.7,
                   padding: 10,
                   borderTopRightRadius: 8,
                   borderBottomRightRadius: 8,
                   paddingHorizontal: 15,
                   paddingVertical: 8,
                 },
-                mode === 3 ? global.mainBgColor : global.bgWhite,
+                mode === 3 ? global.bgYellow : global.bgWhite,
               ]}
               onPress={() => setMode(3)}
             >
               <Ionicons
                 name="list-outline"
                 size={18}
-                color={mode === 3 ? "#ffffff" : "#fb8500"}
+                color={mode === 3 ? "#1f1f1f" : "#1f1f1f"}
               />
             </TouchableOpacity>
           </View>
         </View>
 
-        <View style={{ padding: 10, paddingBottom: 80 }}>
+        <View style={{ paddingVertical: 10, paddingHorizontal: 20, paddingBottom: 80 }}>
           {!loading ? (
             mode === 2 ? (
               <Grid data={favoritesList} />

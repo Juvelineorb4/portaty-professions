@@ -90,7 +90,7 @@ const SearchOut = ({ route }) => {
               alignItems: "center",
             }}
           >
-            <Text style={{ fontFamily: "thinItalic", fontSize: 14 }}>
+            <Text style={{ fontFamily: "regular", fontSize: 14 }}>
               Tienes {totalData} de {input.trim()} cerca de ti
             </Text>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -104,8 +104,8 @@ const SearchOut = ({ route }) => {
               />
               <Text
                 style={{
-                  fontSize: 14,
-                  fontFamily: "thinItalic",
+                  fontSize: 13,
+                  fontFamily: "lightItalic",
                 }}
               >
                 Filtrar
@@ -155,13 +155,15 @@ const SearchOut = ({ route }) => {
                 <View style={{ flex: 1 }}>
                   <TouchableOpacity
                     style={[
-                      global.mainBgColor,
+                      global.bgYellow,
                       {
                         borderRadius: 8,
                         justifyContent: "center",
                         alignItems: "center",
                         height: 49,
                         marginTop: 80,
+                        borderWidth: 0.7,
+                        borderColor: '#1f1f1f'
                       },
                     ]}
                     onPress={() => {
@@ -171,8 +173,8 @@ const SearchOut = ({ route }) => {
                   >
                     <Text
                       style={[
-                        global.white,
-                        { fontFamily: "medium", fontSize: 14 },
+                        global.black,
+                        { fontFamily: "bold", fontSize: 14 },
                       ]}
                     >
                       {`Buscar`}
@@ -214,7 +216,7 @@ const SearchOut = ({ route }) => {
                     <ActivityIndicator size="large" color="#fb8500" />
                   )}
                   {totalData === totalLimit && (
-                    <Text style={{ fontFamily: "light", fontSize: 14 }}>
+                    <Text style={{ fontFamily: "regular", fontSize: 14 }}>
                       No hay mas resultados por: "{input.trim()}"
                     </Text>
                   )}
@@ -240,12 +242,12 @@ const SearchOut = ({ route }) => {
         <Text
           style={[
             {
-              fontFamily: "light",
-              fontSize: 16,
+              fontFamily: "regular",
+              fontSize: 15,
               textAlign: "center",
               marginBottom: 60,
             },
-            global.midGray,
+            global.black,
           ]}
         >
           No se encuentran resultados por: "{input.trim()}"

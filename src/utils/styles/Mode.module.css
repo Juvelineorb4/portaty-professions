@@ -10,7 +10,7 @@
 .columnGrid,
 .columnList {
   /* align-items: center; */
-  border: 0.5px solid #5e2129;
+  border: 0.7px solid #1f1f1f;
   position: relative;
   z-index: 2;
 }

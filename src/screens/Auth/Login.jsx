@@ -85,7 +85,12 @@ const Login = ({ navigation }) => {
         >
           <View style={styles.content}>
             <Text style={styles.title}>{es.authentication.login.title}</Text>
-            <Image
+           
+            <Text style={styles.name}>{es.authentication.login.name}</Text>
+            {errorActive && (
+              <Text style={styles.errorInputMain}>{errorActive}</Text>
+            )}
+             <Image
               style={{
                 width: 300,
                 height: 100,
@@ -94,10 +99,6 @@ const Login = ({ navigation }) => {
               }}
               source={require("@/utils/images/welcome.png")}
             />
-            <Text style={styles.name}>{es.authentication.login.name}</Text>
-            {errorActive && (
-              <Text style={styles.errorInputMain}>{errorActive}</Text>
-            )}
             <CustomInput
               control={control}
               name={`email`}
@@ -107,12 +108,12 @@ const Login = ({ navigation }) => {
                 label: styles.labelInput,
                 error: styles.errorInput,
                 placeholder: styles.placeholder,
-                input: [styles.inputContainer, global.bgWhiteSoft],
+                input: [styles.inputContainer, global.bgWhite],
               }}
               text={`Correo electronico`}
               // icon={require("@/utils/images/email.png")}
               rules={{
-                required: es.authentication.register.email.rules,
+                required: `Requerido`,
               }}
             />
             <CustomInput
@@ -124,7 +125,7 @@ const Login = ({ navigation }) => {
                 label: [styles.labelInput, global.topGray],
                 error: styles.errorInput,
                 placeholder: styles.placeholder,
-                input: [styles.inputContainer, global.bgWhiteSoft],
+                input: [styles.inputContainer, global.bgWhite],
                 security: styles.security,
               }}
               text={`Contraseña`}
@@ -142,15 +143,15 @@ const Login = ({ navigation }) => {
         </ScrollView>
       </TouchableWithoutFeedback>
       <View style={styles.panel}>
-        <View style={{ height: 60 }}>
+        <View style={{ height: 65 }}>
           <CustomButton
             text={
               isLoading ? <ActivityIndicator /> : es.authentication.login.button
             }
             disabled={isLoading}
             handlePress={handleSubmit(onHandleLogin)}
-            textStyles={[styles.textLogin, global.white]}
-            buttonStyles={[styles.login, global.mainBgColor]}
+            textStyles={[styles.textLogin, global.black]}
+            buttonStyles={[styles.login, global.bgYellow]}
           />
         </View>
 

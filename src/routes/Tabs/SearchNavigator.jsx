@@ -61,23 +61,24 @@ const SearchNavigator = ({ navigation }) => {
                   </TouchableOpacity>
                 )}
                 <TouchableOpacity
-                  style={[styles.content, global.bgWhiteSoft]}
+                  style={[styles.content, global.bgWhite]}
                   activeOpacity={1}
                   onPress={() => setActive(true)}
                 >
                   <Image
                     style={{
-                      width: 30,
-                      height: 30,
+                      width: 22,
+                      height: 22,
                       resizeMode: "cover",
                     }}
-                    source={require("@/utils/images/search.png")}
+                    source={require("@/utils/images/search_white.png")}
                   />
                   <TextInput
                     placeholder={"Buscar"}
                     style={styles.input}
                     onPressIn={() => setActive(true)}
                     onChangeText={(e) => setInputSearch(e)}
+                    placeholderTextColor='#1f1f1f'
                     value={inputSearch}
                     returnKeyType="search"
                     onSubmitEditing={() => {
@@ -125,7 +126,7 @@ const SearchNavigator = ({ navigation }) => {
                   />
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={[styles.content, global.bgWhiteSoft]}
+                  style={[styles.content, global.bgWhite]}
                   activeOpacity={1}
                   onPress={() => setActiveOut(true)}
                 >
@@ -143,6 +144,7 @@ const SearchNavigator = ({ navigation }) => {
                     onPressIn={() => setActiveOut(true)}
                     onChangeText={(e) => setInputSearch(e)}
                     value={inputSearch}
+                    placeholderTextColor='#1f1f1f'
                     returnKeyType="search"
                     onSubmitEditing={() => {
                       setActiveOut(false);

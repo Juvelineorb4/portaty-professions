@@ -237,7 +237,7 @@ const Register = ({ navigation }) => {
             rules={{ required: "Requerido" }}
           />
         </ScrollView>
-        <View style={{ height: 60 }}>
+        <View style={{ height: 65 }}>
           <CustomButton
             text={
               isLoading ? (

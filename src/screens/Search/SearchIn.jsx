@@ -56,7 +56,7 @@ const SearchIn = () => {
             letterSpacing: -1,
             marginBottom: 10,
           },
-          global.mainColor,
+          global.black,
         ]}
       >
         Recientes
@@ -96,7 +96,7 @@ const SearchIn = () => {
               source={require("@/utils/images/search.png")}
             />
             <Text
-              style={[{ fontFamily: "light", fontSize: 16 }, global.mainColor]}
+              style={[{ fontFamily: "regular", fontSize: 16 }, global.black]}
             >
               {item}
             </Text>

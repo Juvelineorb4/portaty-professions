@@ -104,7 +104,7 @@ const Search = ({ route }) => {
             <Text
               style={{
                 fontSize: 14,
-                fontFamily: "light",
+                fontFamily: "regular",
               }}
             >
               Tienes {totalData} negocios cerca de ti
@@ -120,8 +120,8 @@ const Search = ({ route }) => {
               />
               <Text
                 style={{
-                  fontSize: 14,
-                  fontFamily: "thinItalic",
+                  fontSize: 13,
+                  fontFamily: "lightItalic",
                 }}
               >
                 Filtrar
@@ -147,11 +147,11 @@ const Search = ({ route }) => {
                       source={require("@/utils/images/arrow_back.png")}
                     />
                   </Pressable>
-                  <Text style={styles.modalText}>{`Filtra tu busqueda`}</Text>
+                  <Text style={{fontFamily: 'medium', fontSize: 12}}>{`Filtra tu busqueda`}</Text>
                 </View>
                 <View style={{ flex: 1 }}>
                   <Text
-                    style={styles.modalText}
+                    style={{fontFamily: 'regular', fontSize: 13}}
                   >{`La distancia de tu radio son: ${filterRadio} km`}</Text>
                   <View
                     style={{
@@ -167,21 +167,21 @@ const Search = ({ route }) => {
                         onPress={() => setFilterRadio(item)}
                         style={[
                           filterRadio === item
-                            ? global.mainBgColor
+                            ? global.bgYellow
                             : global.bgWhite,
                           {
                             padding: 7,
                             borderRadius: 4,
                             marginBottom: 7,
-                            borderWidth: 0.5,
-                            borderColor: filterRadio === item ? "#fff" : "#000",
+                            borderWidth: 0.7,
+                            borderColor: filterRadio === item ? "#1f1f1f" : "#1f1f1f",
                           },
                         ]}
                       >
                         <Text
                           style={[
-                            { fontFamily: "regular", fontSize: 12 },
-                            filterRadio === item ? global.white : global.black,
+                            { fontFamily: "medium", fontSize: 12 },
+                            filterRadio === item ? global.black : global.black,
                           ]}
                         >
                           {item}km
@@ -190,19 +190,21 @@ const Search = ({ route }) => {
                     ))}
                   </View>
                   <Text
-                    style={styles.modalText}
+                    style={{fontFamily: 'regular', fontSize: 13}}
                   >{`La distancia esta reflejada en un radio de kilometros`}</Text>
                 </View>
                 <View style={{ flex: 1 }}>
                   <TouchableOpacity
                     style={[
-                      global.mainBgColor,
+                      global.bgYellow,
                       {
                         borderRadius: 8,
                         justifyContent: "center",
                         alignItems: "center",
                         height: 49,
                         marginTop: 80,
+                        borderWidth: 0.7,
+                        borderColor: '#1f1f1f'
                       },
                     ]}
                     onPress={() => {
@@ -212,8 +214,8 @@ const Search = ({ route }) => {
                   >
                     <Text
                       style={[
-                        global.white,
-                        { fontFamily: "medium", fontSize: 14 },
+                        global.black,
+                        { fontFamily: "bold", fontSize: 14 },
                       ]}
                     >
                       {`Buscar`}
@@ -254,7 +256,7 @@ const Search = ({ route }) => {
                 <ActivityIndicator size="large" color="#5E2129" />
               )} */}
                 {totalData === totalLimit ? (
-                  <Text style={{ fontFamily: "light", fontSize: 14 }}>
+                  <Text style={{ fontFamily: "regular", fontSize: 14 }}>
                     No hay mas negocios por mostrar
                   </Text>
                 ) : (
@@ -289,7 +291,7 @@ const Search = ({ route }) => {
                     <ActivityIndicator size="large" color="#5E2129" />
                   )} */}
                   {totalData === totalLimit ? (
-                    <Text style={{ fontFamily: "light", fontSize: 14 }}>
+                    <Text style={{ fontFamily: "regular", fontSize: 14 }}>
                       No hay mas negocios por mostrar
                     </Text>
                   ) : (

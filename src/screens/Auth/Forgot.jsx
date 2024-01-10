@@ -91,7 +91,7 @@ const Forgot = ({ navigation }) => {
               // icon={require("@/utils/images/email.png")}
               text={es.authentication.forgot.email.title}
               rules={{
-                required: "requiere correo electronico",
+                required: "Requerido",
               }}
             />
             <Text style={[styles.code, global.topGray]}>
@@ -142,7 +142,7 @@ const Forgot = ({ navigation }) => {
               }}
             />
           </ScrollView>
-          <View style={{ height: 60 }}>
+          <View style={{ height: 65 }}>
             <CustomButton
               text={
                 isLoading ? (
@@ -153,8 +153,8 @@ const Forgot = ({ navigation }) => {
               }
               disabled={isLoading}
               handlePress={handleSubmit(onHandleSendCodeEmail)}
-              textStyles={[styles.textContinue, global.white]}
-              buttonStyles={[styles.continue, global.mainBgColor]}
+              textStyles={[styles.textContinue, global.black]}
+              buttonStyles={[styles.continue, global.bgYellow]}
             />
           </View>
         </View>

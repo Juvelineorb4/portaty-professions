@@ -94,7 +94,7 @@ const Unprofile = ({ navigation, route }) => {
               alignItems: "center",
               borderColor: "#1f1f1f",
               borderRadius: 8,
-              borderWidth: 0.5,
+              borderWidth: 0.7,
               marginRight: 10
             },
             // global.bgYellow,
@@ -112,7 +112,7 @@ const Unprofile = ({ navigation, route }) => {
         </View>
         </View>
 
-        <View style={[styles.line, global.bgWhiteSmoke]} />
+        <View style={[styles.line, global.bgMidGray]} />
 
         <TouchableOpacity
           activeOpacity={1}
@@ -121,6 +121,9 @@ const Unprofile = ({ navigation, route }) => {
               user: userAuth?.attributes,
             })
           }
+          style={{
+            marginBottom: -25
+          }}
         >
           <CustomSelect
             title={`Mi cuenta`}
@@ -132,11 +135,11 @@ const Unprofile = ({ navigation, route }) => {
                 subtitle: [styles.textSubtitleSelect, global.topGray],
               },
               container: styles.containerSelect,
-              iconLeft: [styles.iconLeft, global.mainBgColor],
+              iconLeft: [styles.iconLeft, global.bgYellow],
               iconRight: styles.iconRight,
             }}
             icon={{
-              left: require("@/utils/images/profile_white.png"),
+              left: require("@/utils/images/profile_settings.png"),
               right: require("@/utils/images/arrow_right.png"),
             }}
           />
@@ -145,6 +148,7 @@ const Unprofile = ({ navigation, route }) => {
       <Text style={[styles.titleSettings, global.black, { marginTop: 20 }]}>
         {`Gestion`}
       </Text>
+      <View style={[styles.line, global.bgMidGray]} />
       <TouchableOpacity
         activeOpacity={1}
         onPress={() => {
@@ -157,8 +161,10 @@ const Unprofile = ({ navigation, route }) => {
             user: userAuth?.attributes,
           });
         }}
+        style={{
+          marginBottom: -25
+        }}
       >
-        <View style={[styles.line, global.bgWhiteSmoke]} />
         <CustomSelect
           title={`Registra un negocio`}
           subtitle={`Publica tu negocio para que cientos de personajes puedan encontrarte`}
@@ -169,7 +175,7 @@ const Unprofile = ({ navigation, route }) => {
               subtitle: [styles.textSubtitleSelect, global.topGray],
             },
             container: styles.containerSelect,
-            iconLeft: [styles.iconLeft, global.mainBgColor],
+            iconLeft: [styles.iconLeft, global.bgYellow],
             iconRight: styles.iconRight,
           }}
           icon={{
@@ -186,8 +192,11 @@ const Unprofile = ({ navigation, route }) => {
             user: userAuth?.attributes,
           });
         }}
+        style={{
+          marginBottom: -25
+        }}
       >
-        <View style={[styles.line, global.bgWhiteSmoke]} />
+        {/* <View style={[styles.line, global.bgMidGray]} /> */}
         <CustomSelect
           title={`Lista de tus negocios`}
           subtitle={`Mira todos los negocios que tienes publicados`}
@@ -198,7 +207,7 @@ const Unprofile = ({ navigation, route }) => {
               subtitle: [styles.textSubtitleSelect, global.topGray],
             },
             container: styles.containerSelect,
-            iconLeft: [styles.iconLeft, global.mainBgColor],
+            iconLeft: [styles.iconLeft, global.bgYellow],
             iconRight: styles.iconRight,
           }}
           icon={{
@@ -211,13 +220,19 @@ const Unprofile = ({ navigation, route }) => {
         <Text style={[styles.titleSettings, global.black, { marginTop: 20 }]}>
           {`Configuracion`}
         </Text>
+        <View style={[styles.line, global.bgMidGray, {
+          marginBottom: 20,
+          // marginTop: 5
+        }]} />
         {buttons.map((button, index) => (
           <View key={index}>
             {button.route ? (
               <TouchableOpacity
                 onPress={() => navigation.navigate(button.route)}
+                style={{
+                  marginVertical: -25
+                }}
               >
-                <View style={[styles.line, global.bgWhiteSmoke]} />
                 <CustomSelect
                   title={button.title}
                   subtitle={button.subtitle}
@@ -228,7 +243,7 @@ const Unprofile = ({ navigation, route }) => {
                       subtitle: [styles.textSubtitleSelect, global.topGray],
                     },
                     container: styles.containerSelect,
-                    iconLeft: [styles.iconLeft, global.mainBgColor],
+                    iconLeft: [styles.iconLeft, global.bgYellow],
                     iconRight: styles.iconRight,
                   }}
                   icon={button.icon}
@@ -236,7 +251,7 @@ const Unprofile = ({ navigation, route }) => {
               </TouchableOpacity>
             ) : button.web ? (
               <TouchableOpacity>
-                <View style={[styles.line, global.bgWhiteSmoke]} />
+                {/* <View style={[styles.line, global.bgMidGray]} /> */}
                 <CustomSelect
                   title={button.title}
                   subtitle={button.subtitle}
@@ -247,7 +262,7 @@ const Unprofile = ({ navigation, route }) => {
                       subtitle: [styles.textSubtitleSelect, global.topGray],
                     },
                     container: styles.containerSelect,
-                    iconLeft: [styles.iconLeft, global.mainBgColor],
+                    iconLeft: [styles.iconLeft, global.bgYellow],
                     iconRight: styles.iconRight,
                   }}
                   icon={button.icon}
@@ -255,7 +270,7 @@ const Unprofile = ({ navigation, route }) => {
               </TouchableOpacity>
             ) : (
               <TouchableOpacity onPress={onHandleLogout}>
-                <View style={[styles.line, global.bgWhiteSmoke]} />
+                {/* <View style={[styles.line, global.bgMidGray]} /> */}
                 <CustomSelect
                   title={button.title}
                   subtitle={button.subtitle}
@@ -266,7 +281,7 @@ const Unprofile = ({ navigation, route }) => {
                       subtitle: [styles.textSubtitleSelect, global.topGray],
                     },
                     container: styles.containerSelect,
-                    iconLeft: [styles.iconLeft, global.mainBgColor],
+                    iconLeft: [styles.iconLeft, global.bgYellow],
                     iconRight: styles.iconRight,
                   }}
                   icon={button.icon}
