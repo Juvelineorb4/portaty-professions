@@ -186,7 +186,7 @@ const FavoritePage = ({ navigation, route }) => {
             dimensionsImages <= 3 && (
               <View
                 style={[
-                  global.mainBgColor,
+                  global.bgYellow,
                   {
                     width: 25,
                     height: 25,
@@ -199,7 +199,7 @@ const FavoritePage = ({ navigation, route }) => {
                   },
                 ]}
               >
-                <Entypo name="triangle-left" size={24} color="white" />
+                <Entypo name="triangle-left" size={24} color="#1f1f1f" />
               </View>
             )}
           {list.length !== 1 &&
@@ -207,7 +207,7 @@ const FavoritePage = ({ navigation, route }) => {
             dimensionsImages < list.length - 1 && (
               <View
                 style={[
-                  global.mainBgColor,
+                  global.bgYellow,
                   {
                     width: 25,
                     height: 25,
@@ -220,7 +220,7 @@ const FavoritePage = ({ navigation, route }) => {
                   },
                 ]}
               >
-                <Entypo name="triangle-right" size={24} color="white" />
+                <Entypo name="triangle-right" size={24} color="#1f1f1f" />
               </View>
             )}
           <FlatList
@@ -787,6 +787,8 @@ const FavoritePage = ({ navigation, route }) => {
                         height: "60%",
                         resizeMode: "cover",
                         borderRadius: 5,
+                        borderWidth: 0.7,
+                        borderColor: '#1f1f1f'
                       }}
                       source={{
                         uri: imageView?.url ? imageView?.url : imageView?.uri,
@@ -798,8 +800,8 @@ const FavoritePage = ({ navigation, route }) => {
                           style={{
                             flex: 1,
                             flexDirection: "row",
-                            borderColor: "#444",
-                            borderWidth: 0.4,
+                            borderColor: "#1f1f1f",
+                            borderWidth: 0.7,
                             paddingHorizontal: 10,
                             borderRadius: 8,
                             marginTop: 10,
@@ -815,7 +817,7 @@ const FavoritePage = ({ navigation, route }) => {
                             style={{
                               flex: 1,
                               // width: 100,
-                              fontFamily: "light",
+                              fontFamily: "regular",
                               fontSize: 14,
                               alignItems: "flex-start",
                               color: "#000",

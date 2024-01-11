@@ -23,7 +23,7 @@ import * as queries from "@/graphql/CustomQueries/Favorites";
 const SearchOut = ({ route }) => {
   const global = require("@/utils/styles/global.js");
   const { input } = route.params;
-  console.log(input)
+  // console.log(input)
   const [moreItems, setMoreItems] = useState(1);
   const [items, setItems] = useState([]);
   const [totalData, setTotalData] = useState(2);
@@ -63,6 +63,7 @@ const SearchOut = ({ route }) => {
       }
       return setItems(newRenderItems);
     } catch (error) {
+      console.log('Error: ', error)
       setNotFound(true)
     }
   };
@@ -246,6 +247,7 @@ const SearchOut = ({ route }) => {
               fontSize: 15,
               textAlign: "center",
               marginBottom: 60,
+              width: 330
             },
             global.black,
           ]}

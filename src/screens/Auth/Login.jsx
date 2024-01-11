@@ -146,7 +146,7 @@ const Login = ({ navigation }) => {
         <View style={{ height: 65 }}>
           <CustomButton
             text={
-              isLoading ? <ActivityIndicator /> : es.authentication.login.button
+              isLoading ? <ActivityIndicator color={'#1f1f1f'}/> : es.authentication.login.button
             }
             disabled={isLoading}
             handlePress={handleSubmit(onHandleLogin)}

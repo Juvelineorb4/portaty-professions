@@ -152,6 +152,7 @@ const SearchPost = ({ route, navigation }) => {
       } else {
         setShowAgg(true);
       }
+      console.log('toy aqui', business?.data?.getBusiness)
       return setPost(business?.data?.getBusiness);
     } catch (error) {
       console.log(error);

@@ -103,7 +103,7 @@ const StepFive = ({ navigation, route }) => {
               lon: map.longitude,
             },
             activity: activity.name,
-            tags: [`${dataB.business.name}`, `${activity.name}`, `${area.name}`],
+            tags: [`${dataB.business.name}`, `${activity.name}`, `${area.name}`, `${description}`],
           },
         },
       });
@@ -191,7 +191,9 @@ const StepFive = ({ navigation, route }) => {
                   rules={{
                     required: es.businessForm.register.company.rules,
                   }}
+                  max={500}
                 />
+
                 <View
                   style={{
                     flexDirection: "row",

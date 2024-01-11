@@ -86,13 +86,12 @@ const Page = ({ route, navigation }) => {
       await Linking.openURL(result?.url);
       return;
       const localUri = `${FileSystem.documentDirectory}qr.pdf`;
-      console.log(localUri)
+      console.log(localUri);
 
-
-      console.log(result)
+      console.log(result);
       const file = await FileSystem.downloadAsync(result?.url, localUri);
-      console.log(file)
-      console.log('llegue aqui primero')
+      console.log(file);
+      console.log("llegue aqui primero");
 
       FileSystem.getContentUriAsync(file.uri).then((cUri) => {
         if (Platform.OS === "ios") {
@@ -108,8 +107,7 @@ const Page = ({ route, navigation }) => {
       });
       // descargo en almacenamiento local y luego abro
       // downloadAndOpenFile(result.url, localUri, "application/pdf");
-      console.log('llegue aqui')
-
+      console.log("llegue aqui");
     } catch (error) {
       console.log("Error en pdf: ", error.message);
     }
@@ -438,6 +436,8 @@ const Page = ({ route, navigation }) => {
                       resizeMode: "cover",
                       borderRadius: 5,
                       backgroundColor: "#fff",
+                      borderColor: "#1f1f1f",
+                      borderWidth: 0.7,
                     }}
                     source={{ uri: item.url }}
                   />
@@ -469,8 +469,10 @@ const Page = ({ route, navigation }) => {
                         marginBottom: 5,
                         position: "absolute",
                         right: 0,
+                        borderColor: "#1f1f1f",
+                        borderWidth: 0.7,
                       },
-                      global.mainBgColor,
+                      global.bgYellow,
                     ]}
                     onPress={() => {
                       setOpen(!open);
@@ -480,7 +482,7 @@ const Page = ({ route, navigation }) => {
                     <Text
                       style={[
                         { fontFamily: "medium", fontSize: 17 },
-                        global.white,
+                        global.black,
                       ]}
                     >
                       {item.key + 1}/{storageImages.length}
@@ -488,7 +490,7 @@ const Page = ({ route, navigation }) => {
                     <MaterialCommunityIcons
                       name="image-search-outline"
                       size={20}
-                      color="white"
+                      color="#1f1f1f"
                       style={{ marginLeft: 5 }}
                     />
                   </TouchableOpacity>
@@ -512,28 +514,34 @@ const Page = ({ route, navigation }) => {
             <TouchableOpacity
               style={[
                 {
-                  flexDirection: "row",
-                  padding: 8,
-                  borderRadius: 5,
-                  opacity: 0.95,
+                  height: 50,
+                  width: 250,
+                  justifyContent: "center",
                   alignItems: "center",
+                  flexDirection: "row",
+                  borderRadius: 8,
+                  opacity: 0.95,
+                  borderWidth: 0.7,
+                  borderColor: "#1f1f1f",
                   marginBottom: 5,
                 },
-                global.mainBgColor,
+                global.bgYellow,
               ]}
               onPress={selectImages}
             >
-              <Text style={[{ fontFamily: "medium" }, global.white]}>
+              <Text
+                style={[{ fontFamily: "bold", fontSize: 13 }, global.black]}
+              >
                 Agregar mas fotos
               </Text>
               <MaterialCommunityIcons
                 name="camera-plus-outline"
-                size={23}
-                color="white"
-                style={{ marginLeft: 5 }}
+                size={24}
+                color="#1f1f1f"
+                style={{ marginLeft: 8 }}
               />
             </TouchableOpacity>
-            <Text style={{ fontFamily: "light" }}>
+            <Text style={{ fontFamily: "regular" }}>
               Solo puedes tener 5 fotos como maximo
             </Text>
           </View>
@@ -545,12 +553,12 @@ const Page = ({ route, navigation }) => {
             justifyContent: "center",
           }}
         >
-          <Text style={{ fontSize: 26, fontFamily: "thin" }}>
+          <Text style={{ fontSize: 24, fontFamily: "medium" }}>
             {item.favorites?.items?.length}
           </Text>
-          <Text style={{ fontSize: 22, fontFamily: "thin" }}>Favoritos</Text>
+          <Text style={{ fontSize: 20, fontFamily: "light" }}>Favoritos</Text>
         </View>
-        <View style={[styles.line, global.bgWhiteSmoke]} />
+        <View style={[styles.line, global.bgMidGray]} />
         <TouchableOpacity
           style={{
             padding: 20,
@@ -568,7 +576,9 @@ const Page = ({ route, navigation }) => {
               flex: 1,
               borderRadius: 10,
               overflow: "hidden",
-              marginBottom: 40,
+              marginTop: 5,
+              borderColor: "#1f1f1f",
+              borderWidth: 0.7,
             }}
           >
             <MapView
@@ -597,6 +607,7 @@ const Page = ({ route, navigation }) => {
         <TouchableOpacity
           style={{
             padding: 20,
+            marginTop: -15,
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
@@ -612,17 +623,19 @@ const Page = ({ route, navigation }) => {
                   borderRadius: 10,
                   alignItems: "center",
                   justifyContent: "center",
+                  borderColor: '#1f1f1f',
+                  borderWidth: 0.7
                 },
-                global.mainBgColor,
+                global.bgYellow,
               ]}
             >
-              <EvilIcons name="share-google" size={25} color="white" />
+              <EvilIcons name="share-google" size={32} color="#1f1f1f" />
             </View>
             <View style={{ marginLeft: 10 }}>
-              <Text style={{ fontFamily: "light", fontSize: 16 }}>
+              <Text style={{ fontFamily: "medium", fontSize: 15 }}>
                 Compartir
               </Text>
-              <Text style={{ fontFamily: "thin", fontSize: 12, width: 150 }}>
+              <Text style={{ fontFamily: "regular", fontSize: 12, width: 150 }}>
                 Compartelo con tus amigos y familiares
               </Text>
             </View>
@@ -645,8 +658,7 @@ const Page = ({ route, navigation }) => {
             marginTop: -25,
           }}
           onPress={() =>
-            getPdf()
-            .then(async (fileUri) => {
+            getPdf().then(async (fileUri) => {
               if (fileUri) {
                 const localFileUri = await getFileData(fileUri);
                 onSharePdf(localFileUri);
@@ -664,22 +676,20 @@ const Page = ({ route, navigation }) => {
                   borderRadius: 10,
                   alignItems: "center",
                   justifyContent: "center",
+                  borderColor: '#1f1f1f',
+                  borderWidth: 0.7
                 },
-                global.mainBgColor,
+                global.bgYellow,
               ]}
             >
-              <MaterialCommunityIcons
-                name="qrcode-scan"
-                size={25}
-                color="white"
-              />
+              <AntDesign name="qrcode" size={24} color="#1f1f1f" />
             </View>
             <View style={{ marginLeft: 10 }}>
-              <Text style={{ fontFamily: "light", fontSize: 16 }}>
+              <Text style={{ fontFamily: "medium", fontSize: 15 }}>
                 Descargar QR
               </Text>
-              <Text style={{ fontFamily: "thin", fontSize: 12, width: 150 }}>
-                Descarga tu QR para pegarlo en donde quieras
+              <Text style={{ fontFamily: "regular", fontSize: 12, width: 150 }}>
+                Pegalo en donde tu quieras
               </Text>
             </View>
           </View>
@@ -693,10 +703,10 @@ const Page = ({ route, navigation }) => {
           />
         </TouchableOpacity>
         <View style={{ marginBottom: 80 }}>
-          <Text style={{ fontSize: 22, fontFamily: "thinItalic", padding: 10 }}>
+          <Text style={{ fontSize: 22, fontFamily: "regular", padding: 10 }}>
             Datos
           </Text>
-          <View style={[styles.line, global.bgWhiteSmoke]} />
+          <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
               flexDirection: "row",
@@ -709,20 +719,20 @@ const Page = ({ route, navigation }) => {
               {/* <Foundation name="torso-business" size={22} color="#1f1f1f" /> */}
               <Text
                 style={[
-                  { fontFamily: "thinItalic", fontSize: 15 },
-                  global.midGray,
+                  { fontFamily: "lightItalic", fontSize: 15 },
+                  global.black,
                 ]}
               >
                 Razon social
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={[{ fontSize: 13, fontFamily: "lightItalic" }]}>
+              <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
                 {item.name}
               </Text>
             </View>
           </View>
-          <View style={[styles.line, global.bgWhiteSmoke]} />
+          <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
               flexDirection: "row",
@@ -735,20 +745,20 @@ const Page = ({ route, navigation }) => {
               {/* <FontAwesome5 name="store" size={16} color="#1f1f1f" /> */}
               <Text
                 style={[
-                  { fontFamily: "thinItalic", fontSize: 15 },
-                  global.midGray,
+                  { fontFamily: "lightItalic", fontSize: 15 },
+                  global.black,
                 ]}
               >
                 Actividad laboral
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={[{ fontSize: 13, fontFamily: "lightItalic" }]}>
+              <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
                 {item.activity}
               </Text>
             </View>
           </View>
-          <View style={[styles.line, global.bgWhiteSmoke]} />
+          <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
               flexDirection: "row",
@@ -761,20 +771,20 @@ const Page = ({ route, navigation }) => {
               {/* <FontAwesome name="phone" size={20} color="#1f1f1f" /> */}
               <Text
                 style={[
-                  { fontFamily: "thinItalic", fontSize: 15 },
-                  global.midGray,
+                  { fontFamily: "lightItalic", fontSize: 15 },
+                  global.black,
                 ]}
               >
                 Telefono
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={[{ fontSize: 13, fontFamily: "lightItalic" }]}>
+              <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
                 {item.phone}
               </Text>
             </View>
           </View>
-          <View style={[styles.line, global.bgWhiteSmoke]} />
+          <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
               flexDirection: "row",
@@ -787,20 +797,20 @@ const Page = ({ route, navigation }) => {
               {/* <FontAwesome name="whatsapp" size={22} color="#1f1f1f" /> */}
               <Text
                 style={[
-                  { fontFamily: "thinItalic", fontSize: 15 },
-                  global.midGray,
+                  { fontFamily: "lightItalic", fontSize: 15 },
+                  global.black,
                 ]}
               >
                 WhatsApp
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={[{ fontSize: 13, fontFamily: "lightItalic" }]}>
+              <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
                 {item.whatsapp}
               </Text>
             </View>
           </View>
-          <View style={[styles.line, global.bgWhiteSmoke]} />
+          <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
               flexDirection: "row",
@@ -817,20 +827,20 @@ const Page = ({ route, navigation }) => {
               /> */}
               <Text
                 style={[
-                  { fontFamily: "thinItalic", fontSize: 15 },
-                  global.midGray,
+                  { fontFamily: "lightItalic", fontSize: 15 },
+                  global.black,
                 ]}
               >
                 Correo
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={[{ fontSize: 13, fontFamily: "lightItalic" }]}>
+              <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
                 {item.email}
               </Text>
             </View>
           </View>
-          <View style={[styles.line, global.bgWhiteSmoke]} />
+          <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
               flexDirection: "row",
@@ -843,8 +853,8 @@ const Page = ({ route, navigation }) => {
               {/* <MaterialCommunityIcons name="web" size={24} color="#1f1f1f" /> */}
               <Text
                 style={[
-                  { fontFamily: "thinItalic", fontSize: 15 },
-                  global.midGray,
+                  { fontFamily: "lightItalic", fontSize: 15 },
+                  global.black,
                 ]}
               >
                 Web
@@ -853,7 +863,7 @@ const Page = ({ route, navigation }) => {
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Text
                 style={[
-                  { fontSize: 13, fontFamily: "lightItalic", marginRight: 5 },
+                  { fontSize: 13, fontFamily: "regular", marginRight: 5 },
                 ]}
               >
                 Link
@@ -861,7 +871,7 @@ const Page = ({ route, navigation }) => {
               <AntDesign name="link" size={16} color="#1f1f1f" />
             </View>
           </View>
-          <View style={[styles.line, global.bgWhiteSmoke]} />
+          <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
               flexDirection: "row",
@@ -874,8 +884,8 @@ const Page = ({ route, navigation }) => {
               {/* <FontAwesome name="instagram" size={24} color="#1f1f1f" /> */}
               <Text
                 style={[
-                  { fontFamily: "thinItalic", fontSize: 15 },
-                  global.midGray,
+                  { fontFamily: "lightItalic", fontSize: 15 },
+                  global.black,
                 ]}
               >
                 Instagram
@@ -884,7 +894,7 @@ const Page = ({ route, navigation }) => {
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Text
                 style={[
-                  { fontSize: 13, fontFamily: "lightItalic", marginRight: 5 },
+                  { fontSize: 13, fontFamily: "regular", marginRight: 5 },
                 ]}
               >
                 Link
@@ -892,7 +902,7 @@ const Page = ({ route, navigation }) => {
               <AntDesign name="link" size={16} color="#1f1f1f" />
             </View>
           </View>
-          <View style={[styles.line, global.bgWhiteSmoke]} />
+          <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
               flexDirection: "row",
@@ -905,8 +915,8 @@ const Page = ({ route, navigation }) => {
               {/* <FontAwesome name="facebook-square" size={24} color="#1f1f1f" /> */}
               <Text
                 style={[
-                  { fontFamily: "thinItalic", fontSize: 15 },
-                  global.midGray,
+                  { fontFamily: "lightItalic", fontSize: 15 },
+                  global.black,
                 ]}
               >
                 Facebook
@@ -915,7 +925,7 @@ const Page = ({ route, navigation }) => {
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Text
                 style={[
-                  { fontSize: 13, fontFamily: "lightItalic", marginRight: 5 },
+                  { fontSize: 13, fontFamily: "regular", marginRight: 5 },
                 ]}
               >
                 Link
@@ -923,7 +933,7 @@ const Page = ({ route, navigation }) => {
               <AntDesign name="link" size={16} color="#1f1f1f" />
             </View>
           </View>
-          <View style={[styles.line, global.bgWhiteSmoke]} />
+          <View style={[styles.line, global.bgMidGray]} />
         </View>
         <Modal
           animationType="none"

@@ -35,6 +35,8 @@ const ItemProfile = ({ data, identityID, styled }) => {
                 height: 130,
                 resizeMode: "cover",
                 borderRadius: 2,
+                borderColor: '#1f1f1f',
+                borderWidth: 0.7
               }}
               source={{ uri: data?.thumbnail }}
             />
@@ -50,18 +52,18 @@ const ItemProfile = ({ data, identityID, styled }) => {
             }}
           >
             <View>
-              <Text style={{ fontSize: 13, fontFamily: "light" }}>
+              <Text style={{ fontSize: 13, fontFamily: "medium" }}>
                 Nombre
               </Text>
-              <Text style={{ fontSize: 12, fontFamily: "thin" }}>
+              <Text style={{ fontSize: 12, fontFamily: "regular" }}>
                 {data.name}
               </Text>
             </View>
             <View style={{}}>
-              <Text style={{ fontSize: 13, fontFamily: "light" }}>
+              <Text style={{ fontSize: 13, fontFamily: "medium" }}>
                 Actividad laboral
               </Text>
-              <Text style={{ fontSize: 12, fontFamily: "thin" }}>
+              <Text style={{ fontSize: 12, fontFamily: "light", textTransform: 'capitalize' }}>
                 {data.activity}
               </Text>
             </View>

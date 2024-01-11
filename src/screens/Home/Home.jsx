@@ -138,8 +138,8 @@ const Home = ({ navigation, route }) => {
           handlePress={() => {
             setResultNothing(false);
           }}
-          textStyles={[styles.textSearch, global.white]}
-          buttonStyles={[styles.search, global.mainBgColor]}
+          textStyles={[styles.textSearch, global.black]}
+          buttonStyles={[styles.search, global.bgYellow]}
         />
       </View>
     );
@@ -260,7 +260,7 @@ const Home = ({ navigation, route }) => {
           global.bgWhite,
         ]}
       >
-        <ActivityIndicator size="large" color="#fb8500" />
+        <ActivityIndicator size="large" color="#1f1f1f" />
       </View>
     );
 
@@ -278,14 +278,14 @@ const Home = ({ navigation, route }) => {
           global.bgWhite,
         ]}
       >
-        <Text style={{ fontSize: 16, fontFamily: "light" }}>
+        <Text style={{ fontSize: 16, fontFamily: "regular" }}>
           No tienes ningun favorito aun
         </Text>
         <CustomButton
           text={`Buscar`}
           handlePress={() => navigation.navigate("Search_Tab")}
-          textStyles={[styles.textSearch, global.white]}
-          buttonStyles={[styles.search, global.mainBgColor]}
+          textStyles={[styles.textSearch, global.black]}
+          buttonStyles={[styles.search, global.bgYellow]}
         />
       </View>
     );
