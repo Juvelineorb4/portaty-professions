@@ -13,6 +13,7 @@ import {
   TouchableWithoutFeedback,
   ActivityIndicator,
   RefreshControl,
+  Switch,
 } from "react-native";
 import React, { useState, useEffect, useRef } from "react";
 import styles from "@/utils/styles/Unprofile.module.css";
@@ -58,7 +59,17 @@ const Page = ({ route, navigation }) => {
   const global = require("@/utils/styles/global.js");
   const [statusProfile, setStatusProfile] = useRecoilState(updateProfile);
   const [refreshing, setRefreshing] = useState(false);
-
+  const [editActive, setEditActive] = useState(false);
+  const [editParams, setEditParams] = useState({
+    name: item.name,
+    activity: item.activity,
+    phone: item.phone,
+    ws: item.whatsapp,
+    email: item.email,
+    web: item.page,
+    instagram: item.instagram,
+    facebook: item.facebook,
+  });
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
@@ -623,8 +634,8 @@ const Page = ({ route, navigation }) => {
                   borderRadius: 10,
                   alignItems: "center",
                   justifyContent: "center",
-                  borderColor: '#1f1f1f',
-                  borderWidth: 0.7
+                  borderColor: "#1f1f1f",
+                  borderWidth: 0.7,
                 },
                 global.bgYellow,
               ]}
@@ -676,8 +687,8 @@ const Page = ({ route, navigation }) => {
                   borderRadius: 10,
                   alignItems: "center",
                   justifyContent: "center",
-                  borderColor: '#1f1f1f',
-                  borderWidth: 0.7
+                  borderColor: "#1f1f1f",
+                  borderWidth: 0.7,
                 },
                 global.bgYellow,
               ]}
@@ -703,9 +714,41 @@ const Page = ({ route, navigation }) => {
           />
         </TouchableOpacity>
         <View style={{ marginBottom: 80 }}>
-          <Text style={{ fontSize: 22, fontFamily: "regular", padding: 10 }}>
-            Datos
-          </Text>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              padding: 10,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 22,
+                fontFamily: "regular",
+                alignSelf: "flex-end",
+              }}
+            >
+              Datos
+            </Text>
+            <View
+              style={[
+                global.bgYellow,
+                { borderRadius: 8, borderWidth: 0.7, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12 },
+              ]}
+            >
+              <Text style={{ fontSize: 14, fontFamily: "bold" }}>Editar</Text>
+              <Switch
+                trackColor={{
+                  false: "#767577",
+                  true: "#1f1f1f",
+                }}
+                thumbColor={editActive ? "#FFFFFF" : "#f4f3f4"}
+                onValueChange={() => setEditActive(!editActive)}
+                value={editActive}
+              />
+            </View>
+          </View>
+
           <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
@@ -727,9 +770,26 @@ const Page = ({ route, navigation }) => {
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
+              <TextInput
+                onChangeText={(e) => setEditParams({ ...state, name: e })}
+                value={editParams?.name}
+                style={[
+                  {
+                    fontSize: 13,
+                    fontFamily: "regular",
+                    padding: 10,
+                    borderColor: "#1f1f1f",
+                    borderWidth: 0.7,
+                    borderRadius: 4,
+                  },
+                  editActive ? global.bgWhite : global.bgWhiteSoft,
+                ]}
+                // defaultValue={item.name}
+                editable={editActive ? true : false}
+              />
+              {/* <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
                 {item.name}
-              </Text>
+              </Text> */}
             </View>
           </View>
           <View style={[styles.line, global.bgMidGray]} />
@@ -753,9 +813,27 @@ const Page = ({ route, navigation }) => {
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
+            <TextInput
+                onChangeText={(e) => setEditParams({ ...state, activity: e })}
+                value={editParams?.activity}
+                style={[
+                  {
+                    fontSize: 13,
+                    fontFamily: "regular",
+                    padding: 10,
+                    borderColor: "#1f1f1f",
+                    borderWidth: 0.7,
+                    borderRadius: 4,
+                    textTransform: 'capitalize'
+                  },
+                  editActive ? global.bgWhite : global.bgWhiteSoft,
+                ]}
+                // defaultValue={item.name}
+                editable={editActive ? true : false}
+              />
+              {/* <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
                 {item.activity}
-              </Text>
+              </Text> */}
             </View>
           </View>
           <View style={[styles.line, global.bgMidGray]} />
@@ -779,9 +857,27 @@ const Page = ({ route, navigation }) => {
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
+            <TextInput
+                onChangeText={(e) => setEditParams({ ...state, phone: e })}
+                value={editParams?.phone}
+                style={[
+                  {
+                    fontSize: 13,
+                    fontFamily: "regular",
+                    padding: 10,
+                    borderColor: "#1f1f1f",
+                    borderWidth: 0.7,
+                    borderRadius: 4,
+                    textTransform: 'capitalize'
+                  },
+                  editActive ? global.bgWhite : global.bgWhiteSoft,
+                ]}
+                defaultValue={editParams?.phone === null ? 'Agregar telefono' : editParams?.phone}
+                editable={editActive ? true : false}
+              />
+              {/* <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
                 {item.phone}
-              </Text>
+              </Text> */}
             </View>
           </View>
           <View style={[styles.line, global.bgMidGray]} />
@@ -805,9 +901,27 @@ const Page = ({ route, navigation }) => {
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
+            <TextInput
+                onChangeText={(e) => setEditParams({ ...state, ws: e })}
+                value={editParams?.ws === "" ? 'Agregar WhatsApp' : editParams?.ws}
+                style={[
+                  {
+                    fontSize: 13,
+                    fontFamily: "regular",
+                    padding: 10,
+                    borderColor: "#1f1f1f",
+                    borderWidth: 0.7,
+                    borderRadius: 4,
+                    textTransform: 'capitalize'
+                  },
+                  editActive ? global.bgWhite : global.bgWhiteSoft,
+                ]}
+                defaultValue={editParams?.ws === "" ? 'Agregar WhatsApp' : editParams?.ws}
+                editable={editActive ? true : false}
+              />
+              {/* <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
                 {item.whatsapp}
-              </Text>
+              </Text> */}
             </View>
           </View>
           <View style={[styles.line, global.bgMidGray]} />
@@ -835,9 +949,26 @@ const Page = ({ route, navigation }) => {
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
+            <TextInput
+                onChangeText={(e) => setEditParams({ ...state, email: e })}
+                value={editParams?.email}
+                style={[
+                  {
+                    fontSize: 13,
+                    fontFamily: "regular",
+                    padding: 10,
+                    borderColor: "#1f1f1f",
+                    borderWidth: 0.7,
+                    borderRadius: 4,
+                    textTransform: 'capitalize'
+                  },
+                  editActive ? global.bgWhite : global.bgWhiteSoft,
+                ]}
+                editable={editActive ? true : false}
+              />
+              {/* <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
                 {item.email}
-              </Text>
+              </Text> */}
             </View>
           </View>
           <View style={[styles.line, global.bgMidGray]} />
@@ -861,14 +992,32 @@ const Page = ({ route, navigation }) => {
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text
+              {/* <Text
                 style={[
                   { fontSize: 13, fontFamily: "regular", marginRight: 5 },
                 ]}
               >
                 Link
-              </Text>
-              <AntDesign name="link" size={16} color="#1f1f1f" />
+              </Text> */}
+              <TextInput
+                onChangeText={(e) => setEditParams({ ...state, web: e })}
+                value={editParams?.web === null ? 'Agregar Web' : editParams?.web}
+                style={[
+                  {
+                    fontSize: 13,
+                    fontFamily: "regular",
+                    padding: 10,
+                    borderColor: "#1f1f1f",
+                    borderWidth: 0.7,
+                    borderRadius: 4,
+                    textTransform: 'capitalize'
+                  },
+                  editActive ? global.bgWhite : global.bgWhiteSoft,
+                ]}
+                editable={editActive ? true : false}
+                defaultValue={editParams?.web === null ? 'Agregar Web' : editParams?.web}
+              />
+              {/* <AntDesign name="link" size={16} color="#1f1f1f" /> */}
             </View>
           </View>
           <View style={[styles.line, global.bgMidGray]} />
@@ -892,14 +1041,24 @@ const Page = ({ route, navigation }) => {
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text
+            <TextInput
+                onChangeText={(e) => setEditParams({ ...state, instagram: e })}
+                value={editParams?.instagram === null ? 'Agregar Instagram' : editParams?.instagram}
                 style={[
-                  { fontSize: 13, fontFamily: "regular", marginRight: 5 },
+                  {
+                    fontSize: 13,
+                    fontFamily: "regular",
+                    padding: 10,
+                    borderColor: "#1f1f1f",
+                    borderWidth: 0.7,
+                    borderRadius: 4,
+                    textTransform: 'capitalize'
+                  },
+                  editActive ? global.bgWhite : global.bgWhiteSoft,
                 ]}
-              >
-                Link
-              </Text>
-              <AntDesign name="link" size={16} color="#1f1f1f" />
+                editable={editActive ? true : false}
+                defaultValue={editParams?.instagram === null ? 'Agregar Instagram' : editParams?.instagram}
+              />
             </View>
           </View>
           <View style={[styles.line, global.bgMidGray]} />
@@ -923,14 +1082,24 @@ const Page = ({ route, navigation }) => {
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text
+            <TextInput
+                onChangeText={(e) => setEditParams({ ...state, facebook: e })}
+                value={editParams?.facebook === null ? 'Agregar Facebook' : editParams?.facebook}
                 style={[
-                  { fontSize: 13, fontFamily: "regular", marginRight: 5 },
+                  {
+                    fontSize: 13,
+                    fontFamily: "regular",
+                    padding: 10,
+                    borderColor: "#1f1f1f",
+                    borderWidth: 0.7,
+                    borderRadius: 4,
+                    textTransform: 'capitalize'
+                  },
+                  editActive ? global.bgWhite : global.bgWhiteSoft,
                 ]}
-              >
-                Link
-              </Text>
-              <AntDesign name="link" size={16} color="#1f1f1f" />
+                editable={editActive ? true : false}
+                defaultValue={editParams?.facebook === null ? 'Agregar Facebook' : editParams?.facebook}
+              />
             </View>
           </View>
           <View style={[styles.line, global.bgMidGray]} />
