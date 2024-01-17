@@ -66,7 +66,7 @@ const ItemNew = ({ data, page }) => {
   useEffect(() => {
     fetchData();
     getTime();
-    console.log(page[0])
+    console.log(page[0]);
   }, []);
 
   return (
@@ -74,11 +74,11 @@ const ItemNew = ({ data, page }) => {
       style={{
         justifyContent: "center",
         marginVertical: 10,
-        marginHorizontal: 10,
-        paddingHorizontal: 10,
-        paddingVertical: 5,
-        borderColor: "#9d9d9d",
-        borderWidth: 0.5,
+        paddingHorizontal: 15,
+        paddingTop: 10,
+        paddingBottom: 5,
+        borderColor: "#1f1f1f",
+        borderWidth: 0.7,
         borderRadius: 8,
       }}
       activeOpacity={1}
@@ -91,55 +91,58 @@ const ItemNew = ({ data, page }) => {
         })
       }
     >
-        <View style={{flexDirection: 'row', alignItems: 'center', paddingBottom: 5}}>
-      
-      <Image
-        style={{
-          width: 20,
-          height: 20,
-          resizeMode: "contain",
-          borderRadius: 50,
-        }}
-        source={{
-          uri: post?.thumbnail,
-        }}
-      />
-      <Text
-        style={{
-          fontFamily: "light",
-          fontSize: 13,
-          marginLeft: 5,
-          color: '#444'
-        }}
+      <View
+        style={{ flexDirection: "row", alignItems: "center", paddingBottom: 5 }}
       >
-        {post?.name} publico una nueva foto{" "}
-      </Text>
-    </View>
-      
+        <Image
+          style={{
+            width: 20,
+            height: 20,
+            resizeMode: "contain",
+            borderRadius: 50,
+          }}
+          source={{
+            uri: post?.thumbnail,
+          }}
+        />
+        <Text
+          style={{
+            fontFamily: "regular",
+            fontSize: 13,
+            marginLeft: 5,
+            color: "#1f1f1f",
+          }}
+        >
+          {post?.name} publico una nueva foto{" "}
+        </Text>
+      </View>
+
       <Image
         style={{
           width: "100%",
           height: 285,
           resizeMode: "cover",
           borderRadius: 5,
+          borderColor: "#1f1f1f",
+          borderWidth: 0.7,
         }}
         source={{
           uri: data.url,
         }}
       />
       <Text
-          style={{
-            fontFamily: "lightItalic",
-            fontSize: 11,
-            marginTop: 3,
-            alignSelf: 'flex-end',
-          }}
-        >
-          Publicado{' '}
-          {time?.formate !== "fecha" ? `hace` : "el"} {time?.date}{" "}
-          {time?.formate !== "fecha" && time?.formate}
-          {time?.formate !== "fecha" && time?.date >= 2 ? `s` : ``}
-        </Text>
+        style={{
+          fontFamily: "lightItalic",
+          fontSize: 11,
+          marginTop: 3,
+          alignSelf: "flex-end",
+          color: '#1f1f1f',
+        }}
+      >
+        Publicado {time?.formate !== "fecha" ? `hace` : "el"} {time?.date}{" "}
+        {time?.formate !== "fecha" && time?.formate}
+        {time?.formate !== "fecha" && time?.date >= 2 ? `s` : ``}
+      </Text>
     </TouchableOpacity>
   );
 };
