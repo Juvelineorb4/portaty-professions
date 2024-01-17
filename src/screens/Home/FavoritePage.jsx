@@ -26,6 +26,7 @@ import {
   Feather,
   Entypo,
   MaterialIcons,
+  Octicons,
 } from "@expo/vector-icons";
 import { Auth, API, Storage } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Favorites";
@@ -242,7 +243,7 @@ const FavoritePage = ({ navigation, route }) => {
                     borderRadius: 5,
                     backgroundColor: "#fff",
                     borderWidth: 0.7,
-                    borderColor: '#1f1f1f'
+                    borderColor: "#1f1f1f",
                   }}
                   source={{ uri: item.url }}
                 />
@@ -258,7 +259,7 @@ const FavoritePage = ({ navigation, route }) => {
                       position: "absolute",
                       right: 0,
                       borderWidth: 0.8,
-                      borderColor: '#1f1f1f'
+                      borderColor: "#1f1f1f",
                     },
                     global.bgYellow,
                   ]}
@@ -317,14 +318,33 @@ const FavoritePage = ({ navigation, route }) => {
                 height: 45,
                 resizeMode: "cover",
                 borderWidth: 0.8,
-                borderColor: '#1f1f1f',
-                borderRadius: 50
+                borderColor: "#1f1f1f",
+                borderRadius: 50,
               }}
               source={require("@/utils/images/sifavorites.png")}
             />
             {/* <MaterialIcons name="favorite" size={45} color="red" /> */}
           </TouchableOpacity>
         </View>
+        <TouchableOpacity
+          style={{
+            alignSelf: "flex-end",
+            paddingHorizontal: 20,
+            paddingBottom: 5,
+            flexDirection: "row",
+            alignItems: 'center',
+          }}
+          onPress={() => setVisible(true)}
+        >
+          <MaterialIcons name="report" size={22} color="black" />
+          <Text style={[global.black, {
+            fontFamily: 'bold',
+            fontSize: 12
+            // marginLeft: 2,
+            // marginBottom: 3
+          }]}>Reportar negocio</Text>
+        </TouchableOpacity>
+
         <View style={[styles.line, global.bgMidGray]} />
         <TouchableOpacity
           style={{
@@ -332,7 +352,6 @@ const FavoritePage = ({ navigation, route }) => {
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
-            
           }}
           activeOpacity={1}
           onPress={() =>
@@ -350,14 +369,13 @@ const FavoritePage = ({ navigation, route }) => {
               overflow: "hidden",
               marginBottom: 40,
               borderWidth: 0.7,
-            borderColor: '#1f1f1f'
+              borderColor: "#1f1f1f",
             }}
           >
             <MapView
               style={{
                 width: "100%",
                 height: 220,
-                
               }}
               scrollEnabled={false}
               initialRegion={{
@@ -399,7 +417,7 @@ const FavoritePage = ({ navigation, route }) => {
                   alignItems: "center",
                   justifyContent: "center",
                   borderWidth: 0.7,
-                  borderColor: '#1f1f1f'
+                  borderColor: "#1f1f1f",
                 },
                 global.bgYellow,
               ]}
@@ -444,7 +462,7 @@ const FavoritePage = ({ navigation, route }) => {
                   alignItems: "center",
                   justifyContent: "center",
                   borderWidth: 0.7,
-                  borderColor: '#1f1f1f'
+                  borderColor: "#1f1f1f",
                 },
                 global.bgYellow,
               ]}
@@ -489,7 +507,7 @@ const FavoritePage = ({ navigation, route }) => {
                   alignItems: "center",
                   justifyContent: "center",
                   borderWidth: 0.7,
-                  borderColor: '#1f1f1f'
+                  borderColor: "#1f1f1f",
                 },
                 global.bgYellow,
               ]}
@@ -563,7 +581,15 @@ const FavoritePage = ({ navigation, route }) => {
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={[{ fontSize: 13, fontFamily: "regular", textTransform: 'capitalize' }]}>
+              <Text
+                style={[
+                  {
+                    fontSize: 13,
+                    fontFamily: "regular",
+                    textTransform: "capitalize",
+                  },
+                ]}
+              >
                 {item.business.activity}
               </Text>
             </View>
@@ -589,7 +615,7 @@ const FavoritePage = ({ navigation, route }) => {
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
+              <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
                 {item.business.phone}
               </Text>
             </View>
@@ -615,7 +641,7 @@ const FavoritePage = ({ navigation, route }) => {
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
+              <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
                 {item.business.whatsapp}
               </Text>
             </View>
@@ -645,7 +671,7 @@ const FavoritePage = ({ navigation, route }) => {
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
+              <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
                 {item.business.email}
               </Text>
             </View>
@@ -702,7 +728,7 @@ const FavoritePage = ({ navigation, route }) => {
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text
+              <Text
                 style={[
                   { fontSize: 13, fontFamily: "regular", marginRight: 5 },
                 ]}
@@ -733,7 +759,7 @@ const FavoritePage = ({ navigation, route }) => {
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text
+              <Text
                 style={[
                   { fontSize: 13, fontFamily: "regular", marginRight: 5 },
                 ]}
@@ -788,7 +814,7 @@ const FavoritePage = ({ navigation, route }) => {
                         resizeMode: "cover",
                         borderRadius: 5,
                         borderWidth: 0.7,
-                        borderColor: '#1f1f1f'
+                        borderColor: "#1f1f1f",
                       }}
                       source={{
                         uri: imageView?.url ? imageView?.url : imageView?.uri,
@@ -841,7 +867,7 @@ const FavoritePage = ({ navigation, route }) => {
           <Text>Modal</Text>
         </TouchableOpacity> */}
         <ModalAlert
-          text={`Tu negocio ha sido registrado con exito`}
+          text={`Seguro quieres reportar este negocio?`}
           close={() => setVisible(false)}
           open={visible}
           icon={require("@/utils/images/error.png")}

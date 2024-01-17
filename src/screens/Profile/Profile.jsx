@@ -334,7 +334,7 @@ const Profile = ({ route, navigation }) => {
             {editActive && (
               <CustomButton
                 text={
-                  isLoading ? <ActivityIndicator color={`#fff`} /> : "Guardar"
+                  isLoading ? <ActivityIndicator color={`#1f1f1f`} /> : "Guardar"
                 }
                 handlePress={onSaveChange}
                 textStyles={[

@@ -32,14 +32,14 @@ const CustomCheckBox = ({
               style={{ marginVertical: 10, width: 18, height: 18 }}
               value={value}
               onValueChange={onChange}
-              color={value ? "#fb8500" : undefined}
+              color={value ? "#ffb703" : undefined}
             />
             <Text style={{ marginHorizontal: 5, fontFamily: 'light', fontSize: 13 }}>{text}</Text>
             {onPressed && (
               <Feather
                 name="external-link"
                 size={18}
-                color="#fb8500"
+                color="#ffb703"
                 onPress={onPressed}
               />
             )}

@@ -104,7 +104,7 @@ const StepThree = ({ navigation, route }) => {
                     // }}
                   />
                 ) : (
-                  <ActivityIndicator />
+                  <ActivityIndicator color={`#ffb703`}/>
                 )}
               </View>
               <View style={[styles.modalBott]}>

@@ -82,3 +82,22 @@ export const updateBusiness = /* GraphQL */ `
     }
   }
 `;
+
+export const updateBusinessPage = /* GraphQL */ `
+  mutation UpdateBusiness(
+    $input: UpdateBusinessInput!
+    $condition: ModelBusinessConditionInput
+  ) {
+    updateBusiness(input: $input, condition: $condition) {
+      id
+      name
+      email
+      phone
+      whatsapp
+      instagram
+      facebook
+      page
+      activity
+    }
+  }
+`;
