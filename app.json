@@ -4,7 +4,7 @@
     "name": "portaty-professions",
     "slug": "portaty-professions",
     "owner": "portaty",
-    "version": "0.6.0.5",
+    "version": "0.6.0.6",
     "orientation": "portrait",
     "icon": "./assets/favicon.png",
     "userInterfaceStyle": "light",
@@ -86,7 +86,7 @@
         "foregroundImage": "./assets/favicon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "versionCode": 51
+      "versionCode": 52
     },
     "web": {
       "favicon": "./assets/favicon.png"
