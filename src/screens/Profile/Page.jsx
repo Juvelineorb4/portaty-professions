@@ -13,6 +13,7 @@ import {
   TouchableWithoutFeedback,
   ActivityIndicator,
   RefreshControl,
+  Switch,
 } from "react-native";
 import React, { useState, useEffect, useRef } from "react";
 import styles from "@/utils/styles/Unprofile.module.css";
@@ -58,7 +59,17 @@ const Page = ({ route, navigation }) => {
   const global = require("@/utils/styles/global.js");
   const [statusProfile, setStatusProfile] = useRecoilState(updateProfile);
   const [refreshing, setRefreshing] = useState(false);
-
+  const [editActive, setEditActive] = useState(false);
+  const [editParams, setEditParams] = useState({
+    name: item.name,
+    activity: item.activity,
+    phone: item.phone,
+    ws: item.whatsapp,
+    email: item.email,
+    web: item.page,
+    instagram: item.instagram,
+    facebook: item.facebook,
+  });
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
@@ -86,13 +97,12 @@ const Page = ({ route, navigation }) => {
       await Linking.openURL(result?.url);
       return;
       const localUri = `${FileSystem.documentDirectory}qr.pdf`;
-      console.log(localUri)
+      console.log(localUri);
 
-
-      console.log(result)
+      console.log(result);
       const file = await FileSystem.downloadAsync(result?.url, localUri);
-      console.log(file)
-      console.log('llegue aqui primero')
+      console.log(file);
+      console.log("llegue aqui primero");
 
       FileSystem.getContentUriAsync(file.uri).then((cUri) => {
         if (Platform.OS === "ios") {
@@ -108,8 +118,7 @@ const Page = ({ route, navigation }) => {
       });
       // descargo en almacenamiento local y luego abro
       // downloadAndOpenFile(result.url, localUri, "application/pdf");
-      console.log('llegue aqui')
-
+      console.log("llegue aqui");
     } catch (error) {
       console.log("Error en pdf: ", error.message);
     }
@@ -438,6 +447,8 @@ const Page = ({ route, navigation }) => {
                       resizeMode: "cover",
                       borderRadius: 5,
                       backgroundColor: "#fff",
+                      borderColor: "#1f1f1f",
+                      borderWidth: 0.7,
                     }}
                     source={{ uri: item.url }}
                   />
@@ -469,8 +480,10 @@ const Page = ({ route, navigation }) => {
                         marginBottom: 5,
                         position: "absolute",
                         right: 0,
+                        borderColor: "#1f1f1f",
+                        borderWidth: 0.7,
                       },
-                      global.mainBgColor,
+                      global.bgYellow,
                     ]}
                     onPress={() => {
                       setOpen(!open);
@@ -480,7 +493,7 @@ const Page = ({ route, navigation }) => {
                     <Text
                       style={[
                         { fontFamily: "medium", fontSize: 17 },
-                        global.white,
+                        global.black,
                       ]}
                     >
                       {item.key + 1}/{storageImages.length}
@@ -488,7 +501,7 @@ const Page = ({ route, navigation }) => {
                     <MaterialCommunityIcons
                       name="image-search-outline"
                       size={20}
-                      color="white"
+                      color="#1f1f1f"
                       style={{ marginLeft: 5 }}
                     />
                   </TouchableOpacity>
@@ -512,28 +525,34 @@ const Page = ({ route, navigation }) => {
             <TouchableOpacity
               style={[
                 {
-                  flexDirection: "row",
-                  padding: 8,
-                  borderRadius: 5,
-                  opacity: 0.95,
+                  height: 50,
+                  width: 250,
+                  justifyContent: "center",
                   alignItems: "center",
+                  flexDirection: "row",
+                  borderRadius: 8,
+                  opacity: 0.95,
+                  borderWidth: 0.7,
+                  borderColor: "#1f1f1f",
                   marginBottom: 5,
                 },
-                global.mainBgColor,
+                global.bgYellow,
               ]}
               onPress={selectImages}
             >
-              <Text style={[{ fontFamily: "medium" }, global.white]}>
+              <Text
+                style={[{ fontFamily: "bold", fontSize: 13 }, global.black]}
+              >
                 Agregar mas fotos
               </Text>
               <MaterialCommunityIcons
                 name="camera-plus-outline"
-                size={23}
-                color="white"
-                style={{ marginLeft: 5 }}
+                size={24}
+                color="#1f1f1f"
+                style={{ marginLeft: 8 }}
               />
             </TouchableOpacity>
-            <Text style={{ fontFamily: "light" }}>
+            <Text style={{ fontFamily: "regular" }}>
               Solo puedes tener 5 fotos como maximo
             </Text>
           </View>
@@ -545,12 +564,12 @@ const Page = ({ route, navigation }) => {
             justifyContent: "center",
           }}
         >
-          <Text style={{ fontSize: 26, fontFamily: "thin" }}>
+          <Text style={{ fontSize: 24, fontFamily: "medium" }}>
             {item.favorites?.items?.length}
           </Text>
-          <Text style={{ fontSize: 22, fontFamily: "thin" }}>Favoritos</Text>
+          <Text style={{ fontSize: 20, fontFamily: "light" }}>Favoritos</Text>
         </View>
-        <View style={[styles.line, global.bgWhiteSmoke]} />
+        <View style={[styles.line, global.bgMidGray]} />
         <TouchableOpacity
           style={{
             padding: 20,
@@ -568,7 +587,9 @@ const Page = ({ route, navigation }) => {
               flex: 1,
               borderRadius: 10,
               overflow: "hidden",
-              marginBottom: 40,
+              marginTop: 5,
+              borderColor: "#1f1f1f",
+              borderWidth: 0.7,
             }}
           >
             <MapView
@@ -597,6 +618,7 @@ const Page = ({ route, navigation }) => {
         <TouchableOpacity
           style={{
             padding: 20,
+            marginTop: -15,
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
@@ -612,17 +634,19 @@ const Page = ({ route, navigation }) => {
                   borderRadius: 10,
                   alignItems: "center",
                   justifyContent: "center",
+                  borderColor: "#1f1f1f",
+                  borderWidth: 0.7,
                 },
-                global.mainBgColor,
+                global.bgYellow,
               ]}
             >
-              <EvilIcons name="share-google" size={25} color="white" />
+              <EvilIcons name="share-google" size={32} color="#1f1f1f" />
             </View>
             <View style={{ marginLeft: 10 }}>
-              <Text style={{ fontFamily: "light", fontSize: 16 }}>
+              <Text style={{ fontFamily: "medium", fontSize: 15 }}>
                 Compartir
               </Text>
-              <Text style={{ fontFamily: "thin", fontSize: 12, width: 150 }}>
+              <Text style={{ fontFamily: "regular", fontSize: 12, width: 150 }}>
                 Compartelo con tus amigos y familiares
               </Text>
             </View>
@@ -645,8 +669,7 @@ const Page = ({ route, navigation }) => {
             marginTop: -25,
           }}
           onPress={() =>
-            getPdf()
-            .then(async (fileUri) => {
+            getPdf().then(async (fileUri) => {
               if (fileUri) {
                 const localFileUri = await getFileData(fileUri);
                 onSharePdf(localFileUri);
@@ -664,22 +687,20 @@ const Page = ({ route, navigation }) => {
                   borderRadius: 10,
                   alignItems: "center",
                   justifyContent: "center",
+                  borderColor: "#1f1f1f",
+                  borderWidth: 0.7,
                 },
-                global.mainBgColor,
+                global.bgYellow,
               ]}
             >
-              <MaterialCommunityIcons
-                name="qrcode-scan"
-                size={25}
-                color="white"
-              />
+              <AntDesign name="qrcode" size={24} color="#1f1f1f" />
             </View>
             <View style={{ marginLeft: 10 }}>
-              <Text style={{ fontFamily: "light", fontSize: 16 }}>
+              <Text style={{ fontFamily: "medium", fontSize: 15 }}>
                 Descargar QR
               </Text>
-              <Text style={{ fontFamily: "thin", fontSize: 12, width: 150 }}>
-                Descarga tu QR para pegarlo en donde quieras
+              <Text style={{ fontFamily: "regular", fontSize: 12, width: 150 }}>
+                Pegalo en donde tu quieras
               </Text>
             </View>
           </View>
@@ -693,10 +714,42 @@ const Page = ({ route, navigation }) => {
           />
         </TouchableOpacity>
         <View style={{ marginBottom: 80 }}>
-          <Text style={{ fontSize: 22, fontFamily: "thinItalic", padding: 10 }}>
-            Datos
-          </Text>
-          <View style={[styles.line, global.bgWhiteSmoke]} />
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              padding: 10,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 22,
+                fontFamily: "regular",
+                alignSelf: "flex-end",
+              }}
+            >
+              Datos
+            </Text>
+            <View
+              style={[
+                global.bgYellow,
+                { borderRadius: 8, borderWidth: 0.7, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12 },
+              ]}
+            >
+              <Text style={{ fontSize: 14, fontFamily: "bold" }}>Editar</Text>
+              <Switch
+                trackColor={{
+                  false: "#767577",
+                  true: "#1f1f1f",
+                }}
+                thumbColor={editActive ? "#FFFFFF" : "#f4f3f4"}
+                onValueChange={() => setEditActive(!editActive)}
+                value={editActive}
+              />
+            </View>
+          </View>
+
+          <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
               flexDirection: "row",
@@ -709,20 +762,37 @@ const Page = ({ route, navigation }) => {
               {/* <Foundation name="torso-business" size={22} color="#1f1f1f" /> */}
               <Text
                 style={[
-                  { fontFamily: "thinItalic", fontSize: 15 },
-                  global.midGray,
+                  { fontFamily: "lightItalic", fontSize: 15 },
+                  global.black,
                 ]}
               >
                 Razon social
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={[{ fontSize: 13, fontFamily: "lightItalic" }]}>
+              <TextInput
+                onChangeText={(e) => setEditParams({ ...state, name: e })}
+                value={editParams?.name}
+                style={[
+                  {
+                    fontSize: 13,
+                    fontFamily: "regular",
+                    padding: 10,
+                    borderColor: "#1f1f1f",
+                    borderWidth: 0.7,
+                    borderRadius: 4,
+                  },
+                  editActive ? global.bgWhite : global.bgWhiteSoft,
+                ]}
+                // defaultValue={item.name}
+                editable={editActive ? true : false}
+              />
+              {/* <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
                 {item.name}
-              </Text>
+              </Text> */}
             </View>
           </View>
-          <View style={[styles.line, global.bgWhiteSmoke]} />
+          <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
               flexDirection: "row",
@@ -735,20 +805,38 @@ const Page = ({ route, navigation }) => {
               {/* <FontAwesome5 name="store" size={16} color="#1f1f1f" /> */}
               <Text
                 style={[
-                  { fontFamily: "thinItalic", fontSize: 15 },
-                  global.midGray,
+                  { fontFamily: "lightItalic", fontSize: 15 },
+                  global.black,
                 ]}
               >
                 Actividad laboral
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={[{ fontSize: 13, fontFamily: "lightItalic" }]}>
+            <TextInput
+                onChangeText={(e) => setEditParams({ ...state, activity: e })}
+                value={editParams?.activity}
+                style={[
+                  {
+                    fontSize: 13,
+                    fontFamily: "regular",
+                    padding: 10,
+                    borderColor: "#1f1f1f",
+                    borderWidth: 0.7,
+                    borderRadius: 4,
+                    textTransform: 'capitalize'
+                  },
+                  editActive ? global.bgWhite : global.bgWhiteSoft,
+                ]}
+                // defaultValue={item.name}
+                editable={editActive ? true : false}
+              />
+              {/* <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
                 {item.activity}
-              </Text>
+              </Text> */}
             </View>
           </View>
-          <View style={[styles.line, global.bgWhiteSmoke]} />
+          <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
               flexDirection: "row",
@@ -761,20 +849,38 @@ const Page = ({ route, navigation }) => {
               {/* <FontAwesome name="phone" size={20} color="#1f1f1f" /> */}
               <Text
                 style={[
-                  { fontFamily: "thinItalic", fontSize: 15 },
-                  global.midGray,
+                  { fontFamily: "lightItalic", fontSize: 15 },
+                  global.black,
                 ]}
               >
                 Telefono
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={[{ fontSize: 13, fontFamily: "lightItalic" }]}>
+            <TextInput
+                onChangeText={(e) => setEditParams({ ...state, phone: e })}
+                value={editParams?.phone}
+                style={[
+                  {
+                    fontSize: 13,
+                    fontFamily: "regular",
+                    padding: 10,
+                    borderColor: "#1f1f1f",
+                    borderWidth: 0.7,
+                    borderRadius: 4,
+                    textTransform: 'capitalize'
+                  },
+                  editActive ? global.bgWhite : global.bgWhiteSoft,
+                ]}
+                defaultValue={editParams?.phone === null ? 'Agregar telefono' : editParams?.phone}
+                editable={editActive ? true : false}
+              />
+              {/* <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
                 {item.phone}
-              </Text>
+              </Text> */}
             </View>
           </View>
-          <View style={[styles.line, global.bgWhiteSmoke]} />
+          <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
               flexDirection: "row",
@@ -787,20 +893,38 @@ const Page = ({ route, navigation }) => {
               {/* <FontAwesome name="whatsapp" size={22} color="#1f1f1f" /> */}
               <Text
                 style={[
-                  { fontFamily: "thinItalic", fontSize: 15 },
-                  global.midGray,
+                  { fontFamily: "lightItalic", fontSize: 15 },
+                  global.black,
                 ]}
               >
                 WhatsApp
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={[{ fontSize: 13, fontFamily: "lightItalic" }]}>
+            <TextInput
+                onChangeText={(e) => setEditParams({ ...state, ws: e })}
+                value={editParams?.ws === "" ? 'Agregar WhatsApp' : editParams?.ws}
+                style={[
+                  {
+                    fontSize: 13,
+                    fontFamily: "regular",
+                    padding: 10,
+                    borderColor: "#1f1f1f",
+                    borderWidth: 0.7,
+                    borderRadius: 4,
+                    textTransform: 'capitalize'
+                  },
+                  editActive ? global.bgWhite : global.bgWhiteSoft,
+                ]}
+                defaultValue={editParams?.ws === "" ? 'Agregar WhatsApp' : editParams?.ws}
+                editable={editActive ? true : false}
+              />
+              {/* <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
                 {item.whatsapp}
-              </Text>
+              </Text> */}
             </View>
           </View>
-          <View style={[styles.line, global.bgWhiteSmoke]} />
+          <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
               flexDirection: "row",
@@ -817,20 +941,37 @@ const Page = ({ route, navigation }) => {
               /> */}
               <Text
                 style={[
-                  { fontFamily: "thinItalic", fontSize: 15 },
-                  global.midGray,
+                  { fontFamily: "lightItalic", fontSize: 15 },
+                  global.black,
                 ]}
               >
                 Correo
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={[{ fontSize: 13, fontFamily: "lightItalic" }]}>
+            <TextInput
+                onChangeText={(e) => setEditParams({ ...state, email: e })}
+                value={editParams?.email}
+                style={[
+                  {
+                    fontSize: 13,
+                    fontFamily: "regular",
+                    padding: 10,
+                    borderColor: "#1f1f1f",
+                    borderWidth: 0.7,
+                    borderRadius: 4,
+                    textTransform: 'capitalize'
+                  },
+                  editActive ? global.bgWhite : global.bgWhiteSoft,
+                ]}
+                editable={editActive ? true : false}
+              />
+              {/* <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
                 {item.email}
-              </Text>
+              </Text> */}
             </View>
           </View>
-          <View style={[styles.line, global.bgWhiteSmoke]} />
+          <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
               flexDirection: "row",
@@ -843,25 +984,43 @@ const Page = ({ route, navigation }) => {
               {/* <MaterialCommunityIcons name="web" size={24} color="#1f1f1f" /> */}
               <Text
                 style={[
-                  { fontFamily: "thinItalic", fontSize: 15 },
-                  global.midGray,
+                  { fontFamily: "lightItalic", fontSize: 15 },
+                  global.black,
                 ]}
               >
                 Web
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text
+              {/* <Text
                 style={[
-                  { fontSize: 13, fontFamily: "lightItalic", marginRight: 5 },
+                  { fontSize: 13, fontFamily: "regular", marginRight: 5 },
                 ]}
               >
                 Link
-              </Text>
-              <AntDesign name="link" size={16} color="#1f1f1f" />
+              </Text> */}
+              <TextInput
+                onChangeText={(e) => setEditParams({ ...state, web: e })}
+                value={editParams?.web === null ? 'Agregar Web' : editParams?.web}
+                style={[
+                  {
+                    fontSize: 13,
+                    fontFamily: "regular",
+                    padding: 10,
+                    borderColor: "#1f1f1f",
+                    borderWidth: 0.7,
+                    borderRadius: 4,
+                    textTransform: 'capitalize'
+                  },
+                  editActive ? global.bgWhite : global.bgWhiteSoft,
+                ]}
+                editable={editActive ? true : false}
+                defaultValue={editParams?.web === null ? 'Agregar Web' : editParams?.web}
+              />
+              {/* <AntDesign name="link" size={16} color="#1f1f1f" /> */}
             </View>
           </View>
-          <View style={[styles.line, global.bgWhiteSmoke]} />
+          <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
               flexDirection: "row",
@@ -874,25 +1033,35 @@ const Page = ({ route, navigation }) => {
               {/* <FontAwesome name="instagram" size={24} color="#1f1f1f" /> */}
               <Text
                 style={[
-                  { fontFamily: "thinItalic", fontSize: 15 },
-                  global.midGray,
+                  { fontFamily: "lightItalic", fontSize: 15 },
+                  global.black,
                 ]}
               >
                 Instagram
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text
+            <TextInput
+                onChangeText={(e) => setEditParams({ ...state, instagram: e })}
+                value={editParams?.instagram === null ? 'Agregar Instagram' : editParams?.instagram}
                 style={[
-                  { fontSize: 13, fontFamily: "lightItalic", marginRight: 5 },
+                  {
+                    fontSize: 13,
+                    fontFamily: "regular",
+                    padding: 10,
+                    borderColor: "#1f1f1f",
+                    borderWidth: 0.7,
+                    borderRadius: 4,
+                    textTransform: 'capitalize'
+                  },
+                  editActive ? global.bgWhite : global.bgWhiteSoft,
                 ]}
-              >
-                Link
-              </Text>
-              <AntDesign name="link" size={16} color="#1f1f1f" />
+                editable={editActive ? true : false}
+                defaultValue={editParams?.instagram === null ? 'Agregar Instagram' : editParams?.instagram}
+              />
             </View>
           </View>
-          <View style={[styles.line, global.bgWhiteSmoke]} />
+          <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
               flexDirection: "row",
@@ -905,25 +1074,35 @@ const Page = ({ route, navigation }) => {
               {/* <FontAwesome name="facebook-square" size={24} color="#1f1f1f" /> */}
               <Text
                 style={[
-                  { fontFamily: "thinItalic", fontSize: 15 },
-                  global.midGray,
+                  { fontFamily: "lightItalic", fontSize: 15 },
+                  global.black,
                 ]}
               >
                 Facebook
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text
+            <TextInput
+                onChangeText={(e) => setEditParams({ ...state, facebook: e })}
+                value={editParams?.facebook === null ? 'Agregar Facebook' : editParams?.facebook}
                 style={[
-                  { fontSize: 13, fontFamily: "lightItalic", marginRight: 5 },
+                  {
+                    fontSize: 13,
+                    fontFamily: "regular",
+                    padding: 10,
+                    borderColor: "#1f1f1f",
+                    borderWidth: 0.7,
+                    borderRadius: 4,
+                    textTransform: 'capitalize'
+                  },
+                  editActive ? global.bgWhite : global.bgWhiteSoft,
                 ]}
-              >
-                Link
-              </Text>
-              <AntDesign name="link" size={16} color="#1f1f1f" />
+                editable={editActive ? true : false}
+                defaultValue={editParams?.facebook === null ? 'Agregar Facebook' : editParams?.facebook}
+              />
             </View>
           </View>
-          <View style={[styles.line, global.bgWhiteSmoke]} />
+          <View style={[styles.line, global.bgMidGray]} />
         </View>
         <Modal
           animationType="none"

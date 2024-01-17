@@ -59,7 +59,9 @@ const ItemList = ({ data, number, styled }) => {
                 width: 130,
                 height: 130,
                 resizeMode: "cover",
-                borderRadius: 2,
+                borderRadius: 4,
+                borderColor: '#1f1f1f',
+                borderWidth: 0.7
               }}
               source={{ uri: data?.business?.thumbnail }}
             />
@@ -82,18 +84,18 @@ const ItemList = ({ data, number, styled }) => {
             }}
           >
             <View>
-              <Text style={{ fontSize: 13, fontFamily: "light" }}>
+              <Text style={{ fontSize: 13, fontFamily: "medium", color: '#1f1f1f' }}>
                 Nombre
               </Text>
-              <Text style={{ fontSize: 12, fontFamily: "thin" }}>
+              <Text style={{ fontSize: 12, fontFamily: "light", color: '#1f1f1f'  }}>
                 {data.business.name}
               </Text>
             </View>
             <View style={{}}>
-              <Text style={{ fontSize: 13, fontFamily: "light" }}>
+              <Text style={{ fontSize: 13, fontFamily: "medium", color: '#1f1f1f'  }}>
                 Actividad laboral
               </Text>
-              <Text style={{ fontSize: 12, fontFamily: "thin" }}>
+              <Text style={{ fontSize: 12, fontFamily: "light", color: '#1f1f1f', textTransform:"capitalize"  }}>
                 {data.business.activity}
               </Text>
             </View>
@@ -102,13 +104,14 @@ const ItemList = ({ data, number, styled }) => {
             style={{
               flexDirection: "row",
               alignItems: "flex-end",
-              marginRight: 10,
+              justifyContent: 'center',
               position: "relative",
-              top: 10,
+              top: 18,
+              right: 7
             }}
           >
-            <Ionicons name="eye-outline" size={12} color="black" />
-            <Text style={{ fontSize: 12, fontFamily: "light", marginLeft: 1 }}>
+            <Ionicons name="eye-outline" size={16} color="#1f1f1f" />
+            <Text style={{ fontSize: 13, fontFamily: "medium", marginLeft: 2, marginBottom: 1 }}>
               Ver
             </Text>
           </TouchableOpacity>

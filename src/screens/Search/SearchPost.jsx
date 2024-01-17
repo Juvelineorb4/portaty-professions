@@ -56,7 +56,7 @@ const SearchPost = ({ route, navigation }) => {
   const {
     data: { item, images },
   } = route.params;
-  console.log(item)
+  console.log(item);
   const getPdf = async () => {
     const permissions =
       await StorageAccessFramework.requestDirectoryPermissionsAsync();
@@ -152,6 +152,7 @@ const SearchPost = ({ route, navigation }) => {
       } else {
         setShowAgg(true);
       }
+      console.log('toy aqui', business?.data?.getBusiness)
       return setPost(business?.data?.getBusiness);
     } catch (error) {
       console.log(error);
@@ -288,6 +289,8 @@ const SearchPost = ({ route, navigation }) => {
                     resizeMode: "cover",
                     borderRadius: 5,
                     backgroundColor: "#fff",
+                    borderColor: "#1f1f1f",
+                    borderWidth: 0.7,
                   }}
                   source={{ uri: item.url }}
                 />
@@ -302,8 +305,10 @@ const SearchPost = ({ route, navigation }) => {
                       marginBottom: 5,
                       position: "absolute",
                       right: 0,
+                      borderColor: "#1f1f1f",
+                      borderWidth: 0.7,
                     },
-                    global.mainBgColor,
+                    global.bgYellow,
                   ]}
                   onPress={() => {
                     setOpen(!open);
@@ -312,16 +317,16 @@ const SearchPost = ({ route, navigation }) => {
                 >
                   <Text
                     style={[
-                      { fontFamily: "medium", fontSize: 17 },
-                      global.white,
+                      { fontFamily: "medium", fontSize: 15 },
+                      global.black,
                     ]}
                   >
                     {item.key + 1}/{images.length}
                   </Text>
                   <MaterialCommunityIcons
                     name="image-search-outline"
-                    size={20}
-                    color="white"
+                    size={18}
+                    color="#1f1f1f"
                     style={{ marginLeft: 5 }}
                   />
                 </TouchableOpacity>
@@ -340,7 +345,7 @@ const SearchPost = ({ route, navigation }) => {
               alignItems: "center",
               justifyContent: "space-between",
               padding: 20,
-              paddingHorizontal: 100
+              paddingHorizontal: 100,
             }}
           >
             <View
@@ -349,12 +354,12 @@ const SearchPost = ({ route, navigation }) => {
                 justifyContent: "center",
               }}
             >
-              <Text style={{ fontSize: 26, fontFamily: "thin" }}>
+              <Text style={{ fontSize: 24, fontFamily: "medium" }}>
                 {numberFavorite
                   ? numberFavorite
                   : post?.favorites?.items?.length}
               </Text>
-              <Text style={{ fontSize: 22, fontFamily: "thin" }}>
+              <Text style={{ fontSize: 20, fontFamily: "light" }}>
                 Favoritos
               </Text>
             </View>
@@ -369,27 +374,38 @@ const SearchPost = ({ route, navigation }) => {
             >
               {save === "" ? (
                 <Image
-                style={{
-                  width: 45,
-                  height: 45,
-                  resizeMode: "cover",
-                }}
-                source={require("@/utils/images/nofavorites.png")}
-              />
+                  style={{
+                    width: 45,
+                    height: 45,
+                    resizeMode: "cover",
+                  }}
+                  source={require("@/utils/images/nofavorites.png")}
+                />
               ) : (
                 <Image
-              style={{
-                width: 45,
-                height: 45,
-                resizeMode: "cover",
-              }}
-              source={require("@/utils/images/sifavorites.png")}
-            />
+                  style={{
+                    width: 45,
+                    height: 45,
+                    resizeMode: "cover",
+                  }}
+                  source={require("@/utils/images/sifavorites.png")}
+                />
               )}
             </TouchableOpacity>
           </View>
         )}
-        <View style={[styles.line, global.bgWhiteSmoke]} />
+        <View
+          style={[
+            styles.line,
+            global.bgMidGray,
+            {
+              top: 10,
+              left: 0,
+              width: 500,
+              marginBottom: 20,
+            },
+          ]}
+        />
 
         <TouchableOpacity
           style={{
@@ -413,6 +429,8 @@ const SearchPost = ({ route, navigation }) => {
               borderRadius: 10,
               overflow: "hidden",
               marginBottom: 40,
+              borderColor: '#1f1f1f',
+              borderWidth: 0.7
             }}
           >
             <MapView
@@ -445,6 +463,7 @@ const SearchPost = ({ route, navigation }) => {
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
+            marginTop: -50
           }}
           onPress={onShare}
         >
@@ -457,17 +476,19 @@ const SearchPost = ({ route, navigation }) => {
                   borderRadius: 10,
                   alignItems: "center",
                   justifyContent: "center",
+                  borderColor: '#1f1f1f',
+                  borderWidth: 0.7
                 },
-                global.mainBgColor,
+                global.bgYellow,
               ]}
             >
-              <EvilIcons name="share-google" size={25} color="white" />
+              <EvilIcons name="share-google" size={32} color="#1f1f1f" />
             </View>
             <View style={{ marginLeft: 10 }}>
-              <Text style={{ fontFamily: "light", fontSize: 16 }}>
+              <Text style={{ fontFamily: "medium", fontSize: 16 }}>
                 Compartir
               </Text>
-              <Text style={{ fontFamily: "thin", fontSize: 12, width: 150 }}>
+              <Text style={{ fontFamily: "light", fontSize: 12, width: 150 }}>
                 Compartelo con tus amigos y familiares
               </Text>
             </View>
@@ -500,21 +521,19 @@ const SearchPost = ({ route, navigation }) => {
                   borderRadius: 10,
                   alignItems: "center",
                   justifyContent: "center",
+                  borderColor: '#1f1f1f',
+                  borderWidth: 0.7
                 },
-                global.mainBgColor,
+                global.bgYellow,
               ]}
             >
-              <MaterialCommunityIcons
-                name="qrcode-scan"
-                size={25}
-                color="white"
-              />
+              <AntDesign name="qrcode" size={24} color="#1f1f1f" />
             </View>
             <View style={{ marginLeft: 10 }}>
-              <Text style={{ fontFamily: "light", fontSize: 16 }}>
+              <Text style={{ fontFamily: "medium", fontSize: 15 }}>
                 Descargar QR
               </Text>
-              <Text style={{ fontFamily: "thin", fontSize: 12, width: 150 }}>
+              <Text style={{ fontFamily: "light", fontSize: 12, width: 150 }}>
                 Descarga el QR del negocio para pegarlo en donde quieras
               </Text>
             </View>
@@ -547,15 +566,17 @@ const SearchPost = ({ route, navigation }) => {
                   borderRadius: 10,
                   alignItems: "center",
                   justifyContent: "center",
+                  borderColor: '#1f1f1f',
+                  borderWidth: 0.7
                 },
-                global.mainBgColor,
+                global.bgYellow,
               ]}
             >
-              <Feather name="phone-call" size={17} color="white" />
+              <Feather name="phone-call" size={20} color="#1f1f1f" />
             </View>
             <View style={{ marginLeft: 10 }}>
-              <Text style={{ fontFamily: "light", fontSize: 16 }}>Llamar</Text>
-              <Text style={{ fontFamily: "thin", fontSize: 12, width: 150 }}>
+              <Text style={{ fontFamily: "medium", fontSize: 15 }}>Llamar</Text>
+              <Text style={{ fontFamily: "light", fontSize: 12, width: 150 }}>
                 Contacta al negocio directamente
               </Text>
             </View>
@@ -570,10 +591,13 @@ const SearchPost = ({ route, navigation }) => {
           />
         </TouchableOpacity>
         <View style={{ marginBottom: 80 }}>
-          <Text style={{ fontSize: 22, fontFamily: "thinItalic", padding: 10 }}>
+          <Text style={{ fontSize: 22, fontFamily: "regular", padding: 10 }}>
             Datos
           </Text>
-          <View style={[styles.line, global.bgWhiteSmoke]} />
+          <View style={[styles.line, global.bgMidGray, {
+            width: 500,
+            left: 0
+          }]} />
           <View
             style={{
               flexDirection: "row",
@@ -586,20 +610,23 @@ const SearchPost = ({ route, navigation }) => {
               {/* <Foundation name="torso-business" size={22} color="#1f1f1f" /> */}
               <Text
                 style={[
-                  { fontFamily: "thinItalic", fontSize: 15 },
-                  global.midGray,
+                  { fontFamily: "lightItalic", fontSize: 13 },
+                  global.black,
                 ]}
               >
                 Razon social
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={[{ fontSize: 13, fontFamily: "lightItalic" }]}>
+              <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
                 {post?.name}
               </Text>
             </View>
           </View>
-          <View style={[styles.line, global.bgWhiteSmoke]} />
+          <View style={[styles.line, global.bgMidGray, {
+            width: 500,
+            left: 0
+          }]} />
           <View
             style={{
               flexDirection: "row",
@@ -612,20 +639,23 @@ const SearchPost = ({ route, navigation }) => {
               {/* <FontAwesome5 name="store" size={16} color="#1f1f1f" /> */}
               <Text
                 style={[
-                  { fontFamily: "thinItalic", fontSize: 15 },
-                  global.midGray,
+                  { fontFamily: "lightItalic", fontSize: 13 },
+                  global.black,
                 ]}
               >
                 Actividad laboral
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={[{ fontSize: 13, fontFamily: "lightItalic" }]}>
+              <Text style={[{ fontSize: 13, fontFamily: "regular", textTransform: 'capitalize' }]}>
                 {post?.activity}
               </Text>
             </View>
           </View>
-          <View style={[styles.line, global.bgWhiteSmoke]} />
+          <View style={[styles.line, global.bgMidGray, {
+            width: 500,
+            left: 0
+          }]} />
           <View
             style={{
               flexDirection: "row",
@@ -638,20 +668,20 @@ const SearchPost = ({ route, navigation }) => {
               {/* <FontAwesome name="phone" size={20} color="#1f1f1f" /> */}
               <Text
                 style={[
-                  { fontFamily: "thinItalic", fontSize: 15 },
-                  global.midGray,
+                  { fontFamily: "lightItalic", fontSize: 13 },
+                  global.black,
                 ]}
               >
                 Telefono
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={[{ fontSize: 13, fontFamily: "lightItalic" }]}>
+              <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
                 {post?.phone}
               </Text>
             </View>
           </View>
-          <View style={[styles.line, global.bgWhiteSmoke]} />
+          <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
               flexDirection: "row",
@@ -664,20 +694,20 @@ const SearchPost = ({ route, navigation }) => {
               {/* <FontAwesome name="whatsapp" size={22} color="#1f1f1f" /> */}
               <Text
                 style={[
-                  { fontFamily: "thinItalic", fontSize: 15 },
-                  global.midGray,
+                  { fontFamily: "lightItalic", fontSize: 13 },
+                  global.black,
                 ]}
               >
                 WhatsApp
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={[{ fontSize: 13, fontFamily: "lightItalic" }]}>
+              <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
                 {post?.whatsapp}
               </Text>
             </View>
           </View>
-          <View style={[styles.line, global.bgWhiteSmoke]} />
+          <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
               flexDirection: "row",
@@ -694,20 +724,20 @@ const SearchPost = ({ route, navigation }) => {
               /> */}
               <Text
                 style={[
-                  { fontFamily: "thinItalic", fontSize: 15 },
-                  global.midGray,
+                  { fontFamily: "lightItalic", fontSize: 13 },
+                  global.black,
                 ]}
               >
                 Correo
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={[{ fontSize: 13, fontFamily: "lightItalic" }]}>
+              <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
                 {post?.email}
               </Text>
             </View>
           </View>
-          <View style={[styles.line, global.bgWhiteSmoke]} />
+          <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
               flexDirection: "row",
@@ -719,10 +749,10 @@ const SearchPost = ({ route, navigation }) => {
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               {/* <MaterialCommunityIcons name="web" size={24} color="#1f1f1f" /> */}
               <Text
-                style={[
-                  { fontFamily: "thinItalic", fontSize: 15 },
-                  global.midGray,
-                ]}
+               style={[
+                { fontFamily: "lightItalic", fontSize: 13 },
+                global.black,
+              ]}
               >
                 Web
               </Text>
@@ -730,7 +760,7 @@ const SearchPost = ({ route, navigation }) => {
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Text
                 style={[
-                  { fontSize: 13, fontFamily: "lightItalic", marginRight: 5 },
+                  { fontSize: 13, fontFamily: "regular", marginRight: 5 },
                 ]}
               >
                 Link
@@ -738,7 +768,7 @@ const SearchPost = ({ route, navigation }) => {
               <AntDesign name="link" size={16} color="#1f1f1f" />
             </View>
           </View>
-          <View style={[styles.line, global.bgWhiteSmoke]} />
+          <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
               flexDirection: "row",
@@ -751,8 +781,8 @@ const SearchPost = ({ route, navigation }) => {
               {/* <FontAwesome name="instagram" size={24} color="#1f1f1f" /> */}
               <Text
                 style={[
-                  { fontFamily: "thinItalic", fontSize: 15 },
-                  global.midGray,
+                  { fontFamily: "lightItalic", fontSize: 13 },
+                  global.black,
                 ]}
               >
                 Instagram
@@ -761,7 +791,7 @@ const SearchPost = ({ route, navigation }) => {
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Text
                 style={[
-                  { fontSize: 13, fontFamily: "lightItalic", marginRight: 5 },
+                  { fontSize: 13, fontFamily: "regular", marginRight: 5 },
                 ]}
               >
                 Link
@@ -769,7 +799,7 @@ const SearchPost = ({ route, navigation }) => {
               <AntDesign name="link" size={16} color="#1f1f1f" />
             </View>
           </View>
-          <View style={[styles.line, global.bgWhiteSmoke]} />
+          <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
               flexDirection: "row",
@@ -782,8 +812,8 @@ const SearchPost = ({ route, navigation }) => {
               {/* <FontAwesome name="facebook-square" size={24} color="#1f1f1f" /> */}
               <Text
                 style={[
-                  { fontFamily: "thinItalic", fontSize: 15 },
-                  global.midGray,
+                  { fontFamily: "lightItalic", fontSize: 13 },
+                  global.black,
                 ]}
               >
                 Facebook
@@ -792,7 +822,7 @@ const SearchPost = ({ route, navigation }) => {
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Text
                 style={[
-                  { fontSize: 13, fontFamily: "lightItalic", marginRight: 5 },
+                  { fontSize: 13, fontFamily: "regular", marginRight: 5 },
                 ]}
               >
                 Link
@@ -800,7 +830,7 @@ const SearchPost = ({ route, navigation }) => {
               <AntDesign name="link" size={16} color="#1f1f1f" />
             </View>
           </View>
-          <View style={[styles.line, global.bgWhiteSmoke]} />
+          <View style={[styles.line, global.bgMidGray]} />
           <Modal
             animationType="none"
             transparent={true}
@@ -843,6 +873,8 @@ const SearchPost = ({ route, navigation }) => {
                           height: "60%",
                           resizeMode: "cover",
                           borderRadius: 5,
+                          borderWidth: 0.7,
+                          borderColor: '#1f1f1f'
                         }}
                         source={{
                           uri: imageView?.url ? imageView?.url : imageView?.uri,
@@ -854,8 +886,8 @@ const SearchPost = ({ route, navigation }) => {
                             style={{
                               flex: 1,
                               flexDirection: "row",
-                              borderColor: "#444",
-                              borderWidth: 0.4,
+                              borderColor: "#1f1f1f",
+                              borderWidth: 0.7,
                               paddingHorizontal: 10,
                               borderRadius: 8,
                               marginTop: 10,
@@ -871,7 +903,7 @@ const SearchPost = ({ route, navigation }) => {
                               style={{
                                 flex: 1,
                                 // width: 100,
-                                fontFamily: "light",
+                                fontFamily: "regular",
                                 fontSize: 14,
                                 alignItems: "flex-start",
                                 color: "#000",

@@ -111,12 +111,12 @@ const Profile = ({ route, navigation }) => {
             marginBottom: 20,
           }}
         >
-          <Text style={{ fontSize: 26, fontFamily: "thin" }}>0</Text>
-          <Text style={{ fontSize: 22, fontFamily: "thin" }}>
+          <Text style={{ fontSize: 24, fontFamily: "medium" }}>0</Text>
+          <Text style={{ fontSize: 20, fontFamily: "light" }}>
             Mis Favoritos
           </Text>
         </View>
-        <View style={[styles.line, global.bgWhiteSmoke]} />
+        <View style={[styles.line, global.bgMidGray]} />
         <TouchableOpacity
           style={{
             padding: 20,
@@ -135,17 +135,19 @@ const Profile = ({ route, navigation }) => {
                   borderRadius: 10,
                   alignItems: "center",
                   justifyContent: "center",
+                  borderColor: '#1f1f1f',
+                  borderWidth: 0.7
                 },
-                global.mainBgColor,
+                global.bgYellow,
               ]}
             >
-              <EvilIcons name="share-google" size={25} color="white" />
+              <EvilIcons name="share-google" size={30} color="#1f1f1f" />
             </View>
             <View style={{ marginLeft: 10 }}>
-              <Text style={{ fontFamily: "light", fontSize: 16 }}>
+              <Text style={{ fontFamily: "medium", fontSize: 15 }}>
                 Compartir tus favoritos
               </Text>
-              <Text style={{ fontFamily: "thin", fontSize: 12, width: 150 }}>
+              <Text style={{ fontFamily: "regular", fontSize: 12, width: 150 }}>
                 Comparte con tus amigos y familiares la lista de tus favoritos
               </Text>
             </View>
@@ -177,15 +179,17 @@ const Profile = ({ route, navigation }) => {
                   borderRadius: 10,
                   alignItems: "center",
                   justifyContent: "center",
+                  borderColor: '#1f1f1f',
+                  borderWidth: 0.7
                 },
-                global.mainBgColor,
+                global.bgYellow,
               ]}
             >
-              <FontAwesome name="edit" size={20} color="white" />
+              <FontAwesome name="edit" size={21} color="#1f1f1f" />
             </View>
             <View style={{ marginLeft: 10 }}>
-              <Text style={{ fontFamily: "light", fontSize: 16 }}>Editar</Text>
-              <Text style={{ fontFamily: "thin", fontSize: 12, width: 150 }}>
+              <Text style={{ fontFamily: "medium", fontSize: 15 }}>Editar</Text>
+              <Text style={{ fontFamily: "regular", fontSize: 12, width: 150 }}>
                 Actualiza tus datos
               </Text>
             </View>
@@ -193,7 +197,7 @@ const Profile = ({ route, navigation }) => {
           <Switch
             trackColor={{
               false: "#767577",
-              true: "#FF8811",
+              true: "#ffb703",
             }}
             thumbColor={editActive ? "#FFFFFF" : "#f4f3f4"}
             onValueChange={() => setEditActive(!editActive)}
@@ -201,10 +205,10 @@ const Profile = ({ route, navigation }) => {
           />
         </TouchableOpacity>
         <View style={{ marginBottom: 80 }}>
-          <Text style={{ fontSize: 22, fontFamily: "thinItalic", padding: 10 }}>
+          <Text style={{ fontSize: 22, fontFamily: "lightItalic", padding: 10 }}>
             Datos personales
           </Text>
-          <View style={[styles.line, global.bgWhiteSmoke]} />
+          <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
               flexDirection: "row",
@@ -218,7 +222,7 @@ const Profile = ({ route, navigation }) => {
               <Text
                 style={[
                   { fontFamily: "lightItalic", fontSize: 15 },
-                  global.midGray,
+                  global.black,
                 ]}
               >
                 Nombre
@@ -230,11 +234,11 @@ const Profile = ({ route, navigation }) => {
                 value={name}
                 style={[
                   {
-                    fontSize: 13,
-                    fontFamily: "lightItalic",
+                    fontSize: 12,
+                    fontFamily: "regular",
                     padding: 10,
                     borderColor: "#1f1f1f",
-                    borderWidth: 0.3,
+                    borderWidth: 0.7,
                     borderRadius: 4,
                   },
                   editActive ? global.bgWhite : global.bgWhiteSoft,
@@ -243,7 +247,7 @@ const Profile = ({ route, navigation }) => {
               />
             </View>
           </View>
-          <View style={[styles.line, global.bgWhiteSmoke]} />
+          <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
               flexDirection: "row",
@@ -257,7 +261,7 @@ const Profile = ({ route, navigation }) => {
               <Text
                 style={[
                   { fontFamily: "lightItalic", fontSize: 15 },
-                  global.midGray,
+                  global.black,
                 ]}
               >
                 Apellido
@@ -269,11 +273,11 @@ const Profile = ({ route, navigation }) => {
                 value={lastName}
                 style={[
                   {
-                    fontSize: 13,
-                    fontFamily: "lightItalic",
+                    fontSize: 12,
+                    fontFamily: "regular",
                     padding: 10,
                     borderColor: "#1f1f1f",
-                    borderWidth: 0.3,
+                    borderWidth: 0.7,
                     borderRadius: 4,
                   },
                   editActive ? global.bgWhite : global.bgWhiteSoft,
@@ -282,7 +286,7 @@ const Profile = ({ route, navigation }) => {
               />
             </View>
           </View>
-          <View style={[styles.line, global.bgWhiteSmoke]} />
+          <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
               flexDirection: "row",
@@ -300,7 +304,7 @@ const Profile = ({ route, navigation }) => {
               <Text
                 style={[
                   { fontFamily: "lightItalic", fontSize: 15 },
-                  global.midGray,
+                  global.black,
                 ]}
               >
                 Correo
@@ -311,8 +315,8 @@ const Profile = ({ route, navigation }) => {
                 value={email}
                 style={[
                   {
-                    fontSize: 13,
-                    fontFamily: "lightItalic",
+                    fontSize: 12,
+                    fontFamily: "regular",
                     padding: 10,
                     borderColor: "#1f1f1f",
                     borderWidth: 0.3,
@@ -334,8 +338,8 @@ const Profile = ({ route, navigation }) => {
                 }
                 handlePress={onSaveChange}
                 textStyles={[
-                  global.white,
-                  { fontFamily: "medium", marginLeft: 25 },
+                  global.black,
+                  { fontFamily: "bold", marginLeft: 25 },
                 ]}
                 buttonStyles={[
                   {
@@ -345,8 +349,10 @@ const Profile = ({ route, navigation }) => {
                     flexDirection: "row",
                     justifyContent: "center",
                     alignItems: "center",
+                    borderColor: '#1f1f1f',
+                    borderWidth: 0.7
                   },
-                  isSave ? global.mainBgColor : global.bgWhiteSoft,
+                  global.bgYellow,
                   ,
                 ]}
                 disabled={!isSave && isLoading}

@@ -1,10 +1,10 @@
 .line {
-    width: 150%;
-    height: 0.8px;
-    position: relative;
-    left: -10%;
-    /* margin-bottom: 20px; */
-  }
+  width: 150%;
+  height: 0.5px;
+  position: relative;
+  left: -10%;
+  /* margin-bottom: 20px; */
+}
   
   .title {
     font-family: "thinItalic";
@@ -34,6 +34,7 @@
     padding: 20px;
     width: 320px;
     height: 450px;
+    border: 1px solid #1f1f1f;
   }
   .modalTextSelect {
     font-family: "light";
@@ -118,10 +119,10 @@
     margin-bottom: 12px;
     font-size: 12px;
   }
-  .line {
+  /* .line {
     width: 300px;
     height: 0.3px;
     position: relative;
     left: -7.7%;
     bottom: 10%;
-  }
+  } */

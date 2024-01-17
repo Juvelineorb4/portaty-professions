@@ -70,7 +70,7 @@ const Post = ({ data, image, styled }) => {
                   width: "100%",
                   height: "100%",
                   resizeMode: "cover",
-                  borderRadius: 2,
+                  borderRadius: 1,
                 }}
                 source={{ uri: image }}
               />
@@ -150,6 +150,8 @@ const Post = ({ data, image, styled }) => {
                         height: 260,
                         resizeMode: "cover",
                         borderRadius: 5,
+                        borderWidth: 0.7,
+                        borderColor: '#1f1f1f'
                       }}
                       source={{ uri: image }}
                     />
@@ -161,7 +163,7 @@ const Post = ({ data, image, styled }) => {
                           marginTop: 5,
                         }}
                       >
-                        <Text style={{ fontFamily: "light", fontSize: 14 }}>
+                        <Text style={{ fontFamily: "light", fontSize: 13 }}>
                           Nombre:
                         </Text>
                         <Text style={{ fontFamily: "regular", fontSize: 14 }}>
@@ -175,10 +177,10 @@ const Post = ({ data, image, styled }) => {
                           marginTop: 5,
                         }}
                       >
-                        <Text style={{ fontFamily: "light", fontSize: 14 }}>
+                        <Text style={{ fontFamily: "light", fontSize: 13 }}>
                           Actividad:
                         </Text>
-                        <Text style={{ fontFamily: "regular", fontSize: 14 }}>
+                        <Text style={{ fontFamily: "regular", fontSize: 14, textTransform: 'capitalize' }}>
                           {data.activity}
                         </Text>
                       </View>
@@ -189,7 +191,7 @@ const Post = ({ data, image, styled }) => {
                           marginTop: 5,
                         }}
                       >
-                        <Text style={{ fontFamily: "light", fontSize: 14 }}>
+                        <Text style={{ fontFamily: "light", fontSize: 13 }}>
                           Distancia de ti:
                         </Text>
                         <Text
@@ -210,7 +212,7 @@ const Post = ({ data, image, styled }) => {
                           marginTop: 5,
                         }}
                       >
-                        <Text style={{ fontFamily: "light", fontSize: 14 }}>
+                        <Text style={{ fontFamily: "light", fontSize: 13 }}>
                           Favoritos:
                         </Text>
                         <Text style={{ fontFamily: "regular", fontSize: 14 }}>
@@ -222,13 +224,15 @@ const Post = ({ data, image, styled }) => {
                   <View style={{}}>
                     <TouchableOpacity
                       style={[
-                        global.mainBgColor,
+                        global.bgYellow,
                         {
                           borderRadius: 8,
                           justifyContent: "center",
                           alignItems: "center",
                           height: 49,
                           marginTop: 10,
+                          borderWidth: 0.7,
+                          borderColor: '#1f1f1f'
                         },
                       ]}
                       onPress={() => {
@@ -243,8 +247,8 @@ const Post = ({ data, image, styled }) => {
                     >
                       <Text
                         style={[
-                          global.white,
-                          { fontFamily: "medium", fontSize: 14 },
+                          global.black,
+                          { fontFamily: "bold", fontSize: 14 },
                         ]}
                       >
                         {`Ver`}
