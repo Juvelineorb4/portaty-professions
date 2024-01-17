@@ -51,7 +51,7 @@ const ShareListPage = ({ route, navigation }) => {
           global.bgWhite,
         ]}
       >
-        <ActivityIndicator size="large" color="#fb8500" />
+        <ActivityIndicator size="large" color="#ffb703" />
       </View>
     );
 

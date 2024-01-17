@@ -25,6 +25,7 @@ import {
 } from "@expo/vector-icons";
 import { Auth, API, Storage } from "aws-amplify";
 import * as subscriptions from "@/graphql/CustomSubscriptions/Profile";
+import * as mutations from "@/graphql/CustomMutations/Profile";
 import MapView, { Marker } from "react-native-maps";
 import SkeletonPage from "@/components/SkeletonPage";
 import * as ImagePicker from "expo-image-picker";
@@ -41,6 +42,8 @@ import * as IntentLauncher from "expo-intent-launcher";
 import * as Sharing from "expo-sharing";
 // hooks
 import useOpenFile from "@/hooks/useOpenFile";
+import CustomButton from "@/components/CustomButton";
+
 const Page = ({ route, navigation }) => {
   const {
     data: { item, image },
@@ -60,6 +63,7 @@ const Page = ({ route, navigation }) => {
   const [statusProfile, setStatusProfile] = useRecoilState(updateProfile);
   const [refreshing, setRefreshing] = useState(false);
   const [editActive, setEditActive] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [editParams, setEditParams] = useState({
     name: item.name,
     activity: item.activity,
@@ -70,6 +74,36 @@ const Page = ({ route, navigation }) => {
     instagram: item.instagram,
     facebook: item.facebook,
   });
+
+  const onSaveChange = async () => {
+    setIsLoading(true);
+    try {
+      const result = await API.graphql({
+        query: mutations.updateBusinessPage,
+        authMode: "AMAZON_COGNITO_USER_POOLS",
+        variables: {
+          input: {
+            id: item.id,
+            name: editParams.name,
+            email: editParams.email,
+            phone: editParams.phone,
+            whatsapp: editParams.ws,
+            instagram: editParams.instagram,
+            facebook: editParams.facebook,
+            page: editParams.web,
+            activity: editParams.activity,
+          },
+        },
+      });
+      console.log(result)
+    } catch (error) {
+      const { message } = new Error(error);
+      console.log("ERROR AL ACTUALIZAR NEGOCIO: ", message);
+    }
+    setIsLoading(false);
+    setEditActive(!editActive);
+  };
+
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
@@ -466,7 +500,7 @@ const Page = ({ route, navigation }) => {
                         height: "100%",
                       }}
                     >
-                      <ActivityIndicator color={`#fff`} size={`large`} />
+                      <ActivityIndicator color={`#1f1f1f`} size={`large`} />
                     </View>
                   )}
                   <TouchableOpacity
@@ -733,7 +767,13 @@ const Page = ({ route, navigation }) => {
             <View
               style={[
                 global.bgYellow,
-                { borderRadius: 8, borderWidth: 0.7, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12 },
+                {
+                  borderRadius: 8,
+                  borderWidth: 0.7,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  paddingHorizontal: 12,
+                },
               ]}
             >
               <Text style={{ fontSize: 14, fontFamily: "bold" }}>Editar</Text>
@@ -813,7 +853,7 @@ const Page = ({ route, navigation }) => {
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <TextInput
+              <TextInput
                 onChangeText={(e) => setEditParams({ ...state, activity: e })}
                 value={editParams?.activity}
                 style={[
@@ -824,7 +864,7 @@ const Page = ({ route, navigation }) => {
                     borderColor: "#1f1f1f",
                     borderWidth: 0.7,
                     borderRadius: 4,
-                    textTransform: 'capitalize'
+                    textTransform: "capitalize",
                   },
                   editActive ? global.bgWhite : global.bgWhiteSoft,
                 ]}
@@ -857,7 +897,7 @@ const Page = ({ route, navigation }) => {
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <TextInput
+              <TextInput
                 onChangeText={(e) => setEditParams({ ...state, phone: e })}
                 value={editParams?.phone}
                 style={[
@@ -868,11 +908,15 @@ const Page = ({ route, navigation }) => {
                     borderColor: "#1f1f1f",
                     borderWidth: 0.7,
                     borderRadius: 4,
-                    textTransform: 'capitalize'
+                    textTransform: "capitalize",
                   },
                   editActive ? global.bgWhite : global.bgWhiteSoft,
                 ]}
-                defaultValue={editParams?.phone === null ? 'Agregar telefono' : editParams?.phone}
+                defaultValue={
+                  editParams?.phone === null
+                    ? "Agregar telefono"
+                    : editParams?.phone
+                }
                 editable={editActive ? true : false}
               />
               {/* <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
@@ -901,9 +945,11 @@ const Page = ({ route, navigation }) => {
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <TextInput
+              <TextInput
                 onChangeText={(e) => setEditParams({ ...state, ws: e })}
-                value={editParams?.ws === "" ? 'Agregar WhatsApp' : editParams?.ws}
+                value={
+                  editParams?.ws === "" ? "Agregar WhatsApp" : editParams?.ws
+                }
                 style={[
                   {
                     fontSize: 13,
@@ -912,11 +958,13 @@ const Page = ({ route, navigation }) => {
                     borderColor: "#1f1f1f",
                     borderWidth: 0.7,
                     borderRadius: 4,
-                    textTransform: 'capitalize'
+                    textTransform: "capitalize",
                   },
                   editActive ? global.bgWhite : global.bgWhiteSoft,
                 ]}
-                defaultValue={editParams?.ws === "" ? 'Agregar WhatsApp' : editParams?.ws}
+                defaultValue={
+                  editParams?.ws === "" ? "Agregar WhatsApp" : editParams?.ws
+                }
                 editable={editActive ? true : false}
               />
               {/* <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
@@ -949,7 +997,7 @@ const Page = ({ route, navigation }) => {
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <TextInput
+              <TextInput
                 onChangeText={(e) => setEditParams({ ...state, email: e })}
                 value={editParams?.email}
                 style={[
@@ -960,7 +1008,7 @@ const Page = ({ route, navigation }) => {
                     borderColor: "#1f1f1f",
                     borderWidth: 0.7,
                     borderRadius: 4,
-                    textTransform: 'capitalize'
+                    textTransform: "capitalize",
                   },
                   editActive ? global.bgWhite : global.bgWhiteSoft,
                 ]}
@@ -1001,7 +1049,9 @@ const Page = ({ route, navigation }) => {
               </Text> */}
               <TextInput
                 onChangeText={(e) => setEditParams({ ...state, web: e })}
-                value={editParams?.web === null ? 'Agregar Web' : editParams?.web}
+                value={
+                  editParams?.web === null ? "Agregar Web" : editParams?.web
+                }
                 style={[
                   {
                     fontSize: 13,
@@ -1010,12 +1060,14 @@ const Page = ({ route, navigation }) => {
                     borderColor: "#1f1f1f",
                     borderWidth: 0.7,
                     borderRadius: 4,
-                    textTransform: 'capitalize'
+                    textTransform: "capitalize",
                   },
                   editActive ? global.bgWhite : global.bgWhiteSoft,
                 ]}
                 editable={editActive ? true : false}
-                defaultValue={editParams?.web === null ? 'Agregar Web' : editParams?.web}
+                defaultValue={
+                  editParams?.web === null ? "Agregar Web" : editParams?.web
+                }
               />
               {/* <AntDesign name="link" size={16} color="#1f1f1f" /> */}
             </View>
@@ -1041,9 +1093,13 @@ const Page = ({ route, navigation }) => {
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <TextInput
+              <TextInput
                 onChangeText={(e) => setEditParams({ ...state, instagram: e })}
-                value={editParams?.instagram === null ? 'Agregar Instagram' : editParams?.instagram}
+                value={
+                  editParams?.instagram === null
+                    ? "Agregar Instagram"
+                    : editParams?.instagram
+                }
                 style={[
                   {
                     fontSize: 13,
@@ -1052,12 +1108,16 @@ const Page = ({ route, navigation }) => {
                     borderColor: "#1f1f1f",
                     borderWidth: 0.7,
                     borderRadius: 4,
-                    textTransform: 'capitalize'
+                    textTransform: "capitalize",
                   },
                   editActive ? global.bgWhite : global.bgWhiteSoft,
                 ]}
                 editable={editActive ? true : false}
-                defaultValue={editParams?.instagram === null ? 'Agregar Instagram' : editParams?.instagram}
+                defaultValue={
+                  editParams?.instagram === null
+                    ? "Agregar Instagram"
+                    : editParams?.instagram
+                }
               />
             </View>
           </View>
@@ -1082,9 +1142,13 @@ const Page = ({ route, navigation }) => {
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <TextInput
+              <TextInput
                 onChangeText={(e) => setEditParams({ ...state, facebook: e })}
-                value={editParams?.facebook === null ? 'Agregar Facebook' : editParams?.facebook}
+                value={
+                  editParams?.facebook === null
+                    ? "Agregar Facebook"
+                    : editParams?.facebook
+                }
                 style={[
                   {
                     fontSize: 13,
@@ -1093,16 +1157,48 @@ const Page = ({ route, navigation }) => {
                     borderColor: "#1f1f1f",
                     borderWidth: 0.7,
                     borderRadius: 4,
-                    textTransform: 'capitalize'
+                    textTransform: "capitalize",
                   },
                   editActive ? global.bgWhite : global.bgWhiteSoft,
                 ]}
                 editable={editActive ? true : false}
-                defaultValue={editParams?.facebook === null ? 'Agregar Facebook' : editParams?.facebook}
+                defaultValue={
+                  editParams?.facebook === null
+                    ? "Agregar Facebook"
+                    : editParams?.facebook
+                }
               />
             </View>
           </View>
           <View style={[styles.line, global.bgMidGray]} />
+          {editActive && (
+            <CustomButton
+              text={
+                isLoading ? <ActivityIndicator color={`#1f1f1f`} /> : "Guardar"
+              }
+              handlePress={onSaveChange}
+              textStyles={[
+                global.black,
+                { fontFamily: "bold", marginLeft: 25 },
+              ]}
+              buttonStyles={[
+                {
+                  width: 200,
+                  height: 50,
+                  borderRadius: 6,
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderColor: "#1f1f1f",
+                  borderWidth: 0.7,
+                  alignSelf: "center",
+                  marginTop: 15,
+                },
+                global.bgYellow,
+                ,
+              ]}
+            />
+          )}
         </View>
         <Modal
           animationType="none"
@@ -1381,7 +1477,7 @@ const Page = ({ route, navigation }) => {
             height: "100%",
           }}
         >
-          <ActivityIndicator color={`#fff`} size={`large`} />
+          <ActivityIndicator color={`#1f1f1f`} size={`large`} />
         </View>
       )}
     </View>

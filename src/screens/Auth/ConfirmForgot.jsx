@@ -138,7 +138,7 @@ const ConfirmForgot = ({ navigation, route }) => {
           </ScrollView>
           <View style={{ height: 65 }}>
             <CustomButton
-              text={isLoading ? <ActivityIndicator color={`#ffffff`}/> : `Confirmar contraseña`}
+              text={isLoading ? <ActivityIndicator color={`#1f1f1f`}/> : `Confirmar contraseña`}
               disabled={isLoading}
               handlePress={handleSubmit(onHandleConfirmCodeNewPassword)}
               textStyles={[styles.textContinue, global.black]}

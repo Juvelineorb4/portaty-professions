@@ -112,7 +112,7 @@ const Home = ({ navigation, route }) => {
           global.bgWhite,
         ]}
       >
-        <ActivityIndicator size="large" color="#fb8500" />
+        <ActivityIndicator size="large" color="#ffb703" />
       </View>
     );
 
@@ -238,7 +238,7 @@ const Home = ({ navigation, route }) => {
                 global.bgWhite,
               ]}
             >
-              <ActivityIndicator size="large" color="#fb8500" />
+              <ActivityIndicator size="large" color="#ffb703" />
             </View>
           )}
         </View>

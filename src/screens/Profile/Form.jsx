@@ -473,7 +473,7 @@ const Form = ({ navigation, route }) => {
           // }}
         />
       ) : (
-        <ActivityIndicator />
+        <ActivityIndicator color={`#ffb703`}/>
       )}
 
       <TouchableOpacity
@@ -544,7 +544,7 @@ const Form = ({ navigation, route }) => {
         onPress={handleSubmit(onRegisterBusiness)}
       >
         {loading ? (
-          <ActivityIndicator size="small" color="#ffffff" />
+          <ActivityIndicator size="small" color="#1f1f1f" />
         ) : (
           <Text style={[global.white, { fontFamily: "medium", fontSize: 14 }]}>
             {`Registrar`}

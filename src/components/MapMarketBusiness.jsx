@@ -271,7 +271,7 @@ const MapMarketBusiness = ({
                       onPress={onHandleConfirm}
                     >
                       {loading ? (
-                        <ActivityIndicator size="small" color="black" />
+                        <ActivityIndicator size="small" color="#1f1f1f" />
                       ) : (
                         <Text
                           style={[global.black, { fontFamily: "bold" }]}
