@@ -109,7 +109,7 @@ const ConfirmRegister = ({ navigation, route }) => {
             <CustomButton
               text={
                 loading ? (
-                  <ActivityIndicator color={`#ffffff`} />
+                  <ActivityIndicator color={`#1f1f1f`} />
                 ) : (
                   es.authentication.account.button
                 )

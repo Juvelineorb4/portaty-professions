@@ -193,7 +193,7 @@ const SearchOut = ({ route }) => {
               global.bgWhite,
             ]}
           >
-            <ActivityIndicator size="large" color="#fb8500" />
+            <ActivityIndicator size="large" color="#ffb703" />
           </View>
         ) : (
           items !== 0 && (
@@ -214,7 +214,7 @@ const SearchOut = ({ route }) => {
                   }}
                 >
                   {totalData > totalLimit && (
-                    <ActivityIndicator size="large" color="#fb8500" />
+                    <ActivityIndicator size="large" color="#ffb703" />
                   )}
                   {totalData === totalLimit && (
                     <Text style={{ fontFamily: "regular", fontSize: 14 }}>
@@ -264,7 +264,7 @@ const SearchOut = ({ route }) => {
           global.bgWhite,
         ]}
       >
-        <ActivityIndicator size="large" color="#fb8500" />
+        <ActivityIndicator size="large" color="#ffb703" />
       </View>
     );
   }

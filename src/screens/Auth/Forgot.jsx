@@ -146,7 +146,7 @@ const Forgot = ({ navigation }) => {
             <CustomButton
               text={
                 isLoading ? (
-                  <ActivityIndicator color={`#ffffff`}/>
+                  <ActivityIndicator color={`#1f1f1f`}/>
                 ) : (
                   es.authentication.forgot.button
                 )
