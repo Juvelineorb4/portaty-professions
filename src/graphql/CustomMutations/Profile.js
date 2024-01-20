@@ -98,6 +98,7 @@ export const updateBusinessPage = /* GraphQL */ `
       facebook
       page
       activity
+      description
     }
   }
 `;
