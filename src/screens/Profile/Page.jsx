@@ -53,6 +53,7 @@ const Page = ({ route, navigation }) => {
   const [open, setOpen] = useState(false);
   const [dimensionsImages, setDimensionsImages] = useState(0);
   const [imageView, setImageView] = useState(null);
+  const [imageChange, setImageChange] = useState(null);
   const [storageImages, setStorageImages] = useState([]);
   const [arrayImages, setArrayImages] = useState(item?.images);
   const [visible, setVisible] = useState(false);
@@ -61,6 +62,7 @@ const Page = ({ route, navigation }) => {
   const [loadingExtras, setLoadingExtras] = useState(5);
   const global = require("@/utils/styles/global.js");
   const [statusProfile, setStatusProfile] = useRecoilState(updateProfile);
+  const [activeMainImage, setActiveMainImage] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [editActive, setEditActive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -73,8 +75,9 @@ const Page = ({ route, navigation }) => {
     web: item.page,
     instagram: item.instagram,
     facebook: item.facebook,
+    description: item.description
   });
-
+  console.log("esto", storageImages);
   const onSaveChange = async () => {
     setIsLoading(true);
     try {
@@ -84,18 +87,19 @@ const Page = ({ route, navigation }) => {
         variables: {
           input: {
             id: item.id,
-            name: editParams.name,
-            email: editParams.email,
-            phone: editParams.phone,
-            whatsapp: editParams.ws,
-            instagram: editParams.instagram,
-            facebook: editParams.facebook,
-            page: editParams.web,
-            activity: editParams.activity,
+            name: editParams?.name,
+            email: editParams?.email,
+            phone: editParams?.phone,
+            whatsapp: editParams?.ws,
+            instagram: editParams?.instagram,
+            facebook: editParams?.facebook,
+            page: editParams?.web,
+            activity: editParams?.activity,
+            description: editParams?.description
           },
         },
       });
-      console.log(result)
+      console.log(result);
     } catch (error) {
       const { message } = new Error(error);
       console.log("ERROR AL ACTUALIZAR NEGOCIO: ", message);
@@ -274,15 +278,13 @@ const Page = ({ route, navigation }) => {
         .map((image) => JSON.parse(image))
         .sort((a, b) => a.key - b.key);
       setStorageImages(list);
+      console.log("aqui", list);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const changeImage = async (image, description) => {
-    const { identityId } = await Auth.currentUserCredentials();
-    const apiName = "api-professions-gateway"; // replace this with your api name.
-    const path = "/thumbnailgenerator"; //replace this with the path you have configured on your API
+  const changeTemporalImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -291,34 +293,43 @@ const Page = ({ route, navigation }) => {
       base64: true,
     });
     if (!result.canceled) {
-      setOpen(!open);
-      setLoadingExtras(image.key);
-      const imageB64 = result.assets[0].base64;
-      const myInit = {
-        body: {
-          identityid: identityId,
-          businessid: item.id,
-          action: "update",
-          type: image.key === 0 ? "profile" : "extras",
-          key: image?.key,
-          description: description,
-          image: imageB64,
-        }, // replace this with attributes you need
-        headers: {}, // OPTIONAL
-      };
-
-      try {
-        const resultAPI = await API.post(apiName, path, myInit);
-        // console.log(resultAPI);
-        setDescriptionImage("");
-        imagesArray();
-        setOpen(!open);
-        setLoadingExtras(5);
-      } catch (error) {
-        console.log("ERROR EN API: ", error);
-      }
+      setActiveMainImage(true)
+      setImageChange(result.assets[0]);
+      console.log(result.assets[0]);
     } else {
       console.log("cancelaste");
+    }
+  };
+  const changeImage = async (image, description, change) => {
+    const { identityId } = await Auth.currentUserCredentials();
+    const apiName = "api-professions-gateway";
+    const path = "/thumbnailgenerator";
+    setOpen(!open);
+    setLoadingExtras(image.key);
+    const myInit = {
+      body: {
+        identityid: identityId,
+        businessid: item.id,
+        action: "update",
+        type: image.key === 0 ? "profile" : "extras",
+        key: image?.key,
+        description: description ? description : '',
+        image: change ? change.imageB64 : '',
+      }, // replace this with attributes you need
+      headers: {}, // OPTIONAL
+    };
+
+    try {
+      const resultAPI = await API.post(apiName, path, myInit);
+      // console.log(resultAPI);
+      setDescriptionImage("");
+      imagesArray();
+      setOpen(!open);
+      setLoadingExtras(5);
+      setImageChange(null)
+      setActiveMainImage(false)
+    } catch (error) {
+      console.log("ERROR EN API: ", error);
     }
   };
 
@@ -425,18 +436,20 @@ const Page = ({ route, navigation }) => {
                 style={[
                   global.mainBgColor,
                   {
-                    width: 25,
-                    height: 25,
+                    width: 30,
+                    height: 30,
                     position: "absolute",
                     zIndex: 10,
                     left: 0,
                     top: "50%",
                     opacity: 0.85,
                     borderRadius: 5,
+                    justifyContent: "center",
+                    alignItems: "center",
                   },
                 ]}
               >
-                <Entypo name="triangle-left" size={24} color="white" />
+                <Entypo name="triangle-left" size={24} color="#1f1f1f" />
               </View>
             )}
           {storageImages.length !== 1 &&
@@ -446,18 +459,20 @@ const Page = ({ route, navigation }) => {
                 style={[
                   global.mainBgColor,
                   {
-                    width: 25,
-                    height: 25,
+                    width: 30,
+                    height: 30,
                     position: "absolute",
                     zIndex: 10,
                     top: "50%",
                     right: 0,
                     opacity: 0.85,
                     borderRadius: 5,
+                    justifyContent: "center",
+                    alignItems: "center",
                   },
                 ]}
               >
-                <Entypo name="triangle-right" size={24} color="white" />
+                <Entypo name="triangle-right" size={24} color="#1f1f1f" />
               </View>
             )}
           {storageImages.length !== 0 && (
@@ -522,6 +537,7 @@ const Page = ({ route, navigation }) => {
                     onPress={() => {
                       setOpen(!open);
                       setImageView(item);
+                      console.log("imagen", item);
                     }}
                   >
                     <Text
@@ -869,6 +885,52 @@ const Page = ({ route, navigation }) => {
                   editActive ? global.bgWhite : global.bgWhiteSoft,
                 ]}
                 // defaultValue={item.name}
+                editable={editActive ? true : false}
+              />
+              {/* <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
+                {item.activity}
+              </Text> */}
+            </View>
+          </View>
+          <View style={[styles.line, global.bgMidGray]} />
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: 20,
+            }}
+          >
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              {/* <FontAwesome5 name="store" size={16} color="#1f1f1f" /> */}
+              <Text
+                style={[
+                  { fontFamily: "lightItalic", fontSize: 15 },
+                  global.black,
+                ]}
+              >
+                Descripcion
+              </Text>
+            </View>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <TextInput
+                onChangeText={(e) => setEditParams({ ...state, description: e })}
+                value={editParams?.description}
+                style={[
+                  {
+                    width: 200,
+                    height: 100,
+                    fontSize: 13,
+                    fontFamily: "regular",
+                    padding: 10,
+                    borderColor: "#1f1f1f",
+                    borderWidth: 0.7,
+                    borderRadius: 4,
+                  },
+                  editActive ? global.bgWhite : global.bgWhiteSoft,
+                ]}
+                // defaultValue={item.name}
+                multiline={true}
                 editable={editActive ? true : false}
               />
               {/* <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
@@ -1246,17 +1308,38 @@ const Page = ({ route, navigation }) => {
                     </Pressable>
                   </View>
                   <View style={{ flex: 1 }}>
-                    <Image
-                      style={{
-                        width: "100%",
-                        height: "60%",
-                        resizeMode: "cover",
-                        borderRadius: 5,
-                      }}
-                      source={{
-                        uri: imageView?.url ? imageView?.url : imageView?.uri,
-                      }}
-                    />
+                    <View>
+                      <Image
+                        style={{
+                          width: "100%",
+                          height: 230,
+                          resizeMode: "cover",
+                          borderRadius: 5,
+                          borderWidth: 0.7,
+                          borderColor: "#1f1f1f",
+                        }}
+                        source={{
+                          uri: imageChange ? imageChange.uri : imageView?.url ? imageView?.url : imageView?.uri,
+                        }}
+                      />
+                      <MaterialCommunityIcons
+                        name="image-edit-outline"
+                        size={24}
+                        color="#1f1f1f"
+                        style={{
+                          position: "absolute",
+                          backgroundColor: "#ffb703",
+                          borderRadius: 4,
+                          paddingHorizontal: 10,
+                          paddingVertical: 5,
+                          right: 0,
+                          opacity: 0.85,
+                          borderWidth: 0.7,
+                          borderColor: "#1f1f1f",
+                        }}
+                        onPress={changeTemporalImage}
+                      />
+                    </View>
 
                     {imageView?.url && (
                       <View style={{ flex: 1, paddingVertical: 15 }}>
@@ -1288,7 +1371,10 @@ const Page = ({ route, navigation }) => {
                                 ? item.description
                                 : imageView?.description
                             }
-                            onChangeText={(e) => setDescriptionImage(e)}
+                            onChangeText={(e) => {
+                              setActiveMainImage(true);
+                              setDescriptionImage(e);
+                            }}
                             placeholder={
                               "Coloca una descripcion para tu imagen"
                             }
@@ -1313,7 +1399,9 @@ const Page = ({ route, navigation }) => {
                         >
                           <TouchableOpacity
                             style={[
-                              global.bgYellow,
+                              activeMainImage
+                                ? global.bgYellow
+                                : global.bgWhite,
                               {
                                 borderRadius: 8,
                                 flex: 1,
@@ -1322,15 +1410,18 @@ const Page = ({ route, navigation }) => {
                                 height: 49,
                                 marginTop: 10,
                                 flexDirection: "row",
+                                borderWidth: 0.7,
+                                borderColor: "#1f1f1f",
                               },
                             ]}
                             onPress={() =>
-                              changeImage(imageView, descriptionImage)
+                              changeImage(imageView, descriptionImage, imageChange)
                             }
+                            disabled={activeMainImage}
                           >
                             <Text
                               style={[
-                                global.white,
+                                global.black,
                                 {
                                   fontFamily: "medium",
                                   fontSize: 14,
@@ -1338,13 +1429,10 @@ const Page = ({ route, navigation }) => {
                                 },
                               ]}
                             >
-                              {`Cambiar`}
+                              {activeMainImage
+                                ? `Guardar cambios`
+                                : `Sin cambios`}
                             </Text>
-                            <MaterialCommunityIcons
-                              name="image-edit-outline"
-                              size={24}
-                              color="white"
-                            />
                           </TouchableOpacity>
                           {imageView?.key !== 0 && (
                             <TouchableOpacity
@@ -1392,8 +1480,8 @@ const Page = ({ route, navigation }) => {
                           style={{
                             flex: 1,
                             flexDirection: "row",
-                            borderColor: "#444",
-                            borderWidth: 0.4,
+                            borderColor: "#1f1f1f",
+                            borderWidth: 0.7,
                             paddingHorizontal: 10,
                             borderRadius: 8,
                             marginTop: 10,
@@ -1429,6 +1517,8 @@ const Page = ({ route, navigation }) => {
                               height: 70,
                               marginTop: 10,
                               flexDirection: "row",
+                              borderWidth: 0.7,
+                              borderColor: "#1f1f1f",
                             },
                           ]}
                           onPress={() =>
@@ -1437,7 +1527,7 @@ const Page = ({ route, navigation }) => {
                         >
                           <Text
                             style={[
-                              global.white,
+                              global.black,
                               {
                                 fontFamily: "medium",
                                 fontSize: 14,

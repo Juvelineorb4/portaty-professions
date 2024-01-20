@@ -28,7 +28,6 @@ const ConfirmRegister = ({ navigation, route }) => {
   const [loading, setLoading] = useState(false); // 10 minutos
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState("");
-  const { email } = route.params;
   const [codeInputs, setCodeInputs] = useRecoilState(codeFields);
   const global = require("@/utils/styles/global.js");
   const { control, handleSubmit } = useForm({
@@ -37,8 +36,8 @@ const ConfirmRegister = ({ navigation, route }) => {
     },
   });
 
-  const onHandleConfirm = async (data) => {
-    const { email } = data;
+  const onHandleConfirm = async () => {
+  const { email } = route.params;
     setLoading(true);
     try {
       await Auth.confirmSignUp(email, codeInputs);
