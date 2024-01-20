@@ -71,12 +71,12 @@ const Register = ({ navigation }) => {
         },
       });
       navigation.navigate("ConfirmRegister", {
-        email: email,
+        email: email.trim(),
       });
     } catch (error) {
       switch (error?.message) {
         case "An account with the given email already exists.":
-          setError(`El correo: ${email}. Ya esta registrado!`);
+          setError(`El correo: ${email.trim()}. Ya esta registrado!`);
           setVisible(true);
           break;
 
