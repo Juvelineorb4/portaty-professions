@@ -7,6 +7,10 @@ export const onUpdateBusiness = /* GraphQL */ `
       id
       image
       images
+      coordinates {
+        lat
+        lon
+      }
     }
   }
 `;

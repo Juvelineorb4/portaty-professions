@@ -81,7 +81,6 @@ export const userByEmail = /* GraphQL */ `
   }
 `;
 
-
 export const getBusiness = /* GraphQL */ `
   query GetBusiness($id: ID!) {
     getBusiness(id: $id) {
@@ -125,6 +124,17 @@ export const getImages = /* GraphQL */ `
     getBusiness(id: $id) {
       id
       images
+    }
+  }
+`;
+export const getBusinessCoordinate = /* GraphQL */ `
+  query GetBusiness($id: ID!) {
+    getBusiness(id: $id) {
+      id
+      coordinates {
+        lat
+        lon
+      }
     }
   }
 `;

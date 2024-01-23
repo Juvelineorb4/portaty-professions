@@ -119,6 +119,10 @@ const MapMarketBusiness = ({
         latitude: initialLocation.latitude,
         longitude: initialLocation.longitude,
       });
+      setSelectMapBusiness({
+        latitude: initialLocation.latitude,
+        longitude: initialLocation.longitude,
+      });
     }
   }, [modalVisible]);
 

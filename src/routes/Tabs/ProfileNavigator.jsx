@@ -13,6 +13,7 @@ import List from "@/screens/Profile/List";
 import Page from "@/screens/Profile/Page";
 import CustomQR from "@/components/CustomQR";
 import FormNavigator from "../FormNavigation";
+import MapScreen from "@/screens/Profile/Page/Map";
 
 const ProfileNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -33,6 +34,14 @@ const ProfileNavigator = () => {
         component={FormNavigator}
         options={{
           animation: "slide_from_right",
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="MapView"
+        component={MapScreen}
+        options={{
+          // animation: "slide_from_right",
           headerShown: false,
         }}
       />
