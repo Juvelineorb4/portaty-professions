@@ -75,7 +75,7 @@ const Page = ({ route, navigation }) => {
     web: item.page,
     instagram: item.instagram,
     facebook: item.facebook,
-    description: item.description
+    description: item.description,
   });
   console.log("esto", storageImages);
   const onSaveChange = async () => {
@@ -95,7 +95,7 @@ const Page = ({ route, navigation }) => {
             facebook: editParams?.facebook,
             page: editParams?.web,
             activity: editParams?.activity,
-            description: editParams?.description
+            description: editParams?.description,
           },
         },
       });
@@ -293,7 +293,7 @@ const Page = ({ route, navigation }) => {
       base64: true,
     });
     if (!result.canceled) {
-      setActiveMainImage(true)
+      setActiveMainImage(true);
       setImageChange(result.assets[0]);
       console.log(result.assets[0]);
     } else {
@@ -313,8 +313,8 @@ const Page = ({ route, navigation }) => {
         action: "update",
         type: image.key === 0 ? "profile" : "extras",
         key: image?.key,
-        description: description ? description : '',
-        image: change ? change.imageB64 : '',
+        description: description ? description : "",
+        image: change ? change.base64 : "",
       }, // replace this with attributes you need
       headers: {}, // OPTIONAL
     };
@@ -326,10 +326,10 @@ const Page = ({ route, navigation }) => {
       imagesArray();
       setOpen(!open);
       setLoadingExtras(5);
-      setImageChange(null)
-      setActiveMainImage(false)
+      setImageChange(null);
+      setActiveMainImage(false);
     } catch (error) {
-      console.log("ERROR EN API: ", error);
+      console.log("ERROR EN API: ", error.message);
     }
   };
 
@@ -914,7 +914,9 @@ const Page = ({ route, navigation }) => {
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <TextInput
-                onChangeText={(e) => setEditParams({ ...state, description: e })}
+                onChangeText={(e) =>
+                  setEditParams({ ...state, description: e })
+                }
                 value={editParams?.description}
                 style={[
                   {
@@ -1319,7 +1321,11 @@ const Page = ({ route, navigation }) => {
                           borderColor: "#1f1f1f",
                         }}
                         source={{
-                          uri: imageChange ? imageChange.uri : imageView?.url ? imageView?.url : imageView?.uri,
+                          uri: imageChange
+                            ? imageChange.uri
+                            : imageView?.url
+                            ? imageView?.url
+                            : imageView?.uri,
                         }}
                       />
                       <MaterialCommunityIcons
@@ -1415,9 +1421,13 @@ const Page = ({ route, navigation }) => {
                               },
                             ]}
                             onPress={() =>
-                              changeImage(imageView, descriptionImage, imageChange)
+                              changeImage(
+                                imageView,
+                                descriptionImage,
+                                imageChange
+                              )
                             }
-                            disabled={activeMainImage}
+                            disabled={!activeMainImage}
                           >
                             <Text
                               style={[

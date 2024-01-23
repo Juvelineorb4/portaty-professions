@@ -30,14 +30,15 @@ const ConfirmRegister = ({ navigation, route }) => {
   const [error, setError] = useState("");
   const [codeInputs, setCodeInputs] = useRecoilState(codeFields);
   const global = require("@/utils/styles/global.js");
+  const { params } = route;
   const { control, handleSubmit } = useForm({
     defaultValues: {
-      email: email,
+      email: params?.email,
     },
   });
 
   const onHandleConfirm = async () => {
-  const { email } = route.params;
+    const { email } = params;
     setLoading(true);
     try {
       await Auth.confirmSignUp(email, codeInputs);
@@ -84,7 +85,7 @@ const ConfirmRegister = ({ navigation, route }) => {
               {es.authentication.account.entercode.title}
             </Text>
             <Text style={{ fontFamily: "light", fontSize: 16 }}>
-              Enviamos el codigo de confirmacion a {email}
+              Enviamos el codigo de confirmacion a {params?.email}
             </Text>
             <Text
               style={[{ fontSize: 16, fontFamily: "light", marginTop: 10 }]}
@@ -97,7 +98,7 @@ const ConfirmRegister = ({ navigation, route }) => {
               <Text style={styles.titleAlert}>
                 {es.authentication.account.code.title}
               </Text>
-              <TouchableOpacity >
+              <TouchableOpacity>
                 <Text style={styles.subtitleAlert}>
                   {es.authentication.account.code.subtitle}
                 </Text>
