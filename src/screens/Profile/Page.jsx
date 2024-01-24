@@ -662,61 +662,85 @@ const Page = ({ route, navigation }) => {
           <Text style={{ fontSize: 20, fontFamily: "light" }}>Favoritos</Text>
         </View>
         <View>
+          <View style={[styles.line, global.bgMidGray]} />
+          <TouchableOpacity
+            style={{
+              padding: 20,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+            activeOpacity={1}
+            onPress={() =>
+              onOpenMap(coordinate.latitude, coordinate.longitude, item.name)
+            }
+          >
+            <View
+              style={{
+                flex: 1,
+                borderRadius: 10,
+                overflow: "hidden",
+                marginTop: 5,
+                borderColor: "#1f1f1f",
+                borderWidth: 0.7,
+              }}
+            >
+              <MapView
+                ref={mapRef}
+                style={{
+                  width: "100%",
+                  height: 220,
+                }}
+                initialRegion={{
+                  latitude: coordinate.latitude,
+                  longitude: coordinate.longitude,
+                  latitudeDelta: 0.001,
+                  longitudeDelta: 0.001,
+                }}
+                scrollEnabled={false}
+              >
+                <Marker
+                  coordinate={{
+                    latitude: coordinate.latitude,
+                    longitude: coordinate.longitude,
+                  }}
+                  title={item.name}
+                />
+              </MapView>
+            </View>
+          </TouchableOpacity>
           <TouchableOpacity
             onPress={() =>
               onChangeLocation(coordinate.latitude, coordinate.longitude)
             }
+            style={[
+              global.bgYellow,
+              {
+                width: 90,
+                height: 50,
+                justifyContent: "center",
+                alignItems: "center",
+                borderColor: "#1f1f1f",
+                borderWidth: 0.7,
+                borderRadius: 6,
+                position: 'absolute',
+                bottom: '7.5%',
+                right: '5.5%'
+              },
+            ]}
           >
-            <Text>EJEMPLO</Text>
+            <Text
+              style={{
+                fontSize: 12,
+                fontFamily: "bold",
+                textAlign: "center",
+              }}
+            >
+              Editar ubicacion
+            </Text>
           </TouchableOpacity>
         </View>
-        <View style={[styles.line, global.bgMidGray]} />
-        <TouchableOpacity
-          style={{
-            padding: 20,
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-          activeOpacity={1}
-          onPress={() =>
-            onOpenMap(coordinate.latitude, coordinate.longitude, item.name)
-          }
-        >
-          <View
-            style={{
-              flex: 1,
-              borderRadius: 10,
-              overflow: "hidden",
-              marginTop: 5,
-              borderColor: "#1f1f1f",
-              borderWidth: 0.7,
-            }}
-          >
-            <MapView
-              ref={mapRef}
-              style={{
-                width: "100%",
-                height: 220,
-              }}
-              initialRegion={{
-                latitude: coordinate.latitude,
-                longitude: coordinate.longitude,
-                latitudeDelta: 0.001,
-                longitudeDelta: 0.001,
-              }}
-              scrollEnabled={false}
-            >
-              <Marker
-                coordinate={{
-                  latitude: coordinate.latitude,
-                  longitude: coordinate.longitude,
-                }}
-                title={item.name}
-              />
-            </MapView>
-          </View>
-        </TouchableOpacity>
+
         <TouchableOpacity
           style={{
             padding: 20,

@@ -119,7 +119,7 @@ const Register = ({ navigation }) => {
                 placeholder: styles.placeholder,
                 input: [
                   styles.inputContainer,
-                  global.bgWhiteSoft,
+                  global.bgWhite,
                 ],
               }}
               text={`Nombre`}
@@ -139,7 +139,7 @@ const Register = ({ navigation }) => {
                 placeholder: styles.placeholder,
                 input: [
                   styles.inputContainer,
-                  global.bgWhiteSoft,
+                  global.bgWhite,
                 ],
               }}
               text={`Apellido`}
@@ -159,7 +159,7 @@ const Register = ({ navigation }) => {
                 label: styles.labelInput,
                 error: styles.errorInput,
                 placeholder: styles.placeholder,
-                input: [styles.inputContainer, global.bgWhiteSoft],
+                input: [styles.inputContainer, global.bgWhite],
               }}
               text={`Correo electronico`}
               // icon={require("@/utils/images/email.png")}
@@ -177,7 +177,7 @@ const Register = ({ navigation }) => {
                 label: styles.labelInput,
                 error: styles.errorInput,
                 placeholder: styles.placeholder,
-                input: [styles.inputContainer, global.bgWhiteSoft],
+                input: [styles.inputContainer, global.bgWhite],
               }}
               text={`Fecha de nacimiento`}
               // icon={require("@/utils/images/calendar.png")}
@@ -194,7 +194,7 @@ const Register = ({ navigation }) => {
                 label: styles.labelInput,
                 error: styles.errorInput,
                 placeholder: styles.placeholder,
-                input: [styles.inputContainer, global.bgWhiteSoft],
+                input: [styles.inputContainer, global.bgWhite],
                 security: styles.security
               }}
               text={`Contraseña`}
@@ -217,7 +217,7 @@ const Register = ({ navigation }) => {
                 label: styles.labelInput,
                 error: styles.errorInput,
                 placeholder: styles.placeholder,
-                input: [styles.inputContainer, global.bgWhiteSoft],
+                input: [styles.inputContainer, global.bgWhite],
                 security: styles.security
               }}
               text={`Repetir contraseña`}
@@ -232,7 +232,7 @@ const Register = ({ navigation }) => {
           <CustomCheckBox
             control={control}
             name={"terms"}
-            text={"Acepto los Terminos y Condiciones"}
+            text={"Acepto los terminos y condiciones"}
             onPressed={_handlePressButtonAsync}
             rules={{ required: "Requerido" }}
           />
@@ -248,7 +248,7 @@ const Register = ({ navigation }) => {
             }
             disabled={isLoading}
             handlePress={handleSubmit(onHandleRegister)}
-            textStyles={[styles.textContinue, global.white]}
+            textStyles={[styles.textContinue, global.black]}
             buttonStyles={[styles.continue, global.mainBgColor]}
           />
         </View>

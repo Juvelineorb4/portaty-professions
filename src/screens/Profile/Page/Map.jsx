@@ -64,6 +64,7 @@ const Map = ({ navigation, route }) => {
   };
 
   const onHandleConfirmLocation = async () => {
+    setLoading(true);
     try {
       await API.graphql({
         authMode: "AMAZON_COGNITO_USER_POOLS",
@@ -81,7 +82,9 @@ const Map = ({ navigation, route }) => {
     } catch (error) {
       console.log("ERROR EN CARGAR", error);
     }
-    close();
+    setTimeout(() => {
+      close();
+    }, 3000);
   };
   const onSetInitalCoordinate = () => {
     setMarketCoordinate(initialCoor);
@@ -185,13 +188,9 @@ const Map = ({ navigation, route }) => {
                 disabled={disabledBtn2}
                 onPress={onSetInitalCoordinate}
               >
-                {loading ? (
-                  <ActivityIndicator size="small" color="#1f1f1f" />
-                ) : (
-                  <Text
-                    style={[global.black, { fontFamily: "bold" }]}
-                  >{`Ubicacion Inicial`}</Text>
-                )}
+                <Text
+                  style={[global.black, { fontFamily: "bold" }]}
+                >{`Ubicacion Inicial`}</Text>
               </TouchableOpacity>
             </View>
           </View>

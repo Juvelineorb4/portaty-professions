@@ -34,7 +34,7 @@ const CustomCheckBox = ({
               onValueChange={onChange}
               color={value ? "#ffb703" : undefined}
             />
-            <Text style={{ marginHorizontal: 5, fontFamily: 'light', fontSize: 13 }}>{text}</Text>
+            <Text style={{ marginHorizontal: 5, fontFamily: 'regular', fontSize: 13 }}>{text}</Text>
             {onPressed && (
               <Feather
                 name="external-link"
@@ -45,7 +45,7 @@ const CustomCheckBox = ({
             )}
           </View>
           {error && (
-            <Text style={{ color: "red" }}>{error.message || "Error"}</Text>
+            <Text style={{ color: "red", fontFamily: 'bold', fontSize: 12, marginTop: -20, marginBottom: 10 }}>{error.message || "Error"}</Text>
           )}
         </>
       )}

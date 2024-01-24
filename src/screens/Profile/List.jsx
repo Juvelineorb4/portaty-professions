@@ -31,7 +31,7 @@ const List = ({ route, navigation }) => {
         <CustomButton
           text={`Adquiere un plan`}
           handlePress={() =>
-            navigation.navigate("Form", {
+            navigation.navigate("FormNavigator", {
               user: user["custom:userTableID"],
             })
           }
@@ -61,7 +61,7 @@ const List = ({ route, navigation }) => {
         <CustomButton
           text={`Registrar un negocio`}
           handlePress={() =>
-            navigation.navigate("Form", {
+            navigation.navigate("FormNavigator", {
               user: user["custom:userTableID"],
             })
           }

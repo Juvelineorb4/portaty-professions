@@ -115,7 +115,7 @@ const ConfirmRegister = ({ navigation, route }) => {
                 )
               }
               handlePress={handleSubmit(onHandleConfirm)}
-              textStyles={[styles.textContinue, global.white]}
+              textStyles={[styles.textContinue, global.black]}
               buttonStyles={[styles.continue, global.mainBgColor]}
             />
           </View>
