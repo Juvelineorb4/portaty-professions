@@ -15,8 +15,13 @@ import { Feather } from "@expo/vector-icons";
 import MapMarketBusiness from "@/components/MapMarketBusiness";
 import useLocation from "@/hooks/useLocation";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { directionBusiness, emptyLocation, mapBusiness, selectLocation } from "@/atoms";
-import * as Location from 'expo-location';
+import {
+  directionBusiness,
+  emptyLocation,
+  mapBusiness,
+  selectLocation,
+} from "@/atoms";
+import * as Location from "expo-location";
 
 const StepThree = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
@@ -30,8 +35,7 @@ const StepThree = ({ navigation, route }) => {
   const empty = useRecoilValue(emptyLocation);
   const direction = useRecoilValue(directionBusiness);
   console.log(empty);
-  
-  
+
   useEffect(() => {}, []);
   return (
     <View style={[global.bgWhite, styles.container]}>
@@ -98,13 +102,14 @@ const StepThree = ({ navigation, route }) => {
                     initialLocation={location}
                     name={"coordinates"}
                     text={"Abrir Mapa"}
+                    title={business?.name}
                     placeholder={"Selecciona tu ubicacion"}
                     // rules={{
                     //   required: es.businessForm.register.email.rules,
                     // }}
                   />
                 ) : (
-                  <ActivityIndicator color={`#ffb703`}/>
+                  <ActivityIndicator color={`#ffb703`} />
                 )}
               </View>
               <View style={[styles.modalBott]}>
@@ -155,7 +160,7 @@ const StepThree = ({ navigation, route }) => {
                   onPress={() => {
                     if (selectionLocation) return;
                     if (empty) {
-                      setSelectionLocation(true)
+                      setSelectionLocation(true);
                     }
                     navigation.push("StepFour", {
                       business: business,

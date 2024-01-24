@@ -26,6 +26,7 @@ import {
 import { Auth, API, Storage } from "aws-amplify";
 import * as subscriptions from "@/graphql/CustomSubscriptions/Profile";
 import * as mutations from "@/graphql/CustomMutations/Profile";
+import * as queries from "@/graphql/CustomQueries/Profile";
 import MapView, { Marker } from "react-native-maps";
 import SkeletonPage from "@/components/SkeletonPage";
 import * as ImagePicker from "expo-image-picker";
@@ -45,6 +46,7 @@ import useOpenFile from "@/hooks/useOpenFile";
 import CustomButton from "@/components/CustomButton";
 
 const Page = ({ route, navigation }) => {
+  const mapRef = useRef(null);
   const {
     data: { item, image },
   } = route.params;
@@ -66,6 +68,12 @@ const Page = ({ route, navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [editActive, setEditActive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  // coordinates
+  const [coordinate, setCoordinate] = useState({
+    latitude: item.coordinates.lat,
+    longitude: item.coordinates.lon,
+  });
+
   const [editParams, setEditParams] = useState({
     name: item.name,
     activity: item.activity,
@@ -75,7 +83,7 @@ const Page = ({ route, navigation }) => {
     web: item.page,
     instagram: item.instagram,
     facebook: item.facebook,
-    description: item.description
+    description: item.description,
   });
   console.log("esto", storageImages);
   const onSaveChange = async () => {
@@ -95,7 +103,7 @@ const Page = ({ route, navigation }) => {
             facebook: editParams?.facebook,
             page: editParams?.web,
             activity: editParams?.activity,
-            description: editParams?.description
+            description: editParams?.description,
           },
         },
       });
@@ -275,7 +283,7 @@ const Page = ({ route, navigation }) => {
   const AllImages = async () => {
     try {
       const list = arrayImages
-        .map((image) => JSON.parse(image))
+        ?.map((image) => JSON.parse(image))
         .sort((a, b) => a.key - b.key);
       setStorageImages(list);
       console.log("aqui", list);
@@ -293,7 +301,7 @@ const Page = ({ route, navigation }) => {
       base64: true,
     });
     if (!result.canceled) {
-      setActiveMainImage(true)
+      setActiveMainImage(true);
       setImageChange(result.assets[0]);
       console.log(result.assets[0]);
     } else {
@@ -313,8 +321,8 @@ const Page = ({ route, navigation }) => {
         action: "update",
         type: image.key === 0 ? "profile" : "extras",
         key: image?.key,
-        description: description ? description : '',
-        image: change ? change.imageB64 : '',
+        description: description ? description : "",
+        image: change ? change.base64 : "",
       }, // replace this with attributes you need
       headers: {}, // OPTIONAL
     };
@@ -326,10 +334,10 @@ const Page = ({ route, navigation }) => {
       imagesArray();
       setOpen(!open);
       setLoadingExtras(5);
-      setImageChange(null)
-      setActiveMainImage(false)
+      setImageChange(null);
+      setActiveMainImage(false);
     } catch (error) {
-      console.log("ERROR EN API: ", error);
+      console.log("ERROR EN API: ", error.message);
     }
   };
 
@@ -378,6 +386,7 @@ const Page = ({ route, navigation }) => {
   useEffect(() => {
     AllImages();
     imagesArray();
+
     const updateSub = API.graphql({
       query: subscriptions.onUpdateBusiness,
       authMode: "AMAZON_COGNITO_USER_POOLS",
@@ -388,12 +397,38 @@ const Page = ({ route, navigation }) => {
       },
     }).subscribe({
       next: ({ provider, value: { data } }) => {
-        // console.log("EL SUBS", data);
-        const list = data?.onUpdateBusiness?.images
-          .map((image) => JSON.parse(image))
-          .sort((a, b) => a.key - b.key);
-        setStorageImages(list);
-        setArrayImages(data.onUpdateBusiness.images);
+        console.log(item.id);
+        console.log("EL SUBS", data);
+
+        if (data?.onUpdateBusiness?.images) {
+          const list = data?.onUpdateBusiness?.images
+            .map((image) => JSON.parse(image))
+            .sort((a, b) => a.key - b.key);
+          setStorageImages(list);
+          setArrayImages(data.onUpdateBusiness.images);
+        } else {
+          API.graphql({
+            authMode: "AMAZON_COGNITO_USER_POOLS",
+            query: queries.getBusinessCoordinate,
+            variables: {
+              id: item.id,
+            },
+          }).then((r) => {
+            const coor = r.data.getBusiness.coordinates;
+            setCoordinate({
+              latitude: coor.lat,
+              longitude: coor.lon,
+            });
+            mapRef.current.animateToRegion(
+              {
+                ...{ latitude: coor.lat, longitude: coor.lon },
+                latitudeDelta: 0.01, // Ajusta según tus necesidades
+                longitudeDelta: 0.01, // Ajusta según tus necesidades
+              },
+              500
+            );
+          });
+        }
       },
       error: (error) => console.warn(error),
     });
@@ -401,6 +436,13 @@ const Page = ({ route, navigation }) => {
       updateSub.unsubscribe();
     };
   }, []);
+
+  const onChangeLocation = (lat, lon) => {
+    navigation.navigate("MapView", {
+      businessid: item.id,
+      coordinates: { latitude: lat, longitude: lon },
+    });
+  };
 
   if (!item || storageImages?.length === 0) return <SkeletonPage />;
   return (
@@ -619,6 +661,15 @@ const Page = ({ route, navigation }) => {
           </Text>
           <Text style={{ fontSize: 20, fontFamily: "light" }}>Favoritos</Text>
         </View>
+        <View>
+          <TouchableOpacity
+            onPress={() =>
+              onChangeLocation(coordinate.latitude, coordinate.longitude)
+            }
+          >
+            <Text>EJEMPLO</Text>
+          </TouchableOpacity>
+        </View>
         <View style={[styles.line, global.bgMidGray]} />
         <TouchableOpacity
           style={{
@@ -629,7 +680,7 @@ const Page = ({ route, navigation }) => {
           }}
           activeOpacity={1}
           onPress={() =>
-            onOpenMap(item.coordinates.lat, item.coordinates.lon, item.name)
+            onOpenMap(coordinate.latitude, coordinate.longitude, item.name)
           }
         >
           <View
@@ -643,13 +694,14 @@ const Page = ({ route, navigation }) => {
             }}
           >
             <MapView
+              ref={mapRef}
               style={{
                 width: "100%",
                 height: 220,
               }}
               initialRegion={{
-                latitude: item.coordinates.lat,
-                longitude: item.coordinates.lon,
+                latitude: coordinate.latitude,
+                longitude: coordinate.longitude,
                 latitudeDelta: 0.001,
                 longitudeDelta: 0.001,
               }}
@@ -657,8 +709,8 @@ const Page = ({ route, navigation }) => {
             >
               <Marker
                 coordinate={{
-                  latitude: item.coordinates.lat,
-                  longitude: item.coordinates.lon,
+                  latitude: coordinate.latitude,
+                  longitude: coordinate.longitude,
                 }}
                 title={item.name}
               />
@@ -914,7 +966,9 @@ const Page = ({ route, navigation }) => {
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <TextInput
-                onChangeText={(e) => setEditParams({ ...state, description: e })}
+                onChangeText={(e) =>
+                  setEditParams({ ...state, description: e })
+                }
                 value={editParams?.description}
                 style={[
                   {
@@ -1319,7 +1373,11 @@ const Page = ({ route, navigation }) => {
                           borderColor: "#1f1f1f",
                         }}
                         source={{
-                          uri: imageChange ? imageChange.uri : imageView?.url ? imageView?.url : imageView?.uri,
+                          uri: imageChange
+                            ? imageChange.uri
+                            : imageView?.url
+                            ? imageView?.url
+                            : imageView?.uri,
                         }}
                       />
                       <MaterialCommunityIcons
@@ -1415,9 +1473,13 @@ const Page = ({ route, navigation }) => {
                               },
                             ]}
                             onPress={() =>
-                              changeImage(imageView, descriptionImage, imageChange)
+                              changeImage(
+                                imageView,
+                                descriptionImage,
+                                imageChange
+                              )
                             }
-                            disabled={activeMainImage}
+                            disabled={!activeMainImage}
                           >
                             <Text
                               style={[

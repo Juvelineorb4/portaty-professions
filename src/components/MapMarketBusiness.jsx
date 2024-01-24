@@ -10,10 +10,15 @@ import {
   Image,
   ActivityIndicator,
 } from "react-native";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE, Callout } from "react-native-maps";
 import * as Location from "expo-location";
 import styles from "@/utils/styles/MapMarket.module.css";
-import { directionBusiness, emptyLocation, mapBusiness, selectLocation } from "@/atoms";
+import {
+  directionBusiness,
+  emptyLocation,
+  mapBusiness,
+  selectLocation,
+} from "@/atoms";
 import { useRecoilState } from "recoil";
 // hook form
 import { Controller } from "react-hook-form";
@@ -43,12 +48,12 @@ const MapMarketBusiness = ({
   name,
   text,
   placeholder,
+  title,
   rules = {},
 }) => {
   const global = require("@/utils/styles/global.js");
+  const markerRef = useRef(null);
   const [marketLocation, setMarketLocation] = useState(null);
-  const [initalMarketLocation, setInitialMarketLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
   const [errorMap, setErrorMap] = useState(false);
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -77,18 +82,12 @@ const MapMarketBusiness = ({
       let direccion = direcciones[0];
       let direccionString = `${
         direccion.street === null ? "" : `${direccion.street}, `
-      }${
-        direccion.city === null ? "" : direccion.city
-      } - ${direccion.region === null ? "" : direccion.region}, ${direccion.postalCode === null ? "" : direccion.postalCode} `;
+      }${direccion.city === null ? "" : direccion.city} - ${
+        direccion.region === null ? "" : direccion.region
+      }, ${direccion.postalCode === null ? "" : direccion.postalCode} `;
       setDirection(direccionString);
       console.log(direccionString);
     }
-  };
-  const onHandleMarkerDragStart = (e) => {
-    let {
-      nativeEvent: { coordinate },
-    } = e;
-    setInitialMarketLocation(coordinate);
   };
 
   const onHandlePress = (e) => {
@@ -96,6 +95,7 @@ const MapMarketBusiness = ({
       nativeEvent: { coordinate },
     } = e;
     setMarketLocation(coordinate);
+
     setSelectMapBusiness(coordinate);
     setSelectMap(true);
   };
@@ -113,7 +113,22 @@ const MapMarketBusiness = ({
       setModalVisible(!modalVisible);
     }, 2000);
   };
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (modalVisible) {
+      setMarketLocation({
+        latitude: initialLocation.latitude,
+        longitude: initialLocation.longitude,
+      });
+      setSelectMapBusiness({
+        latitude: initialLocation.latitude,
+        longitude: initialLocation.longitude,
+      });
+    }
+  }, [modalVisible]);
+
+  const showTitleMarket = () => {
+    markerRef?.current?.showCallout();
+  };
 
   return (
     <Controller
@@ -209,34 +224,44 @@ const MapMarketBusiness = ({
                     </Text>
                   </View>
                   <View style={{ flex: 1 }}>
-                    <MapView
-                      provider={PROVIDER_GOOGLE}
-                      style={{ flex: 1 }}
-                      showsUserLocation={modalVisible}
-                      ref={mapRef}
-                      initialRegion={{
-                        latitude: initialLocation.latitude,
-                        longitude: initialLocation.longitude,
-                        latitudeDelta: 0.01,
-                        longitudeDelta: 0.01,
-                      }}
-                      showsPointsOfInterest={false}
-                      onDoublePress={(e) => {
-                        onHandlePress(e);
-                        onChange(e.nativeEvent.coordinate);
-                      }}
-                      // customMapStyle={MAP_SETTINGS}
-                    >
-                      {marketLocation && (
+                    {modalVisible && marketLocation && (
+                      <MapView
+                        provider={PROVIDER_GOOGLE}
+                        style={{ flex: 1 }}
+                        showsUserLocation={modalVisible}
+                        ref={mapRef}
+                        initialRegion={{
+                          latitude: initialLocation.latitude,
+                          longitude: initialLocation.longitude,
+                          latitudeDelta: 0.01,
+                          longitudeDelta: 0.01,
+                        }}
+                        showsPointsOfInterest={false}
+                        onDoublePress={(e) => {
+                          onHandlePress(e);
+                          onChange(e.nativeEvent.coordinate);
+                        }}
+                        onMapLoaded={showTitleMarket}
+                      >
                         <Marker
-                          title="Ubicacion de tu negocion"
+                          key={1}
+                          title="Contenido del Callout"
                           coordinate={marketLocation}
                           draggable
-                          // onDragStart={(e) => onHandleMarkerDragStart(e)}
                           onDragEnd={onHandleMarketMove}
-                        />
-                      )}
-                    </MapView>
+                          ref={markerRef}
+                        >
+                          <Callout>
+                            <View style={{ padding: 5 }}>
+                              <Text style={{ fontWeight: "bold" }}>
+                                {title}
+                              </Text>
+                            </View>
+                          </Callout>
+                        </Marker>
+                      </MapView>
+                    )}
+
                     {errorMap && (
                       <Text
                         style={{
