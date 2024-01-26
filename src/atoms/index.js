@@ -135,3 +135,8 @@ export const textInputSearch = atom({
   key: "textInputSearchValue",
   default: '',
 });
+
+export const activeModalScreen = atom({
+  key: "activeModalScreenValue",
+  default: true,
+});

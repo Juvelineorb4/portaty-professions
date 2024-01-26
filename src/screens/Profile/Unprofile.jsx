@@ -34,13 +34,14 @@ const Unprofile = ({ navigation, route }) => {
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState("");
   const [refreshing, setRefreshing] = useState(false);
-  const onRefresh = useCallback(() => {
+  const onRefresh = () => {
     setRefreshing(true);
+    User();
     setTimeout(() => {
       setRefreshing(false);
     }, 1000);
-  }, []);
-
+  };
+  const isFocused = navigation.isFocused();
   const status = useRecoilValue(profileState);
 
   const onHandleLogout = async () => {
@@ -62,10 +63,11 @@ const Unprofile = ({ navigation, route }) => {
   };
 
   useLayoutEffect(() => {
+    console.log('aqui', isFocused);
     // setUser([userAuth?.attributes]);
     User();
     console.log(userAuth?.attributes["custom:userTableID"]);
-  }, [userAuth, status, refreshing]);
+  }, [userAuth, status, refreshing, isFocused]);
 
   if (!userAuth?.attributes) return <SkeletonUnprofile />;
   return (
@@ -73,43 +75,44 @@ const Unprofile = ({ navigation, route }) => {
       style={[styles.container, global.bgWhite]}
       showsVerticalScrollIndicator={false}
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        <RefreshControl refreshing={refreshing} onRefresh={() => User()} />
       }
     >
       <View>
-        <View style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between'
-        }}>
-
-        <Text style={[styles.titleSettings, global.black, { marginTop: 20 }]}>
-          {`Perfil`}
-        </Text>
         <View
-          style={[
-            {
-              width: 165,
-              height: 60,
-              justifyContent: "center",
-              alignItems: "center",
-              borderColor: "#1f1f1f",
-              borderRadius: 8,
-              borderWidth: 0.7,
-              marginRight: 10
-            },
-            // global.bgYellow,
-          ]}
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
         >
-          <Text
-            style={{
-              fontFamily: "lightItalic",
-              fontSize: 14,
-              color: "#1f1f1f",
-            }}
-          >
-            Usuario no premium
+          <Text style={[styles.titleSettings, global.black, { marginTop: 20 }]}>
+            {`Perfil`}
           </Text>
-        </View>
+          <View
+            style={[
+              {
+                width: 165,
+                height: 60,
+                justifyContent: "center",
+                alignItems: "center",
+                borderColor: "#1f1f1f",
+                borderRadius: 8,
+                borderWidth: 0.7,
+                marginRight: 10,
+              },
+              // global.bgYellow,
+            ]}
+          >
+            <Text
+              style={{
+                fontFamily: "lightItalic",
+                fontSize: 14,
+                color: "#1f1f1f",
+              }}
+            >
+              Usuario no premium
+            </Text>
+          </View>
         </View>
 
         <View style={[styles.line, global.bgMidGray]} />
@@ -122,7 +125,7 @@ const Unprofile = ({ navigation, route }) => {
             })
           }
           style={{
-            marginBottom: -25
+            marginBottom: -25,
           }}
         >
           <CustomSelect
@@ -162,7 +165,7 @@ const Unprofile = ({ navigation, route }) => {
           });
         }}
         style={{
-          marginBottom: -25
+          marginBottom: -25,
         }}
       >
         <CustomSelect
@@ -193,7 +196,7 @@ const Unprofile = ({ navigation, route }) => {
           });
         }}
         style={{
-          marginBottom: -25
+          marginBottom: -25,
         }}
       >
         {/* <View style={[styles.line, global.bgMidGray]} /> */}
@@ -220,17 +223,23 @@ const Unprofile = ({ navigation, route }) => {
         <Text style={[styles.titleSettings, global.black, { marginTop: 20 }]}>
           {`Configuracion`}
         </Text>
-        <View style={[styles.line, global.bgMidGray, {
-          marginBottom: 20,
-          // marginTop: 5
-        }]} />
+        <View
+          style={[
+            styles.line,
+            global.bgMidGray,
+            {
+              marginBottom: 20,
+              // marginTop: 5
+            },
+          ]}
+        />
         {buttons.map((button, index) => (
           <View key={index}>
             {button.route ? (
               <TouchableOpacity
                 onPress={() => navigation.navigate(button.route)}
                 style={{
-                  marginVertical: -25
+                  marginVertical: -25,
                 }}
               >
                 <CustomSelect

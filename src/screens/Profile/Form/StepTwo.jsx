@@ -14,8 +14,8 @@ import { es } from "@/utils/constants/lenguage";
 import * as Cellular from "expo-cellular";
 import LottieView from "lottie-react-native";
 import { Feather } from "@expo/vector-icons";
-import { userAuthenticated } from "@/atoms";
-import { useRecoilValue } from "recoil";
+import { activeModalScreen, userAuthenticated } from "@/atoms";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { API } from "aws-amplify";
 import * as customProfile from "@/graphql/CustomQueries/Profile";
 import CustomActivities from "@/components/CustomActivities";
@@ -27,6 +27,7 @@ const StepTwo = ({ navigation, route }) => {
   const animation = useRef(null);
   const [activitiesList, setActivitiesList] = useState([]);
   const { business } = route.params;
+  const [active, setActive] = useRecoilState(activeModalScreen);
   console.log(business);
 
  const MultipleData = async () => {
@@ -41,7 +42,7 @@ const StepTwo = ({ navigation, route }) => {
   }, []);
   return (
     <View style={[global.bgWhite, styles.container]}>
-      <Modal animationType="none" transparent={true} visible={true}>
+      <Modal animationType="none" transparent={active} visible={active}>
         <View style={[styles.modalMain]}>
           <ScrollView style={{ flex: 1 }}>
             <View style={[styles.modalContent]}>

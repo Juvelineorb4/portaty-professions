@@ -8,6 +8,7 @@ import StepFour from "@/screens/Profile/Form/StepFour";
 import Form from "@/screens/Profile/Form";
 import StepFive from "@/screens/Profile/Form/StepFive";
 import StepComplete from "@/screens/Profile/Form/StepComplete";
+import StepLoading from "@/screens/Profile/Form/StepLoading";
 
 const FormNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -65,6 +66,14 @@ const FormNavigator = () => {
             animation: "slide_from_right",
             headerShown: false,
             presentation: 'transparentModal'
+          }}
+        />
+        <Stack.Screen
+          name="StepLoading"
+          component={StepLoading}
+          options={{
+            animation: "slide_from_right",
+            headerShown: false,
           }}
         />
     </Stack.Navigator>

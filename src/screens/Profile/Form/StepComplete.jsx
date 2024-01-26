@@ -11,17 +11,21 @@ import styles from "@/utils/styles/StepComplete.module.css";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import LottieView from "lottie-react-native";
+import { activeModalScreen } from "@/atoms";
+import { useRecoilState } from "recoil";
 
 const StepComplete = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
   const [loading, setLoading] = useState(false);
+  const [active, setActive] = useRecoilState(activeModalScreen);
+  
   const animation = useRef(null);
   let dataB = route.params;
   console.log(dataB);
   useEffect(() => {}, []);
   return (
     <View style={[global.bgWhite, styles.container]}>
-      <Modal animationType="none" transparent={true} visible={true}>
+      <Modal animationType="none" transparent={active} visible={active}>
         <View style={[styles.modalMain]}>
           <ScrollView style={{ flex: 1 }}>
             <View style={[styles.modalContent]}>
@@ -110,7 +114,10 @@ const StepComplete = ({ navigation, route }) => {
                       paddingHorizontal: 10,
                     },
                   ]}
-                  onPress={() => navigation.push("Unprofile")}
+                  onPress={() => {
+                    navigation.replace("StepLoading")
+                    setActive(false)
+                  }}
                 >
                   <View
                     style={{

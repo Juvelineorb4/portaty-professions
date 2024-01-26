@@ -245,19 +245,19 @@ const MapMarketBusiness = ({
                       >
                         <Marker
                           key={1}
-                          title="Contenido del Callout"
+                          // title="Contenido del Callout"
                           coordinate={marketLocation}
                           draggable
                           onDragEnd={onHandleMarketMove}
                           ref={markerRef}
                         >
-                          <Callout>
+                          {/* <Callout>
                             <View style={{ padding: 5 }}>
                               <Text style={{ fontWeight: "bold" }}>
                                 {title}
                               </Text>
                             </View>
-                          </Callout>
+                          </Callout> */}
                         </Marker>
                       </MapView>
                     )}

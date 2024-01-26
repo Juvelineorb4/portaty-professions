@@ -35,6 +35,7 @@ const ProfileNavigator = () => {
         options={{
           animation: "slide_from_right",
           headerShown: false,
+          presentation: 'transparentModal',
         }}
       />
       <Stack.Screen

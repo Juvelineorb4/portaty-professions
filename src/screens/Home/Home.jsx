@@ -23,7 +23,11 @@ import * as queries from "@/graphql/CustomQueries/Favorites";
 import * as subscriptions from "@/graphql/CustomSubscriptions/Favorites";
 import CustomButton from "@/components/CustomButton";
 import styles from "@/utils/styles/Home.module.css";
-import { Ionicons, MaterialCommunityIcons, SimpleLineIcons } from "@expo/vector-icons";
+import {
+  Ionicons,
+  MaterialCommunityIcons,
+  SimpleLineIcons,
+} from "@expo/vector-icons";
 import ModalAlert from "@/components/ModalAlert";
 import News from "@/components/Home/News";
 
@@ -168,7 +172,11 @@ const Home = ({ navigation, route }) => {
             ]}
             onPress={() => setMode(1)}
           >
-            <SimpleLineIcons name="bell" size={16} color={mode === 1 ? "#1f1f1f" : "#1f1f1f"} />
+            <SimpleLineIcons
+              name="bell"
+              size={16}
+              color={mode === 1 ? "#1f1f1f" : "#1f1f1f"}
+            />
           </TouchableOpacity>
           <View
             style={{
@@ -222,7 +230,13 @@ const Home = ({ navigation, route }) => {
           </View>
         </View>
 
-        <View style={{ paddingVertical: 10, paddingHorizontal: 20, paddingBottom: 80 }}>
+        <View
+          style={{
+            paddingVertical: 10,
+            paddingHorizontal: 20,
+            paddingBottom: 80,
+          }}
+        >
           {!loading ? (
             mode === 2 ? (
               <Grid data={favoritesList} />
