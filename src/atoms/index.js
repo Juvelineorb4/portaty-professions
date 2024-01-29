@@ -36,6 +36,10 @@ export const directionBusiness = atom({
   key: "directionBusinessValue",
   default: '',
 });
+export const directionBusinessOn = atom({
+  key: "directionBusinessOnValue",
+  default: {},
+});
 export const imageBusiness = atom({
   key: "imageBusinessValue",
   default: null,

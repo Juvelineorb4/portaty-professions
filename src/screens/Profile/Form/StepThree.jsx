@@ -23,6 +23,7 @@ import {
   selectLocation,
 } from "@/atoms";
 import * as Location from "expo-location";
+import StepClear from "./StepClear";
 
 const StepThree = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
@@ -47,7 +48,12 @@ const StepThree = ({ navigation, route }) => {
           <ScrollView style={{ flex: 1 }}>
             <View style={[styles.modalContent]}>
               <View style={[styles.modalTop]}>
-                <Pressable
+                <StepClear
+                  styled={styles.modalContent}
+                  navig={() => navigation.navigate("Unprofile")}
+                />
+
+                {/* <Pressable
                   onPress={() => {
                     navigation.navigate("Unprofile");
                   }}
@@ -60,7 +66,7 @@ const StepThree = ({ navigation, route }) => {
                     }}
                     source={require("@/utils/images/arrow_back.png")}
                   />
-                </Pressable>
+                </Pressable> */}
                 <View style={{ marginBottom: 20, marginTop: -15 }}>
                   <View>
                     {/* <Text

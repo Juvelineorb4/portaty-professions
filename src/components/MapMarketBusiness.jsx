@@ -9,12 +9,14 @@ import {
   Modal,
   Image,
   ActivityIndicator,
+  TextInput,
 } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE, Callout } from "react-native-maps";
 import * as Location from "expo-location";
 import styles from "@/utils/styles/MapMarket.module.css";
 import {
   directionBusiness,
+  directionBusinessOn,
   emptyLocation,
   mapBusiness,
   selectLocation,
@@ -22,14 +24,7 @@ import {
 import { useRecoilState } from "recoil";
 // hook form
 import { Controller } from "react-hook-form";
-
-const COUNTRY_REGION = {
-  // colombia
-  latitude: 4.5709,
-  longitude: -74.2973,
-  latitudeDelta: 10, // Ajusta este valor según tus necesidades
-  longitudeDelta: 10, // Ajusta este valor según tus necesidades
-};
+import { createRef } from "react";
 
 const MAP_SETTINGS = [
   {
@@ -55,17 +50,26 @@ const MapMarketBusiness = ({
   const markerRef = useRef(null);
   const [marketLocation, setMarketLocation] = useState(null);
   const [errorMap, setErrorMap] = useState(false);
+  const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
+  const [loadingSearch, setLoadingSearch] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectMap, setSelectMap] = useState(false);
   const [direction, setDirection] = useRecoilState(directionBusiness);
+  const [directionOn, setDirectionOn] = useRecoilState(directionBusinessOn);
   const [selectMapBusiness, setSelectMapBusiness] = useRecoilState(mapBusiness);
+  const [region, setRegion] = useState({
+    latitude: initialLocation.latitude,
+    longitude: initialLocation.longitude,
+    latitudeDelta: 0.01,
+    longitudeDelta: 0.01,
+  });
   const [selectionLocation, setSelectionLocation] =
     useRecoilState(selectLocation);
   const [selectionEmptyLocation, setSelectionEmptyLocation] =
     useRecoilState(emptyLocation);
+  let mapRef = useRef();
 
-  let mapRef = useRef(null);
   const onHandleMapMarket = async () => {
     setModalVisible(!modalVisible);
     setSelectionLocation(true);
@@ -86,16 +90,43 @@ const MapMarketBusiness = ({
         direccion.region === null ? "" : direccion.region
       }, ${direccion.postalCode === null ? "" : direccion.postalCode} `;
       setDirection(direccionString);
+      setDirectionOn(direcciones);
       console.log(direccionString);
+      console.log(direcciones);
     }
   };
+
+  const obtenerCoordenadas = async (address) => {
+    console.log(mapRef);
+    console.log(address);
+    let coordenadas = await Location.geocodeAsync(address);
+    setRegion({
+      latitude: coordenadas[0].latitude,
+      longitude: coordenadas[0].longitude,
+      latitudeDelta: 0.01,
+      longitudeDelta: 0.01,
+    });
+    mapRef.current.animateToRegion({
+      latitude: coordenadas.latitude,
+      longitude: coordenadas.longitude,
+      latitudeDelta: 0.01,
+      longitudeDelta: 0.01,
+    }, 7000);
+  };
+
 
   const onHandlePress = (e) => {
     const {
       nativeEvent: { coordinate },
     } = e;
+    console.log(coordinate);
     setMarketLocation(coordinate);
-
+    setRegion({
+      latitude: coordinate.latitude,
+      longitude: coordinate.longitude,
+      latitudeDelta: 0.01,
+      longitudeDelta: 0.01,
+    });
     setSelectMapBusiness(coordinate);
     setSelectMap(true);
   };
@@ -115,10 +146,21 @@ const MapMarketBusiness = ({
   };
   useEffect(() => {
     if (modalVisible) {
-      setMarketLocation({
-        latitude: initialLocation.latitude,
-        longitude: initialLocation.longitude,
-      });
+      if (marketLocation !== null) {
+        setRegion({
+          latitude: marketLocation.latitude,
+          longitude: marketLocation.longitude,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
+        });
+      } else {
+        setMarketLocation({
+          latitude: initialLocation.latitude,
+          longitude: initialLocation.longitude,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
+        });
+      }
       setSelectMapBusiness({
         latitude: initialLocation.latitude,
         longitude: initialLocation.longitude,
@@ -230,18 +272,12 @@ const MapMarketBusiness = ({
                         style={{ flex: 1 }}
                         showsUserLocation={modalVisible}
                         ref={mapRef}
-                        initialRegion={{
-                          latitude: initialLocation.latitude,
-                          longitude: initialLocation.longitude,
-                          latitudeDelta: 0.01,
-                          longitudeDelta: 0.01,
-                        }}
-                        showsPointsOfInterest={false}
+                        region={region}
+                        chan
                         onDoublePress={(e) => {
                           onHandlePress(e);
                           onChange(e.nativeEvent.coordinate);
                         }}
-                        onMapLoaded={showTitleMarket}
                       >
                         <Marker
                           key={1}
@@ -277,6 +313,63 @@ const MapMarketBusiness = ({
                         Aun no seleccionaste ninguna ubicacion
                       </Text>
                     )}
+                    <View
+                      style={{
+                        position: "absolute",
+                        flex: 1,
+                        marginHorizontal: 5,
+                        marginVertical: 13,
+                        padding: 5,
+                        borderRadius: 5,
+                        borderColor: "#1f1f1f",
+                        borderWidth: 0.7,
+                        width: 235,
+                        backgroundColor: "#fff",
+                      }}
+                    >
+                      <TextInput
+                        value={description}
+                        onChangeText={(e) => {
+                          setDescription(e);
+                        }}
+                        placeholder={`Introduce una direccion`}
+                        style={{
+                          fontFamily: "regular",
+                          fontSize: 14,
+                        }}
+                      />
+                      <TouchableOpacity
+                        style={[
+                          {
+                            position: "absolute",
+                            bottom: -1,
+                            right: -65,
+                            justifyContent: "center",
+                            alignContent: "center",
+                            borderRadius: 5,
+                            height: 40,
+                            width: 60,
+                            alignItems: "center",
+                            borderColor: "#1f1f1f",
+                            borderWidth: 0.7,
+                          },
+                          global.bgYellow,
+                        ]}
+                        onPress={() => obtenerCoordenadas(description)}
+                      >
+                        {loadingSearch ? (
+                          <ActivityIndicator size="small" color="#1f1f1f" />
+                        ) : (
+                          <Text
+                            style={[
+                              global.black,
+                              { fontFamily: "bold", fontSize: 12 },
+                            ]}
+                          >{`Buscar`}</Text>
+                        )}
+                      </TouchableOpacity>
+                    </View>
+
                     <TouchableOpacity
                       style={[
                         {

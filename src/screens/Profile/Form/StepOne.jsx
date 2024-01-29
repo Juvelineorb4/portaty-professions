@@ -20,6 +20,7 @@ import LottieView from "lottie-react-native";
 import { Feather } from "@expo/vector-icons";
 import { activeModalScreen, userAuthenticated } from "@/atoms";
 import { useRecoilState, useRecoilValue } from "recoil";
+import StepClear from "./StepClear";
 
 const StepOne = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
@@ -81,7 +82,10 @@ const StepOne = ({ navigation, route }) => {
           <ScrollView style={{ flex: 1 }}>
             <View style={[styles.modalContent]}>
               <View style={[styles.modalTop]}>
-                <Pressable
+              <StepClear
+                  navig={() => navigation.navigate("Unprofile")}
+                />
+                {/* <Pressable
                   onPress={() => {
                     navigation.navigate("Unprofile");
                   }}
@@ -94,7 +98,7 @@ const StepOne = ({ navigation, route }) => {
                     }}
                     source={require("@/utils/images/arrow_back.png")}
                   />
-                </Pressable>
+                </Pressable> */}
                 <View style={{ marginBottom: 20, marginTop: -15 }}>
                   <View
                     style={{ flexDirection: "row", alignItems: "flex-end" }}

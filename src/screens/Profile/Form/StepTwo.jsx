@@ -20,6 +20,7 @@ import { API } from "aws-amplify";
 import * as customProfile from "@/graphql/CustomQueries/Profile";
 import CustomActivities from "@/components/CustomActivities";
 import CustomArea from "@/components/CustomArea";
+import StepClear from "./StepClear";
 
 const StepTwo = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
@@ -47,7 +48,10 @@ const StepTwo = ({ navigation, route }) => {
           <ScrollView style={{ flex: 1 }}>
             <View style={[styles.modalContent]}>
               <View style={[styles.modalTop]}>
-                <Pressable
+              <StepClear
+                  navig={() => navigation.navigate("Unprofile")}
+                />
+                {/* <Pressable
                   onPress={() => {
                     navigation.navigate("Unprofile");
                   }}
@@ -60,7 +64,7 @@ const StepTwo = ({ navigation, route }) => {
                     }}
                     source={require("@/utils/images/arrow_back.png")}
                   />
-                </Pressable>
+                </Pressable> */}
                 <View style={{ marginBottom: 20, marginTop: -15 }}>
                   <View>
                     <Text

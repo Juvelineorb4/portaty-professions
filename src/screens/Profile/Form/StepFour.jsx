@@ -14,6 +14,7 @@ import { Feather } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { useRecoilState } from "recoil";
 import { activeModalScreen, base64Business, blobBusiness, imageBusiness } from "@/atoms";
+import StepClear from "./StepClear";
 
 const StepFour = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
@@ -64,7 +65,10 @@ const StepFour = ({ navigation, route }) => {
           <ScrollView style={{ flex: 1 }}>
             <View style={[styles.modalContent]}>
               <View style={[styles.modalTop]}>
-                <Pressable
+              <StepClear
+                  navig={() => navigation.navigate("Unprofile")}
+                />
+                {/* <Pressable
                   onPress={() => {
                     navigation.navigate("Unprofile");
                   }}
@@ -77,7 +81,7 @@ const StepFour = ({ navigation, route }) => {
                     }}
                     source={require("@/utils/images/arrow_back.png")}
                   />
-                </Pressable>
+                </Pressable> */}
                 <View style={{ marginTop: -15, marginBottom: -20 }}>
                   <View>
                     <Text
