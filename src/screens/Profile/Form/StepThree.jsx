@@ -16,6 +16,7 @@ import MapMarketBusiness from "@/components/MapMarketBusiness";
 import useLocation from "@/hooks/useLocation";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
+  activeModalScreen,
   directionBusiness,
   emptyLocation,
   mapBusiness,
@@ -34,12 +35,14 @@ const StepThree = ({ navigation, route }) => {
     useRecoilState(selectLocation);
   const empty = useRecoilValue(emptyLocation);
   const direction = useRecoilValue(directionBusiness);
+  const [active, setActive] = useRecoilState(activeModalScreen);
+
   console.log(empty);
 
   useEffect(() => {}, []);
   return (
     <View style={[global.bgWhite, styles.container]}>
-      <Modal animationType="none" transparent={true} visible={true}>
+      <Modal animationType="none" transparent={active} visible={active}>
         <View style={[styles.modalMain]}>
           <ScrollView style={{ flex: 1 }}>
             <View style={[styles.modalContent]}>

@@ -19,6 +19,7 @@ import * as customProfile from "@/graphql/CustomQueries/Profile";
 import * as mutations from "@/graphql/CustomMutations/Profile";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
+  activeModalScreen,
   activitySelect,
   areaSelect,
   base64Business,
@@ -47,7 +48,10 @@ const StepFive = ({ navigation, route }) => {
   const [activity, setActivity] = useRecoilState(activitySelect);
   const [location, setLocation] = useRecoilState(selectLocation);
   const [locationEmpty, setLocationEmpty] = useRecoilState(emptyLocation);
-  const [locationDirection, setLocationDirection] = useRecoilState(directionBusiness);
+  const [locationDirection, setLocationDirection] =
+    useRecoilState(directionBusiness);
+  const [active, setActive] = useRecoilState(activeModalScreen);
+
 
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState("");
@@ -55,13 +59,13 @@ const StepFive = ({ navigation, route }) => {
   const BlankInputs = () => {
     setMap({});
     setImage(null);
-    setBlobImage(null)
-    setImageB64('')
-    setArea({})
+    setBlobImage(null);
+    setImageB64("");
+    setArea({});
     setActivity({});
-    setLocationDirection('')
-    setLocationEmpty(true)
-    setLocation(false)
+    setLocationDirection("");
+    setLocationEmpty(true);
+    setLocation(false);
   };
   const Finished = () => {
     let params = {
@@ -71,11 +75,11 @@ const StepFive = ({ navigation, route }) => {
       locationDirection: locationDirection,
       name: dataB.business.name,
       email: dataB.business.email,
-      phone: dataB.business.phone
-    }
+      phone: dataB.business.phone,
+    };
     BlankInputs();
     navigation.navigate("StepComplete", {
-      business: params
+      business: params,
     });
   };
 
@@ -103,11 +107,16 @@ const StepFive = ({ navigation, route }) => {
               lon: map.longitude,
             },
             activity: activity.name,
-            tags: [`${dataB.business.name}`, `${activity.name}`, `${area.name}`, `${description}`],
+            tags: [
+              `${dataB.business.name}`,
+              `${activity.name}`,
+              `${area.name}`,
+              `${description}`,
+            ],
           },
         },
       });
-      console.log(business.data.createBusiness)
+      console.log(business.data.createBusiness);
       const apiName = "api-professions-gateway"; // replace this with your api name.
       const path = "/thumbnailgenerator"; //replace this with the path you have configured on your API
       const myInit = {
@@ -125,25 +134,27 @@ const StepFive = ({ navigation, route }) => {
       const result = await API.post(apiName, path, myInit);
       console.log(result);
       setLoading(false);
-      Finished()
+      Finished();
     } catch (error) {
       setError(`Error al cargar negocio`);
       console.log(`Error al cargar negocio:  ${error}`);
       setVisible(true);
-      setLoading(false)
+      setLoading(false);
     }
   };
   useEffect(() => {}, []);
   return (
     <View style={[global.bgWhite, styles.container]}>
-      <Modal animationType="none" transparent={true} visible={true}>
+      <Modal animationType="none" transparent={active} visible={active}>
         <View style={[styles.modalMain]}>
           <ScrollView style={{ flex: 1 }}>
             <View style={[styles.modalContent]}>
               <View style={[styles.modalTop]}>
                 <Pressable
                   onPress={() => {
-                    navigation.navigate("Unprofile");
+                    navigation.reset({
+                      routes: [{ name: "Unprofile" }],
+                    });
                   }}
                 >
                   <Image

@@ -18,8 +18,8 @@ import { AntDesign } from "@expo/vector-icons";
 import * as Cellular from "expo-cellular";
 import LottieView from "lottie-react-native";
 import { Feather } from "@expo/vector-icons";
-import { userAuthenticated } from "@/atoms";
-import { useRecoilValue } from "recoil";
+import { activeModalScreen, userAuthenticated } from "@/atoms";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 const StepOne = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
@@ -29,6 +29,8 @@ const StepOne = ({ navigation, route }) => {
   const [countries, setCountries] = useState([]);
   const [visibleCountries, setVisibleCountries] = useState(false);
   const [searchCountry, setSearchCountry] = useState("");
+  const [active, setActive] = useRecoilState(activeModalScreen);
+
   const animation = useRef(null);
   let data = route.params
   async function getCountryCode(array) {
@@ -74,7 +76,7 @@ const StepOne = ({ navigation, route }) => {
   }, [route]);
   return (
     <View style={[global.bgWhite, styles.container]}>
-      <Modal animationType="none" transparent={true} visible={true}>
+      <Modal animationType="none" transparent={active} visible={active}>
         <View style={[styles.modalMain]}>
           <ScrollView style={{ flex: 1 }}>
             <View style={[styles.modalContent]}>
@@ -100,7 +102,7 @@ const StepOne = ({ navigation, route }) => {
                     <Text
                       style={{
                         fontFamily: "medium",
-                        fontSize: 36,
+                        fontSize: 30,
                         marginBottom: 2,
                       }}
                     >

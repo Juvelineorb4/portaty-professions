@@ -13,13 +13,14 @@ import { useForm } from "react-hook-form";
 import { Feather } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { useRecoilState } from "recoil";
-import { base64Business, blobBusiness, imageBusiness } from "@/atoms";
+import { activeModalScreen, base64Business, blobBusiness, imageBusiness } from "@/atoms";
 
 const StepFour = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
   const [image, setImage] = useRecoilState(imageBusiness);
   const [blobImage, setBlobImage] = useRecoilState(blobBusiness);
   const [imageB64, setImageB64] = useRecoilState(base64Business);
+  const [active, setActive] = useRecoilState(activeModalScreen);
   const [error, setError] = useState(false)
   const { business } = route.params;
   // console.log(map);
@@ -58,7 +59,7 @@ const StepFour = ({ navigation, route }) => {
   // useEffect(() => {}, []);
   return (
     <View style={[global.bgWhite, styles.container]}>
-      <Modal animationType="none" transparent={true} visible={true}>
+      <Modal animationType="none" transparent={active} visible={active}>
         <View style={[styles.modalMain]}>
           <ScrollView style={{ flex: 1 }}>
             <View style={[styles.modalContent]}>
