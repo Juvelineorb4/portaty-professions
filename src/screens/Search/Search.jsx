@@ -50,6 +50,7 @@ const Search = ({ route }) => {
   const [visibleMap, setVisibleMap] = useState(false);
   const [searchCountry, setSearchCountry] = useState("");
   const [searchAddress, setSearchAddress] = useState("");
+  const [city, setCity] = useState("");
 
   const getAddress = async (coords) => {
     let direcciones = await Location.reverseGeocodeAsync(coords);
@@ -61,6 +62,7 @@ const Search = ({ route }) => {
         direccion.region === null ? "" : direccion.region
       }, ${direccion.postalCode === null ? "" : direccion.postalCode} `;
       setSearchAddress(direccionString);
+      setCity(direccion.region)
       console.log(direccionString);
       console.log(direcciones);
     }
@@ -363,6 +365,8 @@ const Search = ({ route }) => {
                   initialLocation={location}
                   open={visibleMap}
                   close={() => setVisibleMap(!visibleMap)}
+                  country={country?.name?.common}
+                  city={city}
                 />
                 <View style={{ flex: 1 }}>
                   <Text

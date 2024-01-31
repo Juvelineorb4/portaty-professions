@@ -12,22 +12,35 @@ import React, { useEffect, useRef, useState } from "react";
 import MapView, { Marker, PROVIDER_GOOGLE, Circle } from "react-native-maps";
 import * as Location from "expo-location";
 import styles from "@/utils/styles/MapMarket.module.css";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
-const MapFilter = ({ open, close, initialLocation }) => {
-    const global = require("@/utils/styles/global.js");
+const MapFilter = ({ open, close, initialLocation, country, city }) => {
+  console.log(country, city);
+  const global = require("@/utils/styles/global.js");
   const [description, setDescription] = useState("");
+  const [selectedPlace, setSelectedPlace] = useState(null);
   const [region, setRegion] = useState({
     latitude: initialLocation.latitude,
     longitude: initialLocation.longitude,
     latitudeDelta: 0.01,
     longitudeDelta: 0.01,
   });
-
   let mapRef = useRef();
   const obtenerCoordenadas = async (address) => {
     console.log(mapRef);
     console.log(address);
-    let coordenadas = await Location.geocodeAsync(address);
+    const direccionComplete = `${address}, ${city}, ${country}`;
+    let coordenadas = await Location.geocodeAsync(direccionComplete);
+
+    let direcciones = await Location.reverseGeocodeAsync(coordenadas[0]);
+
+    console.log(direcciones);
+
+    if (direcciones[0].country !== country || direcciones[0].city === null) {
+      console.log("No ta");
+      return;
+    }
+
     setRegion({
       latitude: coordenadas[0].latitude,
       longitude: coordenadas[0].longitude,
@@ -88,7 +101,30 @@ const MapFilter = ({ open, close, initialLocation }) => {
                 />
               </MapView>
             )}
-
+            <View
+            >
+              <GooglePlacesAutocomplete
+                placeholder="Buscar"
+                fetchDetails={true}
+                onPress={(data, details = null) => {
+                  console.log(data)
+                  setSelectedPlace(details);
+                }}
+                query={{
+                  key: "AIzaSyD2t22FbClP1nmHLYQiSSfJgk40LgXKzPI",
+                  language: "es",
+                  components: "country:ve", 
+                }}
+              />
+              {selectedPlace && (
+                <View style={{ padding: 20 }}>
+                  <Text>Dirección seleccionada:</Text>
+                  <Text>{selectedPlace.formatted_address}</Text>
+                  <Text>Latitud: {selectedPlace.geometry.location.lat}</Text>
+                  <Text>Longitud: {selectedPlace.geometry.location.lng}</Text>
+                </View>
+              )}
+            </View>
             <View
               style={{
                 position: "absolute",
