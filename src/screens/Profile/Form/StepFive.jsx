@@ -25,6 +25,7 @@ import {
   base64Business,
   blobBusiness,
   directionBusiness,
+  directionBusinessOn,
   emptyLocation,
   imageBusiness,
   mapBusiness,
@@ -33,6 +34,7 @@ import {
 } from "@/atoms";
 import { es } from "@/utils/constants/lenguage";
 import ModalAlert from "@/components/ModalAlert";
+import StepClear from "./StepClear";
 
 const StepFive = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
@@ -40,6 +42,7 @@ const StepFive = ({ navigation, route }) => {
   const [loading, setLoading] = useState(false);
   const { control, handleSubmit } = useForm();
   const userAuth = useRecoilValue(userAuthenticated);
+  const direction = useRecoilValue(directionBusinessOn);
   const [map, setMap] = useRecoilState(mapBusiness);
   const [image, setImage] = useRecoilState(imageBusiness);
   const [blobImage, setBlobImage] = useRecoilState(blobBusiness);
@@ -51,7 +54,6 @@ const StepFive = ({ navigation, route }) => {
   const [locationDirection, setLocationDirection] =
     useRecoilState(directionBusiness);
   const [active, setActive] = useRecoilState(activeModalScreen);
-
 
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState("");
@@ -112,6 +114,7 @@ const StepFive = ({ navigation, route }) => {
               `${activity.name}`,
               `${area.name}`,
               `${description}`,
+              `${direction[0]}`,
             ],
           },
         },
@@ -150,7 +153,14 @@ const StepFive = ({ navigation, route }) => {
           <ScrollView style={{ flex: 1 }}>
             <View style={[styles.modalContent]}>
               <View style={[styles.modalTop]}>
-                <Pressable
+                <StepClear
+                  navig={() => {
+                    navigation.reset({
+                      routes: [{ name: "Unprofile" }],
+                    });
+                  }}
+                />
+                {/* <Pressable
                   onPress={() => {
                     navigation.reset({
                       routes: [{ name: "Unprofile" }],
@@ -165,7 +175,7 @@ const StepFive = ({ navigation, route }) => {
                     }}
                     source={require("@/utils/images/arrow_back.png")}
                   />
-                </Pressable>
+                </Pressable> */}
                 <View style={{ marginBottom: 20, marginTop: -15 }}>
                   <View>
                     <Text
