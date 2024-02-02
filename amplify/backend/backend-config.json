@@ -60,6 +60,7 @@
     }
   },
   "function": {},
+  "geo": {},
   "storage": {
     "s3Professions": {
       "dependsOn": [],

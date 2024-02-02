@@ -5,6 +5,7 @@ import {
   ScrollView,
   Pressable,
   Modal,
+  TextInput,
 } from "react-native";
 import styles from "@/utils/styles/StepTwo.module.css";
 import React, { useEffect, useRef, useState } from "react";
@@ -14,7 +15,7 @@ import { es } from "@/utils/constants/lenguage";
 import * as Cellular from "expo-cellular";
 import LottieView from "lottie-react-native";
 import { Feather } from "@expo/vector-icons";
-import { activeModalScreen, userAuthenticated } from "@/atoms";
+import { activeModalScreen, areaSelect, userAuthenticated } from "@/atoms";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { API } from "aws-amplify";
 import * as customProfile from "@/graphql/CustomQueries/Profile";
@@ -26,20 +27,22 @@ const StepTwo = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
   const { control, handleSubmit } = useForm();
   const animation = useRef(null);
-  const [activitiesList, setActivitiesList] = useState([]);
+  const [areasList, setAreasList] = useState([]);
   const { business } = route.params;
   const [active, setActive] = useRecoilState(activeModalScreen);
+  const area = useRecoilValue(areaSelect);
   console.log(business);
 
- const MultipleData = async () => {
+  const MultipleData = async () => {
     const activities = await API.graphql({
-      query: customProfile.listActivities,
+      query: customProfile.listAreas,
     });
-    setActivitiesList(activities.data.listActivities.items);
+    setAreasList(activities.data.listAreas.items);
+    console.log(activities.data.listAreas.items);
   };
 
   useEffect(() => {
-    MultipleData()
+    MultipleData();
   }, []);
   return (
     <View style={[global.bgWhite, styles.container]}>
@@ -48,23 +51,7 @@ const StepTwo = ({ navigation, route }) => {
           <ScrollView style={{ flex: 1 }}>
             <View style={[styles.modalContent]}>
               <View style={[styles.modalTop]}>
-              <StepClear
-                  navig={() => navigation.navigate("Unprofile")}
-                />
-                {/* <Pressable
-                  onPress={() => {
-                    navigation.navigate("Unprofile");
-                  }}
-                >
-                  <Image
-                    style={{
-                      width: 55,
-                      height: 55,
-                      resizeMode: "contain",
-                    }}
-                    source={require("@/utils/images/arrow_back.png")}
-                  />
-                </Pressable> */}
+                <StepClear navig={() => navigation.navigate("Unprofile")} />
                 <View style={{ marginBottom: 20, marginTop: -15 }}>
                   <View>
                     <Text
@@ -101,46 +88,60 @@ const StepTwo = ({ navigation, route }) => {
                 </View>
               </View>
               <View style={[styles.modalMid]}>
-              {activitiesList.length !== 0 ? (
-                  <CustomArea data={activitiesList} />
-                ) : (
-                  <CustomInput
-                    control={control}
-                    name={`area`}
-                    placeholder={`Selecciona tu area laboral`}
-                    styled={{
-                      text: styles.textInput,
-                      label: [styles.labelInput],
-                      error: styles.errorInput,
-                      input: [styles.inputContainer],
-                      placeholder: styles.placeholder,
+                <View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      columnGap: 10,
+                      justifyContent: "space-between",
                     }}
-                    text={`Area (*)`}
-                    rules={{
-                      required: es.businessForm.register.email.rules,
+                  >
+                    <Text
+                      style={{
+                        fontFamily: "bold",
+                        fontSize: 16,
+                      }}
+                    >
+                      Tu sector:
+                    </Text>
+                    <Text
+                      style={{
+                        fontFamily: "medium",
+                        fontSize: 14,
+                      }}
+                    >
+                      {area?.area ? area?.area : "No has seleccionado aun"}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      columnGap: 10,
+                      justifyContent: "space-between",
+                      marginVertical: 10
                     }}
-                  />
-                )}
-                {activitiesList.length !== 0 ? (
-                  <CustomActivities data={activitiesList} />
-                ) : (
-                  <CustomInput
-                    control={control}
-                    name={`activity`}
-                    placeholder={`Selecciona tu actividad laboral`}
-                    styled={{
-                      text: styles.textInput,
-                      label: [styles.labelInput],
-                      error: styles.errorInput,
-                      input: [styles.inputContainer],
-                      placeholder: styles.placeholder,
-                    }}
-                    text={`Actividad (*)`}
-                    rules={{
-                      required: es.businessForm.register.email.rules,
-                    }}
-                  />
-                )}
+                  >
+                    <Text
+                      style={{
+                        fontFamily: "bold",
+                        fontSize: 16,
+                      }}
+                    >
+                      Tu actividad :
+                    </Text>
+                    <Text
+                      style={{
+                        fontFamily: "medium",
+                        fontSize: 14,
+                      }}
+                    >
+                      {area?.activity
+                        ? area?.activity
+                        : "No has seleccionado aun"}
+                    </Text>
+                  </View>
+                </View>
+                {areasList.length !== 0 ? <CustomArea data={areasList} /> : ""}
               </View>
               <View style={[styles.modalBott]}>
                 <Pressable
@@ -187,9 +188,11 @@ const StepTwo = ({ navigation, route }) => {
                       paddingHorizontal: 10,
                     },
                   ]}
-                  onPress={() => navigation.push("StepThree", {
-                    business: business
-                  })}
+                  onPress={() =>
+                    navigation.push("StepThree", {
+                      business: business,
+                    })
+                  }
                 >
                   <Text
                     style={[

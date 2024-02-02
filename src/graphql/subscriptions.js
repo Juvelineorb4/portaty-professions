@@ -1,16 +1,16 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreateTags = /* GraphQL */ `
-  subscription OnCreateTags($filter: ModelSubscriptionTagsFilterInput) {
-    onCreateTags(filter: $filter) {
+export const onCreateArea = /* GraphQL */ `
+  subscription OnCreateArea($filter: ModelSubscriptionAreaFilterInput) {
+    onCreateArea(filter: $filter) {
       id
       name
-      objects {
+      activities {
         items {
           id
-          tagsId
-          activityId
+          name
+          areaID
           createdAt
           updatedAt
         }
@@ -21,16 +21,16 @@ export const onCreateTags = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateTags = /* GraphQL */ `
-  subscription OnUpdateTags($filter: ModelSubscriptionTagsFilterInput) {
-    onUpdateTags(filter: $filter) {
+export const onUpdateArea = /* GraphQL */ `
+  subscription OnUpdateArea($filter: ModelSubscriptionAreaFilterInput) {
+    onUpdateArea(filter: $filter) {
       id
       name
-      objects {
+      activities {
         items {
           id
-          tagsId
-          activityId
+          name
+          areaID
           createdAt
           updatedAt
         }
@@ -41,16 +41,16 @@ export const onUpdateTags = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteTags = /* GraphQL */ `
-  subscription OnDeleteTags($filter: ModelSubscriptionTagsFilterInput) {
-    onDeleteTags(filter: $filter) {
+export const onDeleteArea = /* GraphQL */ `
+  subscription OnDeleteArea($filter: ModelSubscriptionAreaFilterInput) {
+    onDeleteArea(filter: $filter) {
       id
       name
-      objects {
+      activities {
         items {
           id
-          tagsId
-          activityId
+          name
+          areaID
           createdAt
           updatedAt
         }
@@ -66,15 +66,15 @@ export const onCreateActivity = /* GraphQL */ `
     onCreateActivity(filter: $filter) {
       id
       name
-      tags {
-        items {
-          id
-          tagsId
-          activityId
-          createdAt
-          updatedAt
+      areaID
+      area {
+        id
+        name
+        activities {
+          nextToken
         }
-        nextToken
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -86,15 +86,15 @@ export const onUpdateActivity = /* GraphQL */ `
     onUpdateActivity(filter: $filter) {
       id
       name
-      tags {
-        items {
-          id
-          tagsId
-          activityId
-          createdAt
-          updatedAt
+      areaID
+      area {
+        id
+        name
+        activities {
+          nextToken
         }
-        nextToken
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -106,104 +106,11 @@ export const onDeleteActivity = /* GraphQL */ `
     onDeleteActivity(filter: $filter) {
       id
       name
-      tags {
-        items {
-          id
-          tagsId
-          activityId
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateActivityTags = /* GraphQL */ `
-  subscription OnCreateActivityTags(
-    $filter: ModelSubscriptionActivityTagsFilterInput
-  ) {
-    onCreateActivityTags(filter: $filter) {
-      id
-      tagsId
-      activityId
-      tags {
+      areaID
+      area {
         id
         name
-        objects {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      activity {
-        id
-        name
-        tags {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateActivityTags = /* GraphQL */ `
-  subscription OnUpdateActivityTags(
-    $filter: ModelSubscriptionActivityTagsFilterInput
-  ) {
-    onUpdateActivityTags(filter: $filter) {
-      id
-      tagsId
-      activityId
-      tags {
-        id
-        name
-        objects {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      activity {
-        id
-        name
-        tags {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteActivityTags = /* GraphQL */ `
-  subscription OnDeleteActivityTags(
-    $filter: ModelSubscriptionActivityTagsFilterInput
-  ) {
-    onDeleteActivityTags(filter: $filter) {
-      id
-      tagsId
-      activityId
-      tags {
-        id
-        name
-        objects {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      activity {
-        id
-        name
-        tags {
+        activities {
           nextToken
         }
         createdAt
@@ -242,6 +149,7 @@ export const onCreateUsers = /* GraphQL */ `
         items {
           id
           userID
+          status
           identityID
           name
           image
@@ -256,6 +164,7 @@ export const onCreateUsers = /* GraphQL */ `
           activity
           tags
           description
+          prefer
           createdAt
           updatedAt
           owner
@@ -296,6 +205,7 @@ export const onUpdateUsers = /* GraphQL */ `
         items {
           id
           userID
+          status
           identityID
           name
           image
@@ -310,6 +220,7 @@ export const onUpdateUsers = /* GraphQL */ `
           activity
           tags
           description
+          prefer
           createdAt
           updatedAt
           owner
@@ -350,6 +261,7 @@ export const onDeleteUsers = /* GraphQL */ `
         items {
           id
           userID
+          status
           identityID
           name
           image
@@ -364,6 +276,7 @@ export const onDeleteUsers = /* GraphQL */ `
           activity
           tags
           description
+          prefer
           createdAt
           updatedAt
           owner
@@ -401,6 +314,7 @@ export const onCreateBusiness = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      status
       identityID
       name
       image
@@ -431,6 +345,7 @@ export const onCreateBusiness = /* GraphQL */ `
         nextToken
       }
       description
+      prefer
       createdAt
       updatedAt
       owner
@@ -462,6 +377,7 @@ export const onUpdateBusiness = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      status
       identityID
       name
       image
@@ -492,6 +408,7 @@ export const onUpdateBusiness = /* GraphQL */ `
         nextToken
       }
       description
+      prefer
       createdAt
       updatedAt
       owner
@@ -523,6 +440,7 @@ export const onDeleteBusiness = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      status
       identityID
       name
       image
@@ -553,6 +471,7 @@ export const onDeleteBusiness = /* GraphQL */ `
         nextToken
       }
       description
+      prefer
       createdAt
       updatedAt
       owner
@@ -581,6 +500,7 @@ export const onCreateFavorites = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        status
         identityID
         name
         image
@@ -602,6 +522,7 @@ export const onCreateFavorites = /* GraphQL */ `
           nextToken
         }
         description
+        prefer
         createdAt
         updatedAt
         owner
@@ -653,6 +574,7 @@ export const onUpdateFavorites = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        status
         identityID
         name
         image
@@ -674,6 +596,7 @@ export const onUpdateFavorites = /* GraphQL */ `
           nextToken
         }
         description
+        prefer
         createdAt
         updatedAt
         owner
@@ -725,6 +648,7 @@ export const onDeleteFavorites = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        status
         identityID
         name
         image
@@ -746,6 +670,7 @@ export const onDeleteFavorites = /* GraphQL */ `
           nextToken
         }
         description
+        prefer
         createdAt
         updatedAt
         owner
@@ -784,11 +709,19 @@ export const onCreateComplaints = /* GraphQL */ `
       id
       userID
       businessID
-      description
       status
+      reasonID
+      reason {
+        id
+        name
+        createdAt
+        updatedAt
+        owner
+      }
+      description
+      owner
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -801,11 +734,19 @@ export const onUpdateComplaints = /* GraphQL */ `
       id
       userID
       businessID
-      description
       status
+      reasonID
+      reason {
+        id
+        name
+        createdAt
+        updatedAt
+        owner
+      }
+      description
+      owner
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -818,8 +759,58 @@ export const onDeleteComplaints = /* GraphQL */ `
       id
       userID
       businessID
-      description
       status
+      reasonID
+      reason {
+        id
+        name
+        createdAt
+        updatedAt
+        owner
+      }
+      description
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateReasonComplaints = /* GraphQL */ `
+  subscription OnCreateReasonComplaints(
+    $filter: ModelSubscriptionReasonComplaintsFilterInput
+    $owner: String
+  ) {
+    onCreateReasonComplaints(filter: $filter, owner: $owner) {
+      id
+      name
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdateReasonComplaints = /* GraphQL */ `
+  subscription OnUpdateReasonComplaints(
+    $filter: ModelSubscriptionReasonComplaintsFilterInput
+    $owner: String
+  ) {
+    onUpdateReasonComplaints(filter: $filter, owner: $owner) {
+      id
+      name
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteReasonComplaints = /* GraphQL */ `
+  subscription OnDeleteReasonComplaints(
+    $filter: ModelSubscriptionReasonComplaintsFilterInput
+    $owner: String
+  ) {
+    onDeleteReasonComplaints(filter: $filter, owner: $owner) {
+      id
+      name
       createdAt
       updatedAt
       owner

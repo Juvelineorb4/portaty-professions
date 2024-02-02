@@ -40,6 +40,7 @@ export const searchBusinessByDistance = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        status
         identityID
         name
         image
@@ -61,6 +62,7 @@ export const searchBusinessByDistance = /* GraphQL */ `
           nextToken
         }
         description
+        prefer
         createdAt
         updatedAt
         owner
@@ -70,16 +72,16 @@ export const searchBusinessByDistance = /* GraphQL */ `
     }
   }
 `;
-export const getTags = /* GraphQL */ `
-  query GetTags($id: ID!) {
-    getTags(id: $id) {
+export const getArea = /* GraphQL */ `
+  query GetArea($id: ID!) {
+    getArea(id: $id) {
       id
       name
-      objects {
+      activities {
         items {
           id
-          tagsId
-          activityId
+          name
+          areaID
           createdAt
           updatedAt
         }
@@ -90,17 +92,17 @@ export const getTags = /* GraphQL */ `
     }
   }
 `;
-export const listTags = /* GraphQL */ `
-  query ListTags(
-    $filter: ModelTagsFilterInput
+export const listAreas = /* GraphQL */ `
+  query ListAreas(
+    $filter: ModelAreaFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listTags(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listAreas(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         name
-        objects {
+        activities {
           nextToken
         }
         createdAt
@@ -115,15 +117,15 @@ export const getActivity = /* GraphQL */ `
     getActivity(id: $id) {
       id
       name
-      tags {
-        items {
-          id
-          tagsId
-          activityId
-          createdAt
-          updatedAt
+      areaID
+      area {
+        id
+        name
+        activities {
+          nextToken
         }
-        nextToken
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -140,63 +142,8 @@ export const listActivities = /* GraphQL */ `
       items {
         id
         name
-        tags {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getActivityTags = /* GraphQL */ `
-  query GetActivityTags($id: ID!) {
-    getActivityTags(id: $id) {
-      id
-      tagsId
-      activityId
-      tags {
-        id
-        name
-        objects {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      activity {
-        id
-        name
-        tags {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listActivityTags = /* GraphQL */ `
-  query ListActivityTags(
-    $filter: ModelActivityTagsFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listActivityTags(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        tagsId
-        activityId
-        tags {
-          id
-          name
-          createdAt
-          updatedAt
-        }
-        activity {
+        areaID
+        area {
           id
           name
           createdAt
@@ -209,16 +156,16 @@ export const listActivityTags = /* GraphQL */ `
     }
   }
 `;
-export const activityTagsByTagsId = /* GraphQL */ `
-  query ActivityTagsByTagsId(
-    $tagsId: ID!
+export const activitiesByAreaID = /* GraphQL */ `
+  query ActivitiesByAreaID(
+    $areaID: ID!
     $sortDirection: ModelSortDirection
-    $filter: ModelActivityTagsFilterInput
+    $filter: ModelActivityFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    activityTagsByTagsId(
-      tagsId: $tagsId
+    activitiesByAreaID(
+      areaID: $areaID
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
@@ -226,53 +173,9 @@ export const activityTagsByTagsId = /* GraphQL */ `
     ) {
       items {
         id
-        tagsId
-        activityId
-        tags {
-          id
-          name
-          createdAt
-          updatedAt
-        }
-        activity {
-          id
-          name
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const activityTagsByActivityId = /* GraphQL */ `
-  query ActivityTagsByActivityId(
-    $activityId: ID!
-    $sortDirection: ModelSortDirection
-    $filter: ModelActivityTagsFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    activityTagsByActivityId(
-      activityId: $activityId
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        tagsId
-        activityId
-        tags {
-          id
-          name
-          createdAt
-          updatedAt
-        }
-        activity {
+        name
+        areaID
+        area {
           id
           name
           createdAt
@@ -310,6 +213,7 @@ export const getUsers = /* GraphQL */ `
         items {
           id
           userID
+          status
           identityID
           name
           image
@@ -324,6 +228,7 @@ export const getUsers = /* GraphQL */ `
           activity
           tags
           description
+          prefer
           createdAt
           updatedAt
           owner
@@ -422,6 +327,7 @@ export const getBusiness = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      status
       identityID
       name
       image
@@ -452,6 +358,7 @@ export const getBusiness = /* GraphQL */ `
         nextToken
       }
       description
+      prefer
       createdAt
       updatedAt
       owner
@@ -479,6 +386,7 @@ export const listBusinesses = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        status
         identityID
         name
         image
@@ -500,6 +408,7 @@ export const listBusinesses = /* GraphQL */ `
           nextToken
         }
         description
+        prefer
         createdAt
         updatedAt
         owner
@@ -537,6 +446,7 @@ export const businessesByUserID = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        status
         identityID
         name
         image
@@ -558,6 +468,7 @@ export const businessesByUserID = /* GraphQL */ `
           nextToken
         }
         description
+        prefer
         createdAt
         updatedAt
         owner
@@ -597,6 +508,7 @@ export const searchBusinesses = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        status
         identityID
         name
         image
@@ -618,6 +530,7 @@ export const searchBusinesses = /* GraphQL */ `
           nextToken
         }
         description
+        prefer
         createdAt
         updatedAt
         owner
@@ -660,6 +573,7 @@ export const getFavorites = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        status
         identityID
         name
         image
@@ -681,6 +595,7 @@ export const getFavorites = /* GraphQL */ `
           nextToken
         }
         description
+        prefer
         createdAt
         updatedAt
         owner
@@ -723,6 +638,7 @@ export const listFavorites = /* GraphQL */ `
         business {
           id
           userID
+          status
           identityID
           name
           image
@@ -737,6 +653,7 @@ export const listFavorites = /* GraphQL */ `
           activity
           tags
           description
+          prefer
           createdAt
           updatedAt
           owner
@@ -785,6 +702,7 @@ export const favoritesByBusinessID = /* GraphQL */ `
         business {
           id
           userID
+          status
           identityID
           name
           image
@@ -799,6 +717,7 @@ export const favoritesByBusinessID = /* GraphQL */ `
           activity
           tags
           description
+          prefer
           createdAt
           updatedAt
           owner
@@ -845,6 +764,7 @@ export const favoritesByUserID = /* GraphQL */ `
         business {
           id
           userID
+          status
           identityID
           name
           image
@@ -859,6 +779,7 @@ export const favoritesByUserID = /* GraphQL */ `
           activity
           tags
           description
+          prefer
           createdAt
           updatedAt
           owner
@@ -890,11 +811,19 @@ export const getComplaints = /* GraphQL */ `
       id
       userID
       businessID
-      description
       status
+      reasonID
+      reason {
+        id
+        name
+        createdAt
+        updatedAt
+        owner
+      }
+      description
+      owner
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -909,8 +838,49 @@ export const listComplaints = /* GraphQL */ `
         id
         userID
         businessID
-        description
         status
+        reasonID
+        reason {
+          id
+          name
+          createdAt
+          updatedAt
+          owner
+        }
+        description
+        owner
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getReasonComplaints = /* GraphQL */ `
+  query GetReasonComplaints($id: ID!) {
+    getReasonComplaints(id: $id) {
+      id
+      name
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listReasonComplaints = /* GraphQL */ `
+  query ListReasonComplaints(
+    $filter: ModelReasonComplaintsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listReasonComplaints(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        name
         createdAt
         updatedAt
         owner

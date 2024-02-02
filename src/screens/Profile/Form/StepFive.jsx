@@ -114,7 +114,7 @@ const StepFive = ({ navigation, route }) => {
               `${activity.name}`,
               `${area.name}`,
               `${description}`,
-              `${direction[0]}`,
+              `${JSON.stringify(direction[0])}`,
             ],
           },
         },

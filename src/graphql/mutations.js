@@ -1,19 +1,44 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createTags = /* GraphQL */ `
-  mutation CreateTags(
-    $input: CreateTagsInput!
-    $condition: ModelTagsConditionInput
+export const deleteComplaints = /* GraphQL */ `
+  mutation DeleteComplaints(
+    $input: DeleteComplaintsInput!
+    $condition: ModelComplaintsConditionInput
   ) {
-    createTags(input: $input, condition: $condition) {
+    deleteComplaints(input: $input, condition: $condition) {
+      id
+      userID
+      businessID
+      status
+      reasonID
+      reason {
+        id
+        name
+        createdAt
+        updatedAt
+        owner
+      }
+      description
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createArea = /* GraphQL */ `
+  mutation CreateArea(
+    $input: CreateAreaInput!
+    $condition: ModelAreaConditionInput
+  ) {
+    createArea(input: $input, condition: $condition) {
       id
       name
-      objects {
+      activities {
         items {
           id
-          tagsId
-          activityId
+          name
+          areaID
           createdAt
           updatedAt
         }
@@ -24,19 +49,19 @@ export const createTags = /* GraphQL */ `
     }
   }
 `;
-export const updateTags = /* GraphQL */ `
-  mutation UpdateTags(
-    $input: UpdateTagsInput!
-    $condition: ModelTagsConditionInput
+export const updateArea = /* GraphQL */ `
+  mutation UpdateArea(
+    $input: UpdateAreaInput!
+    $condition: ModelAreaConditionInput
   ) {
-    updateTags(input: $input, condition: $condition) {
+    updateArea(input: $input, condition: $condition) {
       id
       name
-      objects {
+      activities {
         items {
           id
-          tagsId
-          activityId
+          name
+          areaID
           createdAt
           updatedAt
         }
@@ -47,19 +72,19 @@ export const updateTags = /* GraphQL */ `
     }
   }
 `;
-export const deleteTags = /* GraphQL */ `
-  mutation DeleteTags(
-    $input: DeleteTagsInput!
-    $condition: ModelTagsConditionInput
+export const deleteArea = /* GraphQL */ `
+  mutation DeleteArea(
+    $input: DeleteAreaInput!
+    $condition: ModelAreaConditionInput
   ) {
-    deleteTags(input: $input, condition: $condition) {
+    deleteArea(input: $input, condition: $condition) {
       id
       name
-      objects {
+      activities {
         items {
           id
-          tagsId
-          activityId
+          name
+          areaID
           createdAt
           updatedAt
         }
@@ -78,15 +103,15 @@ export const createActivity = /* GraphQL */ `
     createActivity(input: $input, condition: $condition) {
       id
       name
-      tags {
-        items {
-          id
-          tagsId
-          activityId
-          createdAt
-          updatedAt
+      areaID
+      area {
+        id
+        name
+        activities {
+          nextToken
         }
-        nextToken
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -101,15 +126,15 @@ export const updateActivity = /* GraphQL */ `
     updateActivity(input: $input, condition: $condition) {
       id
       name
-      tags {
-        items {
-          id
-          tagsId
-          activityId
-          createdAt
-          updatedAt
+      areaID
+      area {
+        id
+        name
+        activities {
+          nextToken
         }
-        nextToken
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -124,107 +149,11 @@ export const deleteActivity = /* GraphQL */ `
     deleteActivity(input: $input, condition: $condition) {
       id
       name
-      tags {
-        items {
-          id
-          tagsId
-          activityId
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createActivityTags = /* GraphQL */ `
-  mutation CreateActivityTags(
-    $input: CreateActivityTagsInput!
-    $condition: ModelActivityTagsConditionInput
-  ) {
-    createActivityTags(input: $input, condition: $condition) {
-      id
-      tagsId
-      activityId
-      tags {
+      areaID
+      area {
         id
         name
-        objects {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      activity {
-        id
-        name
-        tags {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateActivityTags = /* GraphQL */ `
-  mutation UpdateActivityTags(
-    $input: UpdateActivityTagsInput!
-    $condition: ModelActivityTagsConditionInput
-  ) {
-    updateActivityTags(input: $input, condition: $condition) {
-      id
-      tagsId
-      activityId
-      tags {
-        id
-        name
-        objects {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      activity {
-        id
-        name
-        tags {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteActivityTags = /* GraphQL */ `
-  mutation DeleteActivityTags(
-    $input: DeleteActivityTagsInput!
-    $condition: ModelActivityTagsConditionInput
-  ) {
-    deleteActivityTags(input: $input, condition: $condition) {
-      id
-      tagsId
-      activityId
-      tags {
-        id
-        name
-        objects {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      activity {
-        id
-        name
-        tags {
+        activities {
           nextToken
         }
         createdAt
@@ -263,6 +192,7 @@ export const createUsers = /* GraphQL */ `
         items {
           id
           userID
+          status
           identityID
           name
           image
@@ -277,6 +207,7 @@ export const createUsers = /* GraphQL */ `
           activity
           tags
           description
+          prefer
           createdAt
           updatedAt
           owner
@@ -317,6 +248,7 @@ export const updateUsers = /* GraphQL */ `
         items {
           id
           userID
+          status
           identityID
           name
           image
@@ -331,6 +263,7 @@ export const updateUsers = /* GraphQL */ `
           activity
           tags
           description
+          prefer
           createdAt
           updatedAt
           owner
@@ -371,6 +304,7 @@ export const deleteUsers = /* GraphQL */ `
         items {
           id
           userID
+          status
           identityID
           name
           image
@@ -385,6 +319,7 @@ export const deleteUsers = /* GraphQL */ `
           activity
           tags
           description
+          prefer
           createdAt
           updatedAt
           owner
@@ -422,6 +357,7 @@ export const createBusiness = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      status
       identityID
       name
       image
@@ -452,6 +388,7 @@ export const createBusiness = /* GraphQL */ `
         nextToken
       }
       description
+      prefer
       createdAt
       updatedAt
       owner
@@ -483,6 +420,7 @@ export const updateBusiness = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      status
       identityID
       name
       image
@@ -513,6 +451,7 @@ export const updateBusiness = /* GraphQL */ `
         nextToken
       }
       description
+      prefer
       createdAt
       updatedAt
       owner
@@ -544,6 +483,7 @@ export const deleteBusiness = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      status
       identityID
       name
       image
@@ -574,6 +514,7 @@ export const deleteBusiness = /* GraphQL */ `
         nextToken
       }
       description
+      prefer
       createdAt
       updatedAt
       owner
@@ -602,6 +543,7 @@ export const createFavorites = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        status
         identityID
         name
         image
@@ -623,6 +565,7 @@ export const createFavorites = /* GraphQL */ `
           nextToken
         }
         description
+        prefer
         createdAt
         updatedAt
         owner
@@ -674,6 +617,7 @@ export const updateFavorites = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        status
         identityID
         name
         image
@@ -695,6 +639,7 @@ export const updateFavorites = /* GraphQL */ `
           nextToken
         }
         description
+        prefer
         createdAt
         updatedAt
         owner
@@ -746,6 +691,7 @@ export const deleteFavorites = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        status
         identityID
         name
         image
@@ -767,6 +713,7 @@ export const deleteFavorites = /* GraphQL */ `
           nextToken
         }
         description
+        prefer
         createdAt
         updatedAt
         owner
@@ -805,11 +752,19 @@ export const createComplaints = /* GraphQL */ `
       id
       userID
       businessID
-      description
       status
+      reasonID
+      reason {
+        id
+        name
+        createdAt
+        updatedAt
+        owner
+      }
+      description
+      owner
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -822,25 +777,58 @@ export const updateComplaints = /* GraphQL */ `
       id
       userID
       businessID
-      description
       status
+      reasonID
+      reason {
+        id
+        name
+        createdAt
+        updatedAt
+        owner
+      }
+      description
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createReasonComplaints = /* GraphQL */ `
+  mutation CreateReasonComplaints(
+    $input: CreateReasonComplaintsInput!
+    $condition: ModelReasonComplaintsConditionInput
+  ) {
+    createReasonComplaints(input: $input, condition: $condition) {
+      id
+      name
       createdAt
       updatedAt
       owner
     }
   }
 `;
-export const deleteComplaints = /* GraphQL */ `
-  mutation DeleteComplaints(
-    $input: DeleteComplaintsInput!
-    $condition: ModelComplaintsConditionInput
+export const updateReasonComplaints = /* GraphQL */ `
+  mutation UpdateReasonComplaints(
+    $input: UpdateReasonComplaintsInput!
+    $condition: ModelReasonComplaintsConditionInput
   ) {
-    deleteComplaints(input: $input, condition: $condition) {
+    updateReasonComplaints(input: $input, condition: $condition) {
       id
-      userID
-      businessID
-      description
-      status
+      name
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteReasonComplaints = /* GraphQL */ `
+  mutation DeleteReasonComplaints(
+    $input: DeleteReasonComplaintsInput!
+    $condition: ModelReasonComplaintsConditionInput
+  ) {
+    deleteReasonComplaints(input: $input, condition: $condition) {
+      id
+      name
       createdAt
       updatedAt
       owner
