@@ -1,63 +1,72 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreateTags = /* GraphQL */ `
-  subscription OnCreateTags($filter: ModelSubscriptionTagsFilterInput) {
-    onCreateTags(filter: $filter) {
+export const onCreateArea = /* GraphQL */ `
+  subscription OnCreateArea($filter: ModelSubscriptionAreaFilterInput) {
+    onCreateArea(filter: $filter) {
       id
       name
-      objects {
+      activities {
         items {
           id
-          tagsId
-          activityId
+          name
+          areaID
           createdAt
           updatedAt
+          __typename
         }
         nextToken
+        __typename
       }
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
-export const onUpdateTags = /* GraphQL */ `
-  subscription OnUpdateTags($filter: ModelSubscriptionTagsFilterInput) {
-    onUpdateTags(filter: $filter) {
+export const onUpdateArea = /* GraphQL */ `
+  subscription OnUpdateArea($filter: ModelSubscriptionAreaFilterInput) {
+    onUpdateArea(filter: $filter) {
       id
       name
-      objects {
+      activities {
         items {
           id
-          tagsId
-          activityId
+          name
+          areaID
           createdAt
           updatedAt
+          __typename
         }
         nextToken
+        __typename
       }
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
-export const onDeleteTags = /* GraphQL */ `
-  subscription OnDeleteTags($filter: ModelSubscriptionTagsFilterInput) {
-    onDeleteTags(filter: $filter) {
+export const onDeleteArea = /* GraphQL */ `
+  subscription OnDeleteArea($filter: ModelSubscriptionAreaFilterInput) {
+    onDeleteArea(filter: $filter) {
       id
       name
-      objects {
+      activities {
         items {
           id
-          tagsId
-          activityId
+          name
+          areaID
           createdAt
           updatedAt
+          __typename
         }
         nextToken
+        __typename
       }
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -66,18 +75,21 @@ export const onCreateActivity = /* GraphQL */ `
     onCreateActivity(filter: $filter) {
       id
       name
-      tags {
-        items {
-          id
-          tagsId
-          activityId
-          createdAt
-          updatedAt
+      areaID
+      area {
+        id
+        name
+        activities {
+          nextToken
+          __typename
         }
-        nextToken
+        createdAt
+        updatedAt
+        __typename
       }
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -86,18 +98,21 @@ export const onUpdateActivity = /* GraphQL */ `
     onUpdateActivity(filter: $filter) {
       id
       name
-      tags {
-        items {
-          id
-          tagsId
-          activityId
-          createdAt
-          updatedAt
+      areaID
+      area {
+        id
+        name
+        activities {
+          nextToken
+          __typename
         }
-        nextToken
+        createdAt
+        updatedAt
+        __typename
       }
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -106,111 +121,21 @@ export const onDeleteActivity = /* GraphQL */ `
     onDeleteActivity(filter: $filter) {
       id
       name
-      tags {
-        items {
-          id
-          tagsId
-          activityId
-          createdAt
-          updatedAt
+      areaID
+      area {
+        id
+        name
+        activities {
+          nextToken
+          __typename
         }
-        nextToken
+        createdAt
+        updatedAt
+        __typename
       }
       createdAt
       updatedAt
-    }
-  }
-`;
-export const onCreateActivityTags = /* GraphQL */ `
-  subscription OnCreateActivityTags(
-    $filter: ModelSubscriptionActivityTagsFilterInput
-  ) {
-    onCreateActivityTags(filter: $filter) {
-      id
-      tagsId
-      activityId
-      tags {
-        id
-        name
-        objects {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      activity {
-        id
-        name
-        tags {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateActivityTags = /* GraphQL */ `
-  subscription OnUpdateActivityTags(
-    $filter: ModelSubscriptionActivityTagsFilterInput
-  ) {
-    onUpdateActivityTags(filter: $filter) {
-      id
-      tagsId
-      activityId
-      tags {
-        id
-        name
-        objects {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      activity {
-        id
-        name
-        tags {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteActivityTags = /* GraphQL */ `
-  subscription OnDeleteActivityTags(
-    $filter: ModelSubscriptionActivityTagsFilterInput
-  ) {
-    onDeleteActivityTags(filter: $filter) {
-      id
-      tagsId
-      activityId
-      tags {
-        id
-        name
-        objects {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      activity {
-        id
-        name
-        tags {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
+      __typename
     }
   }
 `;
@@ -235,13 +160,16 @@ export const onCreateUsers = /* GraphQL */ `
           owner
           createdAt
           updatedAt
+          __typename
         }
         nextToken
+        __typename
       }
       business {
         items {
           id
           userID
+          status
           identityID
           name
           image
@@ -256,15 +184,19 @@ export const onCreateUsers = /* GraphQL */ `
           activity
           tags
           description
+          prefer
           createdAt
           updatedAt
           owner
+          __typename
         }
         nextToken
+        __typename
       }
       owner
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -289,13 +221,16 @@ export const onUpdateUsers = /* GraphQL */ `
           owner
           createdAt
           updatedAt
+          __typename
         }
         nextToken
+        __typename
       }
       business {
         items {
           id
           userID
+          status
           identityID
           name
           image
@@ -310,15 +245,19 @@ export const onUpdateUsers = /* GraphQL */ `
           activity
           tags
           description
+          prefer
           createdAt
           updatedAt
           owner
+          __typename
         }
         nextToken
+        __typename
       }
       owner
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -343,13 +282,16 @@ export const onDeleteUsers = /* GraphQL */ `
           owner
           createdAt
           updatedAt
+          __typename
         }
         nextToken
+        __typename
       }
       business {
         items {
           id
           userID
+          status
           identityID
           name
           image
@@ -364,15 +306,19 @@ export const onDeleteUsers = /* GraphQL */ `
           activity
           tags
           description
+          prefer
           createdAt
           updatedAt
           owner
+          __typename
         }
         nextToken
+        __typename
       }
       owner
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -393,14 +339,18 @@ export const onCreateBusiness = /* GraphQL */ `
         identityID
         favorites {
           nextToken
+          __typename
         }
         business {
           nextToken
+          __typename
         }
         owner
         createdAt
         updatedAt
+        __typename
       }
+      status
       identityID
       name
       image
@@ -415,6 +365,7 @@ export const onCreateBusiness = /* GraphQL */ `
       coordinates {
         lat
         lon
+        __typename
       }
       activity
       tags
@@ -427,13 +378,17 @@ export const onCreateBusiness = /* GraphQL */ `
           owner
           createdAt
           updatedAt
+          __typename
         }
         nextToken
+        __typename
       }
       description
+      prefer
       createdAt
       updatedAt
       owner
+      __typename
     }
   }
 `;
@@ -454,14 +409,18 @@ export const onUpdateBusiness = /* GraphQL */ `
         identityID
         favorites {
           nextToken
+          __typename
         }
         business {
           nextToken
+          __typename
         }
         owner
         createdAt
         updatedAt
+        __typename
       }
+      status
       identityID
       name
       image
@@ -476,6 +435,7 @@ export const onUpdateBusiness = /* GraphQL */ `
       coordinates {
         lat
         lon
+        __typename
       }
       activity
       tags
@@ -488,13 +448,17 @@ export const onUpdateBusiness = /* GraphQL */ `
           owner
           createdAt
           updatedAt
+          __typename
         }
         nextToken
+        __typename
       }
       description
+      prefer
       createdAt
       updatedAt
       owner
+      __typename
     }
   }
 `;
@@ -515,14 +479,18 @@ export const onDeleteBusiness = /* GraphQL */ `
         identityID
         favorites {
           nextToken
+          __typename
         }
         business {
           nextToken
+          __typename
         }
         owner
         createdAt
         updatedAt
+        __typename
       }
+      status
       identityID
       name
       image
@@ -537,6 +505,7 @@ export const onDeleteBusiness = /* GraphQL */ `
       coordinates {
         lat
         lon
+        __typename
       }
       activity
       tags
@@ -549,13 +518,17 @@ export const onDeleteBusiness = /* GraphQL */ `
           owner
           createdAt
           updatedAt
+          __typename
         }
         nextToken
+        __typename
       }
       description
+      prefer
       createdAt
       updatedAt
       owner
+      __typename
     }
   }
 `;
@@ -580,7 +553,9 @@ export const onCreateFavorites = /* GraphQL */ `
           owner
           createdAt
           updatedAt
+          __typename
         }
+        status
         identityID
         name
         image
@@ -595,16 +570,20 @@ export const onCreateFavorites = /* GraphQL */ `
         coordinates {
           lat
           lon
+          __typename
         }
         activity
         tags
         favorites {
           nextToken
+          __typename
         }
         description
+        prefer
         createdAt
         updatedAt
         owner
+        __typename
       }
       userID
       user {
@@ -616,18 +595,22 @@ export const onCreateFavorites = /* GraphQL */ `
         identityID
         favorites {
           nextToken
+          __typename
         }
         business {
           nextToken
+          __typename
         }
         owner
         createdAt
         updatedAt
+        __typename
       }
       position
       owner
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -652,7 +635,9 @@ export const onUpdateFavorites = /* GraphQL */ `
           owner
           createdAt
           updatedAt
+          __typename
         }
+        status
         identityID
         name
         image
@@ -667,16 +652,20 @@ export const onUpdateFavorites = /* GraphQL */ `
         coordinates {
           lat
           lon
+          __typename
         }
         activity
         tags
         favorites {
           nextToken
+          __typename
         }
         description
+        prefer
         createdAt
         updatedAt
         owner
+        __typename
       }
       userID
       user {
@@ -688,18 +677,22 @@ export const onUpdateFavorites = /* GraphQL */ `
         identityID
         favorites {
           nextToken
+          __typename
         }
         business {
           nextToken
+          __typename
         }
         owner
         createdAt
         updatedAt
+        __typename
       }
       position
       owner
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -724,7 +717,9 @@ export const onDeleteFavorites = /* GraphQL */ `
           owner
           createdAt
           updatedAt
+          __typename
         }
+        status
         identityID
         name
         image
@@ -739,16 +734,20 @@ export const onDeleteFavorites = /* GraphQL */ `
         coordinates {
           lat
           lon
+          __typename
         }
         activity
         tags
         favorites {
           nextToken
+          __typename
         }
         description
+        prefer
         createdAt
         updatedAt
         owner
+        __typename
       }
       userID
       user {
@@ -760,18 +759,22 @@ export const onDeleteFavorites = /* GraphQL */ `
         identityID
         favorites {
           nextToken
+          __typename
         }
         business {
           nextToken
+          __typename
         }
         owner
         createdAt
         updatedAt
+        __typename
       }
       position
       owner
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -784,11 +787,21 @@ export const onCreateComplaints = /* GraphQL */ `
       id
       userID
       businessID
-      description
       status
+      reasonID
+      reason {
+        id
+        name
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      description
+      owner
       createdAt
       updatedAt
-      owner
+      __typename
     }
   }
 `;
@@ -801,11 +814,21 @@ export const onUpdateComplaints = /* GraphQL */ `
       id
       userID
       businessID
-      description
       status
+      reasonID
+      reason {
+        id
+        name
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      description
+      owner
       createdAt
       updatedAt
-      owner
+      __typename
     }
   }
 `;
@@ -818,11 +841,66 @@ export const onDeleteComplaints = /* GraphQL */ `
       id
       userID
       businessID
-      description
       status
+      reasonID
+      reason {
+        id
+        name
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      description
+      owner
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateReasonComplaints = /* GraphQL */ `
+  subscription OnCreateReasonComplaints(
+    $filter: ModelSubscriptionReasonComplaintsFilterInput
+    $owner: String
+  ) {
+    onCreateReasonComplaints(filter: $filter, owner: $owner) {
+      id
+      name
       createdAt
       updatedAt
       owner
+      __typename
+    }
+  }
+`;
+export const onUpdateReasonComplaints = /* GraphQL */ `
+  subscription OnUpdateReasonComplaints(
+    $filter: ModelSubscriptionReasonComplaintsFilterInput
+    $owner: String
+  ) {
+    onUpdateReasonComplaints(filter: $filter, owner: $owner) {
+      id
+      name
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const onDeleteReasonComplaints = /* GraphQL */ `
+  subscription OnDeleteReasonComplaints(
+    $filter: ModelSubscriptionReasonComplaintsFilterInput
+    $owner: String
+  ) {
+    onDeleteReasonComplaints(filter: $filter, owner: $owner) {
+      id
+      name
+      createdAt
+      updatedAt
+      owner
+      __typename
     }
   }
 `;
@@ -839,6 +917,7 @@ export const onCreateLogs = /* GraphQL */ `
       name
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -855,6 +934,7 @@ export const onUpdateLogs = /* GraphQL */ `
       name
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -871,6 +951,7 @@ export const onDeleteLogs = /* GraphQL */ `
       name
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -882,9 +963,11 @@ export const onCreateTesting = /* GraphQL */ `
       coordinates {
         lat
         lon
+        __typename
       }
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -896,9 +979,11 @@ export const onUpdateTesting = /* GraphQL */ `
       coordinates {
         lat
         lon
+        __typename
       }
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -910,9 +995,11 @@ export const onDeleteTesting = /* GraphQL */ `
       coordinates {
         lat
         lon
+        __typename
       }
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
