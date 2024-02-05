@@ -1,3 +1,4 @@
+import { MaterialIcons } from "@expo/vector-icons";
 import { atom } from "recoil";
 
 export const authSession = atom({
@@ -20,6 +21,14 @@ export const areaSelect = atom({
   key: "areaSelectValue",
   default: {},
 });
+export const optionBussines = atom({
+  key: "optionBussinesValue",
+  default: {
+    name: "Servicio/s",
+    icon: <MaterialIcons name="home-repair-service" size={32} color="black" />,
+    id: 0,
+  },
+});
 export const mapBusiness = atom({
   key: "mapBusinessValue",
   default: {},
@@ -34,7 +43,7 @@ export const emptyLocation = atom({
 });
 export const directionBusiness = atom({
   key: "directionBusinessValue",
-  default: '',
+  default: "",
 });
 export const directionBusinessOn = atom({
   key: "directionBusinessOnValue",
@@ -50,7 +59,7 @@ export const blobBusiness = atom({
 });
 export const base64Business = atom({
   key: "base64BusinessValue",
-  default: '',
+  default: "",
 });
 export const userAuthenticated = atom({
   key: "userAuthenticatedValue",
@@ -137,7 +146,7 @@ export const activeSearch = atom({
 
 export const textInputSearch = atom({
   key: "textInputSearchValue",
-  default: '',
+  default: "",
 });
 
 export const activeModalScreen = atom({

@@ -10,7 +10,7 @@ import {
 import styles from "@/utils/styles/StepFive.module.css";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Feather } from "@expo/vector-icons";
+import { Feather, MaterialIcons } from "@expo/vector-icons";
 import CustomInput from "@/components/CustomInput";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Auth, API, Storage } from "aws-amplify";
@@ -29,6 +29,7 @@ import {
   emptyLocation,
   imageBusiness,
   mapBusiness,
+  optionBussines,
   selectLocation,
   userAuthenticated,
 } from "@/atoms";
@@ -54,7 +55,8 @@ const StepFive = ({ navigation, route }) => {
   const [locationDirection, setLocationDirection] =
     useRecoilState(directionBusiness);
   const [active, setActive] = useRecoilState(activeModalScreen);
-
+  const [selectOption, setSelectOption] = useRecoilState(optionBussines);
+  console.log(selectOption);
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState("");
 
@@ -68,12 +70,20 @@ const StepFive = ({ navigation, route }) => {
     setLocationDirection("");
     setLocationEmpty(true);
     setLocation(false);
+    setSelectOption({
+      name: "Servicio/s",
+      icon: (
+        <MaterialIcons name="home-repair-service" size={32} color="black" />
+      ),
+      id: 0,
+    });
   };
   const Finished = () => {
     let params = {
       image: image,
-      area: area.name,
-      activity: activity.name,
+      area: area.area,
+      activity: area.activity,
+      option: selectOption.name,
       locationDirection: locationDirection,
       name: dataB.business.name,
       email: dataB.business.email,
@@ -86,10 +96,72 @@ const StepFive = ({ navigation, route }) => {
   };
 
   const StepRegister = async (data) => {
+    const today = new Date().toISOString();
     setLoading(true);
     const { identityId } = await Auth.currentUserCredentials();
     console.log(dataB);
     const { description, whatsapp, instagram, facebook } = data;
+
+    const listTags = [
+      `${JSON.stringify({
+        priority: 1,
+        value: dataB.business.name,
+        date: today,
+      })}`,
+      `${JSON.stringify({
+        priority: 2,
+        value: area.activity,
+        date: today,
+      })}`,
+      `${JSON.stringify({
+        priority: 2,
+        value: area.area,
+        date: today,
+      })}`,
+      `${JSON.stringify({
+        priority: 2,
+        value: selectOption.name,
+        date: today,
+      })}`,
+      `${JSON.stringify({
+        priority: 3,
+        value: description,
+        date: today,
+      })}`,
+      `${JSON.stringify({
+        priority: 1,
+        value: JSON.stringify(direction[0]),
+        date: today,
+      })}`,
+    ];
+
+    if (instagram) {
+      listTags.push(
+        JSON.stringify({
+          priority: 1,
+          value: instagram,
+          date: today,
+        })
+      );
+    }
+    if (facebook) {
+      listTags.push(
+        JSON.stringify({
+          priority: 1,
+          value: facebook,
+          date: today,
+        })
+      );
+    }
+    if (whatsapp) {
+      listTags.push(
+        JSON.stringify({
+          priority: 2,
+          value: whatsapp,
+          date: today,
+        })
+      );
+    }
     try {
       const business = await API.graphql({
         query: mutations.createBusiness,
@@ -108,14 +180,8 @@ const StepFive = ({ navigation, route }) => {
               lat: map.latitude,
               lon: map.longitude,
             },
-            activity: activity.name,
-            tags: [
-              `${dataB.business.name}`,
-              `${activity.name}`,
-              `${area.name}`,
-              `${description}`,
-              `${JSON.stringify(direction[0])}`,
-            ],
+            activity: area.activity,
+            tags: listTags,
           },
         },
       });

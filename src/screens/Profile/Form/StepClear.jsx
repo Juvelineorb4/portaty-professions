@@ -1,7 +1,8 @@
 import { Text, View, Pressable, Image } from "react-native";
 import React from "react";
 import { useRecoilState } from "recoil";
-import { activeModalScreen, activitySelect, areaSelect, base64Business, blobBusiness, directionBusiness, directionBusinessOn, emptyLocation, imageBusiness, mapBusiness, selectLocation } from "@/atoms";
+import { activeModalScreen, activitySelect, areaSelect, base64Business, blobBusiness, directionBusiness, directionBusinessOn, emptyLocation, imageBusiness, mapBusiness, optionBussines, selectLocation } from "@/atoms";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const StepClear = ({ navig }) => {
     const [map, setMap] = useRecoilState(mapBusiness);
@@ -16,6 +17,7 @@ const StepClear = ({ navig }) => {
     const [locationDirection, setLocationDirection] =
       useRecoilState(directionBusiness);
     const [active, setActive] = useRecoilState(activeModalScreen);
+    const [selectOption, setSelectOption] = useRecoilState(optionBussines);
     const BlankInputs = () => {
         setDirection({})
         setMap({});
@@ -27,6 +29,13 @@ const StepClear = ({ navig }) => {
         setLocationDirection("");
         setLocationEmpty(true);
         setLocation(false);
+        setSelectOption({
+          name: "Servicio/s",
+          icon: (
+            <MaterialIcons name="home-repair-service" size={32} color="black" />
+          ),
+          id: 0,
+        });
       };
   return (
     <View>
