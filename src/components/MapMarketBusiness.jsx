@@ -61,8 +61,8 @@ const MapMarketBusiness = ({
   const [region, setRegion] = useState({
     latitude: initialLocation.latitude,
     longitude: initialLocation.longitude,
-    latitudeDelta: 0.5,
-    longitudeDelta: 0.5,
+    latitudeDelta: 0.01,
+    longitudeDelta: 0.01,
   });
   const [selectionLocation, setSelectionLocation] =
     useRecoilState(selectLocation);

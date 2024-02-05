@@ -6,6 +6,7 @@ import {
   Pressable,
   Modal,
   TextInput,
+  TouchableOpacity
 } from "react-native";
 import styles from "@/utils/styles/StepTwo.module.css";
 import React, { useEffect, useRef, useState } from "react";
@@ -14,8 +15,8 @@ import CustomInput from "@/components/CustomInput";
 import { es } from "@/utils/constants/lenguage";
 import * as Cellular from "expo-cellular";
 import LottieView from "lottie-react-native";
-import { Feather } from "@expo/vector-icons";
-import { activeModalScreen, areaSelect, userAuthenticated } from "@/atoms";
+import { Feather, MaterialIcons, Entypo } from "@expo/vector-icons";
+import { activeModalScreen, areaSelect, optionBussines, userAuthenticated } from "@/atoms";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { API } from "aws-amplify";
 import * as customProfile from "@/graphql/CustomQueries/Profile";
@@ -30,8 +31,35 @@ const StepTwo = ({ navigation, route }) => {
   const [areasList, setAreasList] = useState([]);
   const { business } = route.params;
   const [active, setActive] = useRecoilState(activeModalScreen);
+  const [selectOption, setSelectOption] = useRecoilState(optionBussines);
   const area = useRecoilValue(areaSelect);
-  console.log(business);
+  console.log(selectOption);
+
+  const listOptions = [
+    {
+      name: "Servicio/s",
+      icon: (
+        <MaterialIcons name="home-repair-service" size={32} color="black" />
+      ),
+      id: 0
+    },
+    {
+      name: "Producto/s",
+      icon: <Entypo name="shopping-basket" size={30} color="black" />,
+      id: 1
+    },
+    {
+      name: "Ambos",
+      icon: (
+        <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 4}}>
+          <Entypo name="shopping-basket" size={23} color="black" />
+          <Text style={{fontFamily: 'bold'}}>{" "}/{" "}</Text>
+          <MaterialIcons name="home-repair-service" size={25} color="black" />
+        </View>
+      ),
+      id: 2
+    },
+  ];
 
   const MultipleData = async () => {
     const activities = await API.graphql({
@@ -41,6 +69,9 @@ const StepTwo = ({ navigation, route }) => {
     console.log(activities.data.listAreas.items);
   };
 
+  const handleOption = (item) => {
+    setSelectOption(item)
+  } 
   useEffect(() => {
     MultipleData();
   }, []);
@@ -76,8 +107,8 @@ const StepTwo = ({ navigation, route }) => {
                       autoPlay
                       ref={animation}
                       style={{
-                        width: 150,
-                        height: 150,
+                        width: 120,
+                        height: 120,
                         backgroundColor: "#fff",
                         justifyContent: "center",
                         alignSelf: "center",
@@ -88,6 +119,50 @@ const StepTwo = ({ navigation, route }) => {
                 </View>
               </View>
               <View style={[styles.modalMid]}>
+                <View style={{
+                  marginBottom: 30,
+                  marginTop: -15
+                }}>
+                  <Text
+                    style={{
+                      fontFamily: "medium",
+                      fontSize: 20,
+                      marginBottom: 5,
+                    }}
+                  >
+                    ¿Qué ofrece tu negocio?
+                  </Text>
+                  <View
+                    style={{
+                      flex: 1,
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    {listOptions.map((item, index) => (
+                      <TouchableOpacity
+                        style={{
+                          borderWidth: 1,
+                          borderColor: "#1f1f1f",
+                          width: 100,
+                          height: 100,
+                          borderRadius: 8,
+                          justifyContent: "center",
+                          alignItems: "center",
+                          backgroundColor: selectOption.id === index ? '#ffb703' : '#ffffff'
+                        }}
+                        key={index}
+                        onPress={() => handleOption(item)}
+                      >
+                        <Text style={{
+                          fontFamily: 'bold',
+                          marginBottom: 10
+                        }}>{item.name}</Text>
+                        {item.icon}
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </View>
                 <View>
                   <View
                     style={{
@@ -118,7 +193,7 @@ const StepTwo = ({ navigation, route }) => {
                       flexDirection: "row",
                       columnGap: 10,
                       justifyContent: "space-between",
-                      marginVertical: 10
+                      marginVertical: 10,
                     }}
                   >
                     <Text

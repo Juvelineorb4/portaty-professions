@@ -33,15 +33,14 @@ const CustomArea = ({ data }) => {
         <TouchableOpacity
           style={[
             {
-              width: 110,
-              padding: 20,
+              width: 100,
+              padding: 15,
               borderRadius: 7,
               borderColor: '#1f1f1f',
               borderWidth: 1,
               justifyContent: 'center',
               alignItems: 'center',
               alignSelf: 'flex-end',
-              marginBottom: 30,
               marginTop: 10
             },
             global.bgYellow,
