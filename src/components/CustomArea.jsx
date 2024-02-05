@@ -21,6 +21,7 @@ const CustomArea = ({ data }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const { control } = useForm();
   const area = useRecoilValue(areaSelect);
+  console.log(area);
   useEffect(() => {}, []);
 
   return (
@@ -29,22 +30,32 @@ const CustomArea = ({ data }) => {
       showsVerticalScrollIndicator={false}
     >
       <View>
-        <Text style={styles.labelInputTag}>Area (*)</Text>
         <TouchableOpacity
-          style={[styles.inputContainerTag]}
+          style={[
+            {
+              width: 110,
+              padding: 20,
+              borderRadius: 7,
+              borderColor: '#1f1f1f',
+              borderWidth: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              alignSelf: 'flex-end',
+              marginBottom: 30,
+              marginTop: 10
+            },
+            global.bgYellow,
+          ]}
           onPress={() => setModalVisible(!modalVisible)}
         >
-          <View style={{ flex: 1, flexDirection: "row" }}>
-            {area.name ? (
-              <View style={styles.containerTag}>
-                <Text style={styles.textTag}>{area.name}</Text>
-              </View>
-            ) : (
-              <Text style={styles.textInputTag}>
-                Selecciona tu area laboral
-              </Text>
-            )}
-          </View>
+          <Text
+            style={{
+              fontFamily: "bold",
+              fontSize: 16,
+            }}
+          >
+            Buscar
+          </Text>
 
           <Modal
             animationType="none"
@@ -71,19 +82,17 @@ const CustomArea = ({ data }) => {
                       source={require("@/utils/images/arrow_back.png")}
                     />
                   </Pressable>
-                  <Text style={styles.titleTag}>
-                    Elige un area laboral
-                  </Text>
+                  <Text style={styles.titleTag}>Elige un area laboral</Text>
                 </View>
                 <View style={{ flex: 1 }}>
                   <View style={[{ flex: 1 }]}>
                     <FlatList
                       data={data}
                       renderItem={({ item }) => <Area item={item} />}
-                      numColumns={3}
+                      numColumns={1}
                       keyExtractor={(item, index) => index}
                       showsVerticalScrollIndicator={false}
-                      columnWrapperStyle={{ justifyContent: "space-between" }}
+                      // columnWrapperStyle={{ justifyContent: "space-between" }}
                     />
                   </View>
                   <TouchableOpacity
@@ -96,6 +105,7 @@ const CustomArea = ({ data }) => {
                         borderRadius: 8,
                         borderColor: "#1f1f1f",
                         borderWidth: 1,
+                        marginTop: 15,
                       },
                       global.bgYellow,
                     ]}

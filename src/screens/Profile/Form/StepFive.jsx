@@ -114,7 +114,7 @@ const StepFive = ({ navigation, route }) => {
               `${activity.name}`,
               `${area.name}`,
               `${description}`,
-              `${direction[0]}`,
+              `${JSON.stringify(direction[0])}`,
             ],
           },
         },
@@ -137,7 +137,7 @@ const StepFive = ({ navigation, route }) => {
       const result = await API.post(apiName, path, myInit);
       console.log(result);
       setLoading(false);
-      Finished();
+      // Finished();
     } catch (error) {
       setError(`Error al cargar negocio`);
       console.log(`Error al cargar negocio:  ${error}`);

@@ -22,6 +22,25 @@ export const listActivities = /* GraphQL */ `
     }
   }
 `;
+export const listAreas = /* GraphQL */ `
+  query ListAreas(
+    $filter: ModelAreaFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAreas(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        name
+        activities {
+          items {
+            name
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const userByEmail = /* GraphQL */ `
   query UserByEmail(
     $email: String!
