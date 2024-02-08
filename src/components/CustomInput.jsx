@@ -18,6 +18,7 @@ const CustomInput = ({
   lines = 1,
   errorPost = false,
   max = 100,
+  editable=true
 }) => {
   const [description, setDescription] = useState('')
   const [securityChange, setSecurityChange] = useState(true);
@@ -64,6 +65,7 @@ const CustomInput = ({
                 multiline={area ? true : false}
                 numberOfLines={lines}
                 maxLength={max}
+                editable={editable}
               />
               {max === 500 && (
                 <Text style={{ position: "absolute", bottom: 0, right: 0, fontFamily: 'regular', fontSize: 12 }}>{description.length} / 500</Text>
