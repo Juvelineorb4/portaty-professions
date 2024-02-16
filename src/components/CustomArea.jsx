@@ -15,6 +15,7 @@ import { es } from "@/utils/constants/lenguage";
 import { useRecoilValue } from "recoil";
 import { areaSelect } from "@/atoms";
 import Area from "./Area";
+import { FlashList } from "@shopify/flash-list";
 
 const CustomArea = ({ data }) => {
   const global = require("@/utils/styles/global.js");
@@ -85,12 +86,13 @@ const CustomArea = ({ data }) => {
                 </View>
                 <View style={{ flex: 1 }}>
                   <View style={[{ flex: 1 }]}>
-                    <FlatList
+                    <FlashList
                       data={data}
                       renderItem={({ item }) => <Area item={item} />}
                       numColumns={1}
                       keyExtractor={(item, index) => index}
-                      showsVerticalScrollIndicator={false}
+                      estimatedItemSize={50}
+                      // showsVerticalScrollIndicator={false}
                       // columnWrapperStyle={{ justifyContent: "space-between" }}
                     />
                   </View>
