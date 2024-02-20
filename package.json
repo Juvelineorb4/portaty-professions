@@ -22,6 +22,7 @@
     "@react-navigation/native-stack": "^6.9.10",
     "@react-navigation/stack": "^6.3.13",
     "@rneui/themed": "^4.0.0-rc.8",
+    "@shopify/flash-list": "1.4.0",
     "@stripe/stripe-react-native": "0.23.3",
     "amazon-cognito-identity-js": "^6.3.6",
     "aws-amplify": "^5.3.11",
@@ -69,13 +70,13 @@
     "react-native-safe-area-context": "4.5.0",
     "react-native-screens": "~3.20.0",
     "react-native-svg": "13.4.0",
+    "react-native-svg-charts": "^5.4.0",
     "react-native-swiper": "^1.6.0",
     "react-native-view-shot": "3.5.0",
     "react-native-web": "~0.18.9",
     "react-native-webview": "11.26.0",
     "recoil": "^0.7.6",
-    "rn-fetch-blob": "^0.12.0",
-    "@shopify/flash-list": "1.4.0"
+    "rn-fetch-blob": "^0.12.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

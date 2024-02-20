@@ -15,11 +15,19 @@ const ItemProfile = ({ data, identityID, styled }) => {
       <TouchableOpacity
         style={styled.column}
         onPress={() =>
-          navigation.navigate("Page", {
-            data: {
-              item: data,
-              image: JSON.parse(data.images[0]).url,
+          navigation.navigate("PageNavigator", {
+            screen: "Page",
+            params: {
+              data: {
+                item: data,
+                image: JSON.parse(data.images[0]).url,
+              },
             },
+            // {
+            // data: {
+            //   item: data,
+            //   image: JSON.parse(data.images[0]).url,
+            // },
           })
         }
       >
@@ -29,18 +37,17 @@ const ItemProfile = ({ data, identityID, styled }) => {
             marginLeft: 10,
           }}
         >
-            <Image
-              style={{
-                width: 130,
-                height: 130,
-                resizeMode: "cover",
-                borderRadius: 2,
-                borderColor: '#1f1f1f',
-                borderWidth: 0.7
-              }}
-              source={{ uri: data?.thumbnail }}
-            />
-         
+          <Image
+            style={{
+              width: 130,
+              height: 130,
+              resizeMode: "cover",
+              borderRadius: 2,
+              borderColor: "#1f1f1f",
+              borderWidth: 0.7,
+            }}
+            source={{ uri: data?.thumbnail }}
+          />
         </View>
         <View>
           <View
@@ -52,9 +59,7 @@ const ItemProfile = ({ data, identityID, styled }) => {
             }}
           >
             <View>
-              <Text style={{ fontSize: 13, fontFamily: "medium" }}>
-                Nombre
-              </Text>
+              <Text style={{ fontSize: 13, fontFamily: "medium" }}>Nombre</Text>
               <Text style={{ fontSize: 12, fontFamily: "regular" }}>
                 {data.name}
               </Text>
@@ -63,7 +68,13 @@ const ItemProfile = ({ data, identityID, styled }) => {
               <Text style={{ fontSize: 13, fontFamily: "medium" }}>
                 Actividad laboral
               </Text>
-              <Text style={{ fontSize: 12, fontFamily: "light", textTransform: 'capitalize' }}>
+              <Text
+                style={{
+                  fontSize: 12,
+                  fontFamily: "light",
+                  textTransform: "capitalize",
+                }}
+              >
                 {data.activity}
               </Text>
             </View>
