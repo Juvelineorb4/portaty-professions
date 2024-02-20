@@ -13,7 +13,6 @@ import { useForm } from "react-hook-form";
 import LottieView from "lottie-react-native";
 import { Feather } from "@expo/vector-icons";
 import MapMarketBusiness from "@/components/MapMarketBusiness";
-import useLocation from "@/hooks/useLocation";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   activeModalScreen,
@@ -21,15 +20,15 @@ import {
   emptyLocation,
   mapBusiness,
   selectLocation,
+  mapUser
 } from "@/atoms";
-import * as Location from "expo-location";
 import StepClear from "./StepClear";
 
 const StepThree = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
   const { control, handleSubmit } = useForm();
   const animation = useRef(null);
-  const { location } = useLocation();
+  const userLocation = useRecoilValue(mapUser)
   const { business } = route.params;
   const map = useRecoilValue(mapBusiness);
   const [selectionLocation, setSelectionLocation] =
@@ -105,10 +104,10 @@ const StepThree = ({ navigation, route }) => {
                 </View>
               </View>
               <View style={[styles.modalMid]}>
-                {location ? (
+                {userLocation ? (
                   <MapMarketBusiness
                     control={control}
-                    initialLocation={location}
+                    initialLocation={userLocation}
                     name={"coordinates"}
                     text={"Abrir Mapa"}
                     title={business?.name}

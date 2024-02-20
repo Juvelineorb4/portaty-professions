@@ -36,8 +36,8 @@ const SearchOut = ({ route }) => {
   const location = useRecoilValue(mapUser);
 
   const getData = async () => {
-    const api = "api-professions-gateway";
-    const path = "/searchBusinessByDistance";
+    const api = "api-opense";
+    const path = "/search/input";
     const params = {
       headers: {}, // OPTIONAL
       queryStringParameters: {
@@ -45,7 +45,7 @@ const SearchOut = ({ route }) => {
           lat: location.latitude,
           lon: location.longitude,
         }),
-        km: 2,
+        km: filterRadio,
         from: 0,
         text: input.trim(),
         limit: number,
@@ -63,8 +63,8 @@ const SearchOut = ({ route }) => {
       }
       return setItems(newRenderItems);
     } catch (error) {
-      console.log('Error: ', error)
-      setNotFound(true)
+      console.log("Error: ", error);
+      setNotFound(true);
     }
   };
   const getFilterData = async () => {
@@ -164,7 +164,7 @@ const SearchOut = ({ route }) => {
                         height: 49,
                         marginTop: 80,
                         borderWidth: 0.7,
-                        borderColor: '#1f1f1f'
+                        borderColor: "#1f1f1f",
                       },
                     ]}
                     onPress={() => {
@@ -247,7 +247,7 @@ const SearchOut = ({ route }) => {
               fontSize: 15,
               textAlign: "center",
               marginBottom: 60,
-              width: 330
+              width: 330,
             },
             global.black,
           ]}
