@@ -9,7 +9,7 @@ import {
   Pressable,
   Modal,
   FlatList,
-  TextInput
+  TextInput,
 } from "react-native";
 import styles from "@/utils/styles/RegisterForm.module.css";
 import React, { useEffect, useState } from "react";
@@ -17,8 +17,7 @@ import { useForm } from "react-hook-form";
 import CustomInput from "@/components/CustomInput";
 import CustomTags from "@/components/CustomTags";
 import * as ImagePicker from "expo-image-picker";
-import { Auth, API, Storage } from "aws-amplify";
-import * as queries from "@/graphql/queries";
+import { Auth, API } from "aws-amplify";
 import * as customProfile from "@/graphql/CustomQueries/Profile";
 import * as mutations from "@/graphql/CustomMutations/Profile";
 import CustomActivities from "@/components/CustomActivities";
@@ -30,10 +29,9 @@ import {
   tagsList,
   updateProfile,
   userAuthenticated,
+  mapUser,
 } from "@/atoms";
 import MapMarketBusiness from "@/components/MapMarketBusiness";
-// hooks
-import useLocation from "@/hooks/useLocation";
 // lengaujhe
 import { es } from "@/utils/constants/lenguage";
 import ModalAlert from "@/components/ModalAlert";
@@ -42,7 +40,7 @@ import * as Cellular from "expo-cellular";
 import SkeletonExample from "@/components/SkeletonForm";
 
 const Form = ({ navigation, route }) => {
-  const { location } = useLocation();
+  const userLocation = useRecoilValue(mapUser);
   const global = require("@/utils/styles/global.js");
   // const { user } = route.params;
   const { control, handleSubmit } = useForm();
@@ -75,9 +73,10 @@ const Form = ({ navigation, route }) => {
     });
   }
 
-  const filteredCountries = countries.filter(item => item?.name?.common.toLowerCase().includes(searchCountry.toLowerCase()));
+  const filteredCountries = countries.filter((item) =>
+    item?.name?.common.toLowerCase().includes(searchCountry.toLowerCase())
+  );
 
-  
   function urlToBlob(url) {
     return new Promise((resolve, reject) => {
       var xhr = new XMLHttpRequest();
@@ -114,8 +113,7 @@ const Form = ({ navigation, route }) => {
     setSelectMapBusiness({});
   };
   const onRegisterBusiness = async (data) => {
-
-    return
+    return;
     setLoading(true);
     const { identityId } = await Auth.currentUserCredentials();
     const { company, email, phone, wsme, coordinates, description } = data;
@@ -328,11 +326,11 @@ const Form = ({ navigation, route }) => {
                     style={{
                       margin: 5,
                       borderWidth: 0.4,
-                      borderColor: '#eee',
+                      borderColor: "#eee",
                       padding: 5,
-                      fontFamily: 'light',
+                      fontFamily: "light",
                       fontSize: 12,
-                      borderRadius: 5
+                      borderRadius: 5,
                     }}
                   />
                   <View style={[{ flex: 1 }]}>
@@ -461,10 +459,10 @@ const Form = ({ navigation, route }) => {
         area={true}
         text={`Descripcion`}
       />
-      {location ? (
+      {userLocation ? (
         <MapMarketBusiness
           control={control}
-          initialLocation={location}
+          initialLocation={userLocation}
           name={"coordinates"}
           text={"Abrir Mapa"}
           placeholder={"Selecciona una Ubicacion"}
@@ -473,7 +471,7 @@ const Form = ({ navigation, route }) => {
           // }}
         />
       ) : (
-        <ActivityIndicator color={`#ffb703`}/>
+        <ActivityIndicator color={`#ffb703`} />
       )}
 
       <TouchableOpacity

@@ -24,7 +24,6 @@ import {
 } from "@/atoms";
 import { useRecoilState, useRecoilValue } from "recoil";
 import * as Location from "expo-location";
-import * as queries from "@/graphql/CustomQueries/Favorites";
 import useLocation from "@/hooks/useLocation";
 import SkeletonSearch from "@/components/SkeletonSearch";
 import SkeletonMoreItems from "@/components/SkeletonMoreItems";
@@ -34,6 +33,7 @@ import MapFilter from "@/components/MapFilter";
 
 const Search = ({ route }) => {
   const global = require("@/utils/styles/global.js");
+  const userLocation = useRecoilValue(mapUser);
   const [moreItems, setMoreItems] = useState(1);
   const [items, setItems] = useState([]);
   const [searchActive, setSearchActive] = useRecoilState(searchStatus);
@@ -43,7 +43,7 @@ const Search = ({ route }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [statusFilter, setStatusFilter] = useState(false);
   const [filterRadio, setFilterRadio] = useRecoilState(kmRadio);
-  const { location } = useLocation();
+  // const { location } = useLocation();
   const [country, setCountry] = useState(null);
   const [countries, setCountries] = useState([]);
   const [visibleCountries, setVisibleCountries] = useState(false);
@@ -62,23 +62,21 @@ const Search = ({ route }) => {
         direccion.region === null ? "" : direccion.region
       }, ${direccion.postalCode === null ? "" : direccion.postalCode} `;
       setSearchAddress(direccionString);
-      setCity(direccion.region)
-      console.log(direccionString);
-      console.log(direcciones);
+      setCity(direccion.region);
     }
   };
 
   const kilometers = [1, 5, 10, 20, 50, 100];
   let number = 26 * moreItems;
   const getData = async () => {
-    const api = "api-professions-gateway";
-    const path = "/searchBusinessByDistance";
+    const api = "api-opense";
+    const path = "/search/default";
     const params = {
       headers: {},
       queryStringParameters: {
         location: JSON.stringify({
-          lat: location?.latitude,
-          lon: location?.longitude,
+          lat: userLocation?.latitude,
+          lon: userLocation?.longitude,
         }),
         km: filterRadio,
         from: 0,
@@ -112,11 +110,9 @@ const Search = ({ route }) => {
 
   async function getCountryCode(array) {
     const countryCode = await Cellular.getIsoCountryCodeAsync();
-    console.log(countryCode.toUpperCase());
     array.map((item, index) => {
       if (item.cca2 === countryCode.toUpperCase()) {
         setCountry(item);
-        console.log(item);
       }
     });
   }
@@ -135,8 +131,8 @@ const Search = ({ route }) => {
         getCountryCode(item);
       });
     // espero que me traiga algo de location
-    if (location) getData();
-  }, [location, moreItems]);
+    if (userLocation) getData();
+  }, [userLocation, moreItems]);
 
   // if (true) return <SkeletonSearch />;
 
@@ -165,7 +161,7 @@ const Search = ({ route }) => {
               style={{ flexDirection: "row", alignItems: "center" }}
               onPress={() => {
                 setModalVisible(!modalVisible);
-                getAddress(location);
+                getAddress(userLocation);
               }}
             >
               <Image
@@ -362,7 +358,7 @@ const Search = ({ route }) => {
                   )}
                 </View>
                 <MapFilter
-                  initialLocation={location}
+                  initialLocation={userLocation}
                   open={visibleMap}
                   close={() => setVisibleMap(!visibleMap)}
                   country={country?.name?.common}
@@ -460,7 +456,7 @@ const Search = ({ route }) => {
                     ]}
                     onPress={() => {
                       setModalVisible(!modalVisible);
-                      if (location) getFilterData();
+                      if (userLocation) getFilterData();
                     }}
                   >
                     <Text

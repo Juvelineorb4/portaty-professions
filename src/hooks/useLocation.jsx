@@ -24,10 +24,10 @@ const useLocation = () => {
             mayShowUserSettingsDialog: true,
           },
           (locationResult) => {
-            console.log(locationResult);
             const { latitude, longitude } = locationResult.coords;
             setLocation({ latitude, longitude });
             setUserLocation({ latitude, longitude });
+            console.log("Se actualizo el location")
           }
         );
       } catch (err) {
