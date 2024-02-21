@@ -23,6 +23,7 @@ import Loading from "@/components/Loading";
 const Navigation = () => {
   const Stack = createNativeStackNavigator();
   const global = require("@/utils/styles/global.js");
+  useLocation()
   const [checkRender, setCheckRender] = useState(true);
   const [userState, setUserState] = useState(false);
   const [isFirsTime, setIsFirsTime] = useState(false);
