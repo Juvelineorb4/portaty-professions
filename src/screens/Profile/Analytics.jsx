@@ -1,5 +1,5 @@
-import { View, ScrollView, Text as RNText, Image } from "react-native";
-import React from "react";
+import { View, ScrollView, Text as RNText, Image, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
 import {
   LineChart,
   Grid,
@@ -170,10 +170,14 @@ const dataResumen = [
 const buttons = [
   {
     id: 1,
-    value: "Favoritos",
+    value: "Favoritos: Nuevos",
   },
   {
     id: 2,
+    value: "Favoritos: Perdidos",
+  },
+  {
+    id: 3,
     value: "Visitas",
   },
 ];
@@ -232,6 +236,8 @@ const Decorator = ({ x, y }) => {
 };
 
 const Analytics = () => {
+  const [type, setType] = useState(1)
+  const [timeGraph, setTimeGraph] = useState(1)
   const maxValue = Math.max(...likes);
   console.log(maxValue);
   return (
@@ -243,7 +249,7 @@ const Analytics = () => {
     >
       <ScrollView horizontal style={{ marginTop: 40, paddingHorizontal: 10 }}>
         {buttons.map((item, index) => (
-          <View
+          <TouchableOpacity
             key={index}
             style={{
               width: 80,
@@ -254,13 +260,14 @@ const Analytics = () => {
               borderRadius: 50,
               justifyContent: "center",
               alignItems: "center",
-              backgroundColor: item.id === 1 ? "#ffb703" : "#ffffff",
+              backgroundColor: item.id === type ? "#ffb703" : "#ffffff",
             }}
+            onPress={() => setType(item.id)}
           >
             <RNText style={{ fontFamily: "bold", fontSize: 12 }}>
               {item.value}
             </RNText>
-          </View>
+          </TouchableOpacity>
         ))}
       </ScrollView>
       <View
@@ -294,15 +301,16 @@ const Analytics = () => {
               justifyContent: "flex-end",
             }}
           >
-            <View
+            <TouchableOpacity
               style={{
                 borderWidth: 1,
                 borderColor: "#1f1f1f",
                 paddingHorizontal: 7,
                 paddingVertical: 3,
                 borderRadius: 5,
-                backgroundColor: '#ffb703'
+                backgroundColor: timeGraph === 1 ? "#ffb703" : "#ffffff",
               }}
+              onPress={() => setTimeGraph(1)}
             >
               <RNText
                 style={{
@@ -312,8 +320,8 @@ const Analytics = () => {
               >
                 7 días
               </RNText>
-            </View>
-            <View
+            </TouchableOpacity>
+            <TouchableOpacity
               style={{
                 borderWidth: 1,
                 borderColor: "#1f1f1f",
@@ -321,7 +329,9 @@ const Analytics = () => {
                 paddingVertical: 3,
                 borderRadius: 5,
                 marginHorizontal: 5,
+                backgroundColor: timeGraph === 2 ? "#ffb703" : "#ffffff",
               }}
+              onPress={() => setTimeGraph(2)}
             >
               <RNText
                 style={{
@@ -331,15 +341,17 @@ const Analytics = () => {
               >
                 30 días
               </RNText>
-            </View>
-            <View
+            </TouchableOpacity>
+            <TouchableOpacity
               style={{
                 borderWidth: 1,
                 borderColor: "#1f1f1f",
                 paddingHorizontal: 7,
                 paddingVertical: 3,
                 borderRadius: 5,
+                backgroundColor: timeGraph === 3 ? "#ffb703" : "#ffffff",
               }}
+              onPress={() => setTimeGraph(3)}
             >
               <RNText
                 style={{
@@ -349,7 +361,7 @@ const Analytics = () => {
               >
                 1 año
               </RNText>
-            </View>
+            </TouchableOpacity>
           </View>
           <View
             style={{
