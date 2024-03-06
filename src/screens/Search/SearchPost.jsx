@@ -29,7 +29,7 @@ import {
   Entypo,
   MaterialIcons,
 } from "@expo/vector-icons";
-import { Auth, API, Storage } from "aws-amplify";
+import { Auth, API, Storage, Analytics } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Favorites";
 import * as customFavorites from "@/graphql/CustomMutations/Favorites";
 import * as subscriptions from "@/graphql/CustomSubscriptions/Search";
@@ -58,7 +58,6 @@ const SearchPost = ({ route, navigation }) => {
   const {
     data: { item, images },
   } = route.params;
-  console.log(item);
   const getPdf = async () => {
     const permissions =
       await StorageAccessFramework.requestDirectoryPermissionsAsync();
@@ -154,7 +153,6 @@ const SearchPost = ({ route, navigation }) => {
       } else {
         setShowAgg(true);
       }
-      console.log("toy aqui", business?.data?.getBusiness);
       return setPost(business?.data?.getBusiness);
     } catch (error) {
       console.log(error);
@@ -202,9 +200,31 @@ const SearchPost = ({ route, navigation }) => {
     Linking.openURL(url);
   };
 
+  const registerViewBusiness = (userID, businessID) => {
+    console.log("PARA ANALISIS: ", userID, businessID);
+   
+    return;
+    const now = new Date();
+    Analytics.record(
+      {
+        data: {
+          type: {
+            event: "user_viewed_business",
+          },
+          userid: userID,
+          age: "",
+          gender: "",
+          businessid: businessID,
+        },
+        streamName: "portaty-app-firehouse-viewBusiness",
+      },
+      "AWSKinesisFirehose"
+    );
+  };
   useEffect(() => {
     if (!save) fetchFavorite();
     fetchData();
+    registerViewBusiness(userAuth?.attributes["custom:userTableID"], item.id);
   }, []);
 
   if (!post) return <SkeletonExample />;

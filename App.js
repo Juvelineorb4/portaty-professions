@@ -9,7 +9,7 @@ import { useFonts } from "expo-font";
 import { Platform, SafeAreaView as SafeAreaIOS } from "react-native";
 import Navigation from "@/routes/Navigation";
 // amplify
-import { Amplify } from "aws-amplify";
+import { Amplify, AWSKinesisFirehoseProvider, Analytics } from "aws-amplify";
 import awsconfig from "./src/aws-exports.js";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet } from "react-native";
@@ -23,11 +23,18 @@ Amplify.configure({
       },
       {
         name: "api-opense",
-        endpoint: "https://6hf00kcyv9.execute-api.us-east-1.amazonaws.com/dev"
-      }
+        endpoint: "https://6hf00kcyv9.execute-api.us-east-1.amazonaws.com/dev",
+      },
     ],
   },
+  Analytics: {
+    AWSKinesisFirehose: {
+      region: awsconfig.aws_project_region,
+    },
+  },
 });
+
+Analytics.addPluggable(new AWSKinesisFirehoseProvider());
 
 export default function App() {
   const global = require("@/utils/styles/global.js");
