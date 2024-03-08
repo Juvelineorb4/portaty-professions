@@ -180,7 +180,10 @@ const StepFive = ({ navigation, route }) => {
               lat: map.latitude,
               lon: map.longitude,
             },
-            activity: area.activity,
+            activity: `${JSON.stringify({
+              main: area.area,
+              sub: area.activity,
+            })}`,
             tags: listTags,
           },
         },
