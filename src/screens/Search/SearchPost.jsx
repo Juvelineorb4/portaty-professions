@@ -13,38 +13,37 @@ import {
   Modal,
   Pressable,
 } from "react-native";
-import React, { useState, useEffect, useLayoutEffect } from "react";
+import React, { useState, useEffect } from "react";
 import * as customSearch from "@/graphql/CustomQueries/Search";
-import CustomSelect from "@/components/CustomSelect";
 import styles from "@/utils/styles/SearchPost.module.css";
 import {
-  FontAwesome5,
   MaterialCommunityIcons,
   AntDesign,
-  FontAwesome,
-  Foundation,
   EvilIcons,
   Feather,
-  Fontisto,
   Entypo,
   MaterialIcons,
 } from "@expo/vector-icons";
-import { Auth, API, Storage, Analytics } from "aws-amplify";
+import { Auth, API, Analytics } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Favorites";
 import * as customFavorites from "@/graphql/CustomMutations/Favorites";
-import * as subscriptions from "@/graphql/CustomSubscriptions/Search";
 import MapView, { Marker } from "react-native-maps";
 import SkeletonExample from "@/components/SkeletonExample";
 // recoil
 import { useRecoilState, useRecoilValue } from "recoil";
-import { updateListFavorites, userAuthenticated } from "@/atoms/index";
+import { updateListFavorites, userAuthenticated, mapUser } from "@/atoms/index";
 import * as FileSystem from "expo-file-system";
 import { StorageAccessFramework } from "expo-file-system";
 import { useRef } from "react";
 import ModalAlert from "@/components/ModalAlert";
+// storage
+import AsyncStorage from "@react-native-async-storage/async-storage";
+// location
+import * as Location from "expo-location";
 
 const SearchPost = ({ route, navigation }) => {
   const userAuth = useRecoilValue(userAuthenticated);
+  const userLocation = useRecoilValue(mapUser);
   const [post, setPost] = useState(null);
   const [save, setSave] = useState("");
   const [open, setOpen] = useState(false);
@@ -200,26 +199,57 @@ const SearchPost = ({ route, navigation }) => {
     Linking.openURL(url);
   };
 
-  const registerViewBusiness = (userID, businessID) => {
-    console.log("PARA ANALISIS: ", userID, businessID);
-   
-    return;
-    const now = new Date();
-    Analytics.record(
-      {
-        data: {
-          type: {
-            event: "user_viewed_business",
-          },
-          userid: userID,
-          age: "",
-          gender: "",
-          businessid: businessID,
+  const registerViewBusiness = async (userID, businessID) => {
+    try {
+      // Obtener informacuon de la ultima visualizacion del usuario guardada en Async Storage
+      const lastViewString = await AsyncStorage.getItem(`lastView_${userID}`);
+      const lastViewInfo = JSON.parse(lastViewString);
+
+      // Si hay una última visualización registrada y ocurrió hace menos de 24 horas, no registra la nueva visualización
+      if (
+        lastViewInfo &&
+        new Date() - new Date(lastViewInfo.timestamp) < 24 * 60 * 60 * 1000 &&
+        lastViewInfo.businessID === businessID
+      ) {
+        console.log(
+          "Visualización no registrada: ya se registró una visualización del mismo negocio en las últimas 24 horas"
+        );
+        return;
+      }
+
+      // De no haber visualizacion Registrarla en analytics
+      const addressArr = await Location.reverseGeocodeAsync(userLocation);
+      const { country, city } = addressArr[0];
+      const params = {
+        eventname: "user_viewed_business",
+        userid: userID,
+        birthdate: userAuth?.attributes?.birthdate,
+        gender: "Male",
+        country,
+        city,
+        businessid: businessID,
+      };
+      Analytics.record(
+        {
+          data: params,
+          streamName: "portaty-app-firehose",
         },
-        streamName: "portaty-app-firehouse-viewBusiness",
-      },
-      "AWSKinesisFirehose"
-    );
+        "AWSKinesisFirehose"
+      );
+      // Almacena la información de la última visualización en AsyncStorage
+      const currentViewInfo = {
+        businessID: businessID,
+        timestamp: new Date().toISOString(),
+      };
+      await AsyncStorage.setItem(
+        `lastView_${userID}`,
+        JSON.stringify(currentViewInfo)
+      );
+
+      console.log("Visualización registrada correctamente");
+    } catch (error) {
+      console.log("Error al registrar analitica: ", error);
+    }
   };
   useEffect(() => {
     if (!save) fetchFavorite();
