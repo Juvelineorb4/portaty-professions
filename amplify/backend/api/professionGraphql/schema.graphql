@@ -55,7 +55,6 @@ type Users
 
 type Business
   @model
-  @searchable
   @auth(
     rules: [
       { allow: owner }
@@ -234,7 +233,7 @@ enum TypeLogs {
   FAVORITE
 }
 
-type Testing @model @searchable @auth(rules: [{ allow: private }]) {
+type Testing @model @auth(rules: [{ allow: private }]) {
   id: ID!
   name: [String!]!
   coordinates: Coordinates!

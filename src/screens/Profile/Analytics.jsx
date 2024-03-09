@@ -1,5 +1,11 @@
-import { View, ScrollView, Text as RNText, Image, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import {
+  View,
+  ScrollView,
+  Text as RNText,
+  Image,
+  TouchableOpacity,
+} from "react-native";
+import React, { useState, useEffect } from "react";
 import {
   LineChart,
   Grid,
@@ -8,6 +14,8 @@ import {
   PieChart,
 } from "react-native-svg-charts";
 import { Circle, G, Line, Text } from "react-native-svg";
+// amplify
+import { API } from "aws-amplify";
 
 const likesData = {
   "2024-02-01": 100,
@@ -235,11 +243,31 @@ const Decorator = ({ x, y }) => {
   ));
 };
 
-const Analytics = () => {
-  const [type, setType] = useState(1)
-  const [timeGraph, setTimeGraph] = useState(1)
+const Analytics = ({ route }) => {
+  const [type, setType] = useState(1);
+  const [timeGraph, setTimeGraph] = useState(1);
   const maxValue = Math.max(...likes);
-  console.log(maxValue);
+
+  const getData = async () => {
+    const api = "api-portaty";
+    const path = "/athena/example";
+    const params = {
+      headers: {},
+      queryStringParameters: {
+        businessID: "95c3e6c3-c4ac-468e-8140-2061318d3370",
+      },
+    };
+    try {
+      const response = await API.get(api, path, params);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <ScrollView
       style={{

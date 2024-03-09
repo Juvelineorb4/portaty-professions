@@ -206,7 +206,7 @@ const StepFive = ({ navigation, route }) => {
       const result = await API.post(apiName, path, myInit);
       console.log(result);
       setLoading(false);
-      // Finished();
+      Finished();
     } catch (error) {
       setError(`Error al cargar negocio`);
       console.log(`Error al cargar negocio:  ${error}`);
