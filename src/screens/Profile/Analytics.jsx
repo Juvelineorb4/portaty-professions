@@ -26,9 +26,9 @@ const likesData = {
   "2024-02-06": 110,
   "2024-02-09": 180,
 };
-const days = Object.keys(likesData);
+// const days = Object.keys(likesData);
 const likes = Object.values(likesData);
-
+console.log(likes)
 const dataGender = [
   {
     key: 1,
@@ -210,8 +210,8 @@ const Labels = ({ slices }) => {
   });
 };
 
-const Decorator = ({ x, y }) => {
-  return likes.map((value, index) => (
+const Decorator = ({ x, y, backUp }) => {
+  return backUp.map((value, index) => (
     <G key={index}>
       <Line
         x1={x(index)}
@@ -246,8 +246,12 @@ const Decorator = ({ x, y }) => {
 const Analytics = ({ route }) => {
   const [type, setType] = useState(1);
   const [timeGraph, setTimeGraph] = useState(1);
-  const maxValue = Math.max(...likes);
+  const [dataGraph, setDataGraph] = useState(null);
+  const [dataLikes, setDataLikes] = useState(null);
+  const [maxValue, setMaxValue] = useState(null);
 
+  // const likes = Object.values(dataGraph);
+  // console.log(likes);
   const getData = async () => {
     const api = "api-portaty";
     const path = "/athena/example";
@@ -259,7 +263,21 @@ const Analytics = ({ route }) => {
     };
     try {
       const response = await API.get(api, path, params);
-      console.log(response);
+      const dataForXAxis = Object.entries(response.data.likesData).map(
+        ([date, value]) => ({
+          x: date,
+          y: value,
+        })
+      );
+      const likes = Object.values(response.data.likesData).map(value => +value);
+      const value = Math.max(...likes);
+
+      setDataGraph(dataForXAxis);
+      setMaxValue(value);
+      setDataLikes(likes);
+      console.log(response.data.likesData);
+      console.log(likes);
+      console.log(value);
     } catch (error) {
       console.log(error);
     }
@@ -268,516 +286,519 @@ const Analytics = ({ route }) => {
     getData();
   }, []);
 
-  return (
-    <ScrollView
-      style={{
-        flex: 1,
-        backgroundColor: "#ffffff",
-      }}
-    >
-      <ScrollView horizontal style={{ marginTop: 40, paddingHorizontal: 10 }}>
-        {buttons.map((item, index) => (
-          <TouchableOpacity
-            key={index}
-            style={{
-              width: 80,
-              height: 80,
-              marginRight: 5,
-              borderWidth: 1,
-              borderColor: "#1f1f1f",
-              borderRadius: 50,
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: item.id === type ? "#ffb703" : "#ffffff",
-            }}
-            onPress={() => setType(item.id)}
-          >
-            <RNText style={{ fontFamily: "bold", fontSize: 12 }}>
-              {item.value}
-            </RNText>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-      <View
+  if (dataGraph !== null && dataLikes !== null && maxValue !== null)
+    return (
+      <ScrollView
         style={{
-          padding: 10,
-          marginBottom: 70,
+          flex: 1,
+          backgroundColor: "#ffffff",
         }}
       >
-        <View
-          style={{
-            borderColor: "#1f1f1f",
-            borderWidth: 0.7,
-            borderRadius: 5,
-            padding: 10,
-            marginTop: 10,
-            flex: 1,
-          }}
-        >
-          <RNText
-            style={{
-              fontFamily: "bold",
-              fontSize: 14,
-              marginBottom: 20,
-            }}
-          >
-            Grafico de nuevos favoritos
-          </RNText>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "flex-end",
-            }}
-          >
+        <ScrollView horizontal style={{ marginTop: 40, paddingHorizontal: 10 }}>
+          {buttons.map((item, index) => (
             <TouchableOpacity
+              key={index}
               style={{
+                width: 80,
+                height: 80,
+                marginRight: 5,
                 borderWidth: 1,
                 borderColor: "#1f1f1f",
-                paddingHorizontal: 7,
-                paddingVertical: 3,
-                borderRadius: 5,
-                backgroundColor: timeGraph === 1 ? "#ffb703" : "#ffffff",
+                borderRadius: 50,
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: item.id === type ? "#ffb703" : "#ffffff",
               }}
-              onPress={() => setTimeGraph(1)}
+              onPress={() => setType(item.id)}
+            >
+              <RNText style={{ fontFamily: "bold", fontSize: 12 }}>
+                {item.value}
+              </RNText>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+        <View
+          style={{
+            padding: 10,
+            marginBottom: 70,
+          }}
+        >
+          <View
+            style={{
+              borderColor: "#1f1f1f",
+              borderWidth: 0.7,
+              borderRadius: 5,
+              padding: 10,
+              marginTop: 10,
+              flex: 1,
+            }}
+          >
+            <RNText
+              style={{
+                fontFamily: "bold",
+                fontSize: 14,
+                marginBottom: 20,
+              }}
+            >
+              Grafico de visitas por negocio
+            </RNText>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "flex-end",
+              }}
+            >
+              <TouchableOpacity
+                style={{
+                  borderWidth: 1,
+                  borderColor: "#1f1f1f",
+                  paddingHorizontal: 7,
+                  paddingVertical: 3,
+                  borderRadius: 5,
+                  backgroundColor: timeGraph === 1 ? "#ffb703" : "#ffffff",
+                }}
+                onPress={() => setTimeGraph(1)}
+              >
+                <RNText
+                  style={{
+                    fontFamily: "bold",
+                    fontSize: 13,
+                  }}
+                >
+                  7 días
+                </RNText>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  borderWidth: 1,
+                  borderColor: "#1f1f1f",
+                  paddingHorizontal: 7,
+                  paddingVertical: 3,
+                  borderRadius: 5,
+                  marginHorizontal: 5,
+                  backgroundColor: timeGraph === 2 ? "#ffb703" : "#ffffff",
+                }}
+                onPress={() => setTimeGraph(2)}
+              >
+                <RNText
+                  style={{
+                    fontFamily: "regular",
+                    fontSize: 13,
+                  }}
+                >
+                  30 días
+                </RNText>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  borderWidth: 1,
+                  borderColor: "#1f1f1f",
+                  paddingHorizontal: 7,
+                  paddingVertical: 3,
+                  borderRadius: 5,
+                  backgroundColor: timeGraph === 3 ? "#ffb703" : "#ffffff",
+                }}
+                onPress={() => setTimeGraph(3)}
+              >
+                <RNText
+                  style={{
+                    fontFamily: "regular",
+                    fontSize: 13,
+                  }}
+                >
+                  1 año
+                </RNText>
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                height: 230,
+                flexDirection: "row",
+              }}
+            >
+              <YAxis
+                data={dataLikes}
+                contentInset={{ top: 25, bottom: 30 }}
+                svg={{
+                  fill: "grey",
+                  fontSize: 9,
+                }}
+                numberOfTicks={1}
+                formatLabel={(value) => `${value}`}
+                min={0}
+                max={maxValue}
+                style={{
+                  marginRight: 3,
+                }}
+              />
+              <ScrollView horizontal>
+                <View style={{ width: dataGraph.length * 60 }}>
+                  <LineChart
+                    style={{ flex: 1 }}
+                    data={dataLikes}
+                    svg={{ stroke: "rgb(255, 183, 3)" }}
+                    contentInset={{ top: 25, bottom: 0, left: 20, right: 20 }}
+                    yMin={0}
+                  >
+                    <Grid />
+                    <Decorator data={dataLikes} backUp={dataLikes} />
+                  </LineChart>
+                  <XAxis
+                    style={{ marginHorizontal: -10, height: 15, marginTop: 15 }}
+                    data={dataGraph}
+                    formatLabel={(value, index) =>
+                      dataGraph[index].x.substring(5)
+                    }
+                    contentInset={{ left: 30, right: 30 }}
+                    svg={{ fontSize: 11, fill: "black", fontFamily: "regular" }}
+                  />
+                </View>
+              </ScrollView>
+            </View>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "flex-end",
+              }}
+            >
+              <RNText
+                style={{
+                  fontSize: 12,
+                  fontFamily: "lightItalic",
+                }}
+              >
+                mover para más
+              </RNText>
+              <Image
+                style={{
+                  width: 30,
+                  height: 30,
+                  resizeMode: "cover",
+                }}
+                source={require("@/utils/images/arrow_right.png")}
+              />
+            </View>
+          </View>
+
+          <View
+            style={{
+              borderColor: "#1f1f1f",
+              borderWidth: 0.7,
+              borderRadius: 5,
+              padding: 10,
+              marginTop: 15,
+            }}
+          >
+            <RNText style={{ fontFamily: "bold", fontSize: 14, marginTop: 5 }}>
+              Nuevos favoritos: diagrama de genero
+            </RNText>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                flex: 1,
+              }}
+            >
+              <PieChart
+                style={{ width: 150, height: 170 }}
+                data={dataGender}
+                outerRadius={"70%"}
+                innerRadius={1}
+              >
+                <Labels />
+              </PieChart>
+              <View>
+                {dataGender.map((entry, index) => (
+                  <View
+                    key={index}
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      marginBottom: 5,
+                    }}
+                  >
+                    <View
+                      style={{
+                        backgroundColor: entry.svg.fill,
+                        height: 15,
+                        width: 15,
+                        borderRadius: 5,
+                      }}
+                    />
+                    <RNText
+                      style={{
+                        fontSize: 10,
+                        marginLeft: 5,
+                        fontFamily: "medium",
+                      }}
+                    >
+                      {`${entry.label}: ${entry.value}% - ${entry.amount} cant.`}
+                    </RNText>
+                  </View>
+                ))}
+              </View>
+            </View>
+            <RNText style={{ fontFamily: "bold", fontSize: 14, marginTop: 15 }}>
+              Nuevos favoritos: diagrama de edad
+            </RNText>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                flex: 1,
+              }}
+            >
+              <PieChart
+                style={{ width: 150, height: 170 }}
+                data={dataAge}
+                outerRadius={"70%"}
+                innerRadius={1}
+              >
+                <Labels />
+              </PieChart>
+              <View>
+                {dataAge.map((entry, index) => (
+                  <View
+                    key={index}
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      marginBottom: 5,
+                    }}
+                  >
+                    <View
+                      style={{
+                        backgroundColor: entry.svg.fill,
+                        height: 15,
+                        width: 15,
+                        borderRadius: 5,
+                      }}
+                    />
+                    <RNText
+                      key={index}
+                      style={{
+                        fontSize: 10,
+                        marginLeft: 5,
+                        fontFamily: "medium",
+                      }}
+                    >
+                      {`${entry.label}: ${entry.value}% - ${entry.amount} cant.`}
+                    </RNText>
+                  </View>
+                ))}
+              </View>
+            </View>
+            <RNText style={{ fontFamily: "bold", fontSize: 14, marginTop: 15 }}>
+              Nuevos favoritos: diagrama de ubicacion
+            </RNText>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                flex: 1,
+              }}
+            >
+              <PieChart
+                style={{ width: 150, height: 170 }}
+                data={dataLocation}
+                outerRadius={"70%"}
+                innerRadius={1}
+              >
+                <Labels />
+              </PieChart>
+              <View>
+                {dataLocation.map((entry, index) => (
+                  <View
+                    key={index}
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      marginBottom: 5,
+                    }}
+                  >
+                    <View
+                      style={{
+                        backgroundColor: entry.svg.fill,
+                        height: 15,
+                        width: 15,
+                        borderRadius: 5,
+                      }}
+                    />
+                    <RNText
+                      key={index}
+                      style={{
+                        fontSize: 10,
+                        marginLeft: 5,
+                        fontFamily: "medium",
+                      }}
+                    >
+                      {`${entry.label}: ${entry.value}% - ${entry.amount} cant.`}
+                    </RNText>
+                  </View>
+                ))}
+              </View>
+            </View>
+          </View>
+
+          <View style={{ marginTop: 15, marginBottom: 15 }}>
+            <RNText
+              style={{
+                fontFamily: "bold",
+                fontSize: 14,
+                marginBottom: 10,
+              }}
+            >
+              Lista de nuevos usuarios
+            </RNText>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                borderBottomWidth: 1,
+              }}
             >
               <RNText
                 style={{
                   fontFamily: "bold",
-                  fontSize: 13,
+                  textAlign: "center",
+                  flex: 1,
+                  borderLeftWidth: 1,
+                  borderRightWidth: 1,
+                  borderTopWidth: 1,
+                  borderColor: "#1f1f1f",
+                  padding: 5,
+                  fontSize: 10,
                 }}
               >
-                7 días
+                Fecha
               </RNText>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                borderWidth: 1,
-                borderColor: "#1f1f1f",
-                paddingHorizontal: 7,
-                paddingVertical: 3,
-                borderRadius: 5,
-                marginHorizontal: 5,
-                backgroundColor: timeGraph === 2 ? "#ffb703" : "#ffffff",
-              }}
-              onPress={() => setTimeGraph(2)}
-            >
               <RNText
                 style={{
-                  fontFamily: "regular",
-                  fontSize: 13,
+                  fontFamily: "bold",
+                  textAlign: "center",
+                  flex: 1,
+                  borderRightWidth: 1,
+                  borderTopWidth: 1,
+                  borderColor: "#1f1f1f",
+                  padding: 5,
+                  fontSize: 10,
                 }}
               >
-                30 días
+                Nombre
               </RNText>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                borderWidth: 1,
-                borderColor: "#1f1f1f",
-                paddingHorizontal: 7,
-                paddingVertical: 3,
-                borderRadius: 5,
-                backgroundColor: timeGraph === 3 ? "#ffb703" : "#ffffff",
-              }}
-              onPress={() => setTimeGraph(3)}
-            >
               <RNText
                 style={{
-                  fontFamily: "regular",
-                  fontSize: 13,
+                  fontFamily: "bold",
+                  textAlign: "center",
+                  flex: 1,
+                  borderRightWidth: 1,
+                  borderTopWidth: 1,
+                  borderColor: "#1f1f1f",
+                  padding: 5,
+                  fontSize: 10,
                 }}
               >
-                1 año
+                Ubicación
               </RNText>
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{
-              height: 230,
-              flexDirection: "row",
-            }}
-          >
-            <YAxis
-              data={likes}
-              contentInset={{ top: 25, bottom: 30 }}
-              svg={{
-                fill: "grey",
-                fontSize: 9,
-              }}
-              numberOfTicks={10}
-              formatLabel={(value) => `${value}`}
-              min={0}
-              max={maxValue}
-              style={{
-                marginRight: 3,
-              }}
-            />
-            <ScrollView horizontal>
-              <View style={{ width: days.length * 60 }}>
-                <LineChart
-                  style={{ flex: 1 }}
-                  data={likes}
-                  svg={{ stroke: "rgb(255, 183, 3)" }}
-                  contentInset={{ top: 25, bottom: 0, left: 20, right: 20 }}
-                  yMin={0}
+              <RNText
+                style={{
+                  fontFamily: "bold",
+                  textAlign: "center",
+                  flex: 1,
+                  borderRightWidth: 1,
+                  borderTopWidth: 1,
+                  borderColor: "#1f1f1f",
+                  padding: 5,
+                  fontSize: 10,
+                }}
+              >
+                Genero
+              </RNText>
+              <RNText
+                style={{
+                  fontFamily: "bold",
+                  textAlign: "center",
+                  flex: 1,
+                  borderRightWidth: 1,
+                  borderTopWidth: 1,
+                  borderColor: "#1f1f1f",
+                  padding: 5,
+                  fontSize: 10,
+                }}
+              >
+                Edad
+              </RNText>
+            </View>
+            {dataResumen.map((usuario, index) => (
+              <View
+                key={index}
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  marginTop: 10,
+                  borderBottomWidth: 1,
+                  paddingBottom: 10,
+                }}
+              >
+                <RNText
+                  style={{
+                    textAlign: "center",
+                    flex: 1,
+                    fontSize: 10,
+                    fontFamily: "light",
+                  }}
                 >
-                  <Grid />
-                  <Decorator data={likes} />
-                </LineChart>
-                <XAxis
-                  style={{ marginHorizontal: -10, height: 15, marginTop: 15 }}
-                  data={days}
-                  formatLabel={(value, index) => days[index].substring(5)}
-                  contentInset={{ left: 30, right: 30 }}
-                  svg={{ fontSize: 11, fill: "black", fontFamily: "regular" }}
-                />
+                  {usuario.fecha}
+                </RNText>
+                <RNText
+                  style={{
+                    textAlign: "center",
+                    flex: 1,
+                    fontSize: 10,
+                    fontFamily: "light",
+                  }}
+                >
+                  {usuario.nombre}
+                </RNText>
+                <RNText
+                  style={{
+                    textAlign: "center",
+                    flex: 1,
+                    fontSize: 10,
+                    fontFamily: "light",
+                  }}
+                >
+                  {usuario.ubicacion}
+                </RNText>
+                <RNText
+                  style={{
+                    textAlign: "center",
+                    flex: 1,
+                    fontSize: 10,
+                    fontFamily: "light",
+                  }}
+                >
+                  {usuario.sexo}
+                </RNText>
+                <RNText
+                  style={{
+                    textAlign: "center",
+                    flex: 1,
+                    fontSize: 10,
+                    fontFamily: "light",
+                  }}
+                >{`${usuario.edad}`}</RNText>
               </View>
-            </ScrollView>
-          </View>
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "flex-end",
-            }}
-          >
-            <RNText
-              style={{
-                fontSize: 12,
-                fontFamily: "lightItalic",
-              }}
-            >
-              mover para más
-            </RNText>
-            <Image
-              style={{
-                width: 30,
-                height: 30,
-                resizeMode: "cover",
-              }}
-              source={require("@/utils/images/arrow_right.png")}
-            />
+            ))}
           </View>
         </View>
-
-        <View
-          style={{
-            borderColor: "#1f1f1f",
-            borderWidth: 0.7,
-            borderRadius: 5,
-            padding: 10,
-            marginTop: 15,
-          }}
-        >
-          <RNText style={{ fontFamily: "bold", fontSize: 14, marginTop: 5 }}>
-            Nuevos favoritos: diagrama de genero
-          </RNText>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              flex: 1,
-            }}
-          >
-            <PieChart
-              style={{ width: 150, height: 170 }}
-              data={dataGender}
-              outerRadius={"70%"}
-              innerRadius={1}
-            >
-              <Labels />
-            </PieChart>
-            <View>
-              {dataGender.map((entry, index) => (
-                <View
-                  key={index}
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    marginBottom: 5,
-                  }}
-                >
-                  <View
-                    style={{
-                      backgroundColor: entry.svg.fill,
-                      height: 15,
-                      width: 15,
-                      borderRadius: 5,
-                    }}
-                  />
-                  <RNText
-                    style={{
-                      fontSize: 10,
-                      marginLeft: 5,
-                      fontFamily: "medium",
-                    }}
-                  >
-                    {`${entry.label}: ${entry.value}% - ${entry.amount} cant.`}
-                  </RNText>
-                </View>
-              ))}
-            </View>
-          </View>
-          <RNText style={{ fontFamily: "bold", fontSize: 14, marginTop: 15 }}>
-            Nuevos favoritos: diagrama de edad
-          </RNText>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              flex: 1,
-            }}
-          >
-            <PieChart
-              style={{ width: 150, height: 170 }}
-              data={dataAge}
-              outerRadius={"70%"}
-              innerRadius={1}
-            >
-              <Labels />
-            </PieChart>
-            <View>
-              {dataAge.map((entry, index) => (
-                <View
-                  key={index}
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    marginBottom: 5,
-                  }}
-                >
-                  <View
-                    style={{
-                      backgroundColor: entry.svg.fill,
-                      height: 15,
-                      width: 15,
-                      borderRadius: 5,
-                    }}
-                  />
-                  <RNText
-                    key={index}
-                    style={{
-                      fontSize: 10,
-                      marginLeft: 5,
-                      fontFamily: "medium",
-                    }}
-                  >
-                    {`${entry.label}: ${entry.value}% - ${entry.amount} cant.`}
-                  </RNText>
-                </View>
-              ))}
-            </View>
-          </View>
-          <RNText style={{ fontFamily: "bold", fontSize: 14, marginTop: 15 }}>
-            Nuevos favoritos: diagrama de ubicacion
-          </RNText>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              flex: 1,
-            }}
-          >
-            <PieChart
-              style={{ width: 150, height: 170 }}
-              data={dataLocation}
-              outerRadius={"70%"}
-              innerRadius={1}
-            >
-              <Labels />
-            </PieChart>
-            <View>
-              {dataLocation.map((entry, index) => (
-                <View
-                  key={index}
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    marginBottom: 5,
-                  }}
-                >
-                  <View
-                    style={{
-                      backgroundColor: entry.svg.fill,
-                      height: 15,
-                      width: 15,
-                      borderRadius: 5,
-                    }}
-                  />
-                  <RNText
-                    key={index}
-                    style={{
-                      fontSize: 10,
-                      marginLeft: 5,
-                      fontFamily: "medium",
-                    }}
-                  >
-                    {`${entry.label}: ${entry.value}% - ${entry.amount} cant.`}
-                  </RNText>
-                </View>
-              ))}
-            </View>
-          </View>
-        </View>
-
-        <View style={{ marginTop: 15, marginBottom: 15 }}>
-          <RNText
-            style={{
-              fontFamily: "bold",
-              fontSize: 14,
-              marginBottom: 10,
-            }}
-          >
-            Lista de nuevos usuarios
-          </RNText>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              borderBottomWidth: 1,
-            }}
-          >
-            <RNText
-              style={{
-                fontFamily: "bold",
-                textAlign: "center",
-                flex: 1,
-                borderLeftWidth: 1,
-                borderRightWidth: 1,
-                borderTopWidth: 1,
-                borderColor: "#1f1f1f",
-                padding: 5,
-                fontSize: 10,
-              }}
-            >
-              Fecha
-            </RNText>
-            <RNText
-              style={{
-                fontFamily: "bold",
-                textAlign: "center",
-                flex: 1,
-                borderRightWidth: 1,
-                borderTopWidth: 1,
-                borderColor: "#1f1f1f",
-                padding: 5,
-                fontSize: 10,
-              }}
-            >
-              Nombre
-            </RNText>
-            <RNText
-              style={{
-                fontFamily: "bold",
-                textAlign: "center",
-                flex: 1,
-                borderRightWidth: 1,
-                borderTopWidth: 1,
-                borderColor: "#1f1f1f",
-                padding: 5,
-                fontSize: 10,
-              }}
-            >
-              Ubicación
-            </RNText>
-            <RNText
-              style={{
-                fontFamily: "bold",
-                textAlign: "center",
-                flex: 1,
-                borderRightWidth: 1,
-                borderTopWidth: 1,
-                borderColor: "#1f1f1f",
-                padding: 5,
-                fontSize: 10,
-              }}
-            >
-              Genero
-            </RNText>
-            <RNText
-              style={{
-                fontFamily: "bold",
-                textAlign: "center",
-                flex: 1,
-                borderRightWidth: 1,
-                borderTopWidth: 1,
-                borderColor: "#1f1f1f",
-                padding: 5,
-                fontSize: 10,
-              }}
-            >
-              Edad
-            </RNText>
-          </View>
-          {dataResumen.map((usuario, index) => (
-            <View
-              key={index}
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                marginTop: 10,
-                borderBottomWidth: 1,
-                paddingBottom: 10,
-              }}
-            >
-              <RNText
-                style={{
-                  textAlign: "center",
-                  flex: 1,
-                  fontSize: 10,
-                  fontFamily: "light",
-                }}
-              >
-                {usuario.fecha}
-              </RNText>
-              <RNText
-                style={{
-                  textAlign: "center",
-                  flex: 1,
-                  fontSize: 10,
-                  fontFamily: "light",
-                }}
-              >
-                {usuario.nombre}
-              </RNText>
-              <RNText
-                style={{
-                  textAlign: "center",
-                  flex: 1,
-                  fontSize: 10,
-                  fontFamily: "light",
-                }}
-              >
-                {usuario.ubicacion}
-              </RNText>
-              <RNText
-                style={{
-                  textAlign: "center",
-                  flex: 1,
-                  fontSize: 10,
-                  fontFamily: "light",
-                }}
-              >
-                {usuario.sexo}
-              </RNText>
-              <RNText
-                style={{
-                  textAlign: "center",
-                  flex: 1,
-                  fontSize: 10,
-                  fontFamily: "light",
-                }}
-              >{`${usuario.edad}`}</RNText>
-            </View>
-          ))}
-        </View>
-      </View>
-    </ScrollView>
-  );
+      </ScrollView>
+    );
 };
 
 export default Analytics;
