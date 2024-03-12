@@ -20,11 +20,12 @@ const Post = ({ data, image, styled, input }) => {
   const navigation = useNavigation();
   const [post, setPost] = useState([]);
   const [loading, setLoading] = useState(false);
-  console.log("post", input);
+  console.log("post", data);
   const list = data?.images
     ?.map((image) => JSON.parse(image))
     .sort((a, b) => a.key - b.key);
   const [modalVisible, setModalVisible] = useState(false);
+  // const actividad = JSON.parse(data.activity);
   const fetchData = async () => {
     try {
       const business = await API.graphql({
@@ -178,6 +179,26 @@ const Post = ({ data, image, styled, input }) => {
                       </Text>
                       <Text style={{ fontFamily: "regular", fontSize: 14 }}>
                         {data?.name}
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        marginTop: 5,
+                      }}
+                    >
+                      <Text style={{ fontFamily: "light", fontSize: 13 }}>
+                        Area:
+                      </Text>
+                      <Text
+                        style={{
+                          fontFamily: "regular",
+                          fontSize: 14,
+                          textTransform: "capitalize",
+                        }}
+                      >
+                        {data.activity}
                       </Text>
                     </View>
                     <View

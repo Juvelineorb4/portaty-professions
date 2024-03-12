@@ -699,7 +699,7 @@ const SearchPost = ({ route, navigation }) => {
                   global.black,
                 ]}
               >
-                Razon social
+                Nombre del negocio
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -734,7 +734,50 @@ const SearchPost = ({ route, navigation }) => {
                   global.black,
                 ]}
               >
-                Actividad laboral
+                Area
+              </Text>
+            </View>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text
+                style={[
+                  {
+                    fontSize: 13,
+                    fontFamily: "regular",
+                    textTransform: "capitalize",
+                  },
+                ]}
+              >
+                {post?.activity}
+              </Text>
+            </View>
+          </View>
+          <View
+            style={[
+              styles.line,
+              global.bgMidGray,
+              {
+                width: 500,
+                left: 0,
+              },
+            ]}
+          />
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: 20,
+            }}
+          >
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              {/* <FontAwesome5 name="store" size={16} color="#1f1f1f" /> */}
+              <Text
+                style={[
+                  { fontFamily: "lightItalic", fontSize: 13 },
+                  global.black,
+                ]}
+              >
+                Actividad
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
