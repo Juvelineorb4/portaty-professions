@@ -254,7 +254,7 @@ const Analytics = ({ route }) => {
   // console.log(likes);
   const getData = async () => {
     const api = "api-portaty";
-    const path = "/athena/example";
+    const path = "/athena/example2";
     const params = {
       headers: {},
       queryStringParameters: {
@@ -263,6 +263,7 @@ const Analytics = ({ route }) => {
     };
     try {
       const response = await API.get(api, path, params);
+      console.log("REPSONSE: ", response)
       const dataForXAxis = Object.entries(response.data.likesData).map(
         ([date, value]) => ({
           x: date,
