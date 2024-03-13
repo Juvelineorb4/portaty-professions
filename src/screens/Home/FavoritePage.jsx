@@ -55,8 +55,7 @@ const FavoritePage = ({ navigation, route }) => {
   const {
     data: { item, image },
   } = route.params;
-
-  console.log(item.business.images);
+  const actividad = JSON.parse(item.business.activity)
   const list = item?.business?.images
     .map((image) => JSON.parse(image))
     .sort((a, b) => a.key - b.key);
@@ -551,7 +550,7 @@ const FavoritePage = ({ navigation, route }) => {
                   global.black,
                 ]}
               >
-                Razon social
+                Nombre del negocio
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -577,7 +576,7 @@ const FavoritePage = ({ navigation, route }) => {
                   global.black,
                 ]}
               >
-                Actividad laboral
+                Area
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -586,11 +585,45 @@ const FavoritePage = ({ navigation, route }) => {
                   {
                     fontSize: 13,
                     fontFamily: "regular",
-                    textTransform: "capitalize",
+                    // textTransform: "capitalize",
                   },
                 ]}
               >
-                {item.business.activity}
+                {actividad.main}
+              </Text>
+            </View>
+          </View>
+          <View style={[styles.line, global.bgMidGray]} />
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: 20,
+            }}
+          >
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              {/* <FontAwesome5 name="store" size={16} color="#1f1f1f" /> */}
+              <Text
+                style={[
+                  { fontFamily: "lightItalic", fontSize: 13 },
+                  global.black,
+                ]}
+              >
+                Actividad
+              </Text>
+            </View>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text
+                style={[
+                  {
+                    fontSize: 13,
+                    fontFamily: "regular",
+                    // textTransform: "capitalize",
+                  },
+                ]}
+              >
+                {actividad.sub}
               </Text>
             </View>
           </View>

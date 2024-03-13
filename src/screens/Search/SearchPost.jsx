@@ -744,7 +744,7 @@ const SearchPost = ({ route, navigation }) => {
                   {
                     fontSize: 13,
                     fontFamily: "regular",
-                    textTransform: "capitalize",
+                    // textTransform: "capitalize",
                   },
                 ]}
               >
@@ -787,7 +787,7 @@ const SearchPost = ({ route, navigation }) => {
                   {
                     fontSize: 13,
                     fontFamily: "regular",
-                    textTransform: "capitalize",
+                    // textTransform: "capitalize",
                   },
                 ]}
               >

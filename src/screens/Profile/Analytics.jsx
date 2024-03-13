@@ -249,16 +249,17 @@ const Analytics = ({ route }) => {
   const [dataGraph, setDataGraph] = useState(null);
   const [dataLikes, setDataLikes] = useState(null);
   const [maxValue, setMaxValue] = useState(null);
-
+  const { data } = route.params
+  // const business = JSON.parse(data)
   // const likes = Object.values(dataGraph);
-  // console.log(likes);
+  // console.log(data.id);
   const getData = async () => {
     const api = "api-portaty";
     const path = "/athena/example2";
     const params = {
       headers: {},
       queryStringParameters: {
-        businessID: "95c3e6c3-c4ac-468e-8140-2061318d3370",
+        businessID: data?.id,
       },
     };
     try {

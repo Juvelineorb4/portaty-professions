@@ -71,7 +71,7 @@ const ItemProfile = ({ data, identityID, styled }) => {
                 style={{
                   fontSize: 12,
                   fontFamily: "light",
-                  textTransform: "capitalize",
+                  // textTransform: "capitalize",
                 }}
               >
                 {actividad.main}
@@ -85,7 +85,7 @@ const ItemProfile = ({ data, identityID, styled }) => {
                 style={{
                   fontSize: 12,
                   fontFamily: "light",
-                  textTransform: "capitalize",
+                  // textTransform: "capitalize",
                 }}
               >
                 {actividad.sub}

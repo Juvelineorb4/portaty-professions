@@ -61,7 +61,7 @@ const Post = ({ data, image, styled, input }) => {
         ]}
         onPress={() => {
           setModalVisible(!modalVisible);
-          console.log('desde el modal', input)
+          console.log("desde el modal", input);
         }}
       >
         {/* {!url ? (
@@ -195,7 +195,7 @@ const Post = ({ data, image, styled, input }) => {
                         style={{
                           fontFamily: "regular",
                           fontSize: 14,
-                          textTransform: "capitalize",
+                          // textTransform: "capitalize",
                         }}
                       >
                         {actividad.main}
@@ -215,7 +215,7 @@ const Post = ({ data, image, styled, input }) => {
                         style={{
                           fontFamily: "regular",
                           fontSize: 14,
-                          textTransform: "capitalize",
+                          // textTransform: "capitalize",
                         }}
                       >
                         {actividad.sub}

@@ -41,7 +41,7 @@ const Post = ({ route }) => {
                 marginTop: 15,
               }}
             >
-              Razon Social
+              Nombre del negocio
             </Text>
             <Text
               style={{
