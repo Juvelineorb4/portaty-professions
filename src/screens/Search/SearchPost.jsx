@@ -57,6 +57,7 @@ const SearchPost = ({ route, navigation }) => {
   const {
     data: { item, images },
   } = route.params;
+  const actividad = JSON.parse(item.activity);
   const getPdf = async () => {
     const permissions =
       await StorageAccessFramework.requestDirectoryPermissionsAsync();
@@ -747,7 +748,7 @@ const SearchPost = ({ route, navigation }) => {
                   },
                 ]}
               >
-                {post?.activity}
+                {actividad?.main}
               </Text>
             </View>
           </View>
@@ -790,7 +791,7 @@ const SearchPost = ({ route, navigation }) => {
                   },
                 ]}
               >
-                {post?.activity}
+                {actividad?.sub}
               </Text>
             </View>
           </View>

@@ -25,7 +25,7 @@ const Post = ({ data, image, styled, input }) => {
     ?.map((image) => JSON.parse(image))
     .sort((a, b) => a.key - b.key);
   const [modalVisible, setModalVisible] = useState(false);
-  // const actividad = JSON.parse(data.activity);
+  const actividad = JSON.parse(data.activity);
   const fetchData = async () => {
     try {
       const business = await API.graphql({
@@ -198,7 +198,7 @@ const Post = ({ data, image, styled, input }) => {
                           textTransform: "capitalize",
                         }}
                       >
-                        {data.activity}
+                        {actividad.main}
                       </Text>
                     </View>
                     <View
@@ -218,7 +218,7 @@ const Post = ({ data, image, styled, input }) => {
                           textTransform: "capitalize",
                         }}
                       >
-                        {data.activity}
+                        {actividad.sub}
                       </Text>
                     </View>
                     <View
