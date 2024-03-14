@@ -154,7 +154,6 @@ const Analytics = ({ route }) => {
     };
     try {
       const response = await API.get(api, path, params);
-      console.log("year: ", response.data.likesData.year);
 
       /* Likes */
       const dataForXAxis = Object.entries(response.data.likesData.days)
@@ -487,6 +486,16 @@ const Analytics = ({ route }) => {
             marginBottom: 70,
           }}
         >
+          <RNText
+            style={{
+              fontFamily: "lightItalic",
+              fontSize: 11,
+              marginBottom: 5,
+              textAlign: "right",
+            }}
+          >
+            Las estadisticas se actualizan cada 12 horas (00:00UTC - 12:00UTC)
+          </RNText>
           <View
             style={{
               borderColor: "#1f1f1f",
@@ -504,7 +513,7 @@ const Analytics = ({ route }) => {
                 marginBottom: 20,
               }}
             >
-              Grafico de visitas por negocio
+              Grafico de visitas
             </RNText>
             <View
               style={{
@@ -697,6 +706,16 @@ const Analytics = ({ route }) => {
               marginTop: 15,
             }}
           >
+            <RNText
+              style={{
+                fontFamily: "lightItalic",
+                fontSize: 12,
+                marginBottom: 20,
+                textAlign: 'right'
+              }}
+            >
+              Desde que se existe el negocio
+            </RNText>
             <RNText style={{ fontFamily: "bold", fontSize: 14, marginTop: 5 }}>
               Visitas: diagrama de genero
             </RNText>
@@ -801,6 +820,7 @@ const Analytics = ({ route }) => {
             <RNText style={{ fontFamily: "bold", fontSize: 14, marginTop: 15 }}>
               Visitas: diagrama de ubicacion
             </RNText>
+            
             <View
               style={{
                 flexDirection: "row",
