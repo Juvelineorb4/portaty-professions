@@ -65,14 +65,14 @@ const buttons = [
     id: 1,
     value: "Visitas",
   },
-  {
-    id: 2,
-    value: "Favoritos: Nuevos",
-  },
-  {
-    id: 3,
-    value: "Favoritos: Perdidos",
-  },
+  // {
+  //   id: 2,
+  //   value: "Favoritos: Nuevos",
+  // },
+  // {
+  //   id: 3,
+  //   value: "Favoritos: Perdidos",
+  // },
 ];
 
 const Labels = ({ slices }) => {
