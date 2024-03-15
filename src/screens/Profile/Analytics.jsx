@@ -154,6 +154,7 @@ const Analytics = ({ route }) => {
     };
     try {
       const response = await API.get(api, path, params);
+      console.log("ES AQUII: ", response.data)
 
       /* Likes */
       const dataForXAxis = Object.entries(response.data.likesData.days)

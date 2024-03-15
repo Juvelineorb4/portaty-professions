@@ -230,7 +230,7 @@ const SearchPost = ({ route, navigation }) => {
         city,
         businessid: businessID,
       };
-      for (let index = 0; index < 10; index++) {
+  
         Analytics.record(
           {
             data: params,
@@ -238,8 +238,7 @@ const SearchPost = ({ route, navigation }) => {
           },
           "AWSKinesisFirehose"
         );
-        console.log("ENVIADO")
-      }
+        
 
       // Almacena la información de la última visualización en AsyncStorage
       const currentViewInfo = {
