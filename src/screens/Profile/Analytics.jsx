@@ -16,6 +16,7 @@ import {
 import { Circle, G, Line, Text } from "react-native-svg";
 // amplify
 import { API } from "aws-amplify";
+import SkeletonAnalytics from "@/components/SkeletonAnalytics";
 
 const dataResumen = [
   {
@@ -142,6 +143,12 @@ const Analytics = ({ route }) => {
   const [dataCityPie, setDataCityPie] = useState(null);
   const [dataCountryPie, setDataCountryPie] = useState(null);
   const [dataAgePie, setDataAgePie] = useState(null);
+
+  /* Condicionales */
+  const [allZeroGender, setAllZeroGender] = useState(false);
+  const [allZeroCity, setAllZeroCity] = useState(false);
+  const [allZeroAge, setAllZeroAge] = useState(false);
+
   const { data } = route.params;
   const getData = async () => {
     const api = "api-portaty";
@@ -154,8 +161,6 @@ const Analytics = ({ route }) => {
     };
     try {
       const response = await API.get(api, path, params);
-      console.log("ES AQUII: ", response.data)
-
       /* Likes */
       const dataForXAxis = Object.entries(response.data.likesData.days)
         .map(([date, value]) => ({
@@ -423,6 +428,11 @@ const Analytics = ({ route }) => {
       );
 
       maxAge.arc = { outerRadius: "120%", cornerRadius: 10 };
+      console.log(gender);
+
+      setAllZeroGender(gender.every((item) => item.value === 0));
+      setAllZeroCity(cities.every((item) => item.value === 0));
+      setAllZeroAge(age.every((item) => item.value === 0));
 
       setDataGenderPie(gender);
       setDataAgePie(age);
@@ -450,7 +460,7 @@ const Analytics = ({ route }) => {
     dataCityPie !== null &&
     dataCountryPie !== null &&
     dataAgePie !== null
-  )
+  ) {
     return (
       <ScrollView
         style={{
@@ -712,10 +722,10 @@ const Analytics = ({ route }) => {
                 fontFamily: "lightItalic",
                 fontSize: 12,
                 marginBottom: 20,
-                textAlign: 'right'
+                textAlign: "right",
               }}
             >
-              Desde que se existe el negocio
+              Desde que existe el negocio
             </RNText>
             <RNText style={{ fontFamily: "bold", fontSize: 14, marginTop: 5 }}>
               Visitas: diagrama de genero
@@ -728,14 +738,32 @@ const Analytics = ({ route }) => {
                 flex: 1,
               }}
             >
-              <PieChart
-                style={{ width: 150, height: 170 }}
-                data={dataGenderPie}
-                outerRadius={"70%"}
-                innerRadius={1}
-              >
-                <Labels />
-              </PieChart>
+              {allZeroGender ? (
+                <View
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <RNText
+                    style={{
+                      fontFamily: "medium",
+                      fontSize: 14,
+                    }}
+                  >
+                    Sin datos
+                  </RNText>
+                </View>
+              ) : (
+                <PieChart
+                  style={{ width: 150, height: 170 }}
+                  data={dataGenderPie}
+                  outerRadius={"70%"}
+                  innerRadius={1}
+                >
+                  <Labels />
+                </PieChart>
+              )}
               <View>
                 {dataGenderPie.map((entry, index) => (
                   <View
@@ -778,14 +806,32 @@ const Analytics = ({ route }) => {
                 flex: 1,
               }}
             >
-              <PieChart
-                style={{ width: 150, height: 170 }}
-                data={dataAgePie}
-                outerRadius={"70%"}
-                innerRadius={1}
-              >
-                <Labels />
-              </PieChart>
+              {allZeroAge ? (
+                <View
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <RNText
+                    style={{
+                      fontFamily: "medium",
+                      fontSize: 14,
+                    }}
+                  >
+                    Sin datos
+                  </RNText>
+                </View>
+              ) : (
+                <PieChart
+                  style={{ width: 150, height: 170 }}
+                  data={dataAgePie}
+                  outerRadius={"70%"}
+                  innerRadius={1}
+                >
+                  <Labels />
+                </PieChart>
+              )}
               <View>
                 {dataAgePie.map((entry, index) => (
                   <View
@@ -821,7 +867,7 @@ const Analytics = ({ route }) => {
             <RNText style={{ fontFamily: "bold", fontSize: 14, marginTop: 15 }}>
               Visitas: diagrama de ubicacion
             </RNText>
-            
+
             <View
               style={{
                 flexDirection: "row",
@@ -885,14 +931,32 @@ const Analytics = ({ route }) => {
                   flex: 1,
                 }}
               >
-                <PieChart
-                  style={{ width: 150, height: 170 }}
-                  data={dataCityPie}
-                  outerRadius={"70%"}
-                  innerRadius={1}
-                >
-                  <Labels />
-                </PieChart>
+                {allZeroCity ? (
+                  <View
+                    style={{
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <RNText
+                      style={{
+                        fontFamily: "medium",
+                        fontSize: 14,
+                      }}
+                    >
+                      Sin datos
+                    </RNText>
+                  </View>
+                ) : (
+                  <PieChart
+                    style={{ width: 150, height: 170 }}
+                    data={dataCityPie}
+                    outerRadius={"70%"}
+                    innerRadius={1}
+                  >
+                    <Labels />
+                  </PieChart>
+                )}
                 <View>
                   {dataCityPie.map((entry, index) => (
                     <View
@@ -934,14 +998,32 @@ const Analytics = ({ route }) => {
                   flex: 1,
                 }}
               >
-                <PieChart
-                  style={{ width: 150, height: 170 }}
-                  data={dataCountryPie}
-                  outerRadius={"70%"}
-                  innerRadius={1}
-                >
-                  <Labels />
-                </PieChart>
+                {allZeroCity ? (
+                  <View
+                    style={{
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <RNText
+                      style={{
+                        fontFamily: "medium",
+                        fontSize: 14,
+                      }}
+                    >
+                      Sin datos
+                    </RNText>
+                  </View>
+                ) : (
+                  <PieChart
+                    style={{ width: 150, height: 170 }}
+                    data={dataCountryPie}
+                    outerRadius={"70%"}
+                    innerRadius={1}
+                  >
+                    <Labels />
+                  </PieChart>
+                )}
                 <View>
                   {dataCountryPie.map((entry, index) => (
                     <View
@@ -1131,6 +1213,21 @@ const Analytics = ({ route }) => {
         </View>
       </ScrollView>
     );
+  } else {
+    return (
+      <View
+        style={[
+          {
+            flex: 1,
+          },
+          global.bgWhite,
+        ]}
+      >
+        <View style={{ paddingTop: 20, backgroundColor: "#ffffff" }}></View>
+        <SkeletonAnalytics />
+      </View>
+    );
+  }
 };
 
 export default Analytics;
