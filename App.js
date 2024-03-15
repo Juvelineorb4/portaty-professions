@@ -18,10 +18,6 @@ Amplify.configure({
   API: {
     endpoints: [
       {
-        name: "api-professions-gateway",
-        endpoint: "https://4wyp6bcbd7.execute-api.us-east-1.amazonaws.com/dev",
-      },
-      {
         name: "api-opense",
         endpoint: "https://6hf00kcyv9.execute-api.us-east-1.amazonaws.com/dev",
       },
