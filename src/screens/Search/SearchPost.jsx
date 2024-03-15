@@ -57,6 +57,7 @@ const SearchPost = ({ route, navigation }) => {
   const {
     data: { item, images },
   } = route.params;
+  const actividad = JSON.parse(item.activity);
   const getPdf = async () => {
     const permissions =
       await StorageAccessFramework.requestDirectoryPermissionsAsync();
@@ -747,11 +748,11 @@ const SearchPost = ({ route, navigation }) => {
                   {
                     fontSize: 13,
                     fontFamily: "regular",
-                    textTransform: "capitalize",
+                    // textTransform: "capitalize",
                   },
                 ]}
               >
-                {post?.activity}
+                {actividad?.main}
               </Text>
             </View>
           </View>
@@ -790,11 +791,11 @@ const SearchPost = ({ route, navigation }) => {
                   {
                     fontSize: 13,
                     fontFamily: "regular",
-                    textTransform: "capitalize",
+                    // textTransform: "capitalize",
                   },
                 ]}
               >
-                {post?.activity}
+                {actividad?.sub}
               </Text>
             </View>
           </View>

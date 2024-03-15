@@ -25,7 +25,7 @@ const Post = ({ data, image, styled, input }) => {
     ?.map((image) => JSON.parse(image))
     .sort((a, b) => a.key - b.key);
   const [modalVisible, setModalVisible] = useState(false);
-  // const actividad = JSON.parse(data.activity);
+  const actividad = JSON.parse(data.activity);
   const fetchData = async () => {
     try {
       const business = await API.graphql({
@@ -61,7 +61,7 @@ const Post = ({ data, image, styled, input }) => {
         ]}
         onPress={() => {
           setModalVisible(!modalVisible);
-          console.log('desde el modal', input)
+          console.log("desde el modal", input);
         }}
       >
         {/* {!url ? (
@@ -195,10 +195,10 @@ const Post = ({ data, image, styled, input }) => {
                         style={{
                           fontFamily: "regular",
                           fontSize: 14,
-                          textTransform: "capitalize",
+                          // textTransform: "capitalize",
                         }}
                       >
-                        {data.activity}
+                        {actividad.main}
                       </Text>
                     </View>
                     <View
@@ -215,10 +215,10 @@ const Post = ({ data, image, styled, input }) => {
                         style={{
                           fontFamily: "regular",
                           fontSize: 14,
-                          textTransform: "capitalize",
+                          // textTransform: "capitalize",
                         }}
                       >
-                        {data.activity}
+                        {actividad.sub}
                       </Text>
                     </View>
                     <View

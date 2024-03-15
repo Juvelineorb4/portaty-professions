@@ -93,7 +93,7 @@ const Page = ({ route, navigation }) => {
   console.log("esto", storageImages);
   const onSaveChange = async () => {
     setIsLoading(true);
-    const activityChange = JSON.stringify(editParams?.activity)
+    const activityChange = JSON.stringify(editParams?.activity);
     try {
       const result = await API.graphql({
         query: mutations.updateBusinessPage,
@@ -854,7 +854,11 @@ const Page = ({ route, navigation }) => {
             justifyContent: "space-between",
             alignItems: "center",
           }}
-          onPress={() => navigation.navigate("Analytics")}
+          onPress={() =>
+            navigation.navigate("Analytics", {
+              data: item,
+            })
+          }
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <View
@@ -1013,7 +1017,7 @@ const Page = ({ route, navigation }) => {
                     borderColor: "#1f1f1f",
                     borderWidth: 0.7,
                     borderRadius: 4,
-                    textTransform: "capitalize",
+                    // textTransform: "capitalize",
                   },
                   editActive ? global.bgWhite : global.bgWhiteSoft,
                 ]}
@@ -1062,7 +1066,7 @@ const Page = ({ route, navigation }) => {
                     borderColor: "#1f1f1f",
                     borderWidth: 0.7,
                     borderRadius: 4,
-                    textTransform: "capitalize",
+                    // textTransform: "capitalize",
                   },
                   editActive ? global.bgWhite : global.bgWhiteSoft,
                 ]}
