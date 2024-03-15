@@ -6,60 +6,13 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import {
-  LineChart,
-  Grid,
-  YAxis,
-  XAxis,
-  PieChart,
-} from "react-native-svg-charts";
+/* charts */
+import { LineChart } from "react-native-gifted-charts";
 import { Circle, G, Line, Text } from "react-native-svg";
+import { PieChart } from "react-native-gifted-charts";
 // amplify
 import { API } from "aws-amplify";
 import SkeletonAnalytics from "@/components/SkeletonAnalytics";
-
-const dataResumen = [
-  {
-    fecha: "2024-02-01",
-    nombre: "Juan",
-    ubicacion: "Caracas",
-    sexo: "Hombre",
-    edad: 30,
-    id: "1",
-  },
-  {
-    fecha: "2024-02-02",
-    nombre: "María",
-    ubicacion: "Maracaibo",
-    sexo: "Mujer",
-    edad: 25,
-    id: "2",
-  },
-  {
-    fecha: "2024-02-02",
-    nombre: "María",
-    ubicacion: "Maracaibo",
-    sexo: "Mujer",
-    edad: 27,
-    id: "3",
-  },
-  {
-    fecha: "2024-02-02",
-    nombre: "María",
-    ubicacion: "Maracaibo",
-    sexo: "Mujer",
-    edad: 23,
-    id: "4",
-  },
-  {
-    fecha: "2024-02-02",
-    nombre: "María",
-    ubicacion: "Maracaibo",
-    sexo: "Mujer",
-    edad: 21,
-    id: "5",
-  },
-];
 
 const buttons = [
   {
@@ -76,58 +29,58 @@ const buttons = [
   // },
 ];
 
-const Labels = ({ slices }) => {
-  return slices.map((slice, index) => {
-    const { labelCentroid, data } = slice;
-    return (
-      <Text
-        key={index}
-        x={labelCentroid[0]}
-        y={labelCentroid[1]}
-        fill="#1f1f1f"
-        textAnchor="middle"
-        alignmentBaseline="middle"
-        fontSize={10}
-        fontWeight={700}
-      >
-        {`${data.amount === 0 ? "" : data.amount}`}
-      </Text>
-    );
-  });
-};
+// const Labels = ({ slices }) => {
+//   return slices.map((slice, index) => {
+//     const { labelCentroid, data } = slice;
+//     return (
+//       <Text
+//         key={index}
+//         x={labelCentroid[0]}
+//         y={labelCentroid[1]}
+//         fill="#1f1f1f"
+//         textAnchor="middle"
+//         alignmentBaseline="middle"
+//         fontSize={10}
+//         fontWeight={700}
+//       >
+//         {`${data.amount === 0 ? "" : data.amount}`}
+//       </Text>
+//     );
+//   });
+// };
 
-const Decorator = ({ x, y, backUp }) => {
-  return backUp.map((value, index) => (
-    <G key={index}>
-      <Line
-        x1={x(index)}
-        y1={y(value)}
-        x2={x(index)}
-        y2={y(0)}
-        stroke="grey"
-        strokeDasharray={[5, 5]}
-      />
-      <Circle
-        cx={x(index)}
-        cy={y(value)}
-        r={4}
-        stroke="rgb(31, 31, 31)"
-        fill="#1f1f1f"
-      />
-      <Text
-        x={x(index)}
-        y={y(value) - 10}
-        fontSize={10}
-        fill="black"
-        alignmentBaseline="middle"
-        textAnchor="middle"
-        fontFamily="bold"
-      >
-        {value}
-      </Text>
-    </G>
-  ));
-};
+// const Decorator = ({ x, y, backUp }) => {
+//   return backUp.map((value, index) => (
+//     <G key={index}>
+//       <Line
+//         x1={x(index)}
+//         y1={y(value)}
+//         x2={x(index)}
+//         y2={y(0)}
+//         stroke="grey"
+//         strokeDasharray={[5, 5]}
+//       />
+//       <Circle
+//         cx={x(index)}
+//         cy={y(value)}
+//         r={4}
+//         stroke="rgb(31, 31, 31)"
+//         fill="#1f1f1f"
+//       />
+//       <Text
+//         x={x(index)}
+//         y={y(value) - 10}
+//         fontSize={10}
+//         fill="black"
+//         alignmentBaseline="middle"
+//         textAnchor="middle"
+//         fontFamily="bold"
+//       >
+//         {value}
+//       </Text>
+//     </G>
+//   ));
+// };
 
 const Analytics = ({ route }) => {
   const [type, setType] = useState(1);
@@ -140,15 +93,25 @@ const Analytics = ({ route }) => {
   const [dataLikesYear, setDataLikesYear] = useState(null);
   const [maxValueYear, setMaxValueYear] = useState(null);
   const [dataGenderPie, setDataGenderPie] = useState(null);
+  const [dataGenderPieGraph, setDataGenderPieGraph] = useState(null);
+  const [dataAgePieGraph, setDataAgePieGraph] = useState(null);
+  const [dataCityPieGraph, setDataCityPieGraph] = useState(null);
+  const [dataCountryPieGraph, setDataCountryPieGraph] = useState(null);
   const [dataCityPie, setDataCityPie] = useState(null);
   const [dataCountryPie, setDataCountryPie] = useState(null);
   const [dataAgePie, setDataAgePie] = useState(null);
-
+  // const [currentData, setCurrentData] = useState(latestData);
   /* Condicionales */
   const [allZeroGender, setAllZeroGender] = useState(false);
   const [allZeroCity, setAllZeroCity] = useState(false);
   const [allZeroAge, setAllZeroAge] = useState(false);
-
+  const customLabel = (val) => {
+    return (
+      <View style={{ width: 70, marginLeft: 7 }}>
+        <Text style={{ color: "white", fontWeight: "bold" }}>{val}</Text>
+      </View>
+    );
+  };
   const { data } = route.params;
   const getData = async () => {
     const api = "api-portaty";
@@ -164,8 +127,8 @@ const Analytics = ({ route }) => {
       /* Likes */
       const dataForXAxis = Object.entries(response.data.likesData.days)
         .map(([date, value]) => ({
-          x: date,
-          y: value,
+          value: Number(value),
+          label: date.substring(5),
         }))
         .reverse();
 
@@ -178,8 +141,8 @@ const Analytics = ({ route }) => {
 
       const dataForXAxisYear = Object.entries(response.data.likesData.year)
         .map(([date, value]) => ({
-          x: date,
-          y: value,
+          value: Number(value),
+          label: date,
         }))
         .reverse();
 
@@ -233,6 +196,15 @@ const Analytics = ({ route }) => {
       );
 
       maxObj.arc = { outerRadius: "120%", cornerRadius: 10 };
+      const genderPie = [];
+      gender.map((item, index) => {
+        genderPie.push({
+          value: item.value,
+          color: item.svg.fill,
+          text: item.amount
+        });
+      });
+
 
       /* City */
       const dataCity = response.data.city;
@@ -299,6 +271,15 @@ const Analytics = ({ route }) => {
       );
 
       maxCity.arc = { outerRadius: "120%", cornerRadius: 10 };
+      const citiesPie = [];
+      cities.map((item, index) => {
+        citiesPie.push({
+          value: item.value,
+          color: item.svg.fill,
+          text: item.amount
+        });
+      });
+      // console.log(countries)
 
       /* Country */
 
@@ -367,6 +348,15 @@ const Analytics = ({ route }) => {
 
       maxCountry.arc = { outerRadius: "120%", cornerRadius: 10 };
 
+      const countriesPie = [];
+      countries.map((item, index) => {
+        countriesPie.push({
+          value: item.value,
+          color: item.svg.fill,
+          text: item.amount
+        });
+      });
+      console.log(citiesPie)
       /* Age */
 
       const dataAge = response.data.age;
@@ -428,16 +418,30 @@ const Analytics = ({ route }) => {
       );
 
       maxAge.arc = { outerRadius: "120%", cornerRadius: 10 };
-      console.log(gender);
 
+      const agePie = [];
+      age.map((item, index) => {
+        agePie.push({
+          value: item.value,
+          color: item.svg.fill,
+          text: item.amount
+        });
+      });
+
+
+      
       setAllZeroGender(gender.every((item) => item.value === 0));
       setAllZeroCity(cities.every((item) => item.value === 0));
       setAllZeroAge(age.every((item) => item.value === 0));
 
       setDataGenderPie(gender);
+      setDataGenderPieGraph(genderPie);
       setDataAgePie(age);
+      setDataAgePieGraph(agePie);
       setDataCityPie(cities);
+      setDataCityPieGraph(citiesPie);
       setDataCountryPie(countries);
+      setDataCountryPieGraph(countriesPie);
       setDataGraph(dataForXAxis);
       setMaxValue(value);
       setDataLikes(likes);
@@ -448,6 +452,11 @@ const Analytics = ({ route }) => {
       console.log(error);
     }
   };
+  // const lineData = [
+  //   { value: 10, label: "2024-03-15" },
+  //   { label: "2024-03-14", value: 5 },
+  // ];
+
   useEffect(() => {
     getData();
   }, []);
@@ -512,7 +521,10 @@ const Analytics = ({ route }) => {
               borderColor: "#1f1f1f",
               borderWidth: 0.7,
               borderRadius: 5,
-              padding: 10,
+              paddingLeft: 5,
+              paddingRight: 15,
+              paddingTop: 10,
+              paddingBottom: 10,
               marginTop: 10,
               flex: 1,
             }}
@@ -581,49 +593,17 @@ const Analytics = ({ route }) => {
                   flexDirection: "row",
                 }}
               >
-                <YAxis
-                  data={dataLikes}
-                  contentInset={{ top: 25, bottom: 30 }}
-                  svg={{
-                    fill: "grey",
-                    fontSize: 9,
-                  }}
-                  numberOfTicks={1}
-                  formatLabel={(value) => `${value}`}
-                  min={0}
-                  max={maxValue}
-                  style={{
-                    marginRight: 3,
-                  }}
-                />
-                <ScrollView horizontal>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                   <View style={{ width: dataGraph.length * 60 }}>
                     <LineChart
-                      style={{ flex: 1 }}
-                      data={dataLikes}
-                      svg={{ stroke: "rgb(255, 183, 3)" }}
-                      contentInset={{ top: 25, bottom: 0, left: 20, right: 20 }}
-                      yMin={0}
-                    >
-                      <Grid />
-                      <Decorator data={dataLikes} backUp={dataLikes} />
-                    </LineChart>
-                    <XAxis
-                      style={{
-                        marginHorizontal: -10,
-                        height: 15,
-                        marginTop: 15,
-                      }}
                       data={dataGraph}
-                      formatLabel={(value, index) =>
-                        dataGraph[index].x.substring(5)
-                      }
-                      contentInset={{ left: 30, right: 30 }}
-                      svg={{
-                        fontSize: 11,
-                        fill: "black",
-                        fontFamily: "regular",
-                      }}
+                      color="#ffb703"
+                      yAxisTextStyle={{fontSize: 12, fontFamily: 'regular'}}
+                      xAxisLabelTextStyle={{fontSize: 12, fontFamily: 'regular'}}
+                      maxValue={maxValue}
+                      spacing={70}
+                      thickness={2}
+                      textFontSize={12}
                     />
                   </View>
                 </ScrollView>
@@ -635,47 +615,17 @@ const Analytics = ({ route }) => {
                   flexDirection: "row",
                 }}
               >
-                <YAxis
-                  data={dataLikesYear}
-                  contentInset={{ top: 25, bottom: 30 }}
-                  svg={{
-                    fill: "grey",
-                    fontSize: 9,
-                  }}
-                  numberOfTicks={1}
-                  formatLabel={(value) => `${value}`}
-                  min={0}
-                  max={maxValueYear}
-                  style={{
-                    marginRight: 3,
-                  }}
-                />
                 <ScrollView horizontal>
                   <View style={{ width: dataGraphYear.length * 60 }}>
-                    <LineChart
-                      style={{ flex: 1 }}
-                      data={dataLikesYear}
-                      svg={{ stroke: "rgb(255, 183, 3)" }}
-                      contentInset={{ top: 25, bottom: 0, left: 20, right: 20 }}
-                      yMin={0}
-                    >
-                      <Grid />
-                      <Decorator data={dataLikesYear} backUp={dataLikesYear} />
-                    </LineChart>
-                    <XAxis
-                      style={{
-                        marginHorizontal: -8,
-                        height: 15,
-                        marginTop: 15,
-                      }}
+                  <LineChart
                       data={dataGraphYear}
-                      formatLabel={(value, index) => dataGraphYear[index].x}
-                      contentInset={{ left: 30, right: 30 }}
-                      svg={{
-                        fontSize: 10,
-                        fill: "black",
-                        fontFamily: "regular",
-                      }}
+                      color="#ffb703"
+                      yAxisTextStyle={{fontSize: 12, fontFamily: 'regular'}}
+                      xAxisLabelTextStyle={{fontSize: 9, fontFamily: 'regular', marginLeft: 5}}
+                      maxValue={maxValueYear}
+                      spacing={70}
+                      thickness={2}
+                      textFontSize={12}
                     />
                   </View>
                 </ScrollView>
@@ -736,6 +686,7 @@ const Analytics = ({ route }) => {
                 justifyContent: "space-between",
                 alignItems: "center",
                 flex: 1,
+                marginVertical: 20
               }}
             >
               {allZeroGender ? (
@@ -756,13 +707,12 @@ const Analytics = ({ route }) => {
                 </View>
               ) : (
                 <PieChart
-                  style={{ width: 150, height: 170 }}
-                  data={dataGenderPie}
-                  outerRadius={"70%"}
-                  innerRadius={1}
-                >
-                  <Labels />
-                </PieChart>
+                  showText
+                  textColor="black"
+                  radius={70}
+                  textSize={12}
+                  data={dataGenderPieGraph}
+                />
               )}
               <View>
                 {dataGenderPie.map((entry, index) => (
@@ -804,6 +754,7 @@ const Analytics = ({ route }) => {
                 justifyContent: "space-between",
                 alignItems: "center",
                 flex: 1,
+                marginVertical: 20
               }}
             >
               {allZeroAge ? (
@@ -824,13 +775,12 @@ const Analytics = ({ route }) => {
                 </View>
               ) : (
                 <PieChart
-                  style={{ width: 150, height: 170 }}
-                  data={dataAgePie}
-                  outerRadius={"70%"}
-                  innerRadius={1}
-                >
-                  <Labels />
-                </PieChart>
+                  showText
+                  textColor="black"
+                  radius={70}
+                  textSize={12}
+                  data={dataAgePieGraph}
+                />
               )}
               <View>
                 {dataAgePie.map((entry, index) => (
@@ -929,6 +879,7 @@ const Analytics = ({ route }) => {
                   justifyContent: "space-between",
                   alignItems: "center",
                   flex: 1,
+                  marginVertical: 20
                 }}
               >
                 {allZeroCity ? (
@@ -949,13 +900,12 @@ const Analytics = ({ route }) => {
                   </View>
                 ) : (
                   <PieChart
-                    style={{ width: 150, height: 170 }}
-                    data={dataCityPie}
-                    outerRadius={"70%"}
-                    innerRadius={1}
-                  >
-                    <Labels />
-                  </PieChart>
+                  showText
+                  textColor="black"
+                  radius={70}
+                  textSize={12}
+                  data={dataCityPieGraph}
+                />
                 )}
                 <View>
                   {dataCityPie.map((entry, index) => (
@@ -996,6 +946,7 @@ const Analytics = ({ route }) => {
                   justifyContent: "space-between",
                   alignItems: "center",
                   flex: 1,
+                  marginVertical: 20
                 }}
               >
                 {allZeroCity ? (
@@ -1016,13 +967,12 @@ const Analytics = ({ route }) => {
                   </View>
                 ) : (
                   <PieChart
-                    style={{ width: 150, height: 170 }}
-                    data={dataCountryPie}
-                    outerRadius={"70%"}
-                    innerRadius={1}
-                  >
-                    <Labels />
-                  </PieChart>
+                  showText
+                  textColor="black"
+                  radius={70}
+                  textSize={12}
+                  data={dataCountryPieGraph}
+                />
                 )}
                 <View>
                   {dataCountryPie.map((entry, index) => (
@@ -1168,16 +1118,6 @@ const Analytics = ({ route }) => {
                   }}
                 >
                   {usuario.fecha}
-                </RNText>
-                <RNText
-                  style={{
-                    textAlign: "center",
-                    flex: 1,
-                    fontSize: 10,
-                    fontFamily: "light",
-                  }}
-                >
-                  {usuario.nombre}
                 </RNText>
                 <RNText
                   style={{
