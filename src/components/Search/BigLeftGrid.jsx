@@ -4,7 +4,6 @@ import styles from "@/utils/styles/GridSearch.module.css";
 import Post from "./Post";
 
 const BigLeftGrid = ({ data, input }) => {
-  console.log('bigleft', input)
 
   return (
     <View style={{ paddingHorizontal: 10, flexDirection: "row" }}>

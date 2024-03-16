@@ -96,6 +96,7 @@ const Search = ({ route }) => {
       }
       setSearchActive(true);
       setSearchCacheActive(newRenderItems);
+      console.log('aqiooo', newRenderItems[0].length)
       return setItems(newRenderItems);
     } catch (error) {
       return console.log(error);

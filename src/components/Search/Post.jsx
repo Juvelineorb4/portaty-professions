@@ -20,7 +20,6 @@ const Post = ({ data, image, styled, input }) => {
   const navigation = useNavigation();
   const [post, setPost] = useState([]);
   const [loading, setLoading] = useState(false);
-  console.log("post", data);
   const list = data?.images
     ?.map((image) => JSON.parse(image))
     .sort((a, b) => a.key - b.key);

@@ -798,6 +798,41 @@ const SearchPost = ({ route, navigation }) => {
               </Text>
             </View>
           </View>
+          <View style={[styles.line, global.bgMidGray]} />
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: 20,
+            }}
+          >
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              {/* <FontAwesome5 name="store" size={16} color="#1f1f1f" /> */}
+              <Text
+                style={[
+                  { fontFamily: "lightItalic", fontSize: 13 },
+                  global.black,
+                ]}
+              >
+                Descripcion
+              </Text>
+            </View>
+            <View style={{ flexDirection: "row", alignItems: 'center', justifyContent: 'flex-end' }}>
+              <Text
+                style={[
+                  {
+                    width: 200,
+                    fontSize: 13,
+                    fontFamily: "regular",
+                    textAlign: 'right'
+                  },
+                ]}
+              >
+                {post?.description}
+              </Text>
+            </View>
+          </View>
           <View
             style={[
               styles.line,
