@@ -76,7 +76,7 @@
         "foregroundImage": "./src/utils/images/portaty.png",
         "backgroundColor": "#FFFFFF"
       },
-      "versionCode": 57
+      "versionCode": 58
     },
     "web": {
       "favicon": "./src/utils/images/portaty.png"
