@@ -52,6 +52,7 @@ const MapMarketBusiness = ({
   const [errorMap, setErrorMap] = useState(false);
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
+  const [activeButton, setActiveButton] = useState(true);
   const [loadingSearch, setLoadingSearch] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectMap, setSelectMap] = useState(false);
@@ -99,21 +100,27 @@ const MapMarketBusiness = ({
   const obtenerCoordenadas = async (address) => {
     console.log(mapRef);
     console.log(address);
-    let coordenadas = await Location.geocodeAsync(address);
+    let direccion = await Location.reverseGeocodeAsync(initialLocation);
+    const direccionComplete = `${address}, ${direccion[0].region}, ${direccion[0].country}`;
+    let coordenadas = await Location.geocodeAsync(direccionComplete);
+    console.log("aqui", coordenadas);
+
     setRegion({
       latitude: coordenadas[0].latitude,
       longitude: coordenadas[0].longitude,
       latitudeDelta: 0.01,
       longitudeDelta: 0.01,
     });
-    mapRef.current.animateToRegion({
-      latitude: coordenadas.latitude,
-      longitude: coordenadas.longitude,
-      latitudeDelta: 0.01,
-      longitudeDelta: 0.01,
-    }, 7000);
+    mapRef.current.animateToRegion(
+      {
+        latitude: coordenadas.latitude,
+        longitude: coordenadas.longitude,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      },
+      7000
+    );
   };
-
 
   const onHandlePress = (e) => {
     const {
@@ -273,7 +280,6 @@ const MapMarketBusiness = ({
                         showsUserLocation={modalVisible}
                         ref={mapRef}
                         region={region}
-                        chan
                         onDoublePress={(e) => {
                           onHandlePress(e);
                           onChange(e.nativeEvent.coordinate);
@@ -319,43 +325,68 @@ const MapMarketBusiness = ({
                         flex: 1,
                         marginHorizontal: 5,
                         marginVertical: 13,
-                        padding: 5,
-                        borderRadius: 5,
-                        borderColor: "#1f1f1f",
-                        borderWidth: 0.7,
-                        width: 235,
-                        backgroundColor: "#fff",
+                        // borderColor: "#1f1f1f",
+                        // borderWidth: 0.7,
+                        flexDirection: "row",
+                        paddingBottom: 10,
+                        paddingRight: 5
                       }}
                     >
-                      <TextInput
-                        value={description}
-                        onChangeText={(e) => {
-                          setDescription(e);
-                        }}
-                        placeholder={`Introduce una direccion`}
+                      <View
                         style={{
-                          fontFamily: "regular",
-                          fontSize: 14,
+                          padding: 5,
+                          borderRadius: 5,
+                          borderColor: "#1f1f1f",
+                          borderWidth: 0.7,
+                          width: 235,
+                          backgroundColor: "#fff",
                         }}
-                      />
+                        pointerEvents="box-none"
+                      >
+                        <TextInput
+                          value={description}
+                          onChangeText={(e) => {
+                            setDescription(e);
+                            setActiveButton(false);
+                          }}
+                          placeholder={`Introduce una direccion`}
+                          style={{
+                            fontFamily: "regular",
+                            fontSize: 14,
+                          }}
+                        />
+                      </View>
+
                       <TouchableOpacity
                         style={[
                           {
-                            position: "absolute",
-                            bottom: -1,
-                            right: -65,
                             justifyContent: "center",
                             alignContent: "center",
                             borderRadius: 5,
                             height: 40,
                             width: 60,
+                            marginLeft: 5,
                             alignItems: "center",
                             borderColor: "#1f1f1f",
                             borderWidth: 0.7,
+                            opacity:
+                              activeButton || description !== "" ? 0.8 : 1,
                           },
-                          global.bgYellow,
+                          activeButton || description === ""
+                            ? global.bgWhite
+                            : global.bgYellow,
                         ]}
-                        onPress={() => obtenerCoordenadas(description)}
+                        pointerEvents="auto"
+                        disabled={
+                          description === "" || activeButton ? true : false
+                        }
+                        onPress={() => {
+                          if (description !== "") {
+                            obtenerCoordenadas(description);
+
+                            setActiveButton(true);
+                          }
+                        }}
                       >
                         {loadingSearch ? (
                           <ActivityIndicator size="small" color="#1f1f1f" />

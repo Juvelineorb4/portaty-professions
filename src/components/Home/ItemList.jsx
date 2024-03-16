@@ -134,7 +134,7 @@ const ItemList = ({ data, number, styled }) => {
               </Text>
             </View>
           </View>
-          <TouchableOpacity
+          <View
             style={{
               flexDirection: "row",
               alignItems: "flex-end",
@@ -155,7 +155,7 @@ const ItemList = ({ data, number, styled }) => {
             >
               Ver
             </Text>
-          </TouchableOpacity>
+          </View>
         </View>
       </TouchableOpacity>
     );
