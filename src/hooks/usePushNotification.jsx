@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
-
+import { useSetRecoilState } from "recoil";
+import { notificationToken } from "@/atoms/index";
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -45,8 +46,6 @@ async function registerForPushNotificationsAsync() {
       return;
     }
     token = (await Notifications.getExpoPushTokenAsync()).data;
-
-    console.log("Token: ", token);
   } else {
     alert("Must use physical device for Push Notifications");
   }
@@ -66,17 +65,19 @@ async function registerForPushNotificationsAsync() {
 const usePushNotification = () => {
   const [expoPushToken, setExpoPushToken] = useState(null);
   const [notification, setNotification] = useState(false);
+  const setToken = useSetRecoilState(notificationToken);
   const notificationListener = useRef();
   const responseListener = useRef();
 
   useEffect(() => {
     registerForPushNotificationsAsync().then((token) => {
       setExpoPushToken(token);
+      setToken(token);
     });
 
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
-        console.log("NOTIFICACION RECIBIDA: ", notification)
+        console.log("NOTIFICACION RECIBIDA: ", notification);
         setNotification(notification);
       });
 

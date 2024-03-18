@@ -20,13 +20,16 @@ import { Auth } from "aws-amplify";
 import ModalAlert from "@/components/ModalAlert";
 import CustomCheckBox from "@/components/CustomCheckBox";
 import * as WebBrowser from "expo-web-browser";
+
+// recoil
+import { notificationToken } from "@/atoms/index";
+import { useRecoilValue } from "recoil";
 const Register = ({ navigation }) => {
+  const token = useRecoilValue(notificationToken);
   const EMAIL_REGEX = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
   const [visible, setVisible] = useState(false);
-  const [activeGender, setActiveGender] = useState(false);
-  const [gender, setGender] = useState(0);
+
   const [error, setError] = useState("");
   const global = require("@/utils/styles/global.js");
   const { control, handleSubmit, watch, setValue } = useForm({
@@ -39,10 +42,6 @@ const Register = ({ navigation }) => {
     },
   });
   const pwd = watch("password");
-  const genderT = watch("gender");
-  useEffect(() => {
-    console.log("GENDER: ", genderT);
-  }, [genderT]);
 
   const convertirFechaADateISO8601 = (date) => {
     // Separamos la fecha en día, mes y año
@@ -63,7 +62,6 @@ const Register = ({ navigation }) => {
 
   const onHandleRegister = async (data) => {
     setIsLoading(true);
-    setErrorMsg("");
     const { name, lastName, email, password, birthdate, gender } = data;
     const fullName = `${name.trim()} ${lastName.trim()}`;
     const fechaISO8601 = convertirFechaADateISO8601(birthdate);
@@ -77,6 +75,7 @@ const Register = ({ navigation }) => {
           birthdate: fechaISO8601,
           "custom:lastName": lastName.trim(),
           "custom:gender": gender.trim(),
+          "custom:notificationToken": token,
         },
       });
       navigation.navigate("ConfirmRegister", {
@@ -151,23 +150,23 @@ const Register = ({ navigation }) => {
                 required: es.authentication.register.lastName.rules,
               }}
             />
-            {/* </View> */}
-
-            <CustomInput
+            <CustomInputSelect
               control={control}
-              name={`email`}
-              placeholder={es.authentication.register.email.placeholder}
+              name={`gender`}
+              placeholderTextColor={`#1f1f1f`}
+              placeholder="Elige tu género"
+              editable={false}
               styled={{
                 text: styles.textInput,
                 label: styles.labelInput,
                 error: styles.errorInput,
-                placeholder: styles.placeholder,
+                placeholder: styles.placeholderGender,
                 input: [styles.inputContainer, global.bgWhite],
+                security: styles.security,
               }}
-              text={`Correo electronico`}
-              // icon={require("@/utils/images/email.png")}
+              text={`Género`}
               rules={{
-                required: es.authentication.register.email.rules,
+                required: es.authentication.register.password.rules,
               }}
             />
             <CustomCalendarInput
@@ -188,6 +187,29 @@ const Register = ({ navigation }) => {
                 required: es.authentication.register.birthday.rules,
               }}
             />
+
+            <CustomInput
+              control={control}
+              name={`email`}
+              placeholder={es.authentication.register.email.placeholder}
+              styled={{
+                text: styles.textInput,
+                label: styles.labelInput,
+                error: styles.errorInput,
+                placeholder: styles.placeholder,
+                input: [styles.inputContainer, global.bgWhite],
+              }}
+              text={`Correo electronico`}
+              // icon={require("@/utils/images/email.png")}
+              rules={{
+                required: es.authentication.register.email.rules,
+                pattern: {
+                  value: /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/,
+                  message: "Correo no valido.",
+                },
+              }}
+            />
+
             <CustomInput
               control={control}
               name={`password`}
@@ -229,25 +251,6 @@ const Register = ({ navigation }) => {
               rules={{
                 required: es.authentication.register.repeat.rules,
                 validate: (value) => value == pwd || "No coincide",
-              }}
-            />
-            <CustomInputSelect
-              control={control}
-              name={`gender`}
-              placeholderTextColor={`#1f1f1f`}
-              placeholder="Elige tu género"
-              editable={false}
-              styled={{
-                text: styles.textInput,
-                label: styles.labelInput,
-                error: styles.errorInput,
-                placeholder: styles.placeholderGender,
-                input: [styles.inputContainer, global.bgWhite],
-                security: styles.security,
-              }}
-              text={`Género`}
-              rules={{
-                required: es.authentication.register.password.rules,
               }}
             />
           </View>

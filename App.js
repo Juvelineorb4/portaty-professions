@@ -1,5 +1,6 @@
 import { useCallback, useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { RootSiblingParent } from "react-native-root-siblings";
 import {
   SafeAreaProvider,
   SafeAreaView as SafeAreaAndroid,
@@ -74,7 +75,9 @@ export default function App() {
         <SafeAreaProvider>
           <GestureHandlerRootView style={{ flex: 1 }}>
             <RecoilRoot>
-              <Navigation />
+              <RootSiblingParent>
+                <Navigation />
+              </RootSiblingParent>
             </RecoilRoot>
           </GestureHandlerRootView>
         </SafeAreaProvider>
@@ -86,8 +89,10 @@ export default function App() {
       <SafeAreaProvider>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <RecoilRoot>
-            <StatusBar style="dark" backgroundColor="#fff" />
-            <Navigation />
+            <RootSiblingParent>
+              <StatusBar style="dark" backgroundColor="#fff" />
+              <Navigation />
+            </RootSiblingParent>
           </RecoilRoot>
         </GestureHandlerRootView>
       </SafeAreaProvider>

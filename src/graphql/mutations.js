@@ -196,6 +196,8 @@ export const createUsers = /* GraphQL */ `
       lastName
       email
       identityID
+      gender
+      notificationToken
       favorites {
         items {
           id
@@ -257,6 +259,8 @@ export const updateUsers = /* GraphQL */ `
       lastName
       email
       identityID
+      gender
+      notificationToken
       favorites {
         items {
           id
@@ -318,6 +322,8 @@ export const deleteUsers = /* GraphQL */ `
       lastName
       email
       identityID
+      gender
+      notificationToken
       favorites {
         items {
           id
@@ -382,6 +388,8 @@ export const createBusiness = /* GraphQL */ `
         lastName
         email
         identityID
+        gender
+        notificationToken
         favorites {
           nextToken
           __typename
@@ -452,6 +460,8 @@ export const updateBusiness = /* GraphQL */ `
         lastName
         email
         identityID
+        gender
+        notificationToken
         favorites {
           nextToken
           __typename
@@ -522,6 +532,8 @@ export const deleteBusiness = /* GraphQL */ `
         lastName
         email
         identityID
+        gender
+        notificationToken
         favorites {
           nextToken
           __typename
@@ -595,6 +607,8 @@ export const createFavorites = /* GraphQL */ `
           lastName
           email
           identityID
+          gender
+          notificationToken
           owner
           createdAt
           updatedAt
@@ -638,6 +652,8 @@ export const createFavorites = /* GraphQL */ `
         lastName
         email
         identityID
+        gender
+        notificationToken
         favorites {
           nextToken
           __typename
@@ -677,6 +693,8 @@ export const updateFavorites = /* GraphQL */ `
           lastName
           email
           identityID
+          gender
+          notificationToken
           owner
           createdAt
           updatedAt
@@ -720,6 +738,8 @@ export const updateFavorites = /* GraphQL */ `
         lastName
         email
         identityID
+        gender
+        notificationToken
         favorites {
           nextToken
           __typename
@@ -759,6 +779,8 @@ export const deleteFavorites = /* GraphQL */ `
           lastName
           email
           identityID
+          gender
+          notificationToken
           owner
           createdAt
           updatedAt
@@ -802,6 +824,8 @@ export const deleteFavorites = /* GraphQL */ `
         lastName
         email
         identityID
+        gender
+        notificationToken
         favorites {
           nextToken
           __typename

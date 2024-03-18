@@ -39,6 +39,8 @@ export const searchBusinessByDistance = /* GraphQL */ `
           lastName
           email
           identityID
+          gender
+          notificationToken
           owner
           createdAt
           updatedAt
@@ -220,6 +222,8 @@ export const getUsers = /* GraphQL */ `
       lastName
       email
       identityID
+      gender
+      notificationToken
       favorites {
         items {
           id
@@ -283,6 +287,8 @@ export const listUsers = /* GraphQL */ `
         lastName
         email
         identityID
+        gender
+        notificationToken
         favorites {
           nextToken
           __typename
@@ -323,6 +329,8 @@ export const userByEmail = /* GraphQL */ `
         lastName
         email
         identityID
+        gender
+        notificationToken
         favorites {
           nextToken
           __typename
@@ -353,6 +361,8 @@ export const getBusiness = /* GraphQL */ `
         lastName
         email
         identityID
+        gender
+        notificationToken
         favorites {
           nextToken
           __typename
@@ -425,6 +435,8 @@ export const listBusinesses = /* GraphQL */ `
           lastName
           email
           identityID
+          gender
+          notificationToken
           owner
           createdAt
           updatedAt
@@ -490,6 +502,8 @@ export const businessesByUserID = /* GraphQL */ `
           lastName
           email
           identityID
+          gender
+          notificationToken
           owner
           createdAt
           updatedAt
@@ -545,6 +559,8 @@ export const getFavorites = /* GraphQL */ `
           lastName
           email
           identityID
+          gender
+          notificationToken
           owner
           createdAt
           updatedAt
@@ -588,6 +604,8 @@ export const getFavorites = /* GraphQL */ `
         lastName
         email
         identityID
+        gender
+        notificationToken
         favorites {
           nextToken
           __typename
@@ -651,6 +669,8 @@ export const listFavorites = /* GraphQL */ `
           lastName
           email
           identityID
+          gender
+          notificationToken
           owner
           createdAt
           updatedAt
@@ -719,6 +739,8 @@ export const favoritesByBusinessID = /* GraphQL */ `
           lastName
           email
           identityID
+          gender
+          notificationToken
           owner
           createdAt
           updatedAt
@@ -785,6 +807,8 @@ export const favoritesByUserID = /* GraphQL */ `
           lastName
           email
           identityID
+          gender
+          notificationToken
           owner
           createdAt
           updatedAt
