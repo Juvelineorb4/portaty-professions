@@ -48,6 +48,9 @@ type Users
         { allow: private, provider: iam, operations: [read] }
       ]
     )
+  gender: String @auth(rules: [{ allow: owner, operations: [read, delete] }])
+  notificationToken: [String]
+    @auth(rules: [{ allow: owner, operations: [read, delete] }])
   favorites: [Favorites] @hasMany(indexName: "byUsersFavorites", fields: ["id"])
   business: [Business] @hasMany(indexName: "byUsersBusiness", fields: ["id"])
   owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }])

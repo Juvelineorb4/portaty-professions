@@ -15,15 +15,17 @@ import linking from "./linking";
 import LeftHeaderShare from "@/components/Header/LeftHeaderShare";
 // hooks
 import useLocation from "@/hooks/useLocation";
+import usePushNotification from "@/hooks/usePushNotification";
 import ShareNavigator from "./ShareNavigator";
 import SplashScreen from "@/components/SplashScreen";
 import { Text, View, Image } from "react-native";
 import Loading from "@/components/Loading";
 
 const Navigation = () => {
+  useLocation();
+  usePushNotification();
   const Stack = createNativeStackNavigator();
   const global = require("@/utils/styles/global.js");
-  useLocation()
   const [checkRender, setCheckRender] = useState(true);
   const [userState, setUserState] = useState(false);
   const [isFirsTime, setIsFirsTime] = useState(false);

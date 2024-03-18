@@ -32,7 +32,7 @@ const CustomCheckBox = ({
               style={{ marginVertical: 10, width: 18, height: 18 }}
               value={value}
               onValueChange={onChange}
-              color={value ? "#ffb703" : undefined}
+              color={ error ? "red" : value ? "#ffb703" : undefined}
             />
             <Text style={{ marginHorizontal: 5, fontFamily: 'regular', fontSize: 13 }}>{text}</Text>
             {onPressed && (

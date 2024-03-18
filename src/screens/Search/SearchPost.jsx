@@ -230,13 +230,16 @@ const SearchPost = ({ route, navigation }) => {
         city,
         businessid: businessID,
       };
-      Analytics.record(
-        {
-          data: params,
-          streamName: "portaty-app-firehose",
-        },
-        "AWSKinesisFirehose"
-      );
+  
+        Analytics.record(
+          {
+            data: params,
+            streamName: "portaty-app-firehose",
+          },
+          "AWSKinesisFirehose"
+        );
+        
+
       // Almacena la información de la última visualización en AsyncStorage
       const currentViewInfo = {
         businessID: businessID,

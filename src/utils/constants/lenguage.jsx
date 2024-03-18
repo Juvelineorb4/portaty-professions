@@ -19,11 +19,11 @@ export const es = {
     register: {
       title: "Crear nueva cuenta",
       name: {
-        placeholder: "Christopher ",
+        placeholder: "Albert",
         rules: "Requerido",
       },
       lastName: {
-        placeholder: "Alvarez",
+        placeholder: "Einstein",
         rules: "Requerido",
       },
       phone: {

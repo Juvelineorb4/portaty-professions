@@ -1,4 +1,4 @@
-package com.portaty;
+package com.teamportaty.appdev;
 
 import android.app.Application;
 import android.content.res.Configuration;

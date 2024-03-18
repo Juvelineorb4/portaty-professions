@@ -153,3 +153,8 @@ export const activeModalScreen = atom({
   key: "activeModalScreenValue",
   default: true,
 });
+
+export const notificationToken = atom({
+  key: "notificationTokenValue",
+  default: null,
+});

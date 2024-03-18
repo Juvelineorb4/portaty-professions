@@ -8,10 +8,11 @@ import {
   Alert,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "@/utils/styles/Register.module.css";
 import { useForm } from "react-hook-form";
 import CustomInput from "@/components/CustomInput";
+import CustomInputSelect from "@/components/CustomInputSelect";
 import CustomButton from "@/components/CustomButton";
 import CustomCalendarInput from "@/components/CustomCalendarInput";
 import { es } from "@/utils/constants/lenguage";
@@ -19,13 +20,16 @@ import { Auth } from "aws-amplify";
 import ModalAlert from "@/components/ModalAlert";
 import CustomCheckBox from "@/components/CustomCheckBox";
 import * as WebBrowser from "expo-web-browser";
+
+// recoil
+import { notificationToken } from "@/atoms/index";
+import { useRecoilValue } from "recoil";
 const Register = ({ navigation }) => {
+  const token = useRecoilValue(notificationToken);
   const EMAIL_REGEX = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
   const [visible, setVisible] = useState(false);
-  const [activeGender, setActiveGender] = useState(false);
-  const [gender, setGender] = useState(0);
+
   const [error, setError] = useState("");
   const global = require("@/utils/styles/global.js");
   const { control, handleSubmit, watch, setValue } = useForm({
@@ -58,8 +62,7 @@ const Register = ({ navigation }) => {
 
   const onHandleRegister = async (data) => {
     setIsLoading(true);
-    setErrorMsg("");
-    const { name, lastName, email, password, birthdate } = data;
+    const { name, lastName, email, password, birthdate, gender } = data;
     const fullName = `${name.trim()} ${lastName.trim()}`;
     const fechaISO8601 = convertirFechaADateISO8601(birthdate);
     try {
@@ -71,6 +74,8 @@ const Register = ({ navigation }) => {
           name: name.trim(),
           birthdate: fechaISO8601,
           "custom:lastName": lastName.trim(),
+          "custom:gender": gender.trim(),
+          "custom:notificationToken": token,
         },
       });
       navigation.navigate("ConfirmRegister", {
@@ -145,23 +150,23 @@ const Register = ({ navigation }) => {
                 required: es.authentication.register.lastName.rules,
               }}
             />
-            {/* </View> */}
-
-            <CustomInput
+            <CustomInputSelect
               control={control}
-              name={`email`}
-              placeholder={es.authentication.register.email.placeholder}
+              name={`gender`}
+              placeholderTextColor={`#1f1f1f`}
+              placeholder="Elige tu género"
+              editable={false}
               styled={{
                 text: styles.textInput,
                 label: styles.labelInput,
                 error: styles.errorInput,
-                placeholder: styles.placeholder,
+                placeholder: styles.placeholderGender,
                 input: [styles.inputContainer, global.bgWhite],
+                security: styles.security,
               }}
-              text={`Correo electronico`}
-              // icon={require("@/utils/images/email.png")}
+              text={`Género`}
               rules={{
-                required: es.authentication.register.email.rules,
+                required: es.authentication.register.password.rules,
               }}
             />
             <CustomCalendarInput
@@ -182,6 +187,29 @@ const Register = ({ navigation }) => {
                 required: es.authentication.register.birthday.rules,
               }}
             />
+
+            <CustomInput
+              control={control}
+              name={`email`}
+              placeholder={es.authentication.register.email.placeholder}
+              styled={{
+                text: styles.textInput,
+                label: styles.labelInput,
+                error: styles.errorInput,
+                placeholder: styles.placeholder,
+                input: [styles.inputContainer, global.bgWhite],
+              }}
+              text={`Correo electronico`}
+              // icon={require("@/utils/images/email.png")}
+              rules={{
+                required: es.authentication.register.email.rules,
+                pattern: {
+                  value: /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/,
+                  message: "Correo no valido.",
+                },
+              }}
+            />
+
             <CustomInput
               control={control}
               name={`password`}
@@ -225,116 +253,6 @@ const Register = ({ navigation }) => {
                 validate: (value) => value == pwd || "No coincide",
               }}
             />
-            <TouchableOpacity
-              onPress={() => setActiveGender(!activeGender)}
-              activeOpacity={1}
-              style={{ position: "relative" }}
-            >
-              <CustomInput
-                control={control}
-                name={`gender`}
-                placeholderTextColor={`#1f1f1f`}
-                placeholder={
-                  gender === 0
-                    ? "Masculino"
-                    : gender === 1
-                    ? "Femenino"
-                    : gender === 2
-                    ? "Otro"
-                    : `Elige tu género`
-                }
-                editable={false}
-                styled={{
-                  text: styles.textInput,
-                  label: styles.labelInput,
-                  error: styles.errorInput,
-                  placeholder: styles.placeholderGender,
-                  input: [styles.inputContainer, global.bgWhite],
-                  security: styles.security,
-                }}
-                text={`Género`}
-                // icon={require("@/utils/images/password.png")}
-                rules={{
-                  required: es.authentication.register.password.rules,
-                }}
-              />
-              {activeGender ? (
-                <View
-                  style={{
-                    flex: 1,
-                    position: "absolute",
-                    backgroundColor: "#ffb703",
-                    width: "100%",
-                    borderColor: "#1f1f1f",
-                    borderWidth: 1,
-                    padding: 10,
-                    borderRadius: 7,
-                    bottom: 75,
-                    zIndex: 100,
-                  }}
-                >
-                  <TouchableOpacity
-                    onPress={() => {
-                      setGender(0);
-                      setActiveGender(!activeGender);
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontFamily: "bold",
-                        fontSize: 12,
-                        borderBottomWidth: 1,
-                        borderBottomColor: "#1f1f1f",
-                        paddingVertical: 10,
-                        color: gender === 0 ? "#1f1f1f" : "#ffffff",
-                      }}
-                    >
-                      Masculino
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => {
-                      setGender(1);
-                      setActiveGender(!activeGender);
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontFamily: "bold",
-                        fontSize: 12,
-                        borderBottomWidth: 1,
-                        borderBottomColor: "#1f1f1f",
-                        paddingVertical: 10,
-                        color: gender === 1 ? "#1f1f1f" : "#ffffff",
-                      }}
-                    >
-                      Femenino
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => {
-                      setGender(2);
-                      setActiveGender(!activeGender);
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontFamily: "bold",
-                        fontSize: 12,
-                        borderBottomWidth: 1,
-                        borderBottomColor: "#1f1f1f",
-                        paddingVertical: 10,
-                        color: gender === 2 ? "#1f1f1f" : "#ffffff",
-                      }}
-                    >
-                      Otro
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              ) : (
-                ""
-              )}
-            </TouchableOpacity>
           </View>
           <CustomCheckBox
             control={control}
