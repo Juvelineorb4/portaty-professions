@@ -55,7 +55,7 @@ const FavoritePage = ({ navigation, route }) => {
   const {
     data: { item, image },
   } = route.params;
-  const actividad = JSON.parse(item.business.activity)
+  const actividad = JSON.parse(item.business.activity);
   const list = item?.business?.images
     .map((image) => JSON.parse(image))
     .sort((a, b) => a.key - b.key);
@@ -325,7 +325,9 @@ const FavoritePage = ({ navigation, route }) => {
             {/* <MaterialIcons name="favorite" size={45} color="red" /> */}
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
+
+        {/* Reporte */}
+        {/* <TouchableOpacity
           style={{
             alignSelf: "flex-end",
             paddingHorizontal: 20,
@@ -342,7 +344,7 @@ const FavoritePage = ({ navigation, route }) => {
             // marginLeft: 2,
             // marginBottom: 3
           }]}>Reportar negocio</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <View style={[styles.line, global.bgMidGray]} />
         <TouchableOpacity
@@ -647,14 +649,20 @@ const FavoritePage = ({ navigation, route }) => {
                 Descripcion
               </Text>
             </View>
-            <View style={{ flexDirection: "row", alignItems: 'center', justifyContent: 'flex-end' }}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "flex-end",
+              }}
+            >
               <Text
                 style={[
                   {
                     width: 200,
                     fontSize: 13,
                     fontFamily: "regular",
-                    textAlign: 'right'
+                    textAlign: "right",
                   },
                 ]}
               >

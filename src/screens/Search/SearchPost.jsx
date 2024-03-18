@@ -450,7 +450,8 @@ const SearchPost = ({ route, navigation }) => {
                 )}
               </TouchableOpacity>
             </View>
-            <TouchableOpacity
+            {/* Reporte */}
+            {/* <TouchableOpacity
               style={{
                 alignSelf: "flex-end",
                 paddingHorizontal: 20,
@@ -474,7 +475,7 @@ const SearchPost = ({ route, navigation }) => {
               >
                 Reportar negocio
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         )}
         <View

@@ -111,7 +111,6 @@ const Post = ({ data, image, styled, input }) => {
                   {roundNumber(data.distance) < "1.0"
                     ? `${roundNumber(data.distance) * 1000} m`
                     : `${data.distance.toFixed(1)} km`}
-                    {console.log(roundNumber(data.distance.toFixed(2)))}
                 </Text>
               </View>
             </View>
