@@ -90,7 +90,6 @@ const Page = ({ route, navigation }) => {
     facebook: item.facebook,
     description: item.description,
   });
-  console.log("esto", storageImages);
   const onSaveChange = async () => {
     setIsLoading(true);
     const activityChange = JSON.stringify(editParams?.activity);
@@ -113,7 +112,6 @@ const Page = ({ route, navigation }) => {
           },
         },
       });
-      console.log(result);
     } catch (error) {
       const { message } = new Error(error);
       console.log("ERROR AL ACTUALIZAR NEGOCIO: ", message);
@@ -129,7 +127,6 @@ const Page = ({ route, navigation }) => {
     }, 1000);
   }, []);
 
-  console.log(actividad);
   const getPdf = async () => {
     const { identityId } = await Auth.currentUserCredentials();
     const api = "api-professions-gateway";
@@ -150,18 +147,13 @@ const Page = ({ route, navigation }) => {
       await Linking.openURL(result?.url);
       return;
       const localUri = `${FileSystem.documentDirectory}qr.pdf`;
-      console.log(localUri);
 
-      console.log(result);
       const file = await FileSystem.downloadAsync(result?.url, localUri);
-      console.log(file);
-      console.log("llegue aqui primero");
 
       FileSystem.getContentUriAsync(file.uri).then((cUri) => {
         if (Platform.OS === "ios") {
           Sharing.shareAsync(cUri);
         } else {
-          console.log(cUri);
           IntentLauncher.startActivityAsync("android.intent.action.VIEW", {
             data: cUri,
             flags: 1,
@@ -171,7 +163,6 @@ const Page = ({ route, navigation }) => {
       });
       // descargo en almacenamiento local y luego abro
       // downloadAndOpenFile(result.url, localUri, "application/pdf");
-      console.log("llegue aqui");
     } catch (error) {
       console.log("Error en pdf: ", error.message);
     }
@@ -229,7 +220,7 @@ const Page = ({ route, navigation }) => {
       setOpen(!open);
       // uploadImages(result.assets[0].base64);
     } else {
-      console.log("cancelaste");
+      console.log("Cancelado");
     }
   };
   function urlToBlob(url) {
@@ -293,7 +284,6 @@ const Page = ({ route, navigation }) => {
         ?.map((image) => JSON.parse(image))
         .sort((a, b) => a.key - b.key);
       setStorageImages(list);
-      console.log("aqui", list);
     } catch (error) {
       console.log(error);
     }
@@ -310,9 +300,8 @@ const Page = ({ route, navigation }) => {
     if (!result.canceled) {
       setActiveMainImage(true);
       setImageChange(result.assets[0]);
-      console.log(result.assets[0]);
     } else {
-      console.log("cancelaste");
+      console.log("Cancelado");
     }
   };
   const changeImage = async (image, description, change) => {
@@ -336,7 +325,6 @@ const Page = ({ route, navigation }) => {
 
     try {
       const resultAPI = await API.post(apiName, path, myInit);
-      // console.log(resultAPI);
       setDescriptionImage("");
       imagesArray();
       setOpen(!open);
@@ -365,7 +353,6 @@ const Page = ({ route, navigation }) => {
     };
     try {
       const resultAPI = await API.post(apiName, path, myInit);
-      // console.log(resultAPI);
       imagesArray();
       setDescriptionImage("");
       setOpen(!open);
@@ -386,7 +373,6 @@ const Page = ({ route, navigation }) => {
     const list = result?.data?.getBusiness?.images
       .map((image) => JSON.parse(image))
       .sort((a, b) => a.key - b.key);
-    // console.log(list);
     setStorageImages(list);
   };
 
@@ -404,9 +390,6 @@ const Page = ({ route, navigation }) => {
       },
     }).subscribe({
       next: ({ provider, value: { data } }) => {
-        console.log(item.id);
-        console.log("EL SUBS", data);
-
         if (data?.onUpdateBusiness?.images) {
           const list = data?.onUpdateBusiness?.images
             .map((image) => JSON.parse(image))
@@ -586,7 +569,6 @@ const Page = ({ route, navigation }) => {
                     onPress={() => {
                       setOpen(!open);
                       setImageView(item);
-                      console.log("imagen", item);
                     }}
                   >
                     <Text
@@ -806,7 +788,6 @@ const Page = ({ route, navigation }) => {
               if (fileUri) {
                 const localFileUri = await getFileData(fileUri);
                 onSharePdf(localFileUri);
-                // console.log(localFileUri);
               }
             })
           }

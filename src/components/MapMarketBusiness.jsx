@@ -81,7 +81,6 @@ const MapMarketBusiness = ({
     } = e;
   };
   const obtenerDireccion = async (coords) => {
-    console.log(coords);
     let direcciones = await Location.reverseGeocodeAsync(coords);
     if (direcciones && direcciones.length > 0) {
       let direccion = direcciones[0];
@@ -92,18 +91,13 @@ const MapMarketBusiness = ({
       }, ${direccion.postalCode === null ? "" : direccion.postalCode} `;
       setDirection(direccionString);
       setDirectionOn(direcciones);
-      console.log(direccionString);
-      console.log(direcciones);
     }
   };
 
   const obtenerCoordenadas = async (address) => {
-    console.log(mapRef);
-    console.log(address);
     let direccion = await Location.reverseGeocodeAsync(initialLocation);
     const direccionComplete = `${address}, ${direccion[0].region}, ${direccion[0].country}`;
     let coordenadas = await Location.geocodeAsync(direccionComplete);
-    console.log("aqui", coordenadas);
 
     setRegion({
       latitude: coordenadas[0].latitude,
@@ -126,7 +120,6 @@ const MapMarketBusiness = ({
     const {
       nativeEvent: { coordinate },
     } = e;
-    console.log(coordinate);
     setMarketLocation(coordinate);
     setRegion({
       latitude: coordinate.latitude,

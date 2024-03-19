@@ -72,7 +72,6 @@ const ConfirmForgot = ({ navigation, route }) => {
     setErrorSendCode("");
     try {
       const result = await Auth.forgotPassword(email);
-      console.log("Envio de Codigo: ", result);
       setCodeSend(
         `Codigo enviado a ${result?.CodeDeliveryDetails?.Destination}`
       );

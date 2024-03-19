@@ -57,7 +57,6 @@ const SharePage = ({ route, navigation }) => {
   const [listUpdate, setListUpdate] = useRecoilState(updateListFavorites);
   const global = require("@/utils/styles/global.js");
   const { item } = route.params;
-  console.log(item);
   const getPdf = async () => {
     const permissions =
       await StorageAccessFramework.requestDirectoryPermissionsAsync();
@@ -153,8 +152,6 @@ const SharePage = ({ route, navigation }) => {
       } else {
         setShowAgg(true);
       }
-      console.log("toy aqui", business?.data?.getBusiness);
-      
       const list = business?.data?.getBusiness?.images.map((image) => JSON.parse(image)).sort((a, b) => a.key - b.key);
     
       setImages(list)

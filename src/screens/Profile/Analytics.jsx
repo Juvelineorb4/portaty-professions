@@ -279,7 +279,6 @@ const Analytics = ({ route }) => {
           text: item.amount
         });
       });
-      // console.log(countries)
 
       /* Country */
 
@@ -356,7 +355,6 @@ const Analytics = ({ route }) => {
           text: item.amount
         });
       });
-      console.log(citiesPie)
       /* Age */
 
       const dataAge = response.data.age;

@@ -11,7 +11,6 @@ import { Ionicons } from "@expo/vector-icons";
 const ItemProfile = ({ data, identityID, styled }) => {
   const navigation = useNavigation();
   const actividad = JSON.parse(data.activity);
-  console.log(actividad);
   if (identityID)
     return (
       <TouchableOpacity

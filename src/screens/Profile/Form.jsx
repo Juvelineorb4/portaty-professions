@@ -67,7 +67,6 @@ const Form = ({ navigation, route }) => {
 
   async function getCountryCode(array) {
     const countryCode = await Cellular.getIsoCountryCodeAsync();
-    console.log(countryCode.toUpperCase());
     array.map((item, index) => {
       if (item.cca2 === countryCode.toUpperCase()) setCountry(item);
     });
@@ -118,14 +117,11 @@ const Form = ({ navigation, route }) => {
     const { identityId } = await Auth.currentUserCredentials();
     const { company, email, phone, wsme, coordinates, description } = data;
     let code = country?.idd?.root;
-    console.log(code);
     for (let i = 0; i < country?.idd?.suffixes.length; i++) {
       code += country?.idd?.suffixes[i];
     }
-    console.log(code);
     try {
       let number = `${code}${phone}`;
-      console.log(number);
       const business = await API.graphql({
         query: mutations.createBusiness,
         authMode: "AMAZON_COGNITO_USER_POOLS",
@@ -164,7 +160,6 @@ const Form = ({ navigation, route }) => {
         headers: {}, // OPTIONAL
       };
       const result = await API.post(apiName, path, myInit);
-      console.log(result);
 
       setStateProfile(true);
       setLoading(false);

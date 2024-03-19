@@ -21,7 +21,6 @@ const StepComplete = ({ navigation, route }) => {
   
   const animation = useRef(null);
   let dataB = route.params;
-  console.log(dataB);
   useEffect(() => {}, []);
   return (
     <View style={[global.bgWhite, styles.container]}>

@@ -84,9 +84,7 @@ const Search = ({ route }) => {
       },
     };
     try {
-      console.log("RECIBI: ", params)
       const response = await API.get(api, path, params);
-      console.log("DIIIIIIIIIIIIIIIIIi")
       setTotalData(response.total);
       setTotalLimit(response.limit);
       // let newItems = [];
@@ -98,7 +96,6 @@ const Search = ({ route }) => {
       }
       setSearchActive(true);
       setSearchCacheActive(newRenderItems);
-      console.log('aqiooo', newRenderItems[0].length)
       return setItems(newRenderItems);
     } catch (error) {
       return console.log(error);

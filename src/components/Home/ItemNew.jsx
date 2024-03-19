@@ -66,7 +66,6 @@ const ItemNew = ({ data, page }) => {
   useEffect(() => {
     fetchData();
     getTime();
-    console.log(page[0]);
   }, []);
 
   return (

@@ -24,7 +24,6 @@ const StepFour = ({ navigation, route }) => {
   const [active, setActive] = useRecoilState(activeModalScreen);
   const [error, setError] = useState(false)
   const { business } = route.params;
-  // console.log(map);
 
   function urlToBlob(url) {
     return new Promise((resolve, reject) => {

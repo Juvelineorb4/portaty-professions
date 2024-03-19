@@ -37,7 +37,6 @@ const StepThree = ({ navigation, route }) => {
   const direction = useRecoilValue(directionBusiness);
   const [active, setActive] = useRecoilState(activeModalScreen);
 
-  console.log(empty);
 
   useEffect(() => {}, []);
   return (

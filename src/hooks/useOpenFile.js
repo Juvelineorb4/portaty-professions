@@ -9,13 +9,11 @@ const useOpenFile = () => {
   // console.log('toy')
   
   const openFile = (uri, contentType) => {
-    console.log(uri)
 
     FileSystem.getContentUriAsync(uri).then((cUri) => {
       if (Platform.OS === "ios") {
         Sharing.shareAsync(cUri);
       } else {
-        console.log(cUri);
         IntentLauncher.startActivityAsync("android.intent.action.VIEW", {
           data: cUri,
           flags: 1,
@@ -28,7 +26,6 @@ const useOpenFile = () => {
   const downloadFile = async (data, uri) => {
     try {
       const result = await FileSystem.downloadAsync(data, uri);
-      console.log(result?.uri)
 
       return result?.uri;
     } catch (error) {
@@ -39,7 +36,6 @@ const useOpenFile = () => {
 
   const downloadAndOpenFile = async (data, localUri, contentType) => {
     result = await downloadFile(data, localUri);
-    console.log(result)
     
     openFile(result, contentType);
   };
