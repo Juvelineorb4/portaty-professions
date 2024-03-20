@@ -13,12 +13,13 @@ import { useForm } from "react-hook-form";
 import LottieView from "lottie-react-native";
 import { activeModalScreen } from "@/atoms";
 import { useRecoilState } from "recoil";
+import StepClear from "./StepClear";
 
 const StepComplete = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
   const [loading, setLoading] = useState(false);
   const [active, setActive] = useRecoilState(activeModalScreen);
-  
+
   const animation = useRef(null);
   let dataB = route.params;
   useEffect(() => {}, []);
@@ -61,11 +62,10 @@ const StepComplete = ({ navigation, route }) => {
                         width: 200,
                         height: 200,
                         borderRadius: 100,
-                        alignSelf: 'center'
+                        alignSelf: "center",
                       }}
                       source={{ uri: dataB.business.image }}
                     />
-                    
                   </View>
                 </View>
               </View>
@@ -79,7 +79,7 @@ const StepComplete = ({ navigation, route }) => {
                     textAlign: "center",
                   }}
                 >
-                  Bienvenido {dataB.business.name}, a Portaty
+                  Bienvenido a Portaty
                 </Text>
                 {/* <LottieView
                       autoPlay
@@ -96,49 +96,10 @@ const StepComplete = ({ navigation, route }) => {
                     /> */}
               </View>
               <View style={[styles.modalBott]}>
-                <Pressable
-                  style={[
-                    global.bgYellow,
-                    {
-                      flex: 1,
-                      borderWidth: 1,
-                      width: 300,
-                      height: 60,
-                      borderRadius: 8,
-                      alignSelf: "center",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      flexDirection: "row",
-                      justifyContent: "space-around",
-                      paddingHorizontal: 10,
-                    },
-                  ]}
-                  onPress={() => {
-                    navigation.replace("StepLoading")
-                    setActive(false)
-                  }}
-                >
-                  <View
-                    style={{
-                      flex: 1,
-                      flexDirection: "row",
-                      justifyContent: "space-around",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Text
-                      style={[
-                        {
-                          fontFamily: "bold",
-                          fontSize: 18,
-                          color: "#1f1f1f",
-                        },
-                      ]}
-                    >
-                      Ir a tu perfil
-                    </Text>
-                  </View>
-                </Pressable>
+                <StepClear
+                  navig={() => navigation.navigate("Unprofile")}
+                  complete={true}
+                />
               </View>
             </View>
           </ScrollView>

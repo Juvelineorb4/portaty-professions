@@ -160,8 +160,8 @@
     margin-top: 37%;
     flex: 0.5;
     flex-direction: row;
-    align-items: flex-end;
-    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
   }
   .modalTop {
     flex: 1.3;

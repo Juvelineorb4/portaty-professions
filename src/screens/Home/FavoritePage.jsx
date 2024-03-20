@@ -552,7 +552,7 @@ const FavoritePage = ({ navigation, route }) => {
                   global.black,
                 ]}
               >
-                Nombre del negocio
+                Nombre
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>

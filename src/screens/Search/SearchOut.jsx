@@ -8,6 +8,7 @@ import {
   Pressable,
   Modal,
   TouchableOpacity,
+  RefreshControl
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import GridSearch from "@/components/Search/GridSearch";
@@ -75,9 +76,25 @@ const SearchOut = ({ route }) => {
       setStatusFilter(false);
     }, 3000);
   };
+
+  /* Refresh */
+  const [refreshing, setRefreshing] = useState(false);
+
+  const Wait = (timeout) => {
+    return new Promise((resolve) => {
+      setTimeout(resolve, timeout);
+    });
+  };
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    Wait(2000).then(() => setRefreshing(false));
+  });
+  /* Refresh */
+
   useEffect(() => {
     getData();
-  }, [route, moreItems]);
+  }, [route, moreItems, refreshing]);
 
   if (items.length !== 0)
     return (
@@ -228,6 +245,9 @@ const SearchOut = ({ route }) => {
                 if (totalData > totalLimit) setMoreItems(moreItems + 1);
               }}
               onEndReachedThreshold={0}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
             />
           )
         )}

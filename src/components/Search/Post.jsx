@@ -176,9 +176,20 @@ const Post = ({ data, image, styled, input }) => {
                       <Text style={{ fontFamily: "light", fontSize: 13 }}>
                         Nombre:
                       </Text>
-                      <Text style={{ fontFamily: "regular", fontSize: 14 }}>
-                        {data?.name}
-                      </Text>
+                      <View
+                        style={{
+                          width: 180,
+                          alignItems: "flex-end",
+                        }}
+                      >
+                        <Text
+                          style={{ fontFamily: "regular", fontSize: 14 }}
+                          numberOfLines={1}
+                          ellipsizeMode="tail"
+                        >
+                          {data?.name}
+                        </Text>
+                      </View>
                     </View>
                     <View
                       style={{

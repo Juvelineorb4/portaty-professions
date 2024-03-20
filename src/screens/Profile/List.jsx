@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import React from "react";
 import styles from "@/utils/styles/Mode.module.css";
 import ItemProfile from "@/components/ItemProfile";
@@ -7,9 +7,10 @@ import CustomButton from "@/components/CustomButton";
 const List = ({ route, navigation }) => {
   const { data, user } = route.params;
   const global = require("@/utils/styles/global.js");
+  console.log(data)
   if (data.length !== 0)
     return (
-      <View
+      <ScrollView
         style={[
           { flex: 1, paddingHorizontal: 20, paddingTop: 50 },
           global.bgWhite,
@@ -24,7 +25,10 @@ const List = ({ route, navigation }) => {
             styled={{ column: styles.columnList }}
           />
         ))}
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <View style={{
+          marginBottom: 120
+        }}></View>
+        {/* <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', paddingBottom: 150}}>
 
         <Text style={{fontFamily: 'regular', fontSize: 18, textAlign: 'center'}}>Solo puedes registrar 1 negocio con tu cuenta gratuita </Text>
         <CustomButton
@@ -37,9 +41,9 @@ const List = ({ route, navigation }) => {
           textStyles={[styles.textSearch, global.black]}
           buttonStyles={[styles.search, global.bgYellow]}
         />
-        </View>
+        </View> */}
 
-      </View>
+      </ScrollView>
     );
   if (data.length === 0)
     return (

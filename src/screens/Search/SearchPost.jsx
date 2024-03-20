@@ -699,7 +699,7 @@ const SearchPost = ({ route, navigation }) => {
                   global.black,
                 ]}
               >
-                Nombre del negocio
+                Nombre
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>

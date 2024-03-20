@@ -90,7 +90,7 @@ const StepTwo = ({ navigation, route }) => {
                         marginTop: 30,
                       }}
                     >
-                      Ahora, {business.name}
+                      Ahora
                     </Text>
                     <Text
                       style={{
