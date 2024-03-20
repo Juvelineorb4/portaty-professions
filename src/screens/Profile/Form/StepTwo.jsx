@@ -33,7 +33,6 @@ const StepTwo = ({ navigation, route }) => {
   const [active, setActive] = useRecoilState(activeModalScreen);
   const [selectOption, setSelectOption] = useRecoilState(optionBussines);
   const area = useRecoilValue(areaSelect);
-  console.log(selectOption);
 
   const listOptions = [
     {
@@ -66,7 +65,6 @@ const StepTwo = ({ navigation, route }) => {
       query: customProfile.listAreas,
     });
     setAreasList(activities.data.listAreas.items);
-    console.log(activities.data.listAreas.items);
   };
 
   const handleOption = (item) => {
@@ -92,7 +90,7 @@ const StepTwo = ({ navigation, route }) => {
                         marginTop: 30,
                       }}
                     >
-                      Ahora, {business.name}
+                      Ahora
                     </Text>
                     <Text
                       style={{

@@ -11,7 +11,6 @@ import { Ionicons } from "@expo/vector-icons";
 const ItemProfile = ({ data, identityID, styled }) => {
   const navigation = useNavigation();
   const actividad = JSON.parse(data.activity);
-  console.log(actividad);
   if (identityID)
     return (
       <TouchableOpacity
@@ -61,7 +60,7 @@ const ItemProfile = ({ data, identityID, styled }) => {
           >
             <View>
               <Text style={{ fontSize: 13, fontFamily: "medium" }}>Nombre</Text>
-              <Text style={{ fontSize: 12, fontFamily: "regular" }}>
+              <Text style={{ fontSize: 12, fontFamily: "light", width: 150 }} numberOfLines={1} ellipsizeMode='tail'>
                 {data.name}
               </Text>
             </View>

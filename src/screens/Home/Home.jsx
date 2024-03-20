@@ -112,7 +112,6 @@ const Home = ({ navigation, route }) => {
       },
     }).subscribe({
       next: ({ provider, value: { data } }) => {
-        console.log("EL SUBS", data);
       },
       error: (error) => console.warn(error),
     });

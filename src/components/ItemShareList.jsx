@@ -47,7 +47,6 @@ const ItemShareList = ({ data, styled }) => {
         },
         authMode: "AMAZON_COGNITO_USER_POOLS",
       });
-      console.log(favorites.data.createFavorites);
       setSave(favorites.data.createFavorites.id);
     } catch (error) {
       console.log(error);
@@ -66,7 +65,6 @@ const ItemShareList = ({ data, styled }) => {
         },
         authMode: "AMAZON_COGNITO_USER_POOLS",
       });
-      console.log(favorites);
       setSave("");
     } catch (error) {
       console.log(error);

@@ -55,18 +55,13 @@ const Unprofile = ({ navigation, route }) => {
         email: userAuth?.attributes?.email,
       },
     });
-    console.log(result?.data?.userByEmail?.items[0]?.business?.items?.length);
     if (result?.data?.userByEmail?.items[0]?.business?.items?.length !== 0)
       setBusiness(result.data.userByEmail.items[0].business.items);
-    console.log(result.data.userByEmail);
     setDisabled(false);
   };
 
   useLayoutEffect(() => {
-    console.log('aqui', isFocused);
-    // setUser([userAuth?.attributes]);
     User();
-    console.log(userAuth?.attributes["custom:userTableID"]);
   }, [userAuth, status, refreshing, isFocused]);
 
   if (!userAuth?.attributes) return <SkeletonUnprofile />;

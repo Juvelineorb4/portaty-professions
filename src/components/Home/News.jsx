@@ -3,7 +3,6 @@ import React from "react";
 import ItemNew from "./ItemNew";
 
 const News = ({ data }) => {
-  console.log(data[0].business.images);
   let listImages = [];
   let listImagesOrden = [];
   data.forEach((item) => {
@@ -17,8 +16,6 @@ const News = ({ data }) => {
     (a, b) =>  new Date(b.date) - new Date(a.date)
   );
 
-  console.log("desde la lista ordenada",listImagesOrden);
-  console.log("desde la lista", listImages);
   return (
     <View>
       {listImagesOrden.map((item, index) => (

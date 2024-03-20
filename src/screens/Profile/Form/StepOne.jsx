@@ -36,7 +36,6 @@ const StepOne = ({ navigation, route }) => {
   let data = route.params
   async function getCountryCode(array) {
     const countryCode = await Cellular.getIsoCountryCodeAsync();
-    console.log(countryCode.toUpperCase());
     array.map((item, index) => {
       if (item.cca2 === countryCode.toUpperCase()) setCountry(item);
     });
@@ -49,17 +48,14 @@ const StepOne = ({ navigation, route }) => {
   const StepParams = async (data) => {
     const { company, email, phone } = data;
     let code = country?.idd?.root;
-    console.log(code);
     for (let i = 0; i < country?.idd?.suffixes.length; i++) {
       code += country?.idd?.suffixes[i];
     }
-    console.log(code);
     let params = {
       name: company,
       email: email,
       phone: `${code}${phone}`,
     };
-    console.log(params)
     navigation.push("StepTwo", {
       business: params,
     });

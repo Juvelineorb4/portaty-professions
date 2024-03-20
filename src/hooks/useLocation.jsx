@@ -27,7 +27,6 @@ const useLocation = () => {
             const { latitude, longitude } = locationResult.coords;
             setLocation({ latitude, longitude });
             setUserLocation({ latitude, longitude });
-            console.log("Se actualizo el location")
           }
         );
       } catch (err) {

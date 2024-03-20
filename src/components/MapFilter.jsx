@@ -17,7 +17,6 @@ import { kmRadio } from "@/atoms";
 import Slider from "@react-native-community/slider";
 
 const MapFilter = ({ open, close, initialLocation, country, city }) => {
-  console.log(country, city);
   const global = require("@/utils/styles/global.js");
   const [description, setDescription] = useState("");
   const [selectedPlace, setSelectedPlace] = useState(null);
@@ -39,10 +38,8 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
 
     if (mapRef.current) {
       const newRegion = mapRef.current.__lastRegion;
-      console.log(newRegion)
 
     }
-    console.log(coordinate);
     setRegion({
       latitude: coordinate.latitude,
       longitude: coordinate.longitude,
@@ -61,17 +58,13 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
   };
 
   const obtenerCoordenadas = async (address) => {
-    console.log(mapRef);
-    console.log(address);
     const direccionComplete = `${address}, ${city}, ${country}`;
     let coordenadas = await Location.geocodeAsync(direccionComplete);
 
     let direcciones = await Location.reverseGeocodeAsync(coordenadas[0]);
 
-    console.log(direcciones);
 
     if (direcciones[0].country !== country || direcciones[0].city === null) {
-      console.log("No ta");
       return;
     }
 
@@ -230,9 +223,6 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
                   if (e === 50) setChangeTag(e * 3 + 10);
 
                   setFilterRadio(e);
-                  console.log("menor de 25", e < 25);
-                  console.log("entre 25 y 35", e >= 25 && e < 35);
-                  console.log("mayor de 25", e >= 35);
                 }}
                 minimumValue={1}
                 maximumValue={50}

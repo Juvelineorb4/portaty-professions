@@ -5,7 +5,7 @@ import { useEffect } from "react";
 const StepLoading = ({ navigation }) => {
   useEffect(() => {
     setTimeout(() => {
-      navigation.replace("Unprofile");
+      navigation.navigate("Unprofile");
     }, 2000);
   }, []);
   return (

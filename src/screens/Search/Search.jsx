@@ -9,6 +9,7 @@ import {
   Modal,
   TouchableOpacity,
   TextInput,
+  RefreshControl,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import GridSearch from "@/components/Search/GridSearch";
@@ -84,9 +85,7 @@ const Search = ({ route }) => {
       },
     };
     try {
-      console.log("RECIBI: ", params)
       const response = await API.get(api, path, params);
-      console.log("DIIIIIIIIIIIIIIIIIi")
       setTotalData(response.total);
       setTotalLimit(response.limit);
       // let newItems = [];
@@ -98,7 +97,6 @@ const Search = ({ route }) => {
       }
       setSearchActive(true);
       setSearchCacheActive(newRenderItems);
-      console.log('aqiooo', newRenderItems[0].length)
       return setItems(newRenderItems);
     } catch (error) {
       return console.log(error);
@@ -124,6 +122,21 @@ const Search = ({ route }) => {
     item?.name?.common.toLowerCase().includes(searchCountry.toLowerCase())
   );
 
+  /* Refresh */
+  const [refreshing, setRefreshing] = useState(false);
+
+  const Wait = (timeout) => {
+    return new Promise((resolve) => {
+      setTimeout(resolve, timeout);
+    });
+  };
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    Wait(2000).then(() => setRefreshing(false));
+  });
+  /* Refresh */
+
   useEffect(() => {
     fetch(`https://restcountries.com/v3.1/all?fields=name,flags,idd,cca2`)
       .then((response) => {
@@ -133,15 +146,14 @@ const Search = ({ route }) => {
         setCountries(item);
         getCountryCode(item);
       });
-    // espero que me traiga algo de location
     if (userLocation) getData();
-  }, [userLocation, moreItems]);
-
-  // if (true) return <SkeletonSearch />;
+  }, [userLocation, moreItems, refreshing]);
 
   if (searchActive) {
     return (
-      <View style={{ flex: 1, backgroundColor: "#FFFFFF", paddingBottom: 50 }}>
+      <View
+        style={{ flex: 1, backgroundColor: "#FFFFFF", paddingBottom: 50 }}
+      >
         <View>
           <View
             style={{
@@ -518,6 +530,9 @@ const Search = ({ route }) => {
               if (totalData > totalLimit) setMoreItems(moreItems + 1);
             }}
             onEndReachedThreshold={0}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
           />
         ) : (
           items.length !== 0 && (
@@ -553,6 +568,9 @@ const Search = ({ route }) => {
                 if (totalData > totalLimit) setMoreItems(moreItems + 1);
               }}
               onEndReachedThreshold={0}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
             />
           )
         )}

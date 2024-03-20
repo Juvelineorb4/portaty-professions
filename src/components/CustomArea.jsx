@@ -22,7 +22,6 @@ const CustomArea = ({ data }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const { control } = useForm();
   const area = useRecoilValue(areaSelect);
-  console.log(area);
   useEffect(() => {}, []);
 
   return (

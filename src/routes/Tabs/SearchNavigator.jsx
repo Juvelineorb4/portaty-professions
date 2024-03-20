@@ -27,7 +27,7 @@ const SearchNavigator = ({ navigation }) => {
       terminosGuardados.push(resultado);
       await AsyncStorage.setItem('@terminos_busqueda', JSON.stringify(terminosGuardados));
     } catch (error) {
-      console.log('error aqui' , error)
+      console.log(error)
     }
   };
   return (

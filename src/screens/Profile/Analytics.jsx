@@ -279,7 +279,6 @@ const Analytics = ({ route }) => {
           text: item.amount
         });
       });
-      // console.log(countries)
 
       /* Country */
 
@@ -356,7 +355,6 @@ const Analytics = ({ route }) => {
           text: item.amount
         });
       });
-      console.log(citiesPie)
       /* Age */
 
       const dataAge = response.data.age;
@@ -477,7 +475,7 @@ const Analytics = ({ route }) => {
           backgroundColor: "#ffffff",
         }}
       >
-        <ScrollView horizontal style={{ marginTop: 40, paddingHorizontal: 10 }}>
+        {/* <ScrollView horizontal style={{ marginTop: 40, paddingHorizontal: 10 }}>
           {buttons.map((item, index) => (
             <TouchableOpacity
               key={index}
@@ -499,7 +497,7 @@ const Analytics = ({ route }) => {
               </RNText>
             </TouchableOpacity>
           ))}
-        </ScrollView>
+        </ScrollView> */}
         <View
           style={{
             padding: 10,
@@ -586,7 +584,7 @@ const Analytics = ({ route }) => {
                 </RNText>
               </TouchableOpacity>
             </View>
-            {timeGraph === 1 ? (
+            {/* {timeGraph === 1 ? (
               <View
                 style={{
                   height: 230,
@@ -630,7 +628,7 @@ const Analytics = ({ route }) => {
                   </View>
                 </ScrollView>
               </View>
-            )}
+            )} */}
             <View
               style={{
                 flex: 1,

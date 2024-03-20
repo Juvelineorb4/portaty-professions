@@ -212,9 +212,6 @@ const SearchPost = ({ route, navigation }) => {
         new Date() - new Date(lastViewInfo.timestamp) < 24 * 60 * 60 * 1000 &&
         lastViewInfo.businessID === businessID
       ) {
-        console.log(
-          "Visualización no registrada: ya se registró una visualización del mismo negocio en las últimas 24 horas"
-        );
         return;
       }
 
@@ -249,8 +246,6 @@ const SearchPost = ({ route, navigation }) => {
         `lastView_${userID}`,
         JSON.stringify(currentViewInfo)
       );
-
-      console.log("Visualización registrada correctamente");
     } catch (error) {
       console.log("Error al registrar analitica: ", error);
     }
@@ -704,7 +699,7 @@ const SearchPost = ({ route, navigation }) => {
                   global.black,
                 ]}
               >
-                Nombre del negocio
+                Nombre
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>

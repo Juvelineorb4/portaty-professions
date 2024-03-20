@@ -34,7 +34,6 @@ const Map = ({ navigation, route }) => {
       marketCoordinate.latitude !== initialCoor.latitude ||
       marketCoordinate.longitude !== initialCoor.longitude
     ) {
-      console.log("Es diferente el coor");
       setDisableBtn(false);
       setDisableBtn2(false);
     } else {
@@ -51,7 +50,6 @@ const Map = ({ navigation, route }) => {
     const {
       nativeEvent: { coordinate },
     } = e;
-    console.log(coordinate);
     setMarketCoordinate(coordinate);
   };
   //   cuando mueven el market
@@ -59,7 +57,6 @@ const Map = ({ navigation, route }) => {
     let {
       nativeEvent: { coordinate },
     } = e;
-    console.log(coordinate);
     setMarketCoordinate(coordinate);
   };
 

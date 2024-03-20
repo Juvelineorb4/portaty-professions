@@ -6,21 +6,9 @@ import { useState } from "react";
 
 const Area = ({ item }) => {
   const global = require("@/utils/styles/global.js");
-  // const [active, setActive] = useState(false);
-  // const [selectActivity, setSelectActivity] = useState("");
   const [selectArea, setSelectArea] = useRecoilState(areaSelect);
-  // console.log(item)
-  // const onHandleCheckActive = () => {
-  //   if (selectArea.activity === selectActivity) {
-  //     console.log(selectArea.activity)
-  //     console.log(selectActivity)
-  //     setActive(true);
-  //   } else {
-  //     setActive(false);
-  //   }
-  // };
+
   useEffect(() => {
-    // onHandleCheckActive();
   }, [selectArea]);
 
   return (

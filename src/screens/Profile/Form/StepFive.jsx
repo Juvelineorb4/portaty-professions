@@ -56,7 +56,6 @@ const StepFive = ({ navigation, route }) => {
     useRecoilState(directionBusiness);
   const [active, setActive] = useRecoilState(activeModalScreen);
   const [selectOption, setSelectOption] = useRecoilState(optionBussines);
-  console.log(selectOption);
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState("");
 
@@ -99,7 +98,6 @@ const StepFive = ({ navigation, route }) => {
     const today = new Date().toISOString();
     setLoading(true);
     const { identityId } = await Auth.currentUserCredentials();
-    console.log(dataB);
     const { description, whatsapp, instagram, facebook } = data;
 
     const listTags = [
@@ -188,7 +186,6 @@ const StepFive = ({ navigation, route }) => {
           },
         },
       });
-      console.log(business.data.createBusiness);
       const apiName = "api-professions-gateway"; // replace this with your api name.
       const path = "/thumbnailgenerator"; //replace this with the path you have configured on your API
       const myInit = {
@@ -204,7 +201,6 @@ const StepFive = ({ navigation, route }) => {
         headers: {}, // OPTIONAL
       };
       const result = await API.post(apiName, path, myInit);
-      console.log(result);
       setLoading(false);
       Finished();
     } catch (error) {
