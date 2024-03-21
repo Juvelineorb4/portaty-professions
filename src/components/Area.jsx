@@ -1,13 +1,13 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React, { useEffect } from "react";
-import { areaSelect } from "@/atoms";
+import { areaSelect, errorArea } from "@/atoms";
 import { useRecoilState } from "recoil";
 import { useState } from "react";
 
 const Area = ({ item }) => {
   const global = require("@/utils/styles/global.js");
   const [selectArea, setSelectArea] = useRecoilState(areaSelect);
-
+  const [selectError, setSelectError] = useRecoilState(errorArea)
   useEffect(() => {
   }, [selectArea]);
 
@@ -55,6 +55,7 @@ const Area = ({ item }) => {
             onPress={() => {
               // if (active === false) {
               setSelectArea({ area: item.name, activity: activity.name });
+              setSelectError(false)
               // }
             }}
           >

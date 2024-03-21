@@ -21,6 +21,10 @@ export const areaSelect = atom({
   key: "areaSelectValue",
   default: {},
 });
+export const errorArea = atom({
+  key: "errorAreaValue",
+  default: false,
+});
 export const optionBussines = atom({
   key: "optionBussinesValue",
   default: {

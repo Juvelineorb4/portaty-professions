@@ -7,9 +7,8 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 /* charts */
-import { LineChart } from "react-native-gifted-charts";
 import { Circle, G, Line, Text } from "react-native-svg";
-import { PieChart } from "react-native-gifted-charts";
+import { PieChart, BarChart } from "react-native-gifted-charts";
 // amplify
 import { API } from "aws-amplify";
 import SkeletonAnalytics from "@/components/SkeletonAnalytics";
@@ -201,10 +200,9 @@ const Analytics = ({ route }) => {
         genderPie.push({
           value: item.value,
           color: item.svg.fill,
-          text: item.amount
+          text: item.amount,
         });
       });
-
 
       /* City */
       const dataCity = response.data.city;
@@ -276,7 +274,7 @@ const Analytics = ({ route }) => {
         citiesPie.push({
           value: item.value,
           color: item.svg.fill,
-          text: item.amount
+          text: item.amount,
         });
       });
 
@@ -352,7 +350,7 @@ const Analytics = ({ route }) => {
         countriesPie.push({
           value: item.value,
           color: item.svg.fill,
-          text: item.amount
+          text: item.amount,
         });
       });
       /* Age */
@@ -422,16 +420,17 @@ const Analytics = ({ route }) => {
         agePie.push({
           value: item.value,
           color: item.svg.fill,
-          text: item.amount
+          text: item.amount,
         });
       });
 
-
-      
       setAllZeroGender(gender.every((item) => item.value === 0));
       setAllZeroCity(cities.every((item) => item.value === 0));
       setAllZeroAge(age.every((item) => item.value === 0));
 
+      console.log("datagraph", dataForXAxisYear);
+      console.log("maxvalue", valueYear);
+      console.log("width", likesYear.length * 60);
       setDataGenderPie(gender);
       setDataGenderPieGraph(genderPie);
       setDataAgePie(age);
@@ -475,7 +474,7 @@ const Analytics = ({ route }) => {
           backgroundColor: "#ffffff",
         }}
       >
-        {/* <ScrollView horizontal style={{ marginTop: 40, paddingHorizontal: 10 }}>
+        <ScrollView horizontal style={{ marginTop: 40, paddingHorizontal: 10 }}>
           {buttons.map((item, index) => (
             <TouchableOpacity
               key={index}
@@ -497,7 +496,7 @@ const Analytics = ({ route }) => {
               </RNText>
             </TouchableOpacity>
           ))}
-        </ScrollView> */}
+        </ScrollView>
         <View
           style={{
             padding: 10,
@@ -584,24 +583,24 @@ const Analytics = ({ route }) => {
                 </RNText>
               </TouchableOpacity>
             </View>
-            {/* {timeGraph === 1 ? (
+            {timeGraph === 1 ? (
               <View
                 style={{
-                  height: 230,
+                  height: 250,
                   flexDirection: "row",
                 }}
               >
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                  <View style={{ width: dataGraph.length * 60 }}>
-                    <LineChart
+                  <View style={{ width: dataGraph.length * 64}}>
+                    <BarChart
+                      barWidth={22}
+                      spacing={40}
+                      noOfSections={2}
+                      barBorderRadius={4}
+                      frontColor="#ffb703"
                       data={dataGraph}
-                      color="#ffb703"
-                      yAxisTextStyle={{fontSize: 12, fontFamily: 'regular'}}
-                      xAxisLabelTextStyle={{fontSize: 12, fontFamily: 'regular'}}
-                      maxValue={maxValue}
-                      spacing={70}
-                      thickness={2}
-                      textFontSize={12}
+                      yAxisThickness={1}
+                      xAxisThickness={1}
                     />
                   </View>
                 </ScrollView>
@@ -609,26 +608,26 @@ const Analytics = ({ route }) => {
             ) : (
               <View
                 style={{
-                  height: 230,
+                  height: 250,
                   flexDirection: "row",
                 }}
               >
-                <ScrollView horizontal>
-                  <View style={{ width: dataGraphYear.length * 60 }}>
-                  <LineChart
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                  <View style={{ width: dataGraphYear.length * 90 }}>
+                  <BarChart
+                      barWidth={22}
+                      spacing={60}
+                      noOfSections={2}
+                      barBorderRadius={4}
+                      frontColor="#ffb703"
                       data={dataGraphYear}
-                      color="#ffb703"
-                      yAxisTextStyle={{fontSize: 12, fontFamily: 'regular'}}
-                      xAxisLabelTextStyle={{fontSize: 9, fontFamily: 'regular', marginLeft: 5}}
-                      maxValue={maxValueYear}
-                      spacing={70}
-                      thickness={2}
-                      textFontSize={12}
+                      yAxisThickness={1}
+                      xAxisThickness={1}
                     />
                   </View>
                 </ScrollView>
               </View>
-            )} */}
+            )}
             <View
               style={{
                 flex: 1,
@@ -684,7 +683,7 @@ const Analytics = ({ route }) => {
                 justifyContent: "space-between",
                 alignItems: "center",
                 flex: 1,
-                marginVertical: 20
+                marginVertical: 20,
               }}
             >
               {allZeroGender ? (
@@ -752,7 +751,7 @@ const Analytics = ({ route }) => {
                 justifyContent: "space-between",
                 alignItems: "center",
                 flex: 1,
-                marginVertical: 20
+                marginVertical: 20,
               }}
             >
               {allZeroAge ? (
@@ -877,7 +876,7 @@ const Analytics = ({ route }) => {
                   justifyContent: "space-between",
                   alignItems: "center",
                   flex: 1,
-                  marginVertical: 20
+                  marginVertical: 20,
                 }}
               >
                 {allZeroCity ? (
@@ -898,12 +897,12 @@ const Analytics = ({ route }) => {
                   </View>
                 ) : (
                   <PieChart
-                  showText
-                  textColor="black"
-                  radius={70}
-                  textSize={12}
-                  data={dataCityPieGraph}
-                />
+                    showText
+                    textColor="black"
+                    radius={70}
+                    textSize={12}
+                    data={dataCityPieGraph}
+                  />
                 )}
                 <View>
                   {dataCityPie.map((entry, index) => (
@@ -944,7 +943,7 @@ const Analytics = ({ route }) => {
                   justifyContent: "space-between",
                   alignItems: "center",
                   flex: 1,
-                  marginVertical: 20
+                  marginVertical: 20,
                 }}
               >
                 {allZeroCity ? (
@@ -965,12 +964,12 @@ const Analytics = ({ route }) => {
                   </View>
                 ) : (
                   <PieChart
-                  showText
-                  textColor="black"
-                  radius={70}
-                  textSize={12}
-                  data={dataCountryPieGraph}
-                />
+                    showText
+                    textColor="black"
+                    radius={70}
+                    textSize={12}
+                    data={dataCountryPieGraph}
+                  />
                 )}
                 <View>
                   {dataCountryPie.map((entry, index) => (

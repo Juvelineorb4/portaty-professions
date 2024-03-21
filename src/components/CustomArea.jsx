@@ -91,8 +91,6 @@ const CustomArea = ({ data }) => {
                       numColumns={1}
                       keyExtractor={(item, index) => index}
                       estimatedItemSize={50}
-                      // showsVerticalScrollIndicator={false}
-                      // columnWrapperStyle={{ justifyContent: "space-between" }}
                     />
                   </View>
                   <TouchableOpacity

@@ -167,6 +167,10 @@ const StepOne = ({ navigation, route }) => {
                   text={`Correo electronico (*)`}
                   rules={{
                     required: es.businessForm.register.email.rules,
+                    pattern: {
+                      value: /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/,
+                      message: "Correo no valido",
+                    },
                   }}
                 />
                 <View
@@ -347,7 +351,12 @@ const StepOne = ({ navigation, route }) => {
                     text={` `}
                     rules={{
                       required: es.businessForm.register.email.rules,
+                      pattern: {
+                        value: /^[0-9]+$/i,
+                        message: "Solo se permiten números"
+                      }
                     }}
+                    inputmode="numeric"
                   />
                 </View>
               </View>
