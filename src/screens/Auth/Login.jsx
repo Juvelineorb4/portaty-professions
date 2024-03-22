@@ -25,10 +25,12 @@ const Login = ({ navigation }) => {
   const emailForm = watch("email");
   const global = require("@/utils/styles/global.js");
   const EMAIL_REGEX = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
+
   const [errorActive, setErrorActive] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState("");
+  const [numberError, setNumberError] = useState(0);
   const onHandleLogin = async (data) => {
     const { email, password } = data;
     setErrorActive("");
@@ -36,11 +38,12 @@ const Login = ({ navigation }) => {
     try {
       const result = await Auth.signIn(email.trim(), password.trim());
     } catch (error) {
+      console.log("ERROR AL LOGEARTE", error.message);
       switch (error.message) {
         case "User is not confirmed.":
+          setNumberError(1);
           setError(`Usuario: ${email} no confirmado, por favor confirmar`);
           setVisible(true);
-
           break;
 
         case "User does not exist.":
@@ -50,6 +53,16 @@ const Login = ({ navigation }) => {
           break;
         case "Incorrect username or password.":
           setErrorActive(`Correo y/o contraseña incorrectos.`);
+          break;
+        case "User is disabled.":
+          setErrorActive(
+            "Usuario deshabilitado.\nComunicate con soporte Tecnico."
+          );
+          break;
+        case "Password reset required for the user":
+          setNumberError(2);
+          setError("Por favor, actualiza tu contraseña.");
+          setVisible(true);
           break;
         default:
           setErrorActive(`Ocurrio un error intente mas tarde.`);
@@ -61,10 +74,23 @@ const Login = ({ navigation }) => {
   };
 
   const CloseModal = () => {
-    navigation.navigate("Register_App", {
-      screen: "ConfirmRegister",
-      params: { email: emailForm },
-    });
+    switch (numberError) {
+      case 1:
+        navigation.navigate("Register_App", {
+          screen: "ConfirmRegister",
+          params: { email: emailForm },
+        });
+        break;
+      case 2:
+        navigation.navigate("Forgot_App", {
+          screen: "Forgot",
+          params: { email: emailForm },
+        });
+        break;
+      default:
+        setErrorActive(`Ocurrio un error intente mas tarde.`);
+        break;
+    }
     setVisible(false);
   };
 
@@ -85,12 +111,12 @@ const Login = ({ navigation }) => {
         >
           <View style={styles.content}>
             <Text style={styles.title}>{es.authentication.login.title}</Text>
-           
+
             <Text style={styles.name}>{es.authentication.login.name}</Text>
             {errorActive && (
               <Text style={styles.errorInputMain}>{errorActive}</Text>
             )}
-             <Image
+            <Image
               style={{
                 width: 300,
                 height: 100,
@@ -114,6 +140,10 @@ const Login = ({ navigation }) => {
               // icon={require("@/utils/images/email.png")}
               rules={{
                 required: `Requerido`,
+                pattern: {
+                  value: EMAIL_REGEX,
+                  message: "Email no valido.",
+                },
               }}
             />
             <CustomInput
@@ -146,7 +176,11 @@ const Login = ({ navigation }) => {
         <View style={{ height: 65 }}>
           <CustomButton
             text={
-              isLoading ? <ActivityIndicator color={'#1f1f1f'}/> : es.authentication.login.button
+              isLoading ? (
+                <ActivityIndicator color={"#1f1f1f"} />
+              ) : (
+                es.authentication.login.button
+              )
             }
             disabled={isLoading}
             handlePress={handleSubmit(onHandleLogin)}
@@ -173,7 +207,7 @@ const Login = ({ navigation }) => {
         text={error}
         close={() => CloseModal()}
         open={visible}
-        icon={require("@/utils/images/alert.png")}
+        icon={require("@/utils/images/error.png")}
       />
     </KeyboardAvoidingView>
   );

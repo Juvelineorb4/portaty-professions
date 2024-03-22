@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Controller } from "react-hook-form";
 
 const CustomInput = ({
-  defaultValue = "",
+  defValue = "",
   control,
   name,
   rules = {},
@@ -18,18 +18,19 @@ const CustomInput = ({
   lines = 1,
   errorPost = false,
   max = 100,
-  editable=true,
-  inputmode="text"
+  editable = true,
+  inputmode = "text",
 }) => {
-  const [description, setDescription] = useState('')
+  const [description, setDescription] = useState("");
   const [securityChange, setSecurityChange] = useState(true);
   return (
     <Controller
+      defaultValue={defValue}
       control={control}
       name={name}
       rules={rules}
       render={({
-        field: { defaultValue, onChange, onBlur },
+        field: { defaultValue = defValue, onChange, onBlur },
         fieldState: { error },
       }) => (
         <View>
@@ -52,17 +53,16 @@ const CustomInput = ({
                 />
               )}
               <TextInput
-                value={defaultValue}
                 onChangeText={(e) => {
-                  onChange(e)
-                  setDescription(e)
+                  onChange(e);
+                  setDescription(e);
                 }}
                 onBlur={onBlur}
                 placeholder={placeholder}
                 placeholderTextColor={placeholderTextColor}
                 style={defaultValue ? styled.text : styled.placeholder}
                 secureTextEntry={security && securityChange}
-                defaultValue={defaultValue}
+                defaultValue={defValue}
                 multiline={area ? true : false}
                 numberOfLines={lines}
                 maxLength={max}
@@ -70,7 +70,17 @@ const CustomInput = ({
                 inputMode={inputmode}
               />
               {max === 500 && (
-                <Text style={{ position: "absolute", bottom: 0, right: 0, fontFamily: 'regular', fontSize: 12 }}>{description.length} / 500</Text>
+                <Text
+                  style={{
+                    position: "absolute",
+                    bottom: 0,
+                    right: 0,
+                    fontFamily: "regular",
+                    fontSize: 12,
+                  }}
+                >
+                  {description.length} / 500
+                </Text>
               )}
             </View>
 

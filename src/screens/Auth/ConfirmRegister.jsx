@@ -24,12 +24,18 @@ import { codeFields } from "@/atoms";
 import ModalAlert from "@/components/ModalAlert";
 
 const ConfirmRegister = ({ navigation, route }) => {
-  const [time, setTime] = useState(10 * 60); // 10 minutos
+  const global = require("@/utils/styles/global.js");
+  const [time, setTime] = useState(60 * 60); // 10 minutos
+  const [timeResend, setTimeResend] = useState(0);
+  const [intervalId, setIntervalId] = useState(null);
   const [loading, setLoading] = useState(false); // 10 minutos
   const [visible, setVisible] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
   const [error, setError] = useState("");
   const [codeInputs, setCodeInputs] = useRecoilState(codeFields);
-  const global = require("@/utils/styles/global.js");
+  const [codeSend, setCodeSend] = useState("");
+  const [errorSendCode, setErrorSendCode] = useState("");
+
   const { params } = route;
   const { control, handleSubmit } = useForm({
     defaultValues: {
@@ -39,14 +45,32 @@ const ConfirmRegister = ({ navigation, route }) => {
 
   const onHandleConfirm = async () => {
     const { email } = params;
+
+    setErrorMsg("");
+    setCodeSend("");
+    setErrorSendCode("");
     setLoading(true);
     try {
       await Auth.confirmSignUp(email, codeInputs);
       setVisible(true);
       setCodeInputs("");
     } catch (error) {
-      setError(`Error al confirmar usuario: ${error}`);
-      setVisible(true);
+      console.log("Error al confirmar usuario: ", error.message);
+      switch (error.message) {
+        case "Invalid verification code provided, please try again.":
+          setErrorMsg(
+            `Se proporcionó un código de verificación no válido (${codeInputs}). Inténtelo de nuevo.`
+          );
+          break;
+        case "Attempt limit exceeded, please try after some time.":
+          setErrorMsg(
+            `Se superó el límite de intentos. Inténtelo después de un tiempo.`
+          );
+          break;
+        default:
+          setErrorMsg("Ocurrio un error, Intente de nuevo.");
+          break;
+      }
     }
     setLoading(false);
   };
@@ -54,6 +78,34 @@ const ConfirmRegister = ({ navigation, route }) => {
   const CloseModal = () => {
     navigation.replace("Login_Welcome", { screen: "Login" });
     setVisible(false);
+  };
+
+  const onHandleResendCode = async () => {
+    const { email } = params;
+    setErrorMsg("");
+    setCodeSend("");
+    setErrorSendCode("");
+    try {
+      const result = await Auth.resendSignUp(email);
+      setCodeSend(
+        `Codigo enviado al ${result?.CodeDeliveryDetails?.Destination}`
+      );
+      setTime(60 * 60);
+      setTimeResend(5 * 60);
+    } catch (error) {
+      console.log("ERROR AL ENVIAR MENSAJE: ", error.message);
+      switch (error.message) {
+        case "Attempt limit exceeded, please try after some time.":
+          setErrorSendCode(
+            `Se superó el límite de intentos. Inténtelo después de un tiempo.`
+          );
+          break;
+
+        default:
+          setErrorSendCode("Ocurrio un error, Intente de nuevo.");
+          break;
+      }
+    }
   };
   const formatTime = (time) => {
     const minutes = Math.floor(time / 60);
@@ -63,12 +115,23 @@ const ConfirmRegister = ({ navigation, route }) => {
   useEffect(() => {
     if (time > 0) {
       const timerId = setInterval(() => {
-        setTime(time - 1);
+        setTime((prevTime) => prevTime - 1);
       }, 1000);
+      setIntervalId(timerId);
       return () => clearInterval(timerId);
     }
   }, [time]);
 
+  useEffect(() => {
+    if (timeResend <= 0) setCodeSend("");
+    if (timeResend > 0) {
+      const timerId = setInterval(() => {
+        setTimeResend((prevTimeResend) => prevTimeResend - 1);
+      }, 1000);
+      setIntervalId(timerId);
+      return () => clearInterval(timerId);
+    }
+  }, [timeResend]);
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -84,9 +147,12 @@ const ConfirmRegister = ({ navigation, route }) => {
             <Text style={[styles.title, global.mainColor]}>
               {es.authentication.account.entercode.title}
             </Text>
-            <Text style={{ fontFamily: "light", fontSize: 16 }}>
+            <Text
+              style={{ fontFamily: "light", fontSize: 16, marginBottom: 5 }}
+            >
               Enviamos el codigo de confirmacion a {params?.email}
             </Text>
+            <Text style={{ color: "red" }}>{errorMsg}</Text>
             <Text
               style={[{ fontSize: 16, fontFamily: "light", marginTop: 10 }]}
             >{`Tu codigo expirara en: ${formatTime(
@@ -98,11 +164,41 @@ const ConfirmRegister = ({ navigation, route }) => {
               <Text style={styles.titleAlert}>
                 {es.authentication.account.code.title}
               </Text>
-              <TouchableOpacity>
-                <Text style={styles.subtitleAlert}>
-                  {es.authentication.account.code.subtitle}
-                </Text>
+              <TouchableOpacity onPress={onHandleResendCode}>
+                <View
+                  style={{
+                    backgroundColor: "rgba(255, 255, 255, 0.5)",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text
+                    style={[
+                      styles.subtitleAlert,
+                      timeResend > 0 && { color: "rgba(0, 0, 0, 0.2)" },
+                    ]}
+                  >
+                    {es.authentication.account.code.subtitle}
+                  </Text>
+                  {timeResend > 0 && (
+                    <Text style={[styles.subtitleAlert]}>
+                      {formatTime(timeResend)}
+                    </Text>
+                  )}
+                </View>
               </TouchableOpacity>
+            </View>
+            <View style={{ marginTop: 20 }}>
+              <Text style={{ color: "green" }}>{codeSend}</Text>
+              <Text style={{ color: "red" }}>{errorSendCode}</Text>
+            </View>
+            <View>
+              <Text
+                style={[styles.subtitleAlert, { color: "rgba(0, 0, 0, 0.2)" }]}
+              >
+                *No olvides revisar la sección de "SPAM"*
+              </Text>
             </View>
           </ScrollView>
           <View style={{ height: 60 }}>
@@ -120,20 +216,12 @@ const ConfirmRegister = ({ navigation, route }) => {
             />
           </View>
           <ModalAlert
-            text={error ? error : "Usuario registrado exitosamente"}
+            text={"Usuario registrado exitosamente"}
             close={() => {
-              if (error) {
-                setVisible(false);
-              } else {
-                CloseModal();
-              }
+              CloseModal();
             }}
             open={visible}
-            icon={
-              error
-                ? require("@/utils/images/error.png")
-                : require("@/utils/images/successful.png")
-            }
+            icon={require("@/utils/images/successful.png")}
           />
         </View>
       </TouchableWithoutFeedback>
