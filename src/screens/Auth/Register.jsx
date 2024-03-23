@@ -202,10 +202,10 @@ const Register = ({ navigation }) => {
               text={`Correo electronico`}
               // icon={require("@/utils/images/email.png")}
               rules={{
-                required: es.authentication.register.email.rules,
+                required: `Requerido`,
                 pattern: {
-                  value: /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/,
-                  message: "Correo no valido.",
+                  value: EMAIL_REGEX,
+                  message: "Email no valido.",
                 },
               }}
             />

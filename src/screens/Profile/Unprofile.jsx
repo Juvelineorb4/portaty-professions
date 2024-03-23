@@ -83,31 +83,6 @@ const Unprofile = ({ navigation, route }) => {
           <Text style={[styles.titleSettings, global.black, { marginTop: 20 }]}>
             {`Perfil`}
           </Text>
-          <View
-            style={[
-              {
-                width: 165,
-                height: 60,
-                justifyContent: "center",
-                alignItems: "center",
-                borderColor: "#1f1f1f",
-                borderRadius: 8,
-                borderWidth: 0.7,
-                marginRight: 10,
-              },
-              // global.bgYellow,
-            ]}
-          >
-            <Text
-              style={{
-                fontFamily: "lightItalic",
-                fontSize: 14,
-                color: "#1f1f1f",
-              }}
-            >
-              Usuario no premium
-            </Text>
-          </View>
         </View>
 
         <View style={[styles.line, global.bgMidGray]} />
@@ -151,7 +126,9 @@ const Unprofile = ({ navigation, route }) => {
         activeOpacity={1}
         onPress={() => {
           if (business.length === 5) {
-            setError("Ya has conseguido el maximo de negocios registrados permitidos");
+            setError(
+              "Ya has conseguido el maximo de negocios registrados permitidos"
+            );
             setVisible(true);
             return;
           }

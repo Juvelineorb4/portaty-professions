@@ -16,16 +16,17 @@ import { useForm } from "react-hook-form";
 import { es } from "@/utils/constants/lenguage";
 import { Auth } from "aws-amplify";
 
-const Forgot = ({ navigation }) => {
+const Forgot = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
+  const params = route?.params;
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const { control, watch, handleSubmit } = useForm({
     defaultValues: {
-      email: "",
+      email: params?.email,
     },
   });
-
+  console.log(params);
   const email = watch("email");
   const pwd = watch("password");
   const EMAIL_REGEX = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
@@ -54,7 +55,11 @@ const Forgot = ({ navigation }) => {
             "Se superó el límite de intentos. Inténtelo después de un tiempo."
           );
           break;
-
+        case "User is disabled.":
+          setErrorMsg(
+            "Usuario deshabilitado.\nComunicate con soporte Tecnico."
+          );
+          break;
         default:
           setErrorMsg("Ocurrio un error intente mas tarde.");
           break;
@@ -79,6 +84,7 @@ const Forgot = ({ navigation }) => {
             <Text style={{ color: "red" }}>{errorMsg}</Text>
             <CustomInput
               control={control}
+              defValue={params?.email ? params?.email : ""}
               name={`email`}
               placeholder={es.authentication.forgot.email.placeholder}
               styled={{
@@ -108,7 +114,7 @@ const Forgot = ({ navigation }) => {
                 error: styles.errorInput,
                 placeholder: styles.placeholder,
                 input: [styles.inputContainer, global.bgWhiteSoft],
-                security: styles.security
+                security: styles.security,
               }}
               text={es.authentication.forgot.password.title}
               // icon={require("@/utils/images/password.png")}
@@ -131,7 +137,7 @@ const Forgot = ({ navigation }) => {
                 error: styles.errorInput,
                 placeholder: styles.placeholder,
                 input: [styles.inputContainer, global.bgWhiteSoft],
-                security: styles.security
+                security: styles.security,
               }}
               text={es.authentication.forgot.repeat.title}
               // icon={require("@/utils/images/password.png")}
@@ -146,7 +152,7 @@ const Forgot = ({ navigation }) => {
             <CustomButton
               text={
                 isLoading ? (
-                  <ActivityIndicator color={`#1f1f1f`}/>
+                  <ActivityIndicator color={`#1f1f1f`} />
                 ) : (
                   es.authentication.forgot.button
                 )

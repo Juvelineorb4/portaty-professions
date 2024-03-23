@@ -23,8 +23,10 @@ import { codeFields } from "@/atoms";
 
 const ConfirmForgot = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
-  const [time, setTime] = useState(10 * 60); // 10 minutos
+  const [time, setTime] = useState(60 * 60); // 10 minutos
+  const [timeResend, setTimeResend] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [intervalId, setIntervalId] = useState(null);
   const [errorMsg, setErrorMsg] = useState("");
   const [codeSend, setCodeSend] = useState("");
   const [errorSendCode, setErrorSendCode] = useState("");
@@ -73,8 +75,10 @@ const ConfirmForgot = ({ navigation, route }) => {
     try {
       const result = await Auth.forgotPassword(email);
       setCodeSend(
-        `Codigo enviado a ${result?.CodeDeliveryDetails?.Destination}`
+        `Codigo enviado al ${result?.CodeDeliveryDetails?.Destination}`
       );
+      setTime(60 * 60);
+      setTimeResend(5 * 60);
     } catch (error) {
       console.log("ERROR AL ENVIAR MENSAJE: ", error.message);
       switch (error.message) {
@@ -98,11 +102,23 @@ const ConfirmForgot = ({ navigation, route }) => {
   useEffect(() => {
     if (time > 0) {
       const timerId = setInterval(() => {
-        setTime(time - 1);
+        setTime((prevTime) => prevTime - 1);
       }, 1000);
+      setIntervalId(timerId);
       return () => clearInterval(timerId);
     }
   }, [time]);
+
+  useEffect(() => {
+    if (timeResend <= 0) setCodeSend("");
+    if (timeResend > 0) {
+      const timerId = setInterval(() => {
+        setTimeResend((prevTimeResend) => prevTimeResend - 1);
+      }, 1000);
+      setIntervalId(timerId);
+      return () => clearInterval(timerId);
+    }
+  }, [timeResend]);
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -120,24 +136,63 @@ const ConfirmForgot = ({ navigation, route }) => {
               Enviamos el codigo de confirmacion a {email}
             </Text>
             <Text style={{ color: "red" }}>{errorMsg}</Text>
-              <Text style={[{ fontSize: 16, fontFamily: 'light', marginTop: 10 }]}>{`Tu codigo expirara en: ${formatTime(time)} introducelo antes`}</Text>
+            <Text
+              style={[{ fontSize: 16, fontFamily: "light", marginTop: 10 }]}
+            >{`Tu codigo expirara en: ${formatTime(
+              time
+            )} introducelo antes!`}</Text>
             <CustomCodeField />
             <View style={{ marginTop: 10 }}>
               <Text style={styles.titleAlert}>
                 {es.authentication.account.code.title}
               </Text>
+
               <TouchableOpacity onPress={onHandleResendCode}>
-                <Text style={styles.subtitleAlert}>
-                  {es.authentication.account.code.subtitle}
-                </Text>
+                <View
+                  style={{
+                    backgroundColor: "rgba(255, 255, 255, 0.5)",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text
+                    style={[
+                      styles.subtitleAlert,
+                      timeResend > 0 && { color: "rgba(0, 0, 0, 0.2)" },
+                    ]}
+                  >
+                    {es.authentication.account.code.subtitle}
+                  </Text>
+                  {timeResend > 0 && (
+                    <Text style={[styles.subtitleAlert]}>
+                      {formatTime(timeResend)}
+                    </Text>
+                  )}
+                </View>
               </TouchableOpacity>
             </View>
-            <Text style={{ color: "green" }}>{codeSend}</Text>
-            <Text style={{ color: "red" }}>{errorSendCode}</Text>
+            <View style={{ marginTop: 20 }}>
+              <Text style={{ color: "green" }}>{codeSend}</Text>
+              <Text style={{ color: "red" }}>{errorSendCode}</Text>
+            </View>
+            <View>
+              <Text
+                style={[styles.subtitleAlert, { color: "rgba(0, 0, 0, 0.2)" }]}
+              >
+                *No olvides revisar la sección de "SPAM"*
+              </Text>
+            </View>
           </ScrollView>
           <View style={{ height: 65 }}>
             <CustomButton
-              text={isLoading ? <ActivityIndicator color={`#1f1f1f`}/> : `Confirmar contraseña`}
+              text={
+                isLoading ? (
+                  <ActivityIndicator color={`#1f1f1f`} />
+                ) : (
+                  `Confirmar contraseña`
+                )
+              }
               disabled={isLoading}
               handlePress={handleSubmit(onHandleConfirmCodeNewPassword)}
               textStyles={[styles.textContinue, global.black]}
