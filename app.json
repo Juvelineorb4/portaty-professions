@@ -76,7 +76,7 @@
         "foregroundImage": "./src/utils/images/portaty.png",
         "backgroundColor": "#FFFFFF"
       },
-      "versionCode": 59,
+      "versionCode": 61,
       "googleServicesFile": "./google-services.json"
     },
     "web": {
@@ -140,6 +140,12 @@
           "photosPermission": "Allow Portasty to access your photos.",
           "savePhotosPermission": "Allow Portaty to save photos.",
           "isAccessMediaLocationEnabled": true
+        }
+      ],
+      [
+        "expo-updates",
+        {
+          "username": "portaty"
         }
       ]
     ],
