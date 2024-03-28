@@ -51,6 +51,7 @@
     "expo-splash-screen": "^0.20.5",
     "expo-status-bar": "~1.4.4",
     "expo-system-ui": "~2.2.1",
+    "expo-updates": "^0.24.12",
     "expo-web-browser": "~12.1.1",
     "gsmarena-api": "^2.0.4",
     "lottie-react-native": "5.1.4",
@@ -79,8 +80,7 @@
     "react-native-web": "~0.18.9",
     "react-native-webview": "11.26.0",
     "recoil": "^0.7.6",
-    "rn-fetch-blob": "^0.12.0",
-    "expo-updates": "~0.18.19"
+    "rn-fetch-blob": "^0.12.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
