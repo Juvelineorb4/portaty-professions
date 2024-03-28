@@ -1,4 +1,4 @@
-package com.teamportaty.appdev;
+package com.portaty;
 
 import android.os.Build;
 import android.os.Bundle;
