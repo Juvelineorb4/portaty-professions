@@ -125,7 +125,7 @@ const Unprofile = ({ navigation, route }) => {
       <TouchableOpacity
         activeOpacity={1}
         onPress={() => {
-          if (business.length === 5) {
+          if (business.length === 1) {
             setError(
               "Ya has conseguido el maximo de negocios registrados permitidos"
             );

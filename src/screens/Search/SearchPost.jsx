@@ -227,15 +227,14 @@ const SearchPost = ({ route, navigation }) => {
         city,
         businessid: businessID,
       };
-  
-        Analytics.record(
-          {
-            data: params,
-            streamName: "portaty-app-firehose",
-          },
-          "AWSKinesisFirehose"
-        );
-        
+
+      Analytics.record(
+        {
+          data: params,
+          streamName: "portaty-app-firehose",
+        },
+        "AWSKinesisFirehose"
+      );
 
       // Almacena la información de la última visualización en AsyncStorage
       const currentViewInfo = {
@@ -333,18 +332,26 @@ const SearchPost = ({ route, navigation }) => {
                   height: 250,
                 }}
               >
-                <Image
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    resizeMode: "cover",
-                    borderRadius: 5,
-                    backgroundColor: "#fff",
-                    borderColor: "#1f1f1f",
-                    borderWidth: 0.7,
+                <Pressable
+                  onPress={() => {
+                    setOpen(!open);
+                    setImageView(item);
                   }}
-                  source={{ uri: item.url }}
-                />
+                >
+                  <Image
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      resizeMode: "cover",
+                      borderRadius: 5,
+                      backgroundColor: "#fff",
+                      borderColor: "#1f1f1f",
+                      borderWidth: 0.7,
+                    }}
+                    source={{ uri: item.url }}
+                  />
+                </Pressable>
+
                 <TouchableOpacity
                   style={[
                     {
@@ -814,14 +821,20 @@ const SearchPost = ({ route, navigation }) => {
                 Descripcion
               </Text>
             </View>
-            <View style={{ flexDirection: "row", alignItems: 'center', justifyContent: 'flex-end' }}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "flex-end",
+              }}
+            >
               <Text
                 style={[
                   {
                     width: 200,
                     fontSize: 13,
                     fontFamily: "regular",
-                    textAlign: 'right'
+                    textAlign: "right",
                   },
                 ]}
               >

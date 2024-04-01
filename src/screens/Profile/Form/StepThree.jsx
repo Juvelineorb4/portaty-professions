@@ -168,6 +168,7 @@ const StepThree = ({ navigation, route }) => {
                     if (selectionLocation) return;
                     if (empty) {
                       setSelectionLocation(true);
+                      return
                     }
                     navigation.push("StepFour", {
                       business: business,

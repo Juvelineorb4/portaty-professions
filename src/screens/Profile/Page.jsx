@@ -521,18 +521,25 @@ const Page = ({ route, navigation }) => {
                     // zIndex: 3
                   }}
                 >
-                  <Image
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      resizeMode: "cover",
-                      borderRadius: 5,
-                      backgroundColor: "#fff",
-                      borderColor: "#1f1f1f",
-                      borderWidth: 0.7,
+                  <Pressable
+                    onPress={() => {
+                      setOpen(!open);
+                      setImageView(item);
                     }}
-                    source={{ uri: item.url }}
-                  />
+                  >
+                    <Image
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        resizeMode: "cover",
+                        borderRadius: 5,
+                        backgroundColor: "#fff",
+                        borderColor: "#1f1f1f",
+                        borderWidth: 0.7,
+                      }}
+                      source={{ uri: item.url }}
+                    />
+                  </Pressable>
 
                   {item.key === loadingExtras && (
                     <View

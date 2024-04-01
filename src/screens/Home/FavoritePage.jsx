@@ -234,18 +234,26 @@ const FavoritePage = ({ navigation, route }) => {
                   height: 250,
                 }}
               >
-                <Image
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    resizeMode: "cover",
-                    borderRadius: 5,
-                    backgroundColor: "#fff",
-                    borderWidth: 0.7,
-                    borderColor: "#1f1f1f",
+                <Pressable
+                  onPress={() => {
+                    setOpen(!open);
+                    setImageView(item);
                   }}
-                  source={{ uri: item.url }}
-                />
+                >
+                  <Image
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      resizeMode: "cover",
+                      borderRadius: 5,
+                      backgroundColor: "#fff",
+                      borderWidth: 0.7,
+                      borderColor: "#1f1f1f",
+                    }}
+                    source={{ uri: item.url }}
+                  />
+                </Pressable>
+
                 <TouchableOpacity
                   style={[
                     {
