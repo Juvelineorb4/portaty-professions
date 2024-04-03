@@ -12,6 +12,7 @@ import {
   TouchableWithoutFeedback,
   Modal,
   Pressable,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import * as customSearch from "@/graphql/CustomQueries/Search";
@@ -153,6 +154,7 @@ const SearchPost = ({ route, navigation }) => {
       } else {
         setShowAgg(true);
       }
+      console.log(business?.data?.getBusiness);
       return setPost(business?.data?.getBusiness);
     } catch (error) {
       console.log(error);
@@ -175,7 +177,6 @@ const SearchPost = ({ route, navigation }) => {
       console.log(error);
     }
   };
-
   const onOpenMap = (lat, lng, name) => {
     let url = "";
     if (Platform.OS === "android") {
@@ -227,15 +228,14 @@ const SearchPost = ({ route, navigation }) => {
         city,
         businessid: businessID,
       };
-  
-        Analytics.record(
-          {
-            data: params,
-            streamName: "portaty-app-firehose",
-          },
-          "AWSKinesisFirehose"
-        );
-        
+
+      Analytics.record(
+        {
+          data: params,
+          streamName: "portaty-app-firehose",
+        },
+        "AWSKinesisFirehose"
+      );
 
       // Almacena la información de la última visualización en AsyncStorage
       const currentViewInfo = {
@@ -333,18 +333,26 @@ const SearchPost = ({ route, navigation }) => {
                   height: 250,
                 }}
               >
-                <Image
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    resizeMode: "cover",
-                    borderRadius: 5,
-                    backgroundColor: "#fff",
-                    borderColor: "#1f1f1f",
-                    borderWidth: 0.7,
+                <Pressable
+                  onPress={() => {
+                    setOpen(!open);
+                    setImageView(item);
                   }}
-                  source={{ uri: item.url }}
-                />
+                >
+                  <Image
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      resizeMode: "cover",
+                      borderRadius: 5,
+                      backgroundColor: "#fff",
+                      borderColor: "#1f1f1f",
+                      borderWidth: 0.7,
+                    }}
+                    source={{ uri: item.url }}
+                  />
+                </Pressable>
+
                 <TouchableOpacity
                   style={[
                     {
@@ -814,14 +822,20 @@ const SearchPost = ({ route, navigation }) => {
                 Descripcion
               </Text>
             </View>
-            <View style={{ flexDirection: "row", alignItems: 'center', justifyContent: 'flex-end' }}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "flex-end",
+              }}
+            >
               <Text
                 style={[
                   {
                     width: 200,
                     fontSize: 13,
                     fontFamily: "regular",
-                    textAlign: 'right'
+                    textAlign: "right",
                   },
                 ]}
               >
@@ -884,11 +898,37 @@ const SearchPost = ({ route, navigation }) => {
                 WhatsApp
               </Text>
             </View>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
-                {post?.whatsapp}
+            <Pressable
+              style={{ flexDirection: "row", alignItems: "center" }}
+              onPress={() => {
+                if (post?.whatsapp === "" || post?.whatsapp === null) return;
+                const url = `https://www.instagram.com/${post?.whatsapp}`;
+                Linking.openURL(url);
+              }}
+            >
+              <Text
+                style={[
+                  {
+                    fontSize: 13,
+                    fontFamily: "regular",
+                    marginRight: 5,
+                    color:
+                      post?.whatsapp === "" || post?.whatsapp === null
+                        ? "#1f1f1f"
+                        : "blue",
+                  },
+                ]}
+              >
+                {post?.whatsapp === "" || post?.whatsapp === null
+                  ? "No"
+                  : post?.whatsapp}
               </Text>
-            </View>
+              {post?.whatsapp === "" || post?.whatsapp === null ? (
+                ""
+              ) : (
+                <Feather name="external-link" size={16} color="#1f1f1f" />
+              )}
+            </Pressable>
           </View>
           <View style={[styles.line, global.bgMidGray]} />
           <View
@@ -920,7 +960,7 @@ const SearchPost = ({ route, navigation }) => {
               </Text>
             </View>
           </View>
-          <View style={[styles.line, global.bgMidGray]} />
+          {/* <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
               flexDirection: "row",
@@ -930,7 +970,7 @@ const SearchPost = ({ route, navigation }) => {
             }}
           >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              {/* <MaterialCommunityIcons name="web" size={24} color="#1f1f1f" /> */}
+              <MaterialCommunityIcons name="web" size={24} color="#1f1f1f" />
               <Text
                 style={[
                   { fontFamily: "lightItalic", fontSize: 13 },
@@ -950,7 +990,7 @@ const SearchPost = ({ route, navigation }) => {
               </Text>
               <AntDesign name="link" size={16} color="#1f1f1f" />
             </View>
-          </View>
+          </View> */}
           <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
@@ -971,16 +1011,37 @@ const SearchPost = ({ route, navigation }) => {
                 Instagram
               </Text>
             </View>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Pressable
+              style={{ flexDirection: "row", alignItems: "center" }}
+              onPress={() => {
+                if (post?.instagram === "" || post?.instagram === null) return;
+                const url = `https://www.instagram.com/${post?.instagram}`;
+                Linking.openURL(url);
+              }}
+            >
               <Text
                 style={[
-                  { fontSize: 13, fontFamily: "regular", marginRight: 5 },
+                  {
+                    fontSize: 13,
+                    fontFamily: "regular",
+                    marginRight: 5,
+                    color:
+                      post?.instagram === "" || post?.instagram === null
+                        ? "#1f1f1f"
+                        : "blue",
+                  },
                 ]}
               >
-                Link
+                {post?.instagram === "" || post?.instagram === null
+                  ? "No"
+                  : post?.instagram}
               </Text>
-              <AntDesign name="link" size={16} color="#1f1f1f" />
-            </View>
+              {post?.instagram === "" || post?.instagram === null ? (
+                ""
+              ) : (
+                <Feather name="external-link" size={16} color="blue" />
+              )}
+            </Pressable>
           </View>
           <View style={[styles.line, global.bgMidGray]} />
           <View
@@ -1002,16 +1063,37 @@ const SearchPost = ({ route, navigation }) => {
                 Facebook
               </Text>
             </View>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Pressable
+              style={{ flexDirection: "row", alignItems: "center" }}
+              onPress={() => {
+                if (post?.facebook === "" || post?.facebook === null) return;
+                const url = `https://www.instagram.com/${post?.facebook}`;
+                Linking.openURL(url);
+              }}
+            >
               <Text
                 style={[
-                  { fontSize: 13, fontFamily: "regular", marginRight: 5 },
+                  {
+                    fontSize: 13,
+                    fontFamily: "regular",
+                    marginRight: 5,
+                    color:
+                      post?.facebook === "" || post?.facebook === null
+                        ? "#1f1f1f"
+                        : "blue",
+                  },
                 ]}
               >
-                Link
+                {post?.facebook === "" || post?.facebook === null
+                  ? "No"
+                  : post?.facebook}
               </Text>
-              <AntDesign name="link" size={16} color="#1f1f1f" />
-            </View>
+              {post?.facebook === "" || post?.facebook === null ? (
+                ""
+              ) : (
+                <Feather name="external-link" size={16} color="blue" />
+              )}
+            </Pressable>
           </View>
           <View style={[styles.line, global.bgMidGray]} />
           <Modal

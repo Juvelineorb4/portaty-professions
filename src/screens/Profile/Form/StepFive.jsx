@@ -58,7 +58,6 @@ const StepFive = ({ navigation, route }) => {
   const [selectOption, setSelectOption] = useRecoilState(optionBussines);
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState("");
-
   const BlankInputs = () => {
     setMap({});
     setImage(null);
@@ -169,9 +168,11 @@ const StepFive = ({ navigation, route }) => {
             userID: userAuth?.attributes["custom:userTableID"],
             name: dataB.business.name,
             email: dataB.business.email,
-            phone: dataB.business.number,
+            phone: dataB.business.phone,
             description: description,
             whatsapp: whatsapp ? whatsapp : "",
+            instagram: instagram ? instagram : "",
+            facebook: facebook ? facebook : "",
             image: "",
             identityID: identityId,
             coordinates: {
