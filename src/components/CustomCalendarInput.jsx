@@ -54,7 +54,7 @@ const CustomCalendarInput = ({
       (diffYears === edadMinima && diffMonths < 0) ||
       (diffYears === edadMinima && diffMonths === 0 && diffDays < 0)
     ) {
-      return "Debes ser mayor de edad para continuar. ";
+      return "Debes ser mayor de 18 años";
     }
 
     return true;

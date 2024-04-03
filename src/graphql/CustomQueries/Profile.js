@@ -137,7 +137,18 @@ export const getBusiness = /* GraphQL */ `
     }
   }
 `;
-
+export const getBusinessFavorites = /* GraphQL */ `
+  query GetBusiness($id: ID!) {
+    getBusiness(id: $id) {
+      id
+      favorites {
+        items {
+          id
+        }
+      }
+    }
+  }
+`;
 export const getImages = /* GraphQL */ `
   query GetBusiness($id: ID!) {
     getBusiness(id: $id) {
