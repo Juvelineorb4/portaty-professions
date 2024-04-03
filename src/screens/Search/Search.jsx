@@ -133,6 +133,7 @@ const Search = ({ route }) => {
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
+    if (userLocation) getData();
     Wait(2000).then(() => setRefreshing(false));
   });
   /* Refresh */
@@ -151,9 +152,7 @@ const Search = ({ route }) => {
 
   if (searchActive) {
     return (
-      <View
-        style={{ flex: 1, backgroundColor: "#FFFFFF", paddingBottom: 50 }}
-      >
+      <View style={{ flex: 1, backgroundColor: "#FFFFFF", paddingBottom: 50 }}>
         <View>
           <View
             style={{
