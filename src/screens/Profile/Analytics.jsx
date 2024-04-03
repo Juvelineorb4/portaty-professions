@@ -153,7 +153,6 @@ const Analytics = ({ route }) => {
 
       /* Gender */
       const dataGender = response.data.gender;
-
       const gender = [];
 
       dataGender.map((item, index) => {
@@ -193,6 +192,7 @@ const Analytics = ({ route }) => {
             : max,
         gender[0]
       );
+      console.log('3', maxObj)
 
       maxObj.arc = { outerRadius: "120%", cornerRadius: 10 };
       const genderPie = [];
@@ -226,7 +226,7 @@ const Analytics = ({ route }) => {
           });
         }
         if (index === 1) {
-          gender.push({
+          cities.push({
             key: 2,
             value: Number(item.porcentaje_visitas),
             svg: { fill: "#b28002" },
@@ -235,7 +235,7 @@ const Analytics = ({ route }) => {
           });
         }
         if (index === 2) {
-          gender.push({
+          cities.push({
             key: 3,
             value: Number(item.porcentaje_visitas),
             svg: { fill: "#D6D211" },
@@ -428,9 +428,6 @@ const Analytics = ({ route }) => {
       setAllZeroCity(cities.every((item) => item.value === 0));
       setAllZeroAge(age.every((item) => item.value === 0));
 
-      console.log("datagraph", dataForXAxisYear);
-      console.log("maxvalue", valueYear);
-      console.log("width", likesYear.length * 60);
       setDataGenderPie(gender);
       setDataGenderPieGraph(genderPie);
       setDataAgePie(age);

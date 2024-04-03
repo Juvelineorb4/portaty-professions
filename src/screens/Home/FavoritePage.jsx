@@ -451,7 +451,7 @@ const FavoritePage = ({ navigation, route }) => {
             source={require("@/utils/images/arrow_right.png")}
           />
         </TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={{
             padding: 20,
             flexDirection: "row",
@@ -495,7 +495,7 @@ const FavoritePage = ({ navigation, route }) => {
             }}
             source={require("@/utils/images/arrow_right.png")}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity
           style={{
             padding: 20,
@@ -724,11 +724,37 @@ const FavoritePage = ({ navigation, route }) => {
                 WhatsApp
               </Text>
             </View>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
-                {item.business.whatsapp}
+            <Pressable
+              style={{ flexDirection: "row", alignItems: "center" }}
+              onPress={() => {
+                if (item.business?.whatsapp === "" || item.business?.whatsapp === null) return;
+                const url = `https://www.instagram.com/${item.business?.whatsapp}`;
+                Linking.openURL(url);
+              }}
+            >
+              <Text
+                style={[
+                  {
+                    fontSize: 13,
+                    fontFamily: "regular",
+                    marginRight: 5,
+                    color:
+                    item.business?.whatsapp === "" || item.business?.whatsapp === null
+                        ? "#1f1f1f"
+                        : "blue",
+                  },
+                ]}
+              >
+                {item.business?.whatsapp === "" || item.business?.whatsapp === null
+                  ? "No"
+                  : item.business?.whatsapp}
               </Text>
-            </View>
+              {item.business?.whatsapp === "" || item.business?.whatsapp === null ? (
+                ""
+              ) : (
+                <Feather name="external-link" size={16} color="#1f1f1f" />
+              )}
+            </Pressable>
           </View>
           <View style={[styles.line, global.bgMidGray]} />
           <View
@@ -760,7 +786,7 @@ const FavoritePage = ({ navigation, route }) => {
               </Text>
             </View>
           </View>
-          <View style={[styles.line, global.bgMidGray]} />
+          {/* <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
               flexDirection: "row",
@@ -770,7 +796,7 @@ const FavoritePage = ({ navigation, route }) => {
             }}
           >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              {/* <MaterialCommunityIcons name="web" size={24} color="#1f1f1f" /> */}
+              <MaterialCommunityIcons name="web" size={24} color="#1f1f1f" />
               <Text
                 style={[
                   { fontFamily: "lightItalic", fontSize: 13 },
@@ -790,7 +816,7 @@ const FavoritePage = ({ navigation, route }) => {
               </Text>
               <AntDesign name="link" size={16} color="#1f1f1f" />
             </View>
-          </View>
+          </View> */}
           <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
@@ -811,16 +837,37 @@ const FavoritePage = ({ navigation, route }) => {
                 Instagram
               </Text>
             </View>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Pressable
+              style={{ flexDirection: "row", alignItems: "center" }}
+              onPress={() => {
+                if (item.business?.instagram === "" || item.business?.instagram === null) return;
+                const url = `https://www.instagram.com/${item.business?.instagram}`;
+                Linking.openURL(url);
+              }}
+            >
               <Text
                 style={[
-                  { fontSize: 13, fontFamily: "regular", marginRight: 5 },
+                  {
+                    fontSize: 13,
+                    fontFamily: "regular",
+                    marginRight: 5,
+                    color:
+                    item.business?.instagram === "" || item.business?.instagram === null
+                        ? "#1f1f1f"
+                        : "blue",
+                  },
                 ]}
               >
-                Link
+                {item.business?.instagram === "" || item.business?.instagram === null
+                  ? "No"
+                  : item.business?.instagram}
               </Text>
-              <AntDesign name="link" size={16} color="#1f1f1f" />
-            </View>
+              {item.business?.instagram === "" || item.business?.instagram === null ? (
+                ""
+              ) : (
+                <Feather name="external-link" size={16} color="#1f1f1f" />
+              )}
+            </Pressable>
           </View>
           <View style={[styles.line, global.bgMidGray]} />
           <View
@@ -842,16 +889,37 @@ const FavoritePage = ({ navigation, route }) => {
                 Facebook
               </Text>
             </View>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Pressable
+              style={{ flexDirection: "row", alignItems: "center" }}
+              onPress={() => {
+                if (item.business?.facebook === "" || item.business?.facebook === null) return;
+                const url = `https://www.instagram.com/${item.business?.facebook}`;
+                Linking.openURL(url);
+              }}
+            >
               <Text
                 style={[
-                  { fontSize: 13, fontFamily: "regular", marginRight: 5 },
+                  {
+                    fontSize: 13,
+                    fontFamily: "regular",
+                    marginRight: 5,
+                    color:
+                    item.business?.facebook === "" || item.business?.facebook === null
+                        ? "#1f1f1f"
+                        : "blue",
+                  },
                 ]}
               >
-                Link
+                {item.business?.facebook === "" || item.business?.facebook === null
+                  ? "No"
+                  : item.business?.facebook}
               </Text>
-              <AntDesign name="link" size={16} color="#1f1f1f" />
-            </View>
+              {item.business?.facebook === "" || item.business?.facebook === null ? (
+                ""
+              ) : (
+                <Feather name="external-link" size={16} color="blue" />
+              )}
+            </Pressable>
           </View>
           <View style={[styles.line, global.bgMidGray]} />
         </View>

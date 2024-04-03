@@ -13,6 +13,7 @@ import React, { useState, useEffect } from "react";
 import { Auth, API, Storage } from "aws-amplify";
 import * as mutations from "@/graphql/CustomMutations/Profile";
 import * as customSearch from "@/graphql/CustomQueries/Search";
+import * as queries from "@/graphql/CustomQueries/Favorites";
 import CustomSelect from "@/components/CustomSelect";
 import styles from "@/utils/styles/Profile.module.css";
 import CustomButton from "@/components/CustomButton";
@@ -35,6 +36,9 @@ const Profile = ({ route, navigation }) => {
   const [editActive, setEditActive] = useState(false);
   const [isSave, setIsSave] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [favoritesQY, setFavoritesQY] = useState(0);
+
+  
   const onShare = async () => {
     try {
       await Share.share({
@@ -45,9 +49,7 @@ const Profile = ({ route, navigation }) => {
     }
   };
 
-  useEffect(() => {
-    onCheckChange();
-  }, [name, lastName]);
+
 
   const onCheckChange = () => {
     if (
@@ -60,7 +62,18 @@ const Profile = ({ route, navigation }) => {
       setIsSave(false);
     }
   };
+  const onFavorites = async () => {
+    const result = await API.graphql({
+      query: queries.userByEmail,
+      authMode: "AMAZON_COGNITO_USER_POOLS",
+      variables: {
+        email: user?.email,
+      },
+    });
 
+    setFavoritesQY(result?.data?.userByEmail?.items[0]?.favorites?.items.length)
+  }
+  
   const onSaveChange = async () => {
     setIsLoading(true);
     const data = await Auth.currentAuthenticatedUser();
@@ -92,6 +105,10 @@ const Profile = ({ route, navigation }) => {
     setEditActive(!editActive)
   };
 
+  useEffect(() => {
+    onFavorites()
+    onCheckChange();
+  }, [name, lastName]);
 
   return (
     <View
@@ -111,13 +128,13 @@ const Profile = ({ route, navigation }) => {
             marginBottom: 20,
           }}
         >
-          <Text style={{ fontSize: 24, fontFamily: "medium" }}>0</Text>
+          <Text style={{ fontSize: 24, fontFamily: "medium" }}>{favoritesQY}</Text>
           <Text style={{ fontSize: 20, fontFamily: "light" }}>
             Mis Favoritos
           </Text>
         </View>
         <View style={[styles.line, global.bgMidGray]} />
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={{
             padding: 20,
             flexDirection: "row",
@@ -160,14 +177,14 @@ const Profile = ({ route, navigation }) => {
             }}
             source={require("@/utils/images/arrow_right.png")}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity
           style={{
             padding: 20,
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
-            marginTop: -25,
+            marginTop: -5,
           }}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>

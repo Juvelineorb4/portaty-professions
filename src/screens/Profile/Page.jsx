@@ -69,6 +69,8 @@ const Page = ({ route, navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [editActive, setEditActive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [favoritesQY, setFavoritesQY] = useState(0);
+  const [enableFavorites, setEnableFavorites] = useState(false);
   // coordinates
   const [coordinate, setCoordinate] = useState({
     latitude: item.coordinates.lat,
@@ -90,6 +92,23 @@ const Page = ({ route, navigation }) => {
     facebook: item.facebook,
     description: item.description,
   });
+  const onFavorites = async () => {
+    setEnableFavorites(true);
+    try {
+      const business = await API.graphql({
+        query: customProfile.getBusinessFavorites,
+        variables: {
+          id: item.id,
+        },
+        authMode: "AWS_IAM",
+      });
+      setFavoritesQY(business.data.getBusiness.favorites.items.length);
+      setEnableFavorites(false);
+    } catch (error) {
+      console.log(error);
+      setEnableFavorites(false);
+    }
+  };
   const onSaveChange = async () => {
     setIsLoading(true);
     const activityChange = JSON.stringify(editParams?.activity);
@@ -119,7 +138,6 @@ const Page = ({ route, navigation }) => {
     setIsLoading(false);
     setEditActive(!editActive);
   };
-
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
@@ -377,6 +395,7 @@ const Page = ({ route, navigation }) => {
   };
 
   useEffect(() => {
+    onFavorites();
     AllImages();
     imagesArray();
 
@@ -653,7 +672,7 @@ const Page = ({ route, navigation }) => {
           }}
         >
           <Text style={{ fontSize: 24, fontFamily: "medium" }}>
-            {item.favorites?.items?.length}
+            {enableFavorites ? <ActivityIndicator color={`#1f1f1f`} /> : favoritesQY}
           </Text>
           <Text style={{ fontSize: 20, fontFamily: "light" }}>Favoritos</Text>
         </View>
@@ -947,7 +966,7 @@ const Page = ({ route, navigation }) => {
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <TextInput
-                onChangeText={(e) => setEditParams({ ...state, name: e })}
+                onChangeText={(e) => setEditParams({ ...editParams, name: e })}
                 value={editParams?.name}
                 style={[
                   {
@@ -991,10 +1010,10 @@ const Page = ({ route, navigation }) => {
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <TextInput
                 onChangeText={(e) =>
-                  setEditParams({
-                    ...state,
-                    activity: { main: e, sub: editParams?.activity?.sub },
-                  })
+                  setEditParams((prevState) => ({
+                    ...prevState,
+                    activity: { ...prevState, main: e },
+                  }))
                 }
                 value={editParams?.activity?.main}
                 style={[
@@ -1040,10 +1059,10 @@ const Page = ({ route, navigation }) => {
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <TextInput
                 onChangeText={(e) =>
-                  setEditParams({
-                    ...state,
-                    activity: { main: editParams?.activity?.main, sub: e },
-                  })
+                  setEditParams((prevState) => ({
+                    ...prevState,
+                    activity: { ...prevState, sub: e },
+                  }))
                 }
                 value={editParams?.activity?.sub}
                 style={[
@@ -1089,7 +1108,10 @@ const Page = ({ route, navigation }) => {
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <TextInput
                 onChangeText={(e) =>
-                  setEditParams({ ...state, description: e })
+                  setEditParams((prevState) => ({
+                    ...prevState,
+                    description: e,
+                  }))
                 }
                 value={editParams?.description}
                 style={[
@@ -1136,7 +1158,12 @@ const Page = ({ route, navigation }) => {
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <TextInput
-                onChangeText={(e) => setEditParams({ ...state, phone: e })}
+                onChangeText={(e) =>
+                  setEditParams((prevState) => ({
+                    ...prevState,
+                    phone: e,
+                  }))
+                }
                 value={editParams?.phone}
                 style={[
                   {
@@ -1184,7 +1211,12 @@ const Page = ({ route, navigation }) => {
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <TextInput
-                onChangeText={(e) => setEditParams({ ...state, ws: e })}
+                onChangeText={(e) =>
+                  setEditParams((prevState) => ({
+                    ...prevState,
+                    ws: e,
+                  }))
+                }
                 value={
                   editParams?.ws === "" ? "Agregar WhatsApp" : editParams?.ws
                 }
@@ -1236,7 +1268,12 @@ const Page = ({ route, navigation }) => {
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <TextInput
-                onChangeText={(e) => setEditParams({ ...state, email: e })}
+                onChangeText={(e) =>
+                  setEditParams((prevState) => ({
+                    ...prevState,
+                    email: e,
+                  }))
+                }
                 value={editParams?.email}
                 style={[
                   {
@@ -1258,7 +1295,7 @@ const Page = ({ route, navigation }) => {
             </View>
           </View>
           <View style={[styles.line, global.bgMidGray]} />
-          <View
+          {/* <View
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
@@ -1267,7 +1304,7 @@ const Page = ({ route, navigation }) => {
             }}
           >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              {/* <MaterialCommunityIcons name="web" size={24} color="#1f1f1f" /> */}
+              <MaterialCommunityIcons name="web" size={24} color="#1f1f1f" />
               <Text
                 style={[
                   { fontFamily: "lightItalic", fontSize: 15 },
@@ -1278,15 +1315,20 @@ const Page = ({ route, navigation }) => {
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              {/* <Text
+              <Text
                 style={[
                   { fontSize: 13, fontFamily: "regular", marginRight: 5 },
                 ]}
               >
                 Link
-              </Text> */}
+              </Text>
               <TextInput
-                onChangeText={(e) => setEditParams({ ...state, web: e })}
+                onChangeText={(e) =>
+                  setEditParams((prevState) => ({
+                    ...prevState,
+                    web: e,
+                  }))
+                }
                 value={
                   editParams?.web === null ? "Agregar Web" : editParams?.web
                 }
@@ -1307,10 +1349,10 @@ const Page = ({ route, navigation }) => {
                   editParams?.web === null ? "Agregar Web" : editParams?.web
                 }
               />
-              {/* <AntDesign name="link" size={16} color="#1f1f1f" /> */}
+              <AntDesign name="link" size={16} color="#1f1f1f" />
             </View>
           </View>
-          <View style={[styles.line, global.bgMidGray]} />
+          <View style={[styles.line, global.bgMidGray]} /> */}
           <View
             style={{
               flexDirection: "row",
@@ -1332,7 +1374,12 @@ const Page = ({ route, navigation }) => {
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <TextInput
-                onChangeText={(e) => setEditParams({ ...state, instagram: e })}
+                onChangeText={(e) =>
+                  setEditParams((prevState) => ({
+                    ...prevState,
+                    instagram: e,
+                  }))
+                }
                 value={
                   editParams?.instagram === null
                     ? "Agregar Instagram"
@@ -1381,9 +1428,14 @@ const Page = ({ route, navigation }) => {
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <TextInput
-                onChangeText={(e) => setEditParams({ ...state, facebook: e })}
+                onChangeText={(e) =>
+                  setEditParams((prevState) => ({
+                    ...prevState,
+                    facebook: e,
+                  }))
+                }
                 value={
-                  editParams?.facebook === null
+                  editParams?.facebook === ""
                     ? "Agregar Facebook"
                     : editParams?.facebook
                 }
@@ -1401,7 +1453,7 @@ const Page = ({ route, navigation }) => {
                 ]}
                 editable={editActive ? true : false}
                 defaultValue={
-                  editParams?.facebook === null
+                  editParams?.facebook === ""
                     ? "Agregar Facebook"
                     : editParams?.facebook
                 }
