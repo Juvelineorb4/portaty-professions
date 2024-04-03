@@ -192,7 +192,6 @@ const Analytics = ({ route }) => {
             : max,
         gender[0]
       );
-      console.log('3', maxObj)
 
       maxObj.arc = { outerRadius: "120%", cornerRadius: 10 };
       const genderPie = [];
@@ -281,12 +280,11 @@ const Analytics = ({ route }) => {
       /* Country */
 
       const dataCountry = response.data.country;
-
       let sortedDataCountry = [...dataCountry].sort(
         (a, b) => b.porcentaje_visitas - a.porcentaje_visitas
       );
 
-      let ThreeCountry = sortedData.slice(0, 3);
+      let ThreeCountry = sortedDataCountry.slice(0, 3);
 
       const countries = [];
 
