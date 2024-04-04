@@ -187,21 +187,22 @@ const StepFive = ({ navigation, route }) => {
           },
         },
       });
-      // const apiName = "api-professions-gateway"; // replace this with your api name.
-      // const path = "/thumbnailgenerator"; //replace this with the path you have configured on your API
-      // const myInit = {
-      //   body: {
-      //     identityid: identityId,
-      //     businessid: business?.data?.createBusiness?.id,
-      //     action: "create",
-      //     type: "profile",
-      //     key: 0,
-      //     description,
-      //     image: imageB64,
-      //   }, // replace this with attributes you need
-      //   headers: {}, // OPTIONAL
-      // };
-      // const result = await API.post(apiName, path, myInit);
+      const apiName = "api-professions-gateway";
+      const path = "/thumbnailgenerator";
+      const myInit = {
+        body: {
+          identityid: identityId,
+          businessid: business?.data?.createBusiness?.id,
+          action: "create",
+          type: "profile",
+          key: 0,
+          description,
+          image: imageB64,
+        },
+        headers: {},
+      };
+      const result = await API.post(apiName, path, myInit);
+
       setLoading(false);
       Finished();
     } catch (error) {
