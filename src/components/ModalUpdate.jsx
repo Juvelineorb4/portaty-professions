@@ -24,7 +24,7 @@ const ModalUpdate = ({ isVisible, onConfirm, version, updateDate }) => {
         }}
       >
         <View
-          style={{ backgroundColor: "white", padding: 20, borderRadius: 10 }}
+          style={{ backgroundColor: "white", padding: 20, borderRadius: 10, width: 250 }}
         >
           <Text
             style={{

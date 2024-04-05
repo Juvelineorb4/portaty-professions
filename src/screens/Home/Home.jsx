@@ -111,7 +111,7 @@ const Home = ({ navigation, route }) => {
     };
   }, [route, statusFavorites, inputFavorite, updateFavorite]);
 
-  if (updateAvailable === true)
+  if (updateAvailable === false)
     return (
       <View
         style={[

@@ -20,13 +20,16 @@ import { useForm } from "react-hook-form";
 import { Alert } from "react-native";
 import ModalAlert from "@/components/ModalAlert";
 import Constants from "expo-constants";
+import useCheckAppVersion from "@/hooks/useCheckAppVersion";
+import ModalUpdate from "@/components/ModalUpdate";
 
 const Login = ({ navigation }) => {
   const { control, handleSubmit, watch } = useForm();
   const emailForm = watch("email");
   const global = require("@/utils/styles/global.js");
   const EMAIL_REGEX = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
-
+  const { updateAvailable, fetchUpdate, updateVersion, updateDate } =
+  useCheckAppVersion();
   const [errorActive, setErrorActive] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -94,6 +97,7 @@ const Login = ({ navigation }) => {
     }
     setVisible(false);
   };
+
 
   return (
     <KeyboardAvoidingView
@@ -216,7 +220,12 @@ const Login = ({ navigation }) => {
           </Text>
         </View>
       </View>
-
+      <ModalUpdate
+        isVisible={updateAvailable}
+        version={updateVersion ? updateVersion : "No definido"}
+        updateDate={updateDate ? updateDate : "No definido"}
+        onConfirm={fetchUpdate}
+      />
       <ModalAlert
         text={error}
         close={() => CloseModal()}
