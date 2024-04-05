@@ -17,7 +17,6 @@ web-build/
 .metro-health-check*
 
 #amplify-do-not-edit-begin
-amplify/*
 amplify/\#current-cloud-backend
 amplify/.config/local-*
 amplify/logs
@@ -37,4 +36,3 @@ amplifytools.xcconfig
 .secret-*
 **.sample
 #amplify-do-not-edit-end
-portaty-firebase-adminsdk-4okqz-04c9013bd3.json

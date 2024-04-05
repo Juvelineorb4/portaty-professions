@@ -4,7 +4,7 @@
     "name": "Portaty",
     "slug": "portaty-professions",
     "owner": "portaty",
-    "version": "0.6.0.9",
+    "version": "0.6.1.3",
     "orientation": "portrait",
     "icon": "./src/utils/images/portaty.png",
     "userInterfaceStyle": "light",
@@ -47,8 +47,13 @@
           "data": [
             {
               "scheme": "https",
-              "host": "*.portaty.com",
-              "pathPrefix": "/share/*"
+              "host": "www.portaty.com",
+              "pathPrefix": "/"
+            },
+            {
+              "scheme": "https",
+              "host": "www.portaty.com",
+              "pathPrefix": "/share/business"
             }
           ],
           "category": [
@@ -76,7 +81,7 @@
         "foregroundImage": "./src/utils/images/portaty.png",
         "backgroundColor": "#FFFFFF"
       },
-      "versionCode": 59,
+      "versionCode": 72,
       "googleServicesFile": "./google-services.json"
     },
     "web": {
@@ -140,6 +145,12 @@
           "photosPermission": "Allow Portasty to access your photos.",
           "savePhotosPermission": "Allow Portaty to save photos.",
           "isAccessMediaLocationEnabled": true
+        }
+      ],
+      [
+        "expo-updates",
+        {
+          "username": "portaty"
         }
       ]
     ],

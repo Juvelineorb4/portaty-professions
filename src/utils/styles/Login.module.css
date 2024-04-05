@@ -92,6 +92,7 @@
 .signup {
   flex-direction: row;
   justify-content: center;
+  margin-bottom: 5px;
 }
 .dont {
   font-family: "light";

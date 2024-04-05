@@ -30,7 +30,7 @@
   "submit": {
     "production": {
       "android": {
-        "serviceAccountKeyPath": "./portaty-firebase-adminsdk-4okqz-04c9013bd3.json",
+        "serviceAccountKeyPath": "../credentials_professions/portaty-firebase-adminsdk-4okqz-ddc7458165.json",
         "track": "internal"
       }
     }

@@ -19,6 +19,7 @@ import CustomButton from "@/components/CustomButton";
 import { useForm } from "react-hook-form";
 import { Alert } from "react-native";
 import ModalAlert from "@/components/ModalAlert";
+import Constants from "expo-constants";
 
 const Login = ({ navigation }) => {
   const { control, handleSubmit, watch } = useForm();
@@ -202,7 +203,20 @@ const Login = ({ navigation }) => {
             </Text>
           </TouchableOpacity>
         </View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "flex-end",
+            alignItems: "center",
+          }}
+        >
+          <Text>V</Text>
+          <Text style={{ fontFamily: "bold" }}>
+            {Constants.expoConfig.version}
+          </Text>
+        </View>
       </View>
+
       <ModalAlert
         text={error}
         close={() => CloseModal()}

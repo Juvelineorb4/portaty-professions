@@ -18,7 +18,6 @@ import {
   updateListFavorites,
 } from "@/atoms";
 import { useRecoilState, useRecoilValue } from "recoil";
-import * as Location from "expo-location";
 import * as queries from "@/graphql/CustomQueries/Favorites";
 import * as subscriptions from "@/graphql/CustomSubscriptions/Favorites";
 import CustomButton from "@/components/CustomButton";
@@ -31,9 +30,13 @@ import {
 import ModalAlert from "@/components/ModalAlert";
 import News from "@/components/Home/News";
 import ModalUpdate from "@/components/ModalUpdate";
+// Hooks
+import useCheckAppVersion from "@/hooks/useCheckAppVersion";
 
 const Home = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
+  const { updateAvailable, fetchUpdate, updateVersion, updateDate } =
+    useCheckAppVersion();
   const [mode, setMode] = useState(3);
   const [userLocation, setUserLocation] = useRecoilState(mapUser);
   const statusFavorites = useRecoilValue(favoritesState);
@@ -46,7 +49,6 @@ const Home = ({ navigation, route }) => {
   const userAuth = useRecoilValue(userAuthenticated);
   const [resultNothing, setResultNothing] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [isUpdate, setIsUpdate] = useState(false);
   const fetchFavorites = async () => {
     setLoading(true);
     const result = await API.graphql({
@@ -88,19 +90,8 @@ const Home = ({ navigation, route }) => {
     // setTimeout(() => {}, 2000);
     setLoading(false);
   };
-  // const checkUpdate = async () => {
-  //   const update = await Updates.checkForUpdateAsync();
-  //   try {
-  //     if (update.isAvailable) {
-  //       setIsUpdate(true);
-  //     }
-  //   } catch (e) {
-  //     setIsUpdate(false);
-  //   }
-  // };
 
   useLayoutEffect(() => {
-    // checkUpdate();
     fetchFavorites();
     const updateSub = API.graphql({
       query: subscriptions.onUpdateUsers,
@@ -111,8 +102,7 @@ const Home = ({ navigation, route }) => {
         },
       },
     }).subscribe({
-      next: ({ provider, value: { data } }) => {
-      },
+      next: ({ provider, value: { data } }) => {},
       error: (error) => console.warn(error),
     });
     return () => {
@@ -121,7 +111,7 @@ const Home = ({ navigation, route }) => {
     };
   }, [route, statusFavorites, inputFavorite, updateFavorite]);
 
-  if (isUpdate === true)
+  if (updateAvailable === true)
     return (
       <View
         style={[
@@ -137,8 +127,9 @@ const Home = ({ navigation, route }) => {
       >
         <ModalUpdate
           isVisible={true}
-          version={"1.0.2"}
-          updateDate={"12 de marzo, 2024"}
+          version={updateVersion ? updateVersion : "No definido"}
+          updateDate={updateDate ? updateDate : "No definido"}
+          onConfirm={fetchUpdate}
         />
       </View>
     );

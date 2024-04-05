@@ -51,6 +51,8 @@ const Navigation = () => {
     if (!isFirsTime) renderNavigation();
   }, [userAuth]);
 
+  
+
   return (
     <NavigationContainer fallback={<Loading />}>
       <NavSettings checkRender={checkRender} />

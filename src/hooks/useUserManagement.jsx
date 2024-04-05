@@ -11,6 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 const useUserManagement = () => {
   const [userAuth, setUserAuth] = useRecoilState(userAuthenticated);
   const navigation = useNavigation();
+  
   const userSignIn = async (data) => {
     try {
       const result = await Auth.currentAuthenticatedUser();

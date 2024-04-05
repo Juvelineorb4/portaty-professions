@@ -78,6 +78,7 @@ const usePushNotification = () => {
     registerForPushNotificationsAsync().then((token) => {
       setExpoPushToken(token);
       setToken(token);
+      console.log(token)
     });
 
     notificationListener.current =
