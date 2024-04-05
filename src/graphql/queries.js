@@ -82,6 +82,72 @@ export const searchBusinessByDistance = /* GraphQL */ `
     }
   }
 `;
+export const getAppVersionHistory = /* GraphQL */ `
+  query GetAppVersionHistory($id: ID!) {
+    getAppVersionHistory(id: $id) {
+      id
+      platform
+      latestVersion
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listAppVersionHistories = /* GraphQL */ `
+  query ListAppVersionHistories(
+    $filter: ModelAppVersionHistoryFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAppVersionHistories(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        platform
+        latestVersion
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const AppVersionByDate = /* GraphQL */ `
+  query AppVersionByDate(
+    $platform: AppPlatform!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelAppVersionHistoryFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    AppVersionByDate(
+      platform: $platform
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        platform
+        latestVersion
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const getArea = /* GraphQL */ `
   query GetArea($id: ID!) {
     getArea(id: $id) {

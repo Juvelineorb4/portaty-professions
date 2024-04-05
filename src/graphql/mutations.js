@@ -1,6 +1,51 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const createAppVersionHistory = /* GraphQL */ `
+  mutation CreateAppVersionHistory(
+    $input: CreateAppVersionHistoryInput!
+    $condition: ModelAppVersionHistoryConditionInput
+  ) {
+    createAppVersionHistory(input: $input, condition: $condition) {
+      id
+      platform
+      latestVersion
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateAppVersionHistory = /* GraphQL */ `
+  mutation UpdateAppVersionHistory(
+    $input: UpdateAppVersionHistoryInput!
+    $condition: ModelAppVersionHistoryConditionInput
+  ) {
+    updateAppVersionHistory(input: $input, condition: $condition) {
+      id
+      platform
+      latestVersion
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteAppVersionHistory = /* GraphQL */ `
+  mutation DeleteAppVersionHistory(
+    $input: DeleteAppVersionHistoryInput!
+    $condition: ModelAppVersionHistoryConditionInput
+  ) {
+    deleteAppVersionHistory(input: $input, condition: $condition) {
+      id
+      platform
+      latestVersion
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const deleteComplaints = /* GraphQL */ `
   mutation DeleteComplaints(
     $input: DeleteComplaintsInput!

@@ -31,12 +31,12 @@ import ModalAlert from "@/components/ModalAlert";
 import News from "@/components/Home/News";
 import ModalUpdate from "@/components/ModalUpdate";
 // Hooks
-import useCheckUpdate from "@/hooks/useCheckUpdate";
+import useCheckAppVersion from "@/hooks/useCheckAppVersion";
 
 const Home = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
   const { updateAvailable, fetchUpdate, updateVersion, updateDate } =
-    useCheckUpdate();
+    useCheckAppVersion();
   const [mode, setMode] = useState(3);
   const [userLocation, setUserLocation] = useRecoilState(mapUser);
   const statusFavorites = useRecoilValue(favoritesState);

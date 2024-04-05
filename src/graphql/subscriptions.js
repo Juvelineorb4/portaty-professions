@@ -1,6 +1,48 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const onCreateAppVersionHistory = /* GraphQL */ `
+  subscription OnCreateAppVersionHistory(
+    $filter: ModelSubscriptionAppVersionHistoryFilterInput
+  ) {
+    onCreateAppVersionHistory(filter: $filter) {
+      id
+      platform
+      latestVersion
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateAppVersionHistory = /* GraphQL */ `
+  subscription OnUpdateAppVersionHistory(
+    $filter: ModelSubscriptionAppVersionHistoryFilterInput
+  ) {
+    onUpdateAppVersionHistory(filter: $filter) {
+      id
+      platform
+      latestVersion
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteAppVersionHistory = /* GraphQL */ `
+  subscription OnDeleteAppVersionHistory(
+    $filter: ModelSubscriptionAppVersionHistoryFilterInput
+  ) {
+    onDeleteAppVersionHistory(filter: $filter) {
+      id
+      platform
+      latestVersion
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const onCreateArea = /* GraphQL */ `
   subscription OnCreateArea($filter: ModelSubscriptionAreaFilterInput) {
     onCreateArea(filter: $filter) {
