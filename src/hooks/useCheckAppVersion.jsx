@@ -53,7 +53,7 @@ const useCheckAppVersion = () => {
           break;
       }
     } catch (error) {
-      alert(`Error fetching latest Expo update: ${error}`);
+      alert(`Error al momento de redireccionar a Store ${error}`);
     }
   }
 
