@@ -14,21 +14,28 @@ import { Amplify, AWSKinesisFirehoseProvider, Analytics } from "aws-amplify";
 import awsconfig from "./src/aws-exports.js";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet } from "react-native";
+import * as Constants from "expo-constants";
+import { api } from "@/utils/constants/api.jsx";
+const ENDPOINT =
+  Constants?.AppOwnership?.Expo === ""
+    ? api?.stage_endpoint?.dev
+    : api?.stage_endpoint?.prod;
+console.log("ENDPOINT: ", ENDPOINT);
 Amplify.configure({
   ...awsconfig,
   API: {
     endpoints: [
       {
         name: "api-professions-gateway",
-        endpoint: "https://6hf00kcyv9.execute-api.us-east-1.amazonaws.com/dev",
+        endpoint: ENDPOINT,
       },
       {
         name: "api-opense",
-        endpoint: "https://6hf00kcyv9.execute-api.us-east-1.amazonaws.com/dev",
+        endpoint: ENDPOINT,
       },
       {
         name: "api-portaty",
-        endpoint: "https://6hf00kcyv9.execute-api.us-east-1.amazonaws.com/dev",
+        endpoint: ENDPOINT,
       },
     ],
   },
