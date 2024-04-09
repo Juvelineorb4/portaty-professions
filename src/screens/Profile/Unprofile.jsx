@@ -59,6 +59,9 @@ const Unprofile = ({ navigation, route }) => {
       setBusiness(result.data.userByEmail.items[0].business.items);
     setDisabled(false);
   };
+  const _handlePressButtonAsync = async (url) => {
+    let result = await WebBrowser.openBrowserAsync(url);
+  };
 
   useLayoutEffect(() => {
     User();
@@ -200,7 +203,7 @@ const Unprofile = ({ navigation, route }) => {
             styles.line,
             global.bgMidGray,
             {
-              marginBottom: 20,
+              marginBottom: 1,
               // marginTop: 5
             },
           ]}
@@ -231,7 +234,9 @@ const Unprofile = ({ navigation, route }) => {
                 />
               </TouchableOpacity>
             ) : button.web ? (
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => _handlePressButtonAsync(button.web)}
+              >
                 {/* <View style={[styles.line, global.bgMidGray]} /> */}
                 <CustomSelect
                   title={button.title}

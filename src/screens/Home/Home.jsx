@@ -7,7 +7,6 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { Auth, API } from "aws-amplify";
-import { searchBusinessByDistance, searchByDistance } from "@/graphql/queries";
 import Grid from "@/components/Home/Grid";
 import List from "@/components/Home/List";
 import {
@@ -111,7 +110,7 @@ const Home = ({ navigation, route }) => {
     };
   }, [route, statusFavorites, inputFavorite, updateFavorite]);
 
-  if (updateAvailable === false)
+  if (updateAvailable === true)
     return (
       <View
         style={[

@@ -155,9 +155,7 @@ const ConfirmRegister = ({ navigation, route }) => {
             <Text style={{ color: "red" }}>{errorMsg}</Text>
             <Text
               style={[{ fontSize: 16, fontFamily: "light", marginTop: 10 }]}
-            >{`Tu codigo expirara en: ${formatTime(
-              time
-            )} introducelo antes`}</Text>
+            >{`Tu codigo expirara en 24 horas introducelo antes`}</Text>
 
             <CustomCodeField />
             <View style={{ marginTop: 10 }}>
