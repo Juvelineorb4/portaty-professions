@@ -10,14 +10,17 @@ const useDeepLinkInital = (checkRender) => {
 
   const returnNavigationScreen = async () => {
     const { path, queryParams } = initalUrl;
-    if (path === "share/list" && queryParams?.id) {
+    // if (path === "share/list" && queryParams?.id) {
+    //   navigation.navigate("ShareNavigator", {
+    //     screen: "ShareListPage",
+    //     params: { id: queryParams?.id },
+    //   });
+    // }
+    if (path === "share/business" && queryParams?.id) {
       navigation.navigate("ShareNavigator", {
-        screen: "ShareListPage",
+        screen: "SharePage",
         params: { id: queryParams?.id },
       });
-    }
-    if (path === "share/business" && queryParams?.id) {
-      navigation.navigate("SharePage", { id: queryParams?.id });
     }
     return setInitalUrl({});
   };
