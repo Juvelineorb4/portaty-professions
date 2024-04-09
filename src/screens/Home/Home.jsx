@@ -126,7 +126,7 @@ const Home = ({ navigation, route }) => {
         ]}
       >
         <ModalUpdate
-          isVisible={true}
+          isVisible={false}
           version={updateVersion ? updateVersion : "No definido"}
           updateDate={updateDate ? updateDate : "No definido"}
           onConfirm={fetchUpdate}

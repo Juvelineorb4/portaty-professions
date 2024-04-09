@@ -221,7 +221,7 @@ const Login = ({ navigation }) => {
         </View>
       </View>
       <ModalUpdate
-        isVisible={updateAvailable}
+        isVisible={false}
         version={updateVersion ? updateVersion : "No definido"}
         updateDate={updateDate ? updateDate : "No definido"}
         onConfirm={fetchUpdate}

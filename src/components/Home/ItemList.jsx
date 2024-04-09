@@ -144,7 +144,7 @@ const ItemList = ({ data, number, styled }) => {
               right: 25,
             }}
           >
-            <Ionicons name="eye-outline" size={16} color="#1f1f1f" />
+            {/* <Ionicons name="eye-outline" size={16} color="#1f1f1f" />
             <Text
               style={{
                 fontSize: 13,
@@ -154,7 +154,7 @@ const ItemList = ({ data, number, styled }) => {
               }}
             >
               Ver
-            </Text>
+            </Text> */}
           </View>
         </View>
       </TouchableOpacity>
