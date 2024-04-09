@@ -16,7 +16,7 @@ import {
 import React, { useState, useEffect, useLayoutEffect } from "react";
 import * as customSearch from "@/graphql/CustomQueries/Search";
 import CustomSelect from "@/components/CustomSelect";
-import styles from "@/utils/styles/SearchPost.module.css";
+import styles from "@/utils/styles/SharePage.module.css";
 import {
   FontAwesome5,
   MaterialCommunityIcons,
@@ -42,23 +42,25 @@ import * as FileSystem from "expo-file-system";
 import { StorageAccessFramework } from "expo-file-system";
 import { useRef } from "react";
 import ModalAlert from "@/components/ModalAlert";
+import CustomButton from "@/components/CustomButton";
 
 const SharePage = ({ route, navigation }) => {
-  console.log("CARGO SHARE PAGE: ", route.params);
   const userAuth = useRecoilValue(userAuthenticated);
   const [post, setPost] = useState(null);
   const [save, setSave] = useState("");
   const [open, setOpen] = useState(false);
+  const [nothing, setNothing] = useState(false);
   const [numberFavorite, setNumberFavorite] = useState(0);
   const [dimensionsImages, setDimensionsImages] = useState(0);
   const [showAgg, setShowAgg] = useState(false);
   const [visible, setVisible] = useState(false);
   const [imageView, setImageView] = useState(null);
+  const [actividad, setActividad] = useState(null);
   const [images, setImages] = useState([]);
   const [listUpdate, setListUpdate] = useRecoilState(updateListFavorites);
-  const [actividad, setActividad] = useState(null);
   const global = require("@/utils/styles/global.js");
   const params = route.params;
+
   const getPdf = async () => {
     const permissions =
       await StorageAccessFramework.requestDirectoryPermissionsAsync();
@@ -159,13 +161,17 @@ const SharePage = ({ route, navigation }) => {
         .sort((a, b) => a.key - b.key);
 
       setImages(list);
+      const getA = JSON.parse(business?.data?.getBusiness?.activity);
+
+      setActividad(getA);
+
       return setPost(business?.data?.getBusiness);
     } catch (error) {
+      setNothing(true);
       console.log("ERROR EN BUSCAR: ", error);
     }
   };
   const fetchFavorite = async () => {
-    
     try {
       const { attributes } = await Auth.currentAuthenticatedUser();
       const favorite = await API.graphql({
@@ -176,7 +182,10 @@ const SharePage = ({ route, navigation }) => {
           userID: { eq: attributes["custom:userTableID"] },
         },
       });
-      console.log("QUE SUELTA ESTO: ", favorite?.data?.favoritesByBusinessID?.items)
+      console.log(
+        "QUE SUELTA ESTO: ",
+        favorite?.data?.favoritesByBusinessID?.items
+      );
       if (favorite?.data?.favoritesByBusinessID?.items?.length !== 0)
         setSave(favorite?.data?.favoritesByBusinessID?.items[0]?.id);
     } catch (error) {
@@ -207,13 +216,35 @@ const SharePage = ({ route, navigation }) => {
     const url = `tel://${post?.phone}`;
     Linking.openURL(url);
   };
-
+  console.log(post);
   useEffect(() => {
     if (!save) fetchFavorite();
     fetchData();
   }, []);
-
-  if (!post) return <SkeletonExample />;
+  if (!post && nothing)
+    return (
+      <View
+        style={[
+          {
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+          },
+          global.bgWhite,
+        ]}
+      >
+        <Text style={{ fontSize: 16, fontFamily: "regular" }}>
+          No se encuentra el negocio
+        </Text>
+        <CustomButton
+          text={`Regresar al inicio`}
+          handlePress={() => navigation.goBack()}
+          textStyles={[styles.textSearch, global.black]}
+          buttonStyles={[styles.search, global.bgYellow]}
+        />
+      </View>
+    );
+  if (!post && nothing === false) return <SkeletonExample />;
   return (
     <View
       style={[
@@ -242,7 +273,7 @@ const SharePage = ({ route, navigation }) => {
             dimensionsImages <= 3 && (
               <View
                 style={[
-                  global.mainBgColor,
+                  global.bgYellow,
                   {
                     width: 25,
                     height: 25,
@@ -255,7 +286,7 @@ const SharePage = ({ route, navigation }) => {
                   },
                 ]}
               >
-                <Entypo name="triangle-left" size={24} color="white" />
+                <Entypo name="triangle-left" size={24} color="#1f1f1f" />
               </View>
             )}
           {images.length !== 1 &&
@@ -263,7 +294,7 @@ const SharePage = ({ route, navigation }) => {
             dimensionsImages < images.length - 1 && (
               <View
                 style={[
-                  global.mainBgColor,
+                  global.bgYellow,
                   {
                     width: 25,
                     height: 25,
@@ -276,7 +307,7 @@ const SharePage = ({ route, navigation }) => {
                   },
                 ]}
               >
-                <Entypo name="triangle-right" size={24} color="white" />
+                <Entypo name="triangle-right" size={24} color="#1f1f1f" />
               </View>
             )}
           <FlatList
@@ -303,8 +334,8 @@ const SharePage = ({ route, navigation }) => {
                       resizeMode: "cover",
                       borderRadius: 5,
                       backgroundColor: "#fff",
-                      borderColor: "#1f1f1f",
                       borderWidth: 0.7,
+                      borderColor: "#1f1f1f",
                     }}
                     source={{ uri: item.url }}
                   />
@@ -321,8 +352,8 @@ const SharePage = ({ route, navigation }) => {
                       marginBottom: 5,
                       position: "absolute",
                       right: 0,
+                      borderWidth: 0.8,
                       borderColor: "#1f1f1f",
-                      borderWidth: 0.7,
                     },
                     global.bgYellow,
                   ]}
@@ -333,7 +364,7 @@ const SharePage = ({ route, navigation }) => {
                 >
                   <Text
                     style={[
-                      { fontFamily: "medium", fontSize: 15 },
+                      { fontFamily: "medium", fontSize: 17 },
                       global.black,
                     ]}
                   >
@@ -353,104 +384,64 @@ const SharePage = ({ route, navigation }) => {
             onViewableItemsChanged={onViewRef.current}
           />
         </View>
-        {showAgg && (
-          <View>
-            <View
-              style={{
-                // flex: 1,
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                padding: 20,
-                paddingHorizontal: 100,
-              }}
-            >
-              <View
-                style={{
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Text style={{ fontSize: 24, fontFamily: "medium" }}>
-                  {numberFavorite
-                    ? numberFavorite
-                    : post?.favorites?.items?.length}
-                </Text>
-                <Text style={{ fontSize: 20, fontFamily: "light" }}>
-                  Favoritos
-                </Text>
-              </View>
-              <TouchableOpacity
-                onPress={() => {
-                  if (save === "") {
-                    onCreateFavorite();
-                  } else {
-                    onDeleteFavorite();
-                  }
-                }}
-              >
-                {save === "" ? (
-                  <Image
-                    style={{
-                      width: 45,
-                      height: 45,
-                      resizeMode: "cover",
-                    }}
-                    source={require("@/utils/images/nofavorites.png")}
-                  />
-                ) : (
-                  <Image
-                    style={{
-                      width: 45,
-                      height: 45,
-                      resizeMode: "cover",
-                    }}
-                    source={require("@/utils/images/sifavorites.png")}
-                  />
-                )}
-              </TouchableOpacity>
-            </View>
-            {/* Reporte */}
-            {/* <TouchableOpacity
-            style={{
-              alignSelf: "flex-end",
-              paddingHorizontal: 20,
-              paddingBottom: 5,
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-            onPress={() => setVisible(true)}
-          >
-            <MaterialIcons name="report" size={22} color="black" />
-            <Text
-              style={[
-                global.black,
-                {
-                  fontFamily: "bold",
-                  fontSize: 12,
-                  // marginLeft: 2,
-                  // marginBottom: 3
-                },
-              ]}
-            >
-              Reportar negocio
-            </Text>
-          </TouchableOpacity> */}
-          </View>
-        )}
         <View
-          style={[
-            styles.line,
-            global.bgMidGray,
-            {
-              top: 10,
-              left: 0,
-              width: 500,
-              marginBottom: 20,
-            },
-          ]}
-        />
+          style={{
+            // flex: 1,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: 20,
+            paddingHorizontal: 100,
+          }}
+        >
+          <View
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text style={{ fontSize: 24, fontFamily: "medium" }}>
+              {post.favorites?.items.length}
+            </Text>
+            <Text style={{ fontSize: 20, fontFamily: "light" }}>Favoritos</Text>
+          </View>
+          <TouchableOpacity onPress={onDeleteFavorite}>
+            <Image
+              style={{
+                width: 45,
+                height: 45,
+                resizeMode: "cover",
+                borderWidth: 0.8,
+                borderColor: "#1f1f1f",
+                borderRadius: 50,
+              }}
+              source={require("@/utils/images/sifavorites.png")}
+            />
+            {/* <MaterialIcons name="favorite" size={45} color="red" /> */}
+          </TouchableOpacity>
+        </View>
 
+        {/* Reporte */}
+        {/* <TouchableOpacity
+          style={{
+            alignSelf: "flex-end",
+            paddingHorizontal: 20,
+            paddingBottom: 5,
+            flexDirection: "row",
+            alignItems: 'center',
+          }}
+          onPress={() => setVisible(true)}
+        >
+          <MaterialIcons name="report" size={22} color="black" />
+          <Text style={[global.black, {
+            fontFamily: 'bold',
+            fontSize: 12
+            // marginLeft: 2,
+            // marginBottom: 3
+          }]}>Reportar negocio</Text>
+        </TouchableOpacity> */}
+
+        <View style={[styles.line, global.bgMidGray]} />
         <TouchableOpacity
           style={{
             padding: 20,
@@ -460,11 +451,7 @@ const SharePage = ({ route, navigation }) => {
           }}
           activeOpacity={1}
           onPress={() =>
-            onOpenMap(
-              post?.coordinates?.lat,
-              post?.coordinates?.lon,
-              post?.name
-            )
+            onOpenMap(post?.coordinates.lat, post?.coordinates.lon, post?.name)
           }
         >
           <View
@@ -473,8 +460,8 @@ const SharePage = ({ route, navigation }) => {
               borderRadius: 10,
               overflow: "hidden",
               marginBottom: 40,
-              borderColor: "#1f1f1f",
               borderWidth: 0.7,
+              borderColor: "#1f1f1f",
             }}
           >
             <MapView
@@ -482,18 +469,18 @@ const SharePage = ({ route, navigation }) => {
                 width: "100%",
                 height: 220,
               }}
-              initialRegion={{
-                latitude: post?.coordinates?.lat,
-                longitude: post?.coordinates?.lon,
-                latitudeDelta: 0.001,
-                longitudeDelta: 0.001,
-              }}
               scrollEnabled={false}
+              initialRegion={{
+                latitude: post?.coordinates.lat,
+                longitude: post?.coordinates.lon,
+                latitudeDelta: 0.005,
+                longitudeDelta: 0.005,
+              }}
             >
               <Marker
                 coordinate={{
-                  latitude: post?.coordinates?.lat,
-                  longitude: post?.coordinates?.lon,
+                  latitude: post?.coordinates.lat,
+                  longitude: post?.coordinates.lon,
                 }}
                 title={post?.name}
               />
@@ -501,13 +488,14 @@ const SharePage = ({ route, navigation }) => {
           </View>
         </TouchableOpacity>
 
+        {/*  */}
         <TouchableOpacity
           style={{
             padding: 20,
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
-            marginTop: -50,
+            marginTop: -53,
           }}
           onPress={onShare}
         >
@@ -520,16 +508,16 @@ const SharePage = ({ route, navigation }) => {
                   borderRadius: 10,
                   alignItems: "center",
                   justifyContent: "center",
-                  borderColor: "#1f1f1f",
                   borderWidth: 0.7,
+                  borderColor: "#1f1f1f",
                 },
                 global.bgYellow,
               ]}
             >
-              <EvilIcons name="share-google" size={32} color="#1f1f1f" />
+              <EvilIcons name="share-google" size={33} color="#1f1f1f" />
             </View>
             <View style={{ marginLeft: 10 }}>
-              <Text style={{ fontFamily: "medium", fontSize: 16 }}>
+              <Text style={{ fontFamily: "medium", fontSize: 15 }}>
                 Compartir
               </Text>
               <Text style={{ fontFamily: "light", fontSize: 12, width: 150 }}>
@@ -547,57 +535,57 @@ const SharePage = ({ route, navigation }) => {
           />
         </TouchableOpacity>
         {/* <TouchableOpacity
-        style={{
-          padding: 20,
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginTop: -25,
-        }}
-        onPress={getPdf}
-      >
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <View
-            style={[
-              {
-                width: 58,
-                height: 58,
-                borderRadius: 10,
-                alignItems: "center",
-                justifyContent: "center",
-                borderColor: "#1f1f1f",
-                borderWidth: 0.7,
-              },
-              global.bgYellow,
-            ]}
-          >
-            <AntDesign name="qrcode" size={24} color="#1f1f1f" />
-          </View>
-          <View style={{ marginLeft: 10 }}>
-            <Text style={{ fontFamily: "medium", fontSize: 15 }}>
-              Descargar QR
-            </Text>
-            <Text style={{ fontFamily: "light", fontSize: 12, width: 150 }}>
-              Descarga el QR del negocio para pegarlo en donde quieras
-            </Text>
-          </View>
-        </View>
-        <Image
           style={{
-            width: 40,
-            height: 40,
-            resizeMode: "cover",
+            padding: 20,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginTop: -27,
           }}
-          source={require("@/utils/images/arrow_right.png")}
-        />
-      </TouchableOpacity> */}
+          onPress={getPdf}
+        >
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View
+              style={[
+                {
+                  width: 58,
+                  height: 58,
+                  borderRadius: 10,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderWidth: 0.7,
+                  borderColor: "#1f1f1f",
+                },
+                global.bgYellow,
+              ]}
+            >
+              <AntDesign name="qrcode" size={24} color="#1f1f1f" />
+            </View>
+            <View style={{ marginLeft: 10 }}>
+              <Text style={{ fontFamily: "medium", fontSize: 15 }}>
+                Descargar QR
+              </Text>
+              <Text style={{ fontFamily: "light", fontSize: 12, width: 150 }}>
+                Descarga el QR del negocio para pegarlo en donde quieras
+              </Text>
+            </View>
+          </View>
+          <Image
+            style={{
+              width: 40,
+              height: 40,
+              resizeMode: "cover",
+            }}
+            source={require("@/utils/images/arrow_right.png")}
+          />
+        </TouchableOpacity> */}
         <TouchableOpacity
           style={{
             padding: 20,
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
-            marginTop: -25,
+            marginTop: -27,
           }}
           onPress={openCall}
         >
@@ -610,8 +598,8 @@ const SharePage = ({ route, navigation }) => {
                   borderRadius: 10,
                   alignItems: "center",
                   justifyContent: "center",
-                  borderColor: "#1f1f1f",
                   borderWidth: 0.7,
+                  borderColor: "#1f1f1f",
                 },
                 global.bgYellow,
               ]}
@@ -638,16 +626,7 @@ const SharePage = ({ route, navigation }) => {
           <Text style={{ fontSize: 22, fontFamily: "regular", padding: 10 }}>
             Datos
           </Text>
-          <View
-            style={[
-              styles.line,
-              global.bgMidGray,
-              {
-                width: 500,
-                left: 0,
-              },
-            ]}
-          />
+          <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
               flexDirection: "row",
@@ -673,16 +652,7 @@ const SharePage = ({ route, navigation }) => {
               </Text>
             </View>
           </View>
-          <View
-            style={[
-              styles.line,
-              global.bgMidGray,
-              {
-                width: 500,
-                left: 0,
-              },
-            ]}
-          />
+          <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
               flexDirection: "row",
@@ -712,20 +682,11 @@ const SharePage = ({ route, navigation }) => {
                   },
                 ]}
               >
-                {actividad?.main}
+                {actividad.main}
               </Text>
             </View>
           </View>
-          <View
-            style={[
-              styles.line,
-              global.bgMidGray,
-              {
-                width: 500,
-                left: 0,
-              },
-            ]}
-          />
+          <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
               flexDirection: "row",
@@ -755,7 +716,7 @@ const SharePage = ({ route, navigation }) => {
                   },
                 ]}
               >
-                {actividad?.sub}
+                {actividad.sub}
               </Text>
             </View>
           </View>
@@ -800,16 +761,7 @@ const SharePage = ({ route, navigation }) => {
               </Text>
             </View>
           </View>
-          <View
-            style={[
-              styles.line,
-              global.bgMidGray,
-              {
-                width: 500,
-                left: 0,
-              },
-            ]}
-          />
+          <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
               flexDirection: "row",
@@ -898,10 +850,10 @@ const SharePage = ({ route, navigation }) => {
           >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               {/* <MaterialCommunityIcons
-              name="email-open-multiple-outline"
-              size={20}
-              color="#1f1f1f"
-            /> */}
+                name="email-open-multiple-outline"
+                size={20}
+                color="#1f1f1f"
+              /> */}
               <Text
                 style={[
                   { fontFamily: "lightItalic", fontSize: 13 },
@@ -918,36 +870,36 @@ const SharePage = ({ route, navigation }) => {
             </View>
           </View>
           {/* <View style={[styles.line, global.bgMidGray]} />
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: 20,
-          }}
-        >
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <MaterialCommunityIcons name="web" size={24} color="#1f1f1f" />
-            <Text
-              style={[
-                { fontFamily: "lightItalic", fontSize: 13 },
-                global.black,
-              ]}
-            >
-              Web
-            </Text>
-          </View>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text
-              style={[
-                { fontSize: 13, fontFamily: "regular", marginRight: 5 },
-              ]}
-            >
-              Link
-            </Text>
-            <AntDesign name="link" size={16} color="#1f1f1f" />
-          </View>
-        </View> */}
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: 20,
+            }}
+          >
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <MaterialCommunityIcons name="web" size={24} color="#1f1f1f" />
+              <Text
+                style={[
+                  { fontFamily: "lightItalic", fontSize: 13 },
+                  global.black,
+                ]}
+              >
+                Web
+              </Text>
+            </View>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text
+                style={[
+                  { fontSize: 13, fontFamily: "regular", marginRight: 5 },
+                ]}
+              >
+                Link
+              </Text>
+              <AntDesign name="link" size={16} color="#1f1f1f" />
+            </View>
+          </View> */}
           <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
@@ -996,7 +948,7 @@ const SharePage = ({ route, navigation }) => {
               {post?.instagram === "" || post?.instagram === null ? (
                 ""
               ) : (
-                <Feather name="external-link" size={16} color="blue" />
+                <Feather name="external-link" size={16} color="#1f1f1f" />
               )}
             </Pressable>
           </View>
@@ -1053,92 +1005,98 @@ const SharePage = ({ route, navigation }) => {
             </Pressable>
           </View>
           <View style={[styles.line, global.bgMidGray]} />
-          <Modal
-            animationType="none"
-            transparent={true}
-            visible={open}
-            onRequestClose={() => {
+        </View>
+        <Modal
+          animationType="none"
+          transparent={true}
+          visible={open}
+          onRequestClose={() => {
+            setOpen(!open);
+            setImageView(null);
+          }}
+        >
+          <TouchableWithoutFeedback
+            onPress={() => {
               setOpen(!open);
               setImageView(null);
             }}
           >
-            <TouchableWithoutFeedback
-              onPress={() => {
-                setOpen(!open);
-                setImageView(null);
-              }}
-            >
-              <View style={styles.modalContainer}>
-                <TouchableWithoutFeedback>
-                  <View style={[styles.modalContent]}>
-                    <View style={styles.modalTop}>
-                      <Pressable
-                        onPress={() => {
-                          setOpen(!open);
-                          setImageView(null);
-                        }}
-                      >
-                        <Image
-                          style={{
-                            width: 35,
-                            height: 35,
-                            resizeMode: "contain",
-                          }}
-                          source={require("@/utils/images/arrow_back.png")}
-                        />
-                      </Pressable>
-                    </View>
-                    <View style={{ flex: 1 }}>
+            <View style={styles.modalContainer}>
+              <TouchableWithoutFeedback>
+                <View style={[styles.modalContent]}>
+                  <View style={styles.modalTop}>
+                    <Pressable
+                      onPress={() => {
+                        setOpen(!open);
+                        setImageView(null);
+                      }}
+                    >
                       <Image
                         style={{
-                          width: "100%",
-                          height: "60%",
-                          resizeMode: "cover",
-                          borderRadius: 5,
-                          borderWidth: 0.7,
-                          borderColor: "#1f1f1f",
+                          width: 35,
+                          height: 35,
+                          resizeMode: "contain",
                         }}
-                        source={{
-                          uri: imageView?.url ? imageView?.url : imageView?.uri,
-                        }}
+                        source={require("@/utils/images/arrow_back.png")}
                       />
-                      {imageView?.url && (
-                        <View style={{ flex: 1, paddingVertical: 15 }}>
-                          <View
+                    </Pressable>
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Image
+                      style={{
+                        width: "100%",
+                        height: "60%",
+                        resizeMode: "cover",
+                        borderRadius: 5,
+                        borderWidth: 0.7,
+                        borderColor: "#1f1f1f",
+                      }}
+                      source={{
+                        uri: imageView?.url ? imageView?.url : imageView?.uri,
+                      }}
+                    />
+                    {imageView?.url && (
+                      <View style={{ flex: 1, paddingVertical: 15 }}>
+                        <View
+                          style={{
+                            flex: 1,
+                            flexDirection: "row",
+                            borderColor: "#1f1f1f",
+                            borderWidth: 0.7,
+                            paddingHorizontal: 10,
+                            borderRadius: 8,
+                            marginTop: 10,
+                          }}
+                        >
+                          <TextInput
+                            value={imageView?.description}
+                            editable={false}
                             style={{
                               flex: 1,
-                              flexDirection: "row",
-                              borderColor: "#1f1f1f",
-                              borderWidth: 0.7,
-                              paddingHorizontal: 10,
-                              borderRadius: 8,
-                              marginTop: 10,
+                              // width: 100,
+                              fontFamily: "regular",
+                              fontSize: 14,
+                              alignItems: "flex-start",
+                              color: "#000",
                             }}
-                          >
-                            <TextInput
-                              value={imageView?.description}
-                              editable={false}
-                              style={{
-                                flex: 1,
-                                // width: 100,
-                                fontFamily: "regular",
-                                fontSize: 14,
-                                alignItems: "flex-start",
-                                color: "#000",
-                              }}
-                              multiline={true}
-                              numberOfLines={5}
-                            />
-                          </View>
+                            multiline={true}
+                            numberOfLines={5}
+                          />
                         </View>
-                      )}
-                    </View>
+                      </View>
+                    )}
                   </View>
-                </TouchableWithoutFeedback>
-              </View>
-            </TouchableWithoutFeedback>
-          </Modal>
-        </View>
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
+        {/* <TouchableOpacity
+          onPress={() => setVisible(true)}
+          style={{ marginBottom: 100 }}
+        >
+          <Text>Modal</Text>
+        </TouchableOpacity> */}
         <ModalAlert
           text={`Seguro quieres reportar este negocio?`}
           close={() => setVisible(false)}
