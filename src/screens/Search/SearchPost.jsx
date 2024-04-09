@@ -1161,11 +1161,7 @@ const SearchPost = ({ route, navigation }) => {
                             }}
                           >
                             <TextInput
-                              value={
-                                imageView.key === 0
-                                  ? post.description
-                                  : imageView?.description
-                              }
+                              value={imageView?.description}
                               editable={false}
                               style={{
                                 flex: 1,

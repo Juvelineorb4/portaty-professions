@@ -157,7 +157,7 @@ const SharePage = ({ route, navigation }) => {
       const list = business?.data?.getBusiness?.images
         .map((image) => JSON.parse(image))
         .sort((a, b) => a.key - b.key);
-      setActividad(JSON.parse(business?.data?.getBusiness?.activity));
+
       setImages(list);
       return setPost(business?.data?.getBusiness);
     } catch (error) {
@@ -1116,11 +1116,7 @@ const SharePage = ({ route, navigation }) => {
                             }}
                           >
                             <TextInput
-                              value={
-                                imageView.key === 0
-                                  ? post.description
-                                  : imageView?.description
-                              }
+                              value={imageView?.description}
                               editable={false}
                               style={{
                                 flex: 1,

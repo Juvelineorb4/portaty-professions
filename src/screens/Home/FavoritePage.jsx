@@ -727,7 +727,11 @@ const FavoritePage = ({ navigation, route }) => {
             <Pressable
               style={{ flexDirection: "row", alignItems: "center" }}
               onPress={() => {
-                if (item.business?.whatsapp === "" || item.business?.whatsapp === null) return;
+                if (
+                  item.business?.whatsapp === "" ||
+                  item.business?.whatsapp === null
+                )
+                  return;
                 const url = `https://www.instagram.com/${item.business?.whatsapp}`;
                 Linking.openURL(url);
               }}
@@ -739,17 +743,20 @@ const FavoritePage = ({ navigation, route }) => {
                     fontFamily: "regular",
                     marginRight: 5,
                     color:
-                    item.business?.whatsapp === "" || item.business?.whatsapp === null
+                      item.business?.whatsapp === "" ||
+                      item.business?.whatsapp === null
                         ? "#1f1f1f"
                         : "blue",
                   },
                 ]}
               >
-                {item.business?.whatsapp === "" || item.business?.whatsapp === null
+                {item.business?.whatsapp === "" ||
+                item.business?.whatsapp === null
                   ? "No"
                   : item.business?.whatsapp}
               </Text>
-              {item.business?.whatsapp === "" || item.business?.whatsapp === null ? (
+              {item.business?.whatsapp === "" ||
+              item.business?.whatsapp === null ? (
                 ""
               ) : (
                 <Feather name="external-link" size={16} color="#1f1f1f" />
@@ -840,7 +847,11 @@ const FavoritePage = ({ navigation, route }) => {
             <Pressable
               style={{ flexDirection: "row", alignItems: "center" }}
               onPress={() => {
-                if (item.business?.instagram === "" || item.business?.instagram === null) return;
+                if (
+                  item.business?.instagram === "" ||
+                  item.business?.instagram === null
+                )
+                  return;
                 const url = `https://www.instagram.com/${item.business?.instagram}`;
                 Linking.openURL(url);
               }}
@@ -852,17 +863,20 @@ const FavoritePage = ({ navigation, route }) => {
                     fontFamily: "regular",
                     marginRight: 5,
                     color:
-                    item.business?.instagram === "" || item.business?.instagram === null
+                      item.business?.instagram === "" ||
+                      item.business?.instagram === null
                         ? "#1f1f1f"
                         : "blue",
                   },
                 ]}
               >
-                {item.business?.instagram === "" || item.business?.instagram === null
+                {item.business?.instagram === "" ||
+                item.business?.instagram === null
                   ? "No"
                   : item.business?.instagram}
               </Text>
-              {item.business?.instagram === "" || item.business?.instagram === null ? (
+              {item.business?.instagram === "" ||
+              item.business?.instagram === null ? (
                 ""
               ) : (
                 <Feather name="external-link" size={16} color="#1f1f1f" />
@@ -892,7 +906,11 @@ const FavoritePage = ({ navigation, route }) => {
             <Pressable
               style={{ flexDirection: "row", alignItems: "center" }}
               onPress={() => {
-                if (item.business?.facebook === "" || item.business?.facebook === null) return;
+                if (
+                  item.business?.facebook === "" ||
+                  item.business?.facebook === null
+                )
+                  return;
                 const url = `https://www.instagram.com/${item.business?.facebook}`;
                 Linking.openURL(url);
               }}
@@ -904,17 +922,20 @@ const FavoritePage = ({ navigation, route }) => {
                     fontFamily: "regular",
                     marginRight: 5,
                     color:
-                    item.business?.facebook === "" || item.business?.facebook === null
+                      item.business?.facebook === "" ||
+                      item.business?.facebook === null
                         ? "#1f1f1f"
                         : "blue",
                   },
                 ]}
               >
-                {item.business?.facebook === "" || item.business?.facebook === null
+                {item.business?.facebook === "" ||
+                item.business?.facebook === null
                   ? "No"
                   : item.business?.facebook}
               </Text>
-              {item.business?.facebook === "" || item.business?.facebook === null ? (
+              {item.business?.facebook === "" ||
+              item.business?.facebook === null ? (
                 ""
               ) : (
                 <Feather name="external-link" size={16} color="blue" />
@@ -986,11 +1007,7 @@ const FavoritePage = ({ navigation, route }) => {
                           }}
                         >
                           <TextInput
-                            value={
-                              imageView.key === 0
-                                ? item?.business?.description
-                                : imageView?.description
-                            }
+                            value={imageView?.description}
                             editable={false}
                             style={{
                               flex: 1,

@@ -1601,14 +1601,8 @@ const Page = ({ route, navigation }) => {
                             marginTop: 10,
                           }}
                         >
-                        {console.log(imageView)}
-
                           <TextInput
-                            defaultValue={
-                              imageView?.key === 0
-                                ? imageView.description
-                                : imageView?.description
-                            }
+                            defaultValue={imageView?.description}
                             onChangeText={(e) => {
                               setActiveMainImage(true);
                               setDescriptionImage(e);
