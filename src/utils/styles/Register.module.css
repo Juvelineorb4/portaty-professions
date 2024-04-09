@@ -72,18 +72,17 @@
 }
 
 .continue {
+  flex: 1;
   text-align: center;
   width: 100%;
+  align-items: center;
   padding: 20px;
-  height: 60px;
-  /* background-color: #ffa424; */
-  border-radius: 8px;
+  height: 65px;
+  border-radius: 12px;
   border: 1px solid #1f1f1f;
 }
 
 .textContinue {
-  text-align: center;
   font-family: "bold";
-  /* color: white; */
   font-size: 16px;
 }

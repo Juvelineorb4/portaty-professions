@@ -74,17 +74,14 @@
   flex: 1;
   text-align: center;
   width: 100%;
-  /* justify-content: center; */
   align-items: center;
   padding: 20px;
-  /* padding-top: -20px; */
   height: 65px;
   border-radius: 12px;
   border: 1px solid #1f1f1f;
 }
 
 .textLogin {
-  /* text-align: center; */
   font-family: "bold";
   font-size: 18px;
 }
