@@ -1,87 +1,6 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const searchByDistance = /* GraphQL */ `
-  query SearchByDistance($location: LocationInput!, $km: Int) {
-    searchByDistance(location: $location, km: $km) {
-      items {
-        id
-        name
-        coordinates {
-          lat
-          lon
-          __typename
-        }
-        createdAt
-        updatedAt
-        __typename
-      }
-      total
-      nextToken
-      __typename
-    }
-  }
-`;
-export const searchBusinessByDistance = /* GraphQL */ `
-  query SearchBusinessByDistance(
-    $location: LocationInput!
-    $km: Float
-    $text: String!
-  ) {
-    searchBusinessByDistance(location: $location, km: $km, text: $text) {
-      items {
-        id
-        userID
-        user {
-          id
-          cognitoID
-          name
-          lastName
-          email
-          identityID
-          gender
-          notificationToken
-          owner
-          createdAt
-          updatedAt
-          __typename
-        }
-        status
-        identityID
-        name
-        image
-        images
-        thumbnail
-        email
-        phone
-        whatsapp
-        instagram
-        facebook
-        page
-        coordinates {
-          lat
-          lon
-          __typename
-        }
-        activity
-        tags
-        favorites {
-          nextToken
-          __typename
-        }
-        description
-        prefer
-        createdAt
-        updatedAt
-        owner
-        __typename
-      }
-      total
-      nextToken
-      __typename
-    }
-  }
-`;
 export const getAppVersionHistory = /* GraphQL */ `
   query GetAppVersionHistory($id: ID!) {
     getAppVersionHistory(id: $id) {
@@ -1016,46 +935,6 @@ export const listLogs = /* GraphQL */ `
         posI
         posE
         name
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const getTesting = /* GraphQL */ `
-  query GetTesting($id: ID!) {
-    getTesting(id: $id) {
-      id
-      name
-      coordinates {
-        lat
-        lon
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const listTestings = /* GraphQL */ `
-  query ListTestings(
-    $filter: ModelTestingFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listTestings(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        name
-        coordinates {
-          lat
-          lon
-          __typename
-        }
         createdAt
         updatedAt
         __typename

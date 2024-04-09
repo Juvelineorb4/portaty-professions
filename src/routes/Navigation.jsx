@@ -20,7 +20,6 @@ import ShareNavigator from "./ShareNavigator";
 import SplashScreen from "@/components/SplashScreen";
 import { Text, View, Image } from "react-native";
 import Loading from "@/components/Loading";
-
 const Navigation = () => {
   useLocation();
   usePushNotification();
@@ -30,11 +29,13 @@ const Navigation = () => {
   const [userState, setUserState] = useState(false);
   const [isFirsTime, setIsFirsTime] = useState(false);
   const userAuth = useRecoilValue(userAuthenticated);
+
   const renderNavigation = () => {
     setCheckRender(true);
 
     try {
       if (userAuth !== null) setUserState(true);
+
       setTimeout(() => {
         setCheckRender(false);
       }, 2000);
@@ -50,8 +51,6 @@ const Navigation = () => {
   useEffect(() => {
     if (!isFirsTime) renderNavigation();
   }, [userAuth]);
-
-  
 
   return (
     <NavigationContainer fallback={<Loading />}>

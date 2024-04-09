@@ -1,15 +1,15 @@
 export const settings = {
   buttons: [
-    {
-      title: "Introducción",
-      subtitle: "Guía de nuestra aplicación.",
-      icon: {
-        left: require("@/utils/images/question.png"),
-        right: require("@/utils/images/arrow_right.png"),
-      },
-      route: "Introduction",
-      // routePush: true,
-    },
+    // {
+    //   title: "Introducción",
+    //   subtitle: "Guía de nuestra aplicación.",
+    //   icon: {
+    //     left: require("@/utils/images/question.png"),
+    //     right: require("@/utils/images/arrow_right.png"),
+    //   },
+    //   route: "Introduction",
+    //   // routePush: true,
+    // },
     {
       title: "Política de privacidad",
       subtitle: "Ver detalles de nuestra política.",
@@ -18,19 +18,19 @@ export const settings = {
         right: require("@/utils/images/arrow_right.png"),
       },
       // route: "Terms",
-      web: "https://www.portaty.com",
+      web: "https://www.portaty.com/politicas",
       // routePush: true,
     },
-    {
-      title: "Especificaciones de la aplicación",
-      subtitle: "Ver detalles sobre la aplicación",
-      icon: {
-        left: require("@/utils/images/info_white.png"),
-        right: require("@/utils/images/arrow_right.png"),
-      },
-      route: "About",
-      // routePush: true,
-    },
+    // {
+    //   title: "Especificaciones de la aplicación",
+    //   subtitle: "Ver detalles sobre la aplicación",
+    //   icon: {
+    //     left: require("@/utils/images/info_white.png"),
+    //     right: require("@/utils/images/arrow_right.png"),
+    //   },
+    //   route: "About",
+    //   // routePush: true,
+    // },
     {
       title: "Cerrar sesión",
       icon: {
