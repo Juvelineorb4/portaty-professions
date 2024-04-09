@@ -337,8 +337,8 @@ const Page = ({ route, navigation }) => {
         key: image?.key,
         description: description ? description : "",
         image: change ? change.base64 : "",
-      }, // replace this with attributes you need
-      headers: {}, // OPTIONAL
+      },
+      headers: {},
     };
 
     try {
@@ -1601,10 +1601,12 @@ const Page = ({ route, navigation }) => {
                             marginTop: 10,
                           }}
                         >
+                        {console.log(imageView)}
+
                           <TextInput
                             defaultValue={
                               imageView?.key === 0
-                                ? item.description
+                                ? imageView.description
                                 : imageView?.description
                             }
                             onChangeText={(e) => {
