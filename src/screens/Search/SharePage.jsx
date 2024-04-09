@@ -152,9 +152,11 @@ const SharePage = ({ route, navigation }) => {
       } else {
         setShowAgg(true);
       }
-      const list = business?.data?.getBusiness?.images.map((image) => JSON.parse(image)).sort((a, b) => a.key - b.key);
-    
-      setImages(list)
+      const list = business?.data?.getBusiness?.images
+        .map((image) => JSON.parse(image))
+        .sort((a, b) => a.key - b.key);
+
+      setImages(list);
       return setPost(business?.data?.getBusiness);
     } catch (error) {
       console.log(error);
@@ -949,11 +951,7 @@ const SharePage = ({ route, navigation }) => {
                             }}
                           >
                             <TextInput
-                              value={
-                                imageView.key === 0
-                                  ? post.description
-                                  : imageView?.description
-                              }
+                              value={imageView?.description}
                               editable={false}
                               style={{
                                 flex: 1,

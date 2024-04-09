@@ -672,7 +672,11 @@ const Page = ({ route, navigation }) => {
           }}
         >
           <Text style={{ fontSize: 24, fontFamily: "medium" }}>
-            {enableFavorites ? <ActivityIndicator color={`#1f1f1f`} /> : favoritesQY}
+            {enableFavorites ? (
+              <ActivityIndicator color={`#1f1f1f`} />
+            ) : (
+              favoritesQY
+            )}
           </Text>
           <Text style={{ fontSize: 20, fontFamily: "light" }}>Favoritos</Text>
         </View>
@@ -1597,14 +1601,8 @@ const Page = ({ route, navigation }) => {
                             marginTop: 10,
                           }}
                         >
-                        {console.log(imageView)}
-
                           <TextInput
-                            defaultValue={
-                              imageView?.key === 0
-                                ? imageView.description
-                                : imageView?.description
-                            }
+                            defaultValue={imageView?.description}
                             onChangeText={(e) => {
                               setActiveMainImage(true);
                               setDescriptionImage(e);
