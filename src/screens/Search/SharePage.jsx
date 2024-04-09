@@ -44,6 +44,7 @@ import { useRef } from "react";
 import ModalAlert from "@/components/ModalAlert";
 
 const SharePage = ({ route, navigation }) => {
+  console.log("CARGO SHARE PAGE: ", route.params);
   const userAuth = useRecoilValue(userAuthenticated);
   const [post, setPost] = useState(null);
   const [save, setSave] = useState("");
@@ -55,8 +56,9 @@ const SharePage = ({ route, navigation }) => {
   const [imageView, setImageView] = useState(null);
   const [images, setImages] = useState([]);
   const [listUpdate, setListUpdate] = useRecoilState(updateListFavorites);
+  const [actividad, setActividad] = useState(null);
   const global = require("@/utils/styles/global.js");
-  const { item } = route.params;
+  const params = route.params;
   const getPdf = async () => {
     const permissions =
       await StorageAccessFramework.requestDirectoryPermissionsAsync();
@@ -69,7 +71,7 @@ const SharePage = ({ route, navigation }) => {
     const params = {
       headers: {},
       queryStringParameters: {
-        path: `https://www.portaty.com/share/business?id=${item.id}`,
+        path: `https://www.portaty.com/share/business?id=${params?.id}`,
       },
     };
 
@@ -140,7 +142,7 @@ const SharePage = ({ route, navigation }) => {
       const business = await API.graphql({
         query: customSearch.getBusiness,
         variables: {
-          id: item ? item : params?.id,
+          id: params?.id,
         },
         authMode: "AWS_IAM",
       });
@@ -159,24 +161,26 @@ const SharePage = ({ route, navigation }) => {
       setImages(list);
       return setPost(business?.data?.getBusiness);
     } catch (error) {
-      console.log(error);
+      console.log("ERROR EN BUSCAR: ", error);
     }
   };
   const fetchFavorite = async () => {
+    
     try {
       const { attributes } = await Auth.currentAuthenticatedUser();
       const favorite = await API.graphql({
         query: queries.favoritesByBusinessID,
         authMode: "AMAZON_COGNITO_USER_POOLS",
         variables: {
-          businessID: item.id,
+          businessID: params?.id,
           userID: { eq: attributes["custom:userTableID"] },
         },
       });
+      console.log("QUE SUELTA ESTO: ", favorite?.data?.favoritesByBusinessID?.items)
       if (favorite?.data?.favoritesByBusinessID?.items?.length !== 0)
         setSave(favorite?.data?.favoritesByBusinessID?.items[0]?.id);
     } catch (error) {
-      console.log(error);
+      console.log("Error en buscar favoritos: ", error);
     }
   };
 
@@ -193,7 +197,7 @@ const SharePage = ({ route, navigation }) => {
   const onShare = async () => {
     try {
       await Share.share({
-        message: `Han compartido contigo un negocio, da click para mirarlo https://www.portaty.com/share/business?id=${item.id}`,
+        message: `Han compartido contigo un negocio, da click para mirarlo https://www.portaty.com/share/business?id=${params?.id}`,
       });
     } catch (error) {
       console.error("Error sharing:", error);
@@ -286,18 +290,26 @@ const SharePage = ({ route, navigation }) => {
                   height: 250,
                 }}
               >
-                <Image
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    resizeMode: "cover",
-                    borderRadius: 5,
-                    backgroundColor: "#fff",
-                    borderColor: "#1f1f1f",
-                    borderWidth: 0.7,
+                <Pressable
+                  onPress={() => {
+                    setOpen(!open);
+                    setImageView(item);
                   }}
-                  source={{ uri: item.url }}
-                />
+                >
+                  <Image
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      resizeMode: "cover",
+                      borderRadius: 5,
+                      backgroundColor: "#fff",
+                      borderColor: "#1f1f1f",
+                      borderWidth: 0.7,
+                    }}
+                    source={{ uri: item.url }}
+                  />
+                </Pressable>
+
                 <TouchableOpacity
                   style={[
                     {
@@ -398,31 +410,32 @@ const SharePage = ({ route, navigation }) => {
                 )}
               </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              style={{
-                alignSelf: "flex-end",
-                paddingHorizontal: 20,
-                paddingBottom: 5,
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-              onPress={() => setVisible(true)}
+            {/* Reporte */}
+            {/* <TouchableOpacity
+            style={{
+              alignSelf: "flex-end",
+              paddingHorizontal: 20,
+              paddingBottom: 5,
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+            onPress={() => setVisible(true)}
+          >
+            <MaterialIcons name="report" size={22} color="black" />
+            <Text
+              style={[
+                global.black,
+                {
+                  fontFamily: "bold",
+                  fontSize: 12,
+                  // marginLeft: 2,
+                  // marginBottom: 3
+                },
+              ]}
             >
-              <MaterialIcons name="report" size={22} color="black" />
-              <Text
-                style={[
-                  global.black,
-                  {
-                    fontFamily: "bold",
-                    fontSize: 12,
-                    // marginLeft: 2,
-                    // marginBottom: 3
-                  },
-                ]}
-              >
-                Reportar negocio
-              </Text>
-            </TouchableOpacity>
+              Reportar negocio
+            </Text>
+          </TouchableOpacity> */}
           </View>
         )}
         <View
@@ -534,50 +547,50 @@ const SharePage = ({ route, navigation }) => {
           />
         </TouchableOpacity>
         {/* <TouchableOpacity
-          style={{
-            padding: 20,
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginTop: -25,
-          }}
-          onPress={getPdf}
-        >
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <View
-              style={[
-                {
-                  width: 58,
-                  height: 58,
-                  borderRadius: 10,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderColor: "#1f1f1f",
-                  borderWidth: 0.7,
-                },
-                global.bgYellow,
-              ]}
-            >
-              <AntDesign name="qrcode" size={24} color="#1f1f1f" />
-            </View>
-            <View style={{ marginLeft: 10 }}>
-              <Text style={{ fontFamily: "medium", fontSize: 15 }}>
-                Descargar QR
-              </Text>
-              <Text style={{ fontFamily: "light", fontSize: 12, width: 150 }}>
-                Descarga el QR del negocio para pegarlo en donde quieras
-              </Text>
-            </View>
+        style={{
+          padding: 20,
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginTop: -25,
+        }}
+        onPress={getPdf}
+      >
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <View
+            style={[
+              {
+                width: 58,
+                height: 58,
+                borderRadius: 10,
+                alignItems: "center",
+                justifyContent: "center",
+                borderColor: "#1f1f1f",
+                borderWidth: 0.7,
+              },
+              global.bgYellow,
+            ]}
+          >
+            <AntDesign name="qrcode" size={24} color="#1f1f1f" />
           </View>
-          <Image
-            style={{
-              width: 40,
-              height: 40,
-              resizeMode: "cover",
-            }}
-            source={require("@/utils/images/arrow_right.png")}
-          />
-        </TouchableOpacity> */}
+          <View style={{ marginLeft: 10 }}>
+            <Text style={{ fontFamily: "medium", fontSize: 15 }}>
+              Descargar QR
+            </Text>
+            <Text style={{ fontFamily: "light", fontSize: 12, width: 150 }}>
+              Descarga el QR del negocio para pegarlo en donde quieras
+            </Text>
+          </View>
+        </View>
+        <Image
+          style={{
+            width: 40,
+            height: 40,
+            resizeMode: "cover",
+          }}
+          source={require("@/utils/images/arrow_right.png")}
+        />
+      </TouchableOpacity> */}
         <TouchableOpacity
           style={{
             padding: 20,
@@ -651,7 +664,7 @@ const SharePage = ({ route, navigation }) => {
                   global.black,
                 ]}
               >
-                Razon social
+                Nombre
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -686,7 +699,7 @@ const SharePage = ({ route, navigation }) => {
                   global.black,
                 ]}
               >
-                Actividad laboral
+                Area
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -695,11 +708,95 @@ const SharePage = ({ route, navigation }) => {
                   {
                     fontSize: 13,
                     fontFamily: "regular",
-                    textTransform: "capitalize",
+                    // textTransform: "capitalize",
                   },
                 ]}
               >
-                {post?.activity}
+                {actividad?.main}
+              </Text>
+            </View>
+          </View>
+          <View
+            style={[
+              styles.line,
+              global.bgMidGray,
+              {
+                width: 500,
+                left: 0,
+              },
+            ]}
+          />
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: 20,
+            }}
+          >
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              {/* <FontAwesome5 name="store" size={16} color="#1f1f1f" /> */}
+              <Text
+                style={[
+                  { fontFamily: "lightItalic", fontSize: 13 },
+                  global.black,
+                ]}
+              >
+                Actividad
+              </Text>
+            </View>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text
+                style={[
+                  {
+                    fontSize: 13,
+                    fontFamily: "regular",
+                    // textTransform: "capitalize",
+                  },
+                ]}
+              >
+                {actividad?.sub}
+              </Text>
+            </View>
+          </View>
+          <View style={[styles.line, global.bgMidGray]} />
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: 20,
+            }}
+          >
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              {/* <FontAwesome5 name="store" size={16} color="#1f1f1f" /> */}
+              <Text
+                style={[
+                  { fontFamily: "lightItalic", fontSize: 13 },
+                  global.black,
+                ]}
+              >
+                Descripcion
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "flex-end",
+              }}
+            >
+              <Text
+                style={[
+                  {
+                    width: 200,
+                    fontSize: 13,
+                    fontFamily: "regular",
+                    textAlign: "right",
+                  },
+                ]}
+              >
+                {post?.description}
               </Text>
             </View>
           </View>
@@ -758,11 +855,37 @@ const SharePage = ({ route, navigation }) => {
                 WhatsApp
               </Text>
             </View>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
-                {post?.whatsapp}
+            <Pressable
+              style={{ flexDirection: "row", alignItems: "center" }}
+              onPress={() => {
+                if (post?.whatsapp === "" || post?.whatsapp === null) return;
+                const url = `https://www.instagram.com/${post?.whatsapp}`;
+                Linking.openURL(url);
+              }}
+            >
+              <Text
+                style={[
+                  {
+                    fontSize: 13,
+                    fontFamily: "regular",
+                    marginRight: 5,
+                    color:
+                      post?.whatsapp === "" || post?.whatsapp === null
+                        ? "#1f1f1f"
+                        : "blue",
+                  },
+                ]}
+              >
+                {post?.whatsapp === "" || post?.whatsapp === null
+                  ? "No"
+                  : post?.whatsapp}
               </Text>
-            </View>
+              {post?.whatsapp === "" || post?.whatsapp === null ? (
+                ""
+              ) : (
+                <Feather name="external-link" size={16} color="#1f1f1f" />
+              )}
+            </Pressable>
           </View>
           <View style={[styles.line, global.bgMidGray]} />
           <View
@@ -775,10 +898,10 @@ const SharePage = ({ route, navigation }) => {
           >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               {/* <MaterialCommunityIcons
-                name="email-open-multiple-outline"
-                size={20}
-                color="#1f1f1f"
-              /> */}
+              name="email-open-multiple-outline"
+              size={20}
+              color="#1f1f1f"
+            /> */}
               <Text
                 style={[
                   { fontFamily: "lightItalic", fontSize: 13 },
@@ -794,37 +917,37 @@ const SharePage = ({ route, navigation }) => {
               </Text>
             </View>
           </View>
-          <View style={[styles.line, global.bgMidGray]} />
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              padding: 20,
-            }}
-          >
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              {/* <MaterialCommunityIcons name="web" size={24} color="#1f1f1f" /> */}
-              <Text
-                style={[
-                  { fontFamily: "lightItalic", fontSize: 13 },
-                  global.black,
-                ]}
-              >
-                Web
-              </Text>
-            </View>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text
-                style={[
-                  { fontSize: 13, fontFamily: "regular", marginRight: 5 },
-                ]}
-              >
-                Link
-              </Text>
-              <AntDesign name="link" size={16} color="#1f1f1f" />
-            </View>
+          {/* <View style={[styles.line, global.bgMidGray]} />
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: 20,
+          }}
+        >
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <MaterialCommunityIcons name="web" size={24} color="#1f1f1f" />
+            <Text
+              style={[
+                { fontFamily: "lightItalic", fontSize: 13 },
+                global.black,
+              ]}
+            >
+              Web
+            </Text>
           </View>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Text
+              style={[
+                { fontSize: 13, fontFamily: "regular", marginRight: 5 },
+              ]}
+            >
+              Link
+            </Text>
+            <AntDesign name="link" size={16} color="#1f1f1f" />
+          </View>
+        </View> */}
           <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
@@ -845,16 +968,37 @@ const SharePage = ({ route, navigation }) => {
                 Instagram
               </Text>
             </View>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Pressable
+              style={{ flexDirection: "row", alignItems: "center" }}
+              onPress={() => {
+                if (post?.instagram === "" || post?.instagram === null) return;
+                const url = `https://www.instagram.com/${post?.instagram}`;
+                Linking.openURL(url);
+              }}
+            >
               <Text
                 style={[
-                  { fontSize: 13, fontFamily: "regular", marginRight: 5 },
+                  {
+                    fontSize: 13,
+                    fontFamily: "regular",
+                    marginRight: 5,
+                    color:
+                      post?.instagram === "" || post?.instagram === null
+                        ? "#1f1f1f"
+                        : "blue",
+                  },
                 ]}
               >
-                Link
+                {post?.instagram === "" || post?.instagram === null
+                  ? "No"
+                  : post?.instagram}
               </Text>
-              <AntDesign name="link" size={16} color="#1f1f1f" />
-            </View>
+              {post?.instagram === "" || post?.instagram === null ? (
+                ""
+              ) : (
+                <Feather name="external-link" size={16} color="blue" />
+              )}
+            </Pressable>
           </View>
           <View style={[styles.line, global.bgMidGray]} />
           <View
@@ -876,16 +1020,37 @@ const SharePage = ({ route, navigation }) => {
                 Facebook
               </Text>
             </View>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Pressable
+              style={{ flexDirection: "row", alignItems: "center" }}
+              onPress={() => {
+                if (post?.facebook === "" || post?.facebook === null) return;
+                const url = `https://www.instagram.com/${post?.facebook}`;
+                Linking.openURL(url);
+              }}
+            >
               <Text
                 style={[
-                  { fontSize: 13, fontFamily: "regular", marginRight: 5 },
+                  {
+                    fontSize: 13,
+                    fontFamily: "regular",
+                    marginRight: 5,
+                    color:
+                      post?.facebook === "" || post?.facebook === null
+                        ? "#1f1f1f"
+                        : "blue",
+                  },
                 ]}
               >
-                Link
+                {post?.facebook === "" || post?.facebook === null
+                  ? "No"
+                  : post?.facebook}
               </Text>
-              <AntDesign name="link" size={16} color="#1f1f1f" />
-            </View>
+              {post?.facebook === "" || post?.facebook === null ? (
+                ""
+              ) : (
+                <Feather name="external-link" size={16} color="blue" />
+              )}
+            </Pressable>
           </View>
           <View style={[styles.line, global.bgMidGray]} />
           <Modal

@@ -34,8 +34,10 @@ const NavSettings = ({ checkRender }) => {
 
     const checkInitialUrl = async () => {
       const initialUrl = await Linking.getInitialURL();
+
       if (!initialUrl) return;
       const { hostname, path, queryParams } = Linking.parse(initialUrl);
+
       if (initialUrl) {
         setUrlInitialShare({
           path,
@@ -45,15 +47,19 @@ const NavSettings = ({ checkRender }) => {
     };
     Linking.addEventListener("url", ({ url }) => {
       const { hostname, path, queryParams } = Linking.parse(url);
+      console.log("A VER URL: ", queryParams?.id);
       if (url) {
-        if (path === "share/list" && queryParams?.id) {
+        // if (path === "share/list" && queryParams?.id) {
+        //   return navigation.navigate("ShareNavigator", {
+        //     screen: "ShareListPage",
+        //     params: { id: queryParams?.id },
+        //   });
+        // }
+        if (path === "share/business" && queryParams?.id) {
           return navigation.navigate("ShareNavigator", {
-            screen: "ShareListPage",
+            screen: "SharePage",
             params: { id: queryParams?.id },
           });
-        }
-        if (path === "share/business" && queryParams?.id) {
-          return navigation.navigate("SharePage", { id: queryParams?.id });
         }
       }
     });
