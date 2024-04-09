@@ -17,7 +17,9 @@
       "fallbackToCacheTimeout": 0,
       "url": "https://u.expo.dev/b378d102-5cf7-49fc-93f0-b5df7f83d8ad"
     },
-    "assetBundlePatterns": ["*/"],
+    "assetBundlePatterns": [
+      "*/"
+    ],
     "ios": {
       "runtimeVersion": "exposdk:49.0.0",
       "supportsTablet": true,
@@ -54,7 +56,10 @@
               "pathPrefix": "/share/business"
             }
           ],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
       ],
       "permissions": [
@@ -76,7 +81,7 @@
         "foregroundImage": "./src/utils/images/portaty.png",
         "backgroundColor": "#FFFFFF"
       },
-      "versionCode": 72,
+      "versionCode": 73,
       "googleServicesFile": "./google-services.json"
     },
     "web": {
@@ -84,7 +89,11 @@
     },
     "packagerOpts": {
       "config": "metro.config.js",
-      "sourceExts": ["js", "jsx", "css"]
+      "sourceExts": [
+        "js",
+        "jsx",
+        "css"
+      ]
     },
     "plugins": [
       [
