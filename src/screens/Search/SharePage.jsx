@@ -44,7 +44,6 @@ import { useRef } from "react";
 import ModalAlert from "@/components/ModalAlert";
 
 const SharePage = ({ route, navigation }) => {
-  console.log("CARGO SHARE PAGE: ", route.params);
   const userAuth = useRecoilValue(userAuthenticated);
   const [post, setPost] = useState(null);
   const [save, setSave] = useState("");
@@ -146,6 +145,7 @@ const SharePage = ({ route, navigation }) => {
         },
         authMode: "AWS_IAM",
       });
+      console.log("HABERÑ ", business);
       if (
         userAuth?.attributes["custom:userTableID"] ===
         business?.data?.getBusiness?.userID
@@ -165,7 +165,6 @@ const SharePage = ({ route, navigation }) => {
     }
   };
   const fetchFavorite = async () => {
-    
     try {
       const { attributes } = await Auth.currentAuthenticatedUser();
       const favorite = await API.graphql({
@@ -176,7 +175,10 @@ const SharePage = ({ route, navigation }) => {
           userID: { eq: attributes["custom:userTableID"] },
         },
       });
-      console.log("QUE SUELTA ESTO: ", favorite?.data?.favoritesByBusinessID?.items)
+      console.log(
+        "QUE SUELTA ESTO: ",
+        favorite?.data?.favoritesByBusinessID?.items
+      );
       if (favorite?.data?.favoritesByBusinessID?.items?.length !== 0)
         setSave(favorite?.data?.favoritesByBusinessID?.items[0]?.id);
     } catch (error) {
@@ -211,7 +213,7 @@ const SharePage = ({ route, navigation }) => {
   useEffect(() => {
     if (!save) fetchFavorite();
     fetchData();
-  }, []);
+  }, [params]);
 
   if (!post) return <SkeletonExample />;
   return (
@@ -237,7 +239,7 @@ const SharePage = ({ route, navigation }) => {
             },
           ]}
         >
-          {images.length !== 1 &&
+          {images?.length !== 1 &&
             dimensionsImages + 1 > 1 &&
             dimensionsImages <= 3 && (
               <View
@@ -258,7 +260,7 @@ const SharePage = ({ route, navigation }) => {
                 <Entypo name="triangle-left" size={24} color="white" />
               </View>
             )}
-          {images.length !== 1 &&
+          {images?.length !== 1 &&
             dimensionsImages >= 0 &&
             dimensionsImages < images.length - 1 && (
               <View
@@ -337,7 +339,7 @@ const SharePage = ({ route, navigation }) => {
                       global.black,
                     ]}
                   >
-                    {item.key + 1}/{images.length}
+                    {item.key + 1}/{images?.length}
                   </Text>
                   <MaterialCommunityIcons
                     name="image-search-outline"
