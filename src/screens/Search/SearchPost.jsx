@@ -41,10 +41,11 @@ import ModalAlert from "@/components/ModalAlert";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 // location
 import * as Location from "expo-location";
-
+import useKinesisFirehose from "@/hooks/useKinesisFirehose";
 const SearchPost = ({ route, navigation }) => {
   const userAuth = useRecoilValue(userAuthenticated);
   const userLocation = useRecoilValue(mapUser);
+  const [kinesisStreamName] = useKinesisFirehose();
   const [post, setPost] = useState(null);
   const [save, setSave] = useState("");
   const [open, setOpen] = useState(false);
@@ -55,6 +56,7 @@ const SearchPost = ({ route, navigation }) => {
   const [imageView, setImageView] = useState(null);
   const [listUpdate, setListUpdate] = useRecoilState(updateListFavorites);
   const global = require("@/utils/styles/global.js");
+
   const {
     data: { item, images },
   } = route.params;
@@ -122,7 +124,7 @@ const SearchPost = ({ route, navigation }) => {
       console.log("ERRO AL CARGAR UN FAVORITO: ", error);
     }
   };
-
+  console.log("HOAAAAAAAAAAAA", kinesisStreamName);
   const onDeleteFavorite = async () => {
     const favorites = await API.graphql({
       query: customFavorites.deleteFavorites,
@@ -223,7 +225,7 @@ const SearchPost = ({ route, navigation }) => {
         eventname: "user_viewed_business",
         userid: userID,
         birthdate: userAuth?.attributes?.birthdate,
-        gender: "Male",
+        gender: userAuth?.attributes["custom:gender"],
         country,
         city,
         businessid: businessID,
@@ -232,7 +234,7 @@ const SearchPost = ({ route, navigation }) => {
       Analytics.record(
         {
           data: params,
-          streamName: "portaty-app-firehose",
+          streamName: kinesisStreamName,
         },
         "AWSKinesisFirehose"
       );

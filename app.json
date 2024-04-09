@@ -4,7 +4,7 @@
     "name": "Portaty",
     "slug": "portaty-professions",
     "owner": "portaty",
-    "version": "0.6.1.3",
+    "version": "0.6.1.4",
     "orientation": "portrait",
     "icon": "./src/utils/images/portaty.png",
     "userInterfaceStyle": "light",
@@ -81,7 +81,7 @@
         "foregroundImage": "./src/utils/images/portaty.png",
         "backgroundColor": "#FFFFFF"
       },
-      "versionCode": 72,
+      "versionCode": 73,
       "googleServicesFile": "./google-services.json"
     },
     "web": {
@@ -151,6 +151,13 @@
         "expo-updates",
         {
           "username": "portaty"
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon_notification.png",
+          "color": "#ffffff"
         }
       ]
     ],

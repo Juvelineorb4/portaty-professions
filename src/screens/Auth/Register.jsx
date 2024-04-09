@@ -82,6 +82,7 @@ const Register = ({ navigation }) => {
         email: email.trim(),
       });
     } catch (error) {
+      console.log(error);
       switch (error?.message) {
         case "An account with the given email already exists.":
           setError(`El correo: ${email.trim()}. Ya esta registrado!`);
@@ -98,7 +99,7 @@ const Register = ({ navigation }) => {
   };
 
   const _handlePressButtonAsync = async () => {
-    let result = await WebBrowser.openBrowserAsync("https://www.portaty.com");
+    let result = await WebBrowser.openBrowserAsync("https://www.portaty.com/terminos");
   };
   return (
     <KeyboardAvoidingView

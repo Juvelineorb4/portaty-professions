@@ -58,11 +58,11 @@ const CustomInput = ({
                 <TextInput
                   value={
                     gender === 0
-                      ? "Masculino"
+                      ? "Male"
                       : gender === 1
-                      ? "Femenino"
+                      ? "Female"
                       : gender === 2
-                      ? "Otro"
+                      ? "Others"
                       : `Elige tu género`
                   }
                   onBlur={onBlur}

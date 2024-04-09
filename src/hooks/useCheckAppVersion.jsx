@@ -21,9 +21,10 @@ const useCheckAppVersion = () => {
             limit: 1,
           },
         });
-        const { latestVersion, createdAt } =
-          result?.data?.AppVersionByDate?.items[0];
-        if (localVersion !== latestVersion) {
+        const data = result?.data?.AppVersionByDate?.items[0];
+        const latestVersion = data?.latestVersion;
+        const createdAt = data?.createdAt;
+        if (localVersion !== latestVersion && latestVersion) {
           setUpdateAvailable(true);
           setUpdateVersion(latestVersion);
           setUpdateDate(createdAt.split("T")[0]);
@@ -53,7 +54,7 @@ const useCheckAppVersion = () => {
           break;
       }
     } catch (error) {
-      alert(`Error fetching latest Expo update: ${error}`);
+      alert(`Error al momento de redireccionar a Store ${error}`);
     }
   }
 

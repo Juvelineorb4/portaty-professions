@@ -257,13 +257,6 @@ enum ComplaintStatus {
 enum TypeLogs {
   SEARCH
   BUSINESS_VIEW
-  FAVORITE
-}
-
-type Testing @model @auth(rules: [{ allow: private }]) {
-  id: ID!
-  name: [String!]!
-  coordinates: Coordinates!
 }
 
 type Coordinates {
@@ -271,29 +264,4 @@ type Coordinates {
   lon: Float!
 }
 
-type Query {
-  searchByDistance(location: LocationInput!, km: Int): TestingConnection
-  searchBusinessByDistance(
-    location: LocationInput!
-    km: Float
-    text: String!
-  ): BusinessConnection
-}
 
-input LocationInput {
-  lat: Float!
-  lon: Float!
-}
-
-type TestingConnection {
-  items: [Testing]
-  total: Int
-  nextToken: String
-}
-
-type BusinessConnection {
-  items: [Business]
-  total: Int
-  nextToken: String
-}
-# custom queries and mutations
