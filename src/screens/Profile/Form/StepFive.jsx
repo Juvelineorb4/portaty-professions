@@ -160,49 +160,40 @@ const StepFive = ({ navigation, route }) => {
       );
     }
     try {
-      const business = await API.graphql({
-        query: mutations.createBusiness,
-        authMode: "AMAZON_COGNITO_USER_POOLS",
-        variables: {
-          input: {
-            userID: userAuth?.attributes["custom:userTableID"],
-            name: dataB.business.name,
-            email: dataB.business.email,
-            phone: dataB.business.phone,
-            description: description,
-            whatsapp: whatsapp ? whatsapp : "",
-            instagram: instagram ? instagram : "",
-            facebook: facebook ? facebook : "",
-            image: "",
-            identityID: identityId,
-            coordinates: {
-              lat: map.latitude,
-              lon: map.longitude,
-            },
-            activity: `${JSON.stringify({
-              main: area.area,
-              sub: area.activity,
-            })}`,
-            tags: listTags,
-          },
+      const input = {
+        owner: userAuth?.attributes?.sub,
+        userID: userAuth?.attributes["custom:userTableID"],
+        name: dataB.business.name,
+        email: dataB.business.email,
+        phone: dataB.business.phone,
+        description: description,
+        whatsapp: whatsapp ? whatsapp : "",
+        instagram: instagram ? instagram : "",
+        facebook: facebook ? facebook : "",
+        image: "",
+        identityID: identityId,
+        coordinates: {
+          lat: map.latitude,
+          lon: map.longitude,
         },
-      });
-      const apiName = "api-professions-gateway";
-      const path = "/thumbnailgenerator";
+        activity: `${JSON.stringify({
+          main: area.area,
+          sub: area.activity,
+        })}`,
+        tags: listTags,
+      };
+      const params = {
+        dataBusiness: input,
+        image: imageB64,
+      };
+      const apiName = "api-portaty";
+      const path = "/business/create";
       const myInit = {
-        body: {
-          identityid: identityId,
-          businessid: business?.data?.createBusiness?.id,
-          action: "create",
-          type: "profile",
-          key: 0,
-          description,
-          image: imageB64,
-        },
+        body: params,
         headers: {},
       };
       const result = await API.post(apiName, path, myInit);
-
+      console.log("QUE SALE: ", result);
       setLoading(false);
       Finished();
     } catch (error) {
