@@ -32,6 +32,7 @@ const Unprofile = ({ navigation, route }) => {
   const [user, setUser] = useState([]);
   const [business, setBusiness] = useState([]);
   const [visible, setVisible] = useState(false);
+  const [createBussiness, setCreateBussiness] = useState(true);
   const [error, setError] = useState("");
   const [refreshing, setRefreshing] = useState(false);
   const onRefresh = () => {
@@ -126,8 +127,8 @@ const Unprofile = ({ navigation, route }) => {
       </Text>
       <View style={[styles.line, global.bgMidGray]} />
       <TouchableOpacity
-        activeOpacity={1}
         onPress={() => {
+          if (disabled) return;
           if (business.length === 1) {
             setError(
               "Ya has conseguido el maximo de negocios registrados permitidos"
