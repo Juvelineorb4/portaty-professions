@@ -904,7 +904,7 @@ const SearchPost = ({ route, navigation }) => {
               style={{ flexDirection: "row", alignItems: "center" }}
               onPress={() => {
                 if (post?.whatsapp === "" || post?.whatsapp === null) return;
-                const url = `https://www.instagram.com/${post?.whatsapp}`;
+                const url = `https://${post?.whatsapp}`;
                 Linking.openURL(url);
               }}
             >
@@ -1069,7 +1069,7 @@ const SearchPost = ({ route, navigation }) => {
               style={{ flexDirection: "row", alignItems: "center" }}
               onPress={() => {
                 if (post?.facebook === "" || post?.facebook === null) return;
-                const url = `https://www.instagram.com/${post?.facebook}`;
+                const url = `https://www.facebook.com/${post?.facebook}`;
                 Linking.openURL(url);
               }}
             >

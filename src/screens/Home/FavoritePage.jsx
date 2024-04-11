@@ -732,7 +732,7 @@ const FavoritePage = ({ navigation, route }) => {
                   item.business?.whatsapp === null
                 )
                   return;
-                const url = `https://www.instagram.com/${item.business?.whatsapp}`;
+                const url = `https://${item.business?.whatsapp}`;
                 Linking.openURL(url);
               }}
             >
@@ -911,7 +911,7 @@ const FavoritePage = ({ navigation, route }) => {
                   item.business?.facebook === null
                 )
                   return;
-                const url = `https://www.instagram.com/${item.business?.facebook}`;
+                const url = `https://www.facebook.com/${item.business?.facebook}`;
                 Linking.openURL(url);
               }}
             >
