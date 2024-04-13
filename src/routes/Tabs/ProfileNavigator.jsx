@@ -15,6 +15,7 @@ import CustomQR from "@/components/CustomQR";
 import FormNavigator from "../FormNavigation";
 import MapScreen from "@/screens/Profile/Page/Map";
 import PageNavigator from "../PageNavigator";
+import Contact from "@/screens/Profile/Contact";
 
 const ProfileNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -82,6 +83,14 @@ const ProfileNavigator = () => {
       <Stack.Screen
         name="About"
         component={About}
+        options={{
+          animation: "slide_from_right",
+          header: (props) => <LeftHeader {...props} />,
+        }}
+      />
+      <Stack.Screen
+        name="Contact"
+        component={Contact}
         options={{
           animation: "slide_from_right",
           header: (props) => <LeftHeader {...props} />,
