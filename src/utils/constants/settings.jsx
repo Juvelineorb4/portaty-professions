@@ -21,16 +21,16 @@ export const settings = {
       web: "https://www.portaty.com/politicas",
       // routePush: true,
     },
-    // {
-    //   title: "Especificaciones de la aplicación",
-    //   subtitle: "Ver detalles sobre la aplicación",
-    //   icon: {
-    //     left: require("@/utils/images/info_white.png"),
-    //     right: require("@/utils/images/arrow_right.png"),
-    //   },
-    //   route: "About",
-    //   // routePush: true,
-    // },
+    {
+      title: "Contáctanos",
+      subtitle: "Encuentra todas las maneras de ponerte en contacto con nosotros",
+      icon: {
+        left: require("@/utils/images/info_white.png"),
+        right: require("@/utils/images/arrow_right.png"),
+      },
+      route: "Contact",
+      // routePush: true,
+    },
     {
       title: "Cerrar sesión",
       icon: {
