@@ -7,6 +7,7 @@ import {
 } from "react-native-safe-area-context";
 import { RecoilRoot } from "recoil";
 import { useFonts } from "expo-font";
+
 import { Platform, SafeAreaView as SafeAreaIOS } from "react-native";
 import Navigation from "@/routes/Navigation";
 // amplify
@@ -17,7 +18,7 @@ import { StyleSheet } from "react-native";
 import * as Constants from "expo-constants";
 import { api } from "@/utils/constants/api.jsx";
 const ENDPOINT =
-  Constants?.AppOwnership?.Expo === "expo"
+  Constants?.AppOwnership?.Expo === ""
     ? api?.stage_endpoint?.dev
     : api?.stage_endpoint?.prod;
 console.log("ENDPOINT: ", ENDPOINT);
