@@ -18,6 +18,7 @@
   /* background-color: #ffa424; */
   border: 1px solid #1f1f1f;
   border-radius: 8px;
+  margin-top: -20px;
 }
 
 .textContinue {
@@ -52,5 +53,6 @@
   font-size: 14px;
   margin-left: 5px;
   color: #1f1f1f;
+  margin-bottom: -20px;
 
 }

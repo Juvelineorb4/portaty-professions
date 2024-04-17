@@ -26,6 +26,7 @@
   border-radius: 8px;
   margin: 3px 0px 10px;
   border: 1px solid #1f1f1f;
+  height: 55px;
 }
 .labelInput {
   font-family: "bold";
@@ -37,6 +38,7 @@
   font-family: "regular";
   margin-left: 10px;
   color: #1f1f1f;
+  height: 55px;
 }
 .errorInput {
   font-family: "bold";
@@ -44,6 +46,7 @@
   font-size: 12px;
   position: relative;
   top: -10px;
+
 }
 .errorInputMain {
   font-family: "light";
@@ -51,6 +54,7 @@
   font-size: 14px;
   position: relative;
   top: -10px;
+  height: 55px;
 }
 .placeholder {
   flex: 1;
@@ -58,6 +62,7 @@
   color: #1f1f1f;
   font-size: 12px;
   font-family: "light";
+  height: 55px;
 }
 .placeholderGender {
   flex: 1;

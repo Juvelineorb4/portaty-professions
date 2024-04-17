@@ -35,6 +35,7 @@ import MapFilter from "@/components/MapFilter";
 const Search = ({ route }) => {
   const global = require("@/utils/styles/global.js");
   const userLocation = useRecoilValue(mapUser);
+  console.log(userLocation)
   const [moreItems, setMoreItems] = useState(1);
   const [items, setItems] = useState([]);
   const [searchActive, setSearchActive] = useRecoilState(searchStatus);
@@ -52,6 +53,7 @@ const Search = ({ route }) => {
   const [searchCountry, setSearchCountry] = useState("");
   const [searchAddress, setSearchAddress] = useState("");
   const [city, setCity] = useState("");
+  const [region, setRegion] = useState("");
 
   const getAddress = async (coords) => {
     let direcciones = await Location.reverseGeocodeAsync(coords);
@@ -63,7 +65,9 @@ const Search = ({ route }) => {
         direccion.region === null ? "" : direccion.region
       }, ${direccion.postalCode === null ? "" : direccion.postalCode} `;
       setSearchAddress(direccionString);
-      setCity(direccion.region);
+      console.log(direccionString)
+      setRegion(direccion.region);
+      setCity(direccion.city);
     }
   };
 
@@ -110,10 +114,23 @@ const Search = ({ route }) => {
   };
 
   async function getCountryCode(array) {
-    const countryCode = await Cellular.getIsoCountryCodeAsync();
+    let geocode = await Location.reverseGeocodeAsync(userLocation);
+    let countryCodes = geocode[0].isoCountryCode;
     array.map((item, index) => {
-      if (item.cca2 === countryCode.toUpperCase()) {
+      if (item.cca2 === countryCodes.toUpperCase()) {
+        let arrayCountries = [...array]
         setCountry(item);
+        let country = arrayCountries.filter(item => item.cca2 === countryCodes.toUpperCase());
+
+        if (country.length > 0) {
+          // Eliminar el país del array original
+          arrayCountries = arrayCountries.filter(item => item.cca2 !== countryCodes.toUpperCase());
+        
+          // Agregar el país al principio del array
+          arrayCountries.unshift(country[0]);
+        }
+        setCountries(arrayCountries);
+
       }
     });
   }
@@ -139,12 +156,13 @@ const Search = ({ route }) => {
   /* Refresh */
 
   useEffect(() => {
+    getAddress(userLocation)
     fetch(`https://restcountries.com/v3.1/all?fields=name,flags,idd,cca2`)
       .then((response) => {
         return response.json();
       })
       .then((item) => {
-        setCountries(item);
+        console.log(item[0])
         getCountryCode(item);
       });
     if (userLocation) getData();
@@ -175,7 +193,6 @@ const Search = ({ route }) => {
               style={{ flexDirection: "row", alignItems: "center" }}
               onPress={() => {
                 setModalVisible(!modalVisible);
-                getAddress(userLocation);
               }}
             >
               <Image
@@ -299,7 +316,7 @@ const Search = ({ route }) => {
                         position: "absolute",
                         top: 50,
                         backgroundColor: "#fff",
-                        zIndex: 10,
+                        zIndex: 15,
                         borderRadius: 5,
                       }}
                     >
@@ -308,6 +325,7 @@ const Search = ({ route }) => {
                         onChangeText={(e) => setSearchCountry(e)}
                         placeholder={`Busca tu pais`}
                         defaultValue={searchCountry}
+                        placeholderTextColor={"#1f1f1f80"}
                         style={{
                           margin: 5,
                           borderWidth: 1,
@@ -316,6 +334,7 @@ const Search = ({ route }) => {
                           fontFamily: "medium",
                           fontSize: 12,
                           borderRadius: 5,
+                          height: 40,
                         }}
                       />
                       <View style={[{ flex: 1 }]}>
@@ -377,36 +396,38 @@ const Search = ({ route }) => {
                   close={() => setVisibleMap(!visibleMap)}
                   country={country?.name?.common}
                   city={city}
+                  regionState={region}
                 />
-                <View style={{ flex: 1 }}>
-                  <Text
-                    style={{
-                      fontFamily: "medium",
-                      fontSize: 15,
-                      marginVertical: 20,
-                      lineHeight: 25,
-                    }}
-                  >
-                    {`Te encuentras en: `}{" "}
+                {!visibleCountries && (
+                  <View style={{ flex: 1 }}>
                     <Text
                       style={{
-                        fontFamily: "regular",
-                        fontSize: 14,
-                      }}
-                    >{`${searchAddress}`}</Text>
-                    <Text
-                      onPress={() => setVisibleMap(true)}
-                      style={{
-                        fontFamily: "bold",
+                        fontFamily: "medium",
                         fontSize: 15,
-                        textDecorationLine: "underline",
+                        marginVertical: 20,
+                        lineHeight: 25,
                       }}
                     >
-                      Cambiar
+                      {`Te encuentras en: `}{" "}
+                      <Text
+                        style={{
+                          fontFamily: "regular",
+                          fontSize: 14,
+                        }}
+                      >{`${searchAddress}`}</Text>
+                      <Text
+                        onPress={() => setVisibleMap(true)}
+                        style={{
+                          fontFamily: "bold",
+                          fontSize: 15,
+                          textDecorationLine: "underline",
+                        }}
+                      >
+                        Cambiar
+                      </Text>
                     </Text>
-                  </Text>
 
-                  {/* <View>
+                    {/* <View>
                     <Text
                       style={{ fontFamily: "regular", fontSize: 13 }}
                     >{`La distancia de tu radio son: ${filterRadio} km`}</Text>
@@ -453,8 +474,10 @@ const Search = ({ route }) => {
                       style={{ fontFamily: "regular", fontSize: 13 }}
                     >{`La distancia esta reflejada en un radio de kilometros`}</Text>
                   </View> */}
-                </View>
-                <View style={{}}>
+                  </View>
+                )}
+                {/* <View style={{}}> */}
+                {!visibleCountries && (
                   <TouchableOpacity
                     style={[
                       global.bgYellow,
@@ -482,7 +505,8 @@ const Search = ({ route }) => {
                       {`Buscar`}
                     </Text>
                   </TouchableOpacity>
-                </View>
+                )}
+                {/* </View> */}
               </View>
             </View>
           </Modal>

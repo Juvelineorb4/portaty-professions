@@ -29,7 +29,7 @@ const Login = ({ navigation }) => {
   const global = require("@/utils/styles/global.js");
   const EMAIL_REGEX = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
   const { updateAvailable, fetchUpdate, updateVersion, updateDate } =
-  useCheckAppVersion();
+    useCheckAppVersion();
   const [errorActive, setErrorActive] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -98,7 +98,6 @@ const Login = ({ navigation }) => {
     setVisible(false);
   };
 
-
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -130,50 +129,62 @@ const Login = ({ navigation }) => {
               }}
               source={require("@/utils/images/welcome.png")}
             />
-            <CustomInput
-              control={control}
-              name={`email`}
-              placeholder={es.authentication.register.email.placeholder}
-              styled={{
-                text: styles.textInput,
-                label: styles.labelInput,
-                error: styles.errorInput,
-                placeholder: styles.placeholder,
-                input: [styles.inputContainer, global.bgWhite],
+            <View
+              style={{
+                flex: 1,
               }}
-              text={`Correo electronico`}
-              // icon={require("@/utils/images/email.png")}
-              rules={{
-                required: `Requerido`,
-                pattern: {
-                  value: EMAIL_REGEX,
-                  message: "Email no valido.",
-                },
+            >
+              <CustomInput
+                control={control}
+                name={`email`}
+                placeholder={es.authentication.register.email.placeholder}
+                styled={{
+                  text: styles.textInput,
+                  label: styles.labelInput,
+                  error: styles.errorInput,
+                  placeholder: styles.placeholder,
+                  input: [styles.inputContainer, global.bgWhite],
+                }}
+                text={`Correo electronico`}
+                // icon={require("@/utils/images/email.png")}
+                rules={{
+                  required: `Requerido`,
+                  pattern: {
+                    value: EMAIL_REGEX,
+                    message: "Email no valido.",
+                  },
+                }}
+              />
+            </View>
+            <View
+              style={{
+                flex: 1,
               }}
-            />
-            <CustomInput
-              control={control}
-              name={`password`}
-              placeholder={`**********`}
-              styled={{
-                text: styles.textInput,
-                label: [styles.labelInput, global.topGray],
-                error: styles.errorInput,
-                placeholder: styles.placeholder,
-                input: [styles.inputContainer, global.bgWhite],
-                security: styles.security,
-              }}
-              text={`Contraseña`}
-              // icon={require("@/utils/images/password.png")}
-              security={true}
-              rules={{
-                required: "Contraseña requerida",
-                minLength: {
-                  value: 8,
-                  message: "8 caracteres minimo",
-                },
-              }}
-            />
+            >
+              <CustomInput
+                control={control}
+                name={`password`}
+                placeholder={`**********`}
+                styled={{
+                  text: styles.textInput,
+                  label: [styles.labelInput, global.topGray],
+                  error: styles.errorInput,
+                  placeholder: styles.placeholder,
+                  input: [styles.inputContainer, global.bgWhite],
+                  security: styles.security,
+                }}
+                text={`Contraseña`}
+                // icon={require("@/utils/images/password.png")}
+                security={true}
+                rules={{
+                  required: "Contraseña requerida",
+                  minLength: {
+                    value: 8,
+                    message: "8 caracteres minimo",
+                  },
+                }}
+              />
+            </View>
           </View>
         </ScrollView>
       </TouchableWithoutFeedback>
