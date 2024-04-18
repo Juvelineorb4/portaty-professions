@@ -21,6 +21,7 @@ import {
   areaSelect,
   errorArea,
   optionBussines,
+  stepOneParams,
   userAuthenticated,
 } from "@/atoms";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -35,7 +36,6 @@ const StepTwo = ({ navigation, route }) => {
   const { control, handleSubmit } = useForm();
   const animation = useRef(null);
   const [areasList, setAreasList] = useState([]);
-  const { business } = route.params;
   const [active, setActive] = useRecoilState(activeModalScreen);
   const [selectOption, setSelectOption] = useRecoilState(optionBussines);
   const area = useRecoilValue(areaSelect);
@@ -84,7 +84,7 @@ const StepTwo = ({ navigation, route }) => {
   }, []);
   return (
     <View style={[global.bgWhite, styles.container]}>
-      <Modal animationType="none" transparent={active} visible={active}>
+      {/* <Modal animationType="none" transparent={active} visible={active}> */}
         <View style={[styles.modalMain]}>
           <ScrollView style={{ flex: 1 }}>
             <View style={[styles.modalContent]}>
@@ -251,7 +251,7 @@ const StepTwo = ({ navigation, route }) => {
                     },
                   ]}
                   onPress={() =>
-                    navigation.push("StepOne", { business: business })
+                    navigation.navigate("FormNavigator")
                   }
                 >
                   <Feather name="arrow-left-circle" size={30} color="black" />
@@ -285,9 +285,7 @@ const StepTwo = ({ navigation, route }) => {
                       console.log('No has elegido')
                       return
                     }
-                    navigation.push("StepThree", {
-                      business: business,
-                    });
+                    navigation.navigate("FormNavigatorThree");
                   }}
                 >
                   <Text
@@ -307,7 +305,7 @@ const StepTwo = ({ navigation, route }) => {
             </View>
           </ScrollView>
         </View>
-      </Modal>
+      {/* </Modal> */}
     </View>
   );
 };

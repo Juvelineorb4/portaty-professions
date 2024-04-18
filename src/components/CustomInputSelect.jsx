@@ -1,4 +1,4 @@
-import { Text, View, TextInput, TouchableOpacity, Image } from "react-native";
+import { Text, View, TextInput, TouchableOpacity, Image, Pressable } from "react-native";
 import React, { useState } from "react";
 import { Controller } from "react-hook-form";
 
@@ -29,9 +29,12 @@ const CustomInput = ({
         fieldState: { error },
       }) => (
         <TouchableOpacity
-          onPress={() => setActiveGender(!activeGender)}
-          activeOpacity={1}
-          style={{ position: "relative" }}
+          onPress={() => {
+            console.log('hue')
+            setActiveGender(!activeGender)
+          }}
+          activeOpacity={0}
+          style={{ position: "relative", }}
         >
           <View>
             {text && <Text style={styled.label}>{text}</Text>}

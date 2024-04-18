@@ -62,7 +62,7 @@ const StepClear = ({ navig, complete = false }) => {
               flex: 1,
               borderWidth: 1,
               width: 300,
-              height: 60,
+              height: 80,
               borderRadius: 8,
               alignSelf: "center",
               flexDirection: "row",

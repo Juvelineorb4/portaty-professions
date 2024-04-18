@@ -18,9 +18,10 @@ import { AntDesign } from "@expo/vector-icons";
 import * as Cellular from "expo-cellular";
 import LottieView from "lottie-react-native";
 import { Feather } from "@expo/vector-icons";
-import { activeModalScreen, userAuthenticated } from "@/atoms";
+import { activeModalScreen, mapUser, stepOneParams, userAuthenticated } from "@/atoms";
 import { useRecoilState, useRecoilValue } from "recoil";
 import StepClear from "./StepClear";
+import * as Location from "expo-location";
 
 const StepOne = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
@@ -31,13 +32,34 @@ const StepOne = ({ navigation, route }) => {
   const [visibleCountries, setVisibleCountries] = useState(false);
   const [searchCountry, setSearchCountry] = useState("");
   const [active, setActive] = useRecoilState(activeModalScreen);
-
+  const [businessStepOne, setBusinessStepOne] = useRecoilState(stepOneParams);
+  const userLocation = useRecoilValue(mapUser);
   const animation = useRef(null);
-  let data = route.params
+  let data = route.params;
+
   async function getCountryCode(array) {
-    const countryCode = await Cellular.getIsoCountryCodeAsync();
+    let geocode = await Location.reverseGeocodeAsync(userLocation);
+    let countryCodes = geocode[0].isoCountryCode;
+    console.log(countryCodes);
     array.map((item, index) => {
-      if (item.cca2 === countryCode.toUpperCase()) setCountry(item);
+      if (item.cca2 === countryCodes.toUpperCase()) {
+        let arrayCountries = [...array];
+        setCountry(item);
+        let country = arrayCountries.filter(
+          (item) => item.cca2 === countryCodes.toUpperCase()
+        );
+
+        if (country.length > 0) {
+          // Eliminar el país del array original
+          arrayCountries = arrayCountries.filter(
+            (item) => item.cca2 !== countryCodes.toUpperCase()
+          );
+
+          // Agregar el país al principio del array
+          arrayCountries.unshift(country[0]);
+        }
+        setCountries(arrayCountries);
+      }
     });
   }
 
@@ -45,20 +67,26 @@ const StepOne = ({ navigation, route }) => {
     item?.name?.common.toLowerCase().includes(searchCountry.toLowerCase())
   );
 
-  const StepParams = async (data) => {
+  const StepParams = (data) => {
     const { company, email, phone } = data;
     let code = country?.idd?.root;
+    console.log('1')
     for (let i = 0; i < country?.idd?.suffixes.length; i++) {
       code += country?.idd?.suffixes[i];
     }
+    console.log('2')
+
     let params = {
       name: company,
       email: email,
       phone: `${code}${phone}`,
     };
-    navigation.push("StepTwo", {
-      business: params,
-    });
+    console.log('3')
+    setBusinessStepOne(params)
+    // navigation.goBack()
+    navigation.navigate("FormNavigatorTwo");
+    // console.log('4')
+
   };
 
   useEffect(() => {
@@ -67,20 +95,17 @@ const StepOne = ({ navigation, route }) => {
         return response.json();
       })
       .then((item) => {
-        setCountries(item);
         getCountryCode(item);
       });
   }, [route]);
   return (
     <View style={[global.bgWhite, styles.container]}>
-      <Modal animationType="none" transparent={active} visible={active}>
+      {/* <Modal animationType="none" transparent={active} visible={active}> */}
         <View style={[styles.modalMain]}>
           <ScrollView style={{ flex: 1 }}>
             <View style={[styles.modalContent]}>
               <View style={[styles.modalTop]}>
-              <StepClear
-                  navig={() => navigation.navigate("Unprofile")}
-                />
+                <StepClear navig={() => navigation.navigate("Unprofile")} />
                 {/* <Pressable
                   onPress={() => {
                     navigation.navigate("Unprofile");
@@ -139,6 +164,7 @@ const StepOne = ({ navigation, route }) => {
                   control={control}
                   name={`company`}
                   placeholder={`Portaty C.A.`}
+                  placeholderTextColor={`#1f1f1f80`}
                   styled={{
                     text: styles.textInput,
                     label: [styles.labelInput],
@@ -146,7 +172,7 @@ const StepOne = ({ navigation, route }) => {
                     input: [styles.inputContainer],
                     placeholder: styles.placeholder,
                   }}
-                  defaultValue={data === undefined ? '' : data?.business?.name}
+                  defaultValue={data === undefined ? "" : data?.business?.name}
                   text={`Nombre del negocio (*)`}
                   rules={{
                     required: es.businessForm.register.company.rules,
@@ -156,6 +182,7 @@ const StepOne = ({ navigation, route }) => {
                   control={control}
                   name={`email`}
                   placeholder={`soporte@portaty.com`}
+                  placeholderTextColor={`#1f1f1f80`}
                   styled={{
                     text: styles.textInput,
                     label: [styles.labelInput],
@@ -163,7 +190,7 @@ const StepOne = ({ navigation, route }) => {
                     input: [styles.inputContainer],
                     placeholder: styles.placeholder,
                   }}
-                  defaultValue={data === undefined ? '' : data?.business?.email}
+                  defaultValue={data === undefined ? "" : data?.business?.email}
                   text={`Correo electronico (*)`}
                   rules={{
                     required: es.businessForm.register.email.rules,
@@ -175,18 +202,23 @@ const StepOne = ({ navigation, route }) => {
                 />
                 <View
                   style={{
+                    flex: 1,
                     flexDirection: "row",
                     justifyContent: "space-between",
                   }}
                 >
-                  <View>
+                  <View
+                    style={{
+                      marginRight: 5,
+                    }}
+                  >
                     <Text style={styles.labelInput}>Telefono (*)</Text>
 
                     <TouchableOpacity
                       style={[
                         styles.inputContainerBot,
                         {
-                          height: 50,
+                          height: 55,
                           width: 100,
                           marginRight: 10,
                           borderColor: "#404040",
@@ -196,6 +228,7 @@ const StepOne = ({ navigation, route }) => {
                       onPress={() => setVisibleCountries(!visibleCountries)}
                     >
                       {/* <View> */}
+                      {console.log(country)}
                       <Image
                         style={{
                           width: 20,
@@ -293,7 +326,7 @@ const StepOne = ({ navigation, route }) => {
                                         alignItems: "center",
                                         marginHorizontal: 5,
                                         borderRadius: 8,
-                                        marginBottom: 5
+                                        marginBottom: 5,
                                       },
                                     ]}
                                     onPress={() => {
@@ -340,6 +373,7 @@ const StepOne = ({ navigation, route }) => {
                     control={control}
                     name={`phone`}
                     placeholder={`Coloca el numero de telefono`}
+                    placeholderTextColor={`#1f1f1f80`}
                     styled={{
                       text: styles.textInputP,
                       label: [styles.labelInput],
@@ -347,14 +381,16 @@ const StepOne = ({ navigation, route }) => {
                       input: [styles.inputContainerP],
                       placeholder: styles.placeholder,
                     }}
-                    defaultValue={data === undefined ? '' : data?.business?.phone}
+                    defaultValue={
+                      data === undefined ? "" : data?.business?.phone
+                    }
                     text={` `}
                     rules={{
                       required: es.businessForm.register.email.rules,
                       pattern: {
                         value: /^[0-9]+$/i,
-                        message: "Solo se permiten números"
-                      }
+                        message: "Solo se permiten números",
+                      },
                     }}
                     inputmode="numeric"
                   />
@@ -396,7 +432,7 @@ const StepOne = ({ navigation, route }) => {
             </View>
           </ScrollView>
         </View>
-      </Modal>
+      {/* </Modal> */}
     </View>
   );
 };

@@ -167,31 +167,7 @@ const Register = ({ navigation }) => {
               />
             </View>
 
-            <View
-              style={{
-                flex: 1,
-              }}
-            >
-              <CustomInputSelect
-                control={control}
-                name={`gender`}
-                placeholderTextColor={`#1f1f1f`}
-                placeholder="Elige tu género"
-                editable={false}
-                styled={{
-                  text: styles.textInput,
-                  label: styles.labelInput,
-                  error: styles.errorInput,
-                  placeholder: styles.placeholderGender,
-                  input: [styles.inputContainer, global.bgWhite],
-                  security: styles.security,
-                }}
-                text={`Género`}
-                rules={{
-                  required: es.authentication.register.password.rules,
-                }}
-              />
-            </View>
+            
 
             <View
               style={{
@@ -297,6 +273,32 @@ const Register = ({ navigation }) => {
                 rules={{
                   required: es.authentication.register.repeat.rules,
                   validate: (value) => value == pwd || "No coincide",
+                }}
+              />
+            </View>
+
+            <View
+              style={{
+                flex: 1,
+              }}
+            >
+              <CustomInputSelect
+                control={control}
+                name={`gender`}
+                placeholderTextColor={`#1f1f1f`}
+                placeholder="Elige tu género"
+                editable={false}
+                styled={{
+                  text: styles.textInput,
+                  label: styles.labelInput,
+                  error: styles.errorInput,
+                  placeholder: styles.placeholderGender,
+                  input: [styles.inputContainer, global.bgWhite],
+                  security: styles.security,
+                }}
+                text={`Género`}
+                rules={{
+                  required: es.authentication.register.password.rules,
                 }}
               />
             </View>

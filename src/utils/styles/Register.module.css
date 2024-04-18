@@ -16,13 +16,13 @@
   color: #ffb703;
 }
 .inputContainer {
-  flex: 1;
+  /* flex: 1; */
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
+  /* align-items: center; */
   /* background-color: #fafafa; */
   border: none;
-  padding: 11px 10px 11px 0px;
+  padding: 0px 10px 11px 0px;
   border-radius: 8px;
   margin: 3px 0px 10px;
   border: 1px solid #1f1f1f;
@@ -34,11 +34,14 @@
   color: #1f1f1f;
 }
 .textInput {
-  flex: 1;
+  /* flex: 1; */
   font-family: "regular";
+  width: 100%;
   margin-left: 10px;
   color: #1f1f1f;
   height: 55px;
+  /* border: 1px solid yellow; */
+
 }
 .errorInput {
   font-family: "bold";
@@ -48,28 +51,24 @@
   top: -10px;
 
 }
-.errorInputMain {
-  font-family: "light";
-  color: red;
-  font-size: 14px;
-  position: relative;
-  top: -10px;
-  height: 55px;
-}
 .placeholder {
-  flex: 1;
+  width: 100%;
   margin-left: 10px;
   color: #1f1f1f;
   font-size: 12px;
   font-family: "light";
   height: 55px;
+  /* border: 1px solid yellow; */
+
 }
 .placeholderGender {
-  flex: 1;
+  /* flex: 1; */
   margin-left: 10px;
   color: #1f1f1f;
   font-size: 12px;
   font-family: "regular";
+  height: 55px;
+  width: 100%;
 }
 .security {
   position: relative;

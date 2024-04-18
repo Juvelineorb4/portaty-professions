@@ -23,7 +23,6 @@ const StepFour = ({ navigation, route }) => {
   const [imageB64, setImageB64] = useRecoilState(base64Business);
   const [active, setActive] = useRecoilState(activeModalScreen);
   const [error, setError] = useState(false)
-  const { business } = route.params;
 
   function urlToBlob(url) {
     return new Promise((resolve, reject) => {
@@ -59,7 +58,7 @@ const StepFour = ({ navigation, route }) => {
   // useEffect(() => {}, []);
   return (
     <View style={[global.bgWhite, styles.container]}>
-      <Modal animationType="none" transparent={active} visible={active}>
+      {/* <Modal animationType="none" transparent={active} visible={active}> */}
         <View style={[styles.modalMain]}>
           <ScrollView style={{ flex: 1 }}>
             <View style={[styles.modalContent]}>
@@ -164,7 +163,7 @@ const StepFour = ({ navigation, route }) => {
                     },
                   ]}
                   onPress={() =>
-                    navigation.push("StepThree", { business: business })
+                    navigation.navigate("FormNavigatorThree")
                   }
                 >
                   <Feather name="arrow-left-circle" size={30} color="black" />
@@ -197,9 +196,7 @@ const StepFour = ({ navigation, route }) => {
                       setError(true)
                       return
                     };
-                    navigation.push("StepFive", {
-                      business: business,
-                    });
+                    navigation.navigate("FormNavigatorFive");
                   }}
                 >
                   <Text
@@ -219,7 +216,7 @@ const StepFour = ({ navigation, route }) => {
             </View>
           </ScrollView>
         </View>
-      </Modal>
+      {/* </Modal> */}
     </View>
   );
 };

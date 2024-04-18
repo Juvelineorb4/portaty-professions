@@ -7,6 +7,7 @@ import {
   Modal,
   FlatList,
   TouchableOpacity,
+  SafeAreaView,
 } from "react-native";
 import styles from "@/utils/styles/Area.module.css";
 import React, { useEffect, useState } from "react";
@@ -55,6 +56,7 @@ const CustomArea = ({ data }) => {
           >
             Buscar
           </Text>
+          <SafeAreaView style={{ flex: 1, padding: 30 }}>
 
           <Modal
             animationType="none"
@@ -122,6 +124,8 @@ const CustomArea = ({ data }) => {
               </View>
             </View>
           </Modal>
+          </SafeAreaView>
+
         </TouchableOpacity>
       </View>
     </ScrollView>
