@@ -176,15 +176,12 @@ const ConfirmForgot = ({ navigation, route }) => {
               <Text style={{ color: "green" }}>{codeSend}</Text>
               <Text style={{ color: "red" }}>{errorSendCode}</Text>
             </View>
-            <View>
-              <Text
-                style={[styles.subtitleAlert, { color: "rgba(0, 0, 0, 0.2)" }]}
-              >
-                *No olvides revisar la sección de "SPAM"*
-              </Text>
-            </View>
-          </ScrollView>
-          <View style={{ height: 65 }}>
+            <Text
+              style={[styles.subtitleAlert, { color: "rgba(0, 0, 0, 0.2)" }]}
+            >
+              *No olvides revisar la sección de "SPAM"*
+            </Text>
+
             <CustomButton
               text={
                 isLoading ? (
@@ -198,7 +195,7 @@ const ConfirmForgot = ({ navigation, route }) => {
               textStyles={[styles.textContinue, global.black]}
               buttonStyles={[styles.continue, global.bgYellow]}
             />
-          </View>
+          </ScrollView>
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>

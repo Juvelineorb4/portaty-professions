@@ -20,12 +20,14 @@
   font-family: "regular";
   margin-left: 12px;
   color: #1f1f1f;
+  height: 55px;
 }
 .textInput {
   flex: 1;
   font-family: "regular";
   margin-left: 12px;
   color: #1f1f1f;
+  height: 55px;
 }
 .errorInput {
   position: absolute;
@@ -53,6 +55,7 @@
   padding: 11px 10px 11px 0px;
   border-radius: 8px;
   margin: 3px 0px 18px;
+  height: 55px;
 }
 .inputContainerP {
   flex: 1;
@@ -66,6 +69,8 @@
   padding: 11px 10px 11px 0px;
   border-radius: 8px;
   margin: 3px 0px 10px;
+  height: 55px;
+
 }
 .placeholder {
   flex: 1;
@@ -73,6 +78,7 @@
   color: #1f1f1f;
   font-size: 12px;
   font-family: "regular";
+  height: 55px;
 }
 .labelInput {
   font-family: "bold";
@@ -97,6 +103,7 @@
   padding: 11px 0px 11px 0px;
   border-radius: 8px;
   margin: 3px 0px 10px;
+  height: 55px;
 }
 .placeholderBot {
   flex: 1;

@@ -17,6 +17,7 @@
   border-radius: 8px;
   margin: 3px 0px 10px;
   border: 1px solid #1f1f1f;
+  height: 55px;
 }
 .labelInput {
   font-family: "bold";
@@ -28,6 +29,7 @@
   font-family: "medium";
   margin-left: 10px;
   color: #1f1f1f;
+  height: 55px;
 }
 .errorInput {
   font-family: "bold";
@@ -48,6 +50,7 @@
   margin-left: 10px;
   color: #1f1f1f;
   font-size: 12px;
+  height: 55px;
   font-family: "medium";
 }
 .security {

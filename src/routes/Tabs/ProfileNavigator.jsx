@@ -16,6 +16,11 @@ import FormNavigator from "../FormNavigation";
 import MapScreen from "@/screens/Profile/Page/Map";
 import PageNavigator from "../PageNavigator";
 import Contact from "@/screens/Profile/Contact";
+import FormNavigatorTwo from "../FormNavigationTwo";
+import FormNavigatorThree from "../FormNavigationThree";
+import FormNavigatorFour from "../FormNavigationFour";
+import FormNavigatorFive from "../FormNavigationFive";
+import FormNavigatorComplete from "../FormNavigationComplete";
 
 const ProfileNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -40,6 +45,52 @@ const ProfileNavigator = () => {
           presentation: 'transparentModal',
         }}
       />
+      <Stack.Screen
+        name="FormNavigatorTwo"
+        component={FormNavigatorTwo}
+        options={{
+          animation: "slide_from_right",
+          headerShown: false,
+          presentation: 'transparentModal',
+        }}
+      />
+      <Stack.Screen
+        name="FormNavigatorThree"
+        component={FormNavigatorThree}
+        options={{
+          animation: "slide_from_right",
+          headerShown: false,
+          presentation: 'transparentModal',
+        }}
+      />
+      <Stack.Screen
+        name="FormNavigatorFour"
+        component={FormNavigatorFour}
+        options={{
+          animation: "slide_from_right",
+          headerShown: false,
+          presentation: 'transparentModal',
+        }}
+      />
+      <Stack.Screen
+        name="FormNavigatorFive"
+        component={FormNavigatorFive}
+        options={{
+          animation: "slide_from_right",
+          headerShown: false,
+          presentation: 'transparentModal',
+        }}
+      />
+      <Stack.Screen
+        name="FormNavigatorComplete"
+        component={FormNavigatorComplete}
+        options={{
+          animation: "slide_from_right",
+          headerShown: false,
+          presentation: 'transparentModal',
+        }}
+      />
+
       <Stack.Screen
         name="MapView"
         component={MapScreen}

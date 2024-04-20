@@ -20,7 +20,8 @@ import {
   emptyLocation,
   mapBusiness,
   selectLocation,
-  mapUser
+  mapUser,
+  stepOneParams
 } from "@/atoms";
 import StepClear from "./StepClear";
 
@@ -29,19 +30,19 @@ const StepThree = ({ navigation, route }) => {
   const { control, handleSubmit } = useForm();
   const animation = useRef(null);
   const userLocation = useRecoilValue(mapUser)
-  const { business } = route.params;
   const map = useRecoilValue(mapBusiness);
   const [selectionLocation, setSelectionLocation] =
     useRecoilState(selectLocation);
   const empty = useRecoilValue(emptyLocation);
   const direction = useRecoilValue(directionBusiness);
   const [active, setActive] = useRecoilState(activeModalScreen);
+  const [businessStepOne, setBusinessStepOne] = useRecoilState(stepOneParams);
 
 
   useEffect(() => {}, []);
   return (
     <View style={[global.bgWhite, styles.container]}>
-      <Modal animationType="none" transparent={active} visible={active}>
+      {/* <Modal animationType="none" transparent={active} visible={active}> */}
         <View style={[styles.modalMain]}>
           <ScrollView style={{ flex: 1 }}>
             <View style={[styles.modalContent]}>
@@ -109,7 +110,7 @@ const StepThree = ({ navigation, route }) => {
                     initialLocation={userLocation}
                     name={"coordinates"}
                     text={"Abrir Mapa"}
-                    title={business?.name}
+                    title={businessStepOne?.name}
                     placeholder={"Selecciona tu ubicacion"}
                     // rules={{
                     //   required: es.businessForm.register.email.rules,
@@ -136,7 +137,7 @@ const StepThree = ({ navigation, route }) => {
                     },
                   ]}
                   onPress={() =>
-                    navigation.push("StepTwo", { business: business })
+                    navigation.navigate("FormNavigatorTwo")
                   }
                 >
                   <Feather name="arrow-left-circle" size={30} color="black" />
@@ -170,9 +171,7 @@ const StepThree = ({ navigation, route }) => {
                       setSelectionLocation(true);
                       return
                     }
-                    navigation.push("StepFour", {
-                      business: business,
-                    });
+                    navigation.navigate("FormNavigatorFour");
                   }}
                 >
                   <Text
@@ -192,7 +191,7 @@ const StepThree = ({ navigation, route }) => {
             </View>
           </ScrollView>
         </View>
-      </Modal>
+      {/* </Modal> */}
     </View>
   );
 };

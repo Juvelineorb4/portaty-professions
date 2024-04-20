@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import StepOne from "@/screens/Profile/Form/StepOne";
+import StepTwo from "@/screens/Profile/Form/StepTwo";
 
 
-const FormNavigator = () => {
+const FormNavigatorTwo = () => {
   const Stack = createNativeStackNavigator();
   return (
-    <Stack.Navigator initialRouteName={`StepOne`}>
-      <Stack.Screen
-          name="StepOne"
-          component={StepOne}
+    <Stack.Navigator initialRouteName={`StepTwo`}>
+        <Stack.Screen
+          name="StepTwo"
+          component={StepTwo}
           options={{
             animation: "slide_from_right",
             headerShown: false,
@@ -20,4 +20,4 @@ const FormNavigator = () => {
   );
 };
 
-export default FormNavigator;
+export default FormNavigatorTwo;

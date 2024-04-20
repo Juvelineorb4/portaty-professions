@@ -36,6 +36,7 @@
   border-radius: 8px;
   margin: 3px 0px 10px;
   border: 1px solid #1f1f1f;
+  height: 55px;
 }
 .labelInput {
   font-family: "bold";
@@ -44,6 +45,7 @@
 }
 .textInput {
   flex: 1;
+  height: 55px;
   font-family: "regular";
   margin-left: 14px;
   color: #1f1f1f;

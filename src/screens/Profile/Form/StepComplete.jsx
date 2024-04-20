@@ -11,7 +11,7 @@ import styles from "@/utils/styles/StepComplete.module.css";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import LottieView from "lottie-react-native";
-import { activeModalScreen } from "@/atoms";
+import { activeModalScreen, stepCompleteParams } from "@/atoms";
 import { useRecoilState } from "recoil";
 import StepClear from "./StepClear";
 
@@ -19,13 +19,14 @@ const StepComplete = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
   const [loading, setLoading] = useState(false);
   const [active, setActive] = useRecoilState(activeModalScreen);
+  const [businessComplete, setBusinessComplete] = useRecoilState(stepCompleteParams);
 
   const animation = useRef(null);
   let dataB = route.params;
   useEffect(() => {}, []);
   return (
     <View style={[global.bgWhite, styles.container]}>
-      <Modal animationType="none" transparent={active} visible={active}>
+      {/* <Modal animationType="none" transparent={active} visible={active}> */}
         <View style={[styles.modalMain]}>
           <ScrollView style={{ flex: 1 }}>
             <View style={[styles.modalContent]}>
@@ -64,7 +65,7 @@ const StepComplete = ({ navigation, route }) => {
                         borderRadius: 100,
                         alignSelf: "center",
                       }}
-                      source={{ uri: dataB.business.image }}
+                      source={{ uri: businessComplete.image }}
                     />
                   </View>
                 </View>
@@ -104,7 +105,7 @@ const StepComplete = ({ navigation, route }) => {
             </View>
           </ScrollView>
         </View>
-      </Modal>
+      {/* </Modal> */}
     </View>
   );
 };

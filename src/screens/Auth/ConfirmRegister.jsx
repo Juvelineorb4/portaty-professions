@@ -76,7 +76,7 @@ const ConfirmRegister = ({ navigation, route }) => {
   };
 
   const CloseModal = () => {
-    navigation.replace("Login_Welcome", { screen: "Login" });
+    navigation.navigate("Login");
     setVisible(false);
   };
 

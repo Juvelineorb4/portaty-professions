@@ -157,7 +157,14 @@ export const activeModalScreen = atom({
   key: "activeModalScreenValue",
   default: true,
 });
-
+export const stepOneParams = atom({
+  key: "stepOneParamsValue",
+  default: null,
+});
+export const stepCompleteParams = atom({
+  key: "stepCompleteParamsValue",
+  default: null,
+});
 export const notificationToken = atom({
   key: "notificationTokenValue",
   default: null,
