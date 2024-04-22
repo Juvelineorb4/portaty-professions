@@ -4,7 +4,7 @@
     "name": "Portaty",
     "slug": "portaty-professions",
     "owner": "portaty",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "orientation": "portrait",
     "icon": "./src/utils/images/portaty.png",
     "userInterfaceStyle": "light",
