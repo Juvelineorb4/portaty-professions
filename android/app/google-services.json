@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "937865933585",
+    "project_id": "portaty",
+    "storage_bucket": "portaty.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:937865933585:android:fd612751e2a8e0774992b0",
+        "android_client_info": {
+          "package_name": "com.teamportaty.appdev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "937865933585-7djnqsnv9dnjcddlmrv93ffg50lb26r1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGEw0u3Bo4ZHQ-iHcVU4nQzQn0kUhIGI4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "937865933585-7djnqsnv9dnjcddlmrv93ffg50lb26r1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
