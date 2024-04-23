@@ -229,3 +229,25 @@ export const getPostBusiness = /* GraphQL */ `
     }
   }
 `;
+
+export const listReasonComplaints = /* GraphQL */ `
+  query ListReasonComplaints(
+    $filter: ModelReasonComplaintsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listReasonComplaints(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        name
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
