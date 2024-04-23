@@ -126,6 +126,7 @@ const SharePage = ({ route, navigation }) => {
   };
 
   const onDeleteFavorite = async () => {
+    // return
     const favorites = await API.graphql({
       query: customFavorites.deleteFavorites,
       variables: {
@@ -136,6 +137,7 @@ const SharePage = ({ route, navigation }) => {
       authMode: "AMAZON_COGNITO_USER_POOLS",
     });
     setSave("");
+    setListUpdate(!listUpdate);
     setNumberFavorite(0);
   };
 
@@ -182,10 +184,7 @@ const SharePage = ({ route, navigation }) => {
           userID: { eq: attributes["custom:userTableID"] },
         },
       });
-      console.log(
-        "QUE SUELTA ESTO: ",
-        favorite?.data?.favoritesByBusinessID?.items
-      );
+    
       if (favorite?.data?.favoritesByBusinessID?.items?.length !== 0)
         setSave(favorite?.data?.favoritesByBusinessID?.items[0]?.id);
     } catch (error) {
@@ -216,11 +215,10 @@ const SharePage = ({ route, navigation }) => {
     const url = `tel://${post?.phone}`;
     Linking.openURL(url);
   };
-  console.log(post);
   useEffect(() => {
     if (!save) fetchFavorite();
     fetchData();
-  }, []);
+  }, [save]);
   if (!post && nothing)
     return (
       <View
@@ -384,42 +382,91 @@ const SharePage = ({ route, navigation }) => {
             onViewableItemsChanged={onViewRef.current}
           />
         </View>
-        <View
-          style={{
-            // flex: 1,
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: 20,
-            paddingHorizontal: 100,
-          }}
-        >
-          <View
-            style={{
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Text style={{ fontSize: 24, fontFamily: "medium" }}>
-              {post.favorites?.items.length}
-            </Text>
-            <Text style={{ fontSize: 20, fontFamily: "light" }}>Favoritos</Text>
-          </View>
-          <TouchableOpacity onPress={onDeleteFavorite}>
-            <Image
+        {showAgg && (
+          <View>
+            <View
               style={{
-                width: 45,
-                height: 45,
-                resizeMode: "cover",
-                borderWidth: 0.8,
-                borderColor: "#1f1f1f",
-                borderRadius: 50,
+                // flex: 1,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: 20,
+                paddingHorizontal: 100,
               }}
-              source={require("@/utils/images/sifavorites.png")}
-            />
-            {/* <MaterialIcons name="favorite" size={45} color="red" /> */}
-          </TouchableOpacity>
-        </View>
+            >
+              <View
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Text style={{ fontSize: 24, fontFamily: "medium" }}>
+                  {numberFavorite
+                    ? numberFavorite
+                    : post?.favorites?.items?.length}
+                </Text>
+                <Text style={{ fontSize: 20, fontFamily: "light" }}>
+                  Favoritos
+                </Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => {
+                  if (save === "") {
+                    onCreateFavorite();
+                  } else {
+                    onDeleteFavorite();
+                  }
+                }}
+              >
+                {save === "" ? (
+                  <Image
+                    style={{
+                      width: 45,
+                      height: 45,
+                      resizeMode: "cover",
+                    }}
+                    source={require("@/utils/images/nofavorites.png")}
+                  />
+                ) : (
+                  <Image
+                    style={{
+                      width: 45,
+                      height: 45,
+                      resizeMode: "cover",
+                    }}
+                    source={require("@/utils/images/sifavorites.png")}
+                  />
+                )}
+              </TouchableOpacity>
+            </View>
+            {/* Reporte */}
+            {/* <TouchableOpacity
+              style={{
+                alignSelf: "flex-end",
+                paddingHorizontal: 20,
+                paddingBottom: 5,
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+              onPress={() => setVisible(true)}
+            >
+              <MaterialIcons name="report" size={22} color="black" />
+              <Text
+                style={[
+                  global.black,
+                  {
+                    fontFamily: "bold",
+                    fontSize: 12,
+                    // marginLeft: 2,
+                    // marginBottom: 3
+                  },
+                ]}
+              >
+                Reportar negocio
+              </Text>
+            </TouchableOpacity> */}
+          </View>
+        )}
 
         {/* Reporte */}
         {/* <TouchableOpacity
