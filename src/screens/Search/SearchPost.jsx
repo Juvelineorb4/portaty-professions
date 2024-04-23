@@ -485,8 +485,8 @@ const SearchPost = ({ route, navigation }) => {
             </TouchableOpacity> */}
           </View>
         )}
-         {/* Reporte */}
-         <TouchableOpacity
+        {/* Reporte */}
+        <TouchableOpacity
           style={{
             alignSelf: "flex-end",
             paddingHorizontal: 20,
@@ -1214,6 +1214,7 @@ const SearchPost = ({ route, navigation }) => {
           </Modal>
         </View>
         <ModalReport
+          businessID={item.id}
           close={() => setVisibleReport(false)}
           open={visibleReport}
         />
