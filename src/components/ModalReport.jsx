@@ -12,10 +12,37 @@ import {
 import React, { useState } from "react";
 import styles from "@/utils/styles/ModalReport.module.css";
 import { complaints } from "@/utils/constants/complaints";
+import * as customFavorites from "@/graphql/CustomMutations/Favorites";
+import { Auth, API, Storage } from "aws-amplify";
+import { useRecoilValue } from "recoil";
+import { userAuthenticated } from "@/atoms";
 
-const ModalReport = ({ text, icon, close, open }) => {
+const ModalReport = ({ businessID, close, open }) => {
   const global = require("@/utils/styles/global.js");
-  const [complaint, setComplaint] = useState(null);
+  const [complaint, setComplaint] = useState("");
+  const userAuth = useRecoilValue(userAuthenticated);
+
+  const onReportBusiness = async () => {
+    console.log(businessID, complaint, userAuth?.attributes["custom:userTableID"]);
+    try {
+      const report = await API.graphql({
+        query: customFavorites.createComplaints,
+        variables: {
+          input: {
+            userID: userAuth?.attributes["custom:userTableID"],
+            businessID: businessID,
+            reason: complaint,
+            status: "PENDING",
+          },
+        },
+        authMode: "AMAZON_COGNITO_USER_POOLS",
+      });
+      console.log(report.data.createComplaints);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Modal
       animationType="none"
@@ -63,7 +90,15 @@ const ModalReport = ({ text, icon, close, open }) => {
                 />
               </View>
               <Pressable
-                onPress={close}
+                onPress={() => {
+                  if (complaint !== "") {
+                    onReportBusiness();
+                    setComplaint("");
+                    close();
+                  }
+                  setComplaint("");
+                  close();
+                }}
                 style={[
                   global.bgYellow,
                   {

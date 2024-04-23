@@ -183,42 +183,10 @@ type Complaints
   ) {
   id: ID!
   userID: ID!
-    @auth(
-      rules: [
-        { allow: owner, operations: [create, read, update] }
-        { allow: groups, groups: ["sp"], operations: [read, update, delete] }
-      ]
-    )
   businessID: ID!
-    @auth(
-      rules: [
-        { allow: owner, operations: [create, read, update] }
-        { allow: groups, groups: ["sp"], operations: [read, update, delete] }
-      ]
-    )
-  status: ComplaintStatus!
-    @auth(
-      rules: [
-        { allow: owner, operations: [create, read, update] }
-        { allow: groups, groups: ["sp"], operations: [read, update, delete] }
-      ]
-    )
-
-  reasonID: ID!
-    @auth(
-      rules: [
-        { allow: owner, operations: [create, read, update] }
-        { allow: groups, groups: ["sp"], operations: [read, update, delete] }
-      ]
-    )
-  reason: ReasonComplaints @hasOne(fields: ["reasonID"])
-  description: String!
-    @auth(
-      rules: [
-        { allow: owner, operations: [create, read, update] }
-        { allow: groups, groups: ["sp"], operations: [read, update, delete] }
-      ]
-    )
+  status: ComplaintStatus! @default(value: "PENDING")
+  reason: String!
+  description: String
   owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }])
 }
 
@@ -263,5 +231,3 @@ type Coordinates {
   lat: Float!
   lon: Float!
 }
-
-

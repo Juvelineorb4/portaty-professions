@@ -11,7 +11,6 @@ export const onCreateAppVersionHistory = /* GraphQL */ `
       latestVersion
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -25,7 +24,6 @@ export const onUpdateAppVersionHistory = /* GraphQL */ `
       latestVersion
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -39,7 +37,6 @@ export const onDeleteAppVersionHistory = /* GraphQL */ `
       latestVersion
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -55,14 +52,11 @@ export const onCreateArea = /* GraphQL */ `
           areaID
           createdAt
           updatedAt
-          __typename
         }
         nextToken
-        __typename
       }
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -78,14 +72,11 @@ export const onUpdateArea = /* GraphQL */ `
           areaID
           createdAt
           updatedAt
-          __typename
         }
         nextToken
-        __typename
       }
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -101,14 +92,11 @@ export const onDeleteArea = /* GraphQL */ `
           areaID
           createdAt
           updatedAt
-          __typename
         }
         nextToken
-        __typename
       }
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -123,15 +111,12 @@ export const onCreateActivity = /* GraphQL */ `
         name
         activities {
           nextToken
-          __typename
         }
         createdAt
         updatedAt
-        __typename
       }
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -146,15 +131,12 @@ export const onUpdateActivity = /* GraphQL */ `
         name
         activities {
           nextToken
-          __typename
         }
         createdAt
         updatedAt
-        __typename
       }
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -169,15 +151,12 @@ export const onDeleteActivity = /* GraphQL */ `
         name
         activities {
           nextToken
-          __typename
         }
         createdAt
         updatedAt
-        __typename
       }
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -204,10 +183,8 @@ export const onCreateUsers = /* GraphQL */ `
           owner
           createdAt
           updatedAt
-          __typename
         }
         nextToken
-        __typename
       }
       business {
         items {
@@ -232,15 +209,12 @@ export const onCreateUsers = /* GraphQL */ `
           createdAt
           updatedAt
           owner
-          __typename
         }
         nextToken
-        __typename
       }
       owner
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -267,10 +241,8 @@ export const onUpdateUsers = /* GraphQL */ `
           owner
           createdAt
           updatedAt
-          __typename
         }
         nextToken
-        __typename
       }
       business {
         items {
@@ -295,15 +267,12 @@ export const onUpdateUsers = /* GraphQL */ `
           createdAt
           updatedAt
           owner
-          __typename
         }
         nextToken
-        __typename
       }
       owner
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -330,10 +299,8 @@ export const onDeleteUsers = /* GraphQL */ `
           owner
           createdAt
           updatedAt
-          __typename
         }
         nextToken
-        __typename
       }
       business {
         items {
@@ -358,15 +325,12 @@ export const onDeleteUsers = /* GraphQL */ `
           createdAt
           updatedAt
           owner
-          __typename
         }
         nextToken
-        __typename
       }
       owner
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -389,16 +353,13 @@ export const onCreateBusiness = /* GraphQL */ `
         notificationToken
         favorites {
           nextToken
-          __typename
         }
         business {
           nextToken
-          __typename
         }
         owner
         createdAt
         updatedAt
-        __typename
       }
       status
       identityID
@@ -415,7 +376,6 @@ export const onCreateBusiness = /* GraphQL */ `
       coordinates {
         lat
         lon
-        __typename
       }
       activity
       tags
@@ -428,17 +388,14 @@ export const onCreateBusiness = /* GraphQL */ `
           owner
           createdAt
           updatedAt
-          __typename
         }
         nextToken
-        __typename
       }
       description
       prefer
       createdAt
       updatedAt
       owner
-      __typename
     }
   }
 `;
@@ -461,16 +418,13 @@ export const onUpdateBusiness = /* GraphQL */ `
         notificationToken
         favorites {
           nextToken
-          __typename
         }
         business {
           nextToken
-          __typename
         }
         owner
         createdAt
         updatedAt
-        __typename
       }
       status
       identityID
@@ -487,7 +441,6 @@ export const onUpdateBusiness = /* GraphQL */ `
       coordinates {
         lat
         lon
-        __typename
       }
       activity
       tags
@@ -500,17 +453,14 @@ export const onUpdateBusiness = /* GraphQL */ `
           owner
           createdAt
           updatedAt
-          __typename
         }
         nextToken
-        __typename
       }
       description
       prefer
       createdAt
       updatedAt
       owner
-      __typename
     }
   }
 `;
@@ -533,16 +483,13 @@ export const onDeleteBusiness = /* GraphQL */ `
         notificationToken
         favorites {
           nextToken
-          __typename
         }
         business {
           nextToken
-          __typename
         }
         owner
         createdAt
         updatedAt
-        __typename
       }
       status
       identityID
@@ -559,7 +506,6 @@ export const onDeleteBusiness = /* GraphQL */ `
       coordinates {
         lat
         lon
-        __typename
       }
       activity
       tags
@@ -572,17 +518,14 @@ export const onDeleteBusiness = /* GraphQL */ `
           owner
           createdAt
           updatedAt
-          __typename
         }
         nextToken
-        __typename
       }
       description
       prefer
       createdAt
       updatedAt
       owner
-      __typename
     }
   }
 `;
@@ -609,7 +552,6 @@ export const onCreateFavorites = /* GraphQL */ `
           owner
           createdAt
           updatedAt
-          __typename
         }
         status
         identityID
@@ -626,20 +568,17 @@ export const onCreateFavorites = /* GraphQL */ `
         coordinates {
           lat
           lon
-          __typename
         }
         activity
         tags
         favorites {
           nextToken
-          __typename
         }
         description
         prefer
         createdAt
         updatedAt
         owner
-        __typename
       }
       userID
       user {
@@ -653,22 +592,18 @@ export const onCreateFavorites = /* GraphQL */ `
         notificationToken
         favorites {
           nextToken
-          __typename
         }
         business {
           nextToken
-          __typename
         }
         owner
         createdAt
         updatedAt
-        __typename
       }
       position
       owner
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -695,7 +630,6 @@ export const onUpdateFavorites = /* GraphQL */ `
           owner
           createdAt
           updatedAt
-          __typename
         }
         status
         identityID
@@ -712,20 +646,17 @@ export const onUpdateFavorites = /* GraphQL */ `
         coordinates {
           lat
           lon
-          __typename
         }
         activity
         tags
         favorites {
           nextToken
-          __typename
         }
         description
         prefer
         createdAt
         updatedAt
         owner
-        __typename
       }
       userID
       user {
@@ -739,22 +670,18 @@ export const onUpdateFavorites = /* GraphQL */ `
         notificationToken
         favorites {
           nextToken
-          __typename
         }
         business {
           nextToken
-          __typename
         }
         owner
         createdAt
         updatedAt
-        __typename
       }
       position
       owner
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -781,7 +708,6 @@ export const onDeleteFavorites = /* GraphQL */ `
           owner
           createdAt
           updatedAt
-          __typename
         }
         status
         identityID
@@ -798,20 +724,17 @@ export const onDeleteFavorites = /* GraphQL */ `
         coordinates {
           lat
           lon
-          __typename
         }
         activity
         tags
         favorites {
           nextToken
-          __typename
         }
         description
         prefer
         createdAt
         updatedAt
         owner
-        __typename
       }
       userID
       user {
@@ -825,22 +748,18 @@ export const onDeleteFavorites = /* GraphQL */ `
         notificationToken
         favorites {
           nextToken
-          __typename
         }
         business {
           nextToken
-          __typename
         }
         owner
         createdAt
         updatedAt
-        __typename
       }
       position
       owner
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -854,20 +773,11 @@ export const onCreateComplaints = /* GraphQL */ `
       userID
       businessID
       status
-      reasonID
-      reason {
-        id
-        name
-        createdAt
-        updatedAt
-        owner
-        __typename
-      }
+      reason
       description
       owner
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -881,20 +791,11 @@ export const onUpdateComplaints = /* GraphQL */ `
       userID
       businessID
       status
-      reasonID
-      reason {
-        id
-        name
-        createdAt
-        updatedAt
-        owner
-        __typename
-      }
+      reason
       description
       owner
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -908,20 +809,11 @@ export const onDeleteComplaints = /* GraphQL */ `
       userID
       businessID
       status
-      reasonID
-      reason {
-        id
-        name
-        createdAt
-        updatedAt
-        owner
-        __typename
-      }
+      reason
       description
       owner
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -936,7 +828,6 @@ export const onCreateReasonComplaints = /* GraphQL */ `
       createdAt
       updatedAt
       owner
-      __typename
     }
   }
 `;
@@ -951,7 +842,6 @@ export const onUpdateReasonComplaints = /* GraphQL */ `
       createdAt
       updatedAt
       owner
-      __typename
     }
   }
 `;
@@ -966,7 +856,6 @@ export const onDeleteReasonComplaints = /* GraphQL */ `
       createdAt
       updatedAt
       owner
-      __typename
     }
   }
 `;
@@ -983,7 +872,6 @@ export const onCreateLogs = /* GraphQL */ `
       name
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -1000,7 +888,6 @@ export const onUpdateLogs = /* GraphQL */ `
       name
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -1017,7 +904,6 @@ export const onDeleteLogs = /* GraphQL */ `
       name
       createdAt
       updatedAt
-      __typename
     }
   }
 `;

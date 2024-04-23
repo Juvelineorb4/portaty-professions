@@ -185,7 +185,7 @@ const SharePage = ({ route, navigation }) => {
           userID: { eq: attributes["custom:userTableID"] },
         },
       });
-    
+
       if (favorite?.data?.favoritesByBusinessID?.items?.length !== 0)
         setSave(favorite?.data?.favoritesByBusinessID?.items[0]?.id);
     } catch (error) {
@@ -476,17 +476,24 @@ const SharePage = ({ route, navigation }) => {
             paddingHorizontal: 20,
             paddingBottom: 5,
             flexDirection: "row",
-            alignItems: 'center',
+            alignItems: "center",
           }}
           onPress={() => setVisible(true)}
         >
           <MaterialIcons name="report" size={22} color="black" />
-          <Text style={[global.black, {
-            fontFamily: 'bold',
-            fontSize: 12
-            // marginLeft: 2,
-            // marginBottom: 3
-          }]}>Reportar negocio</Text>
+          <Text
+            style={[
+              global.black,
+              {
+                fontFamily: "bold",
+                fontSize: 12,
+                // marginLeft: 2,
+                // marginBottom: 3
+              },
+            ]}
+          >
+            Reportar negocio
+          </Text>
         </TouchableOpacity>
 
         <View style={[styles.line, global.bgMidGray]} />
@@ -1146,6 +1153,7 @@ const SharePage = ({ route, navigation }) => {
           <Text>Modal</Text>
         </TouchableOpacity> */}
         <ModalReport
+          businessID={post?.id}
           close={() => setVisible(false)}
           open={visible}
         />
