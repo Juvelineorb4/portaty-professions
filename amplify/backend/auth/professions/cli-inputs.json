@@ -14,8 +14,8 @@
     ],
     "smsAuthenticationMessage": "Your authentication code is {####}",
     "smsVerificationMessage": "Your verification code is {####}",
-    "emailVerificationSubject": "Verifica tu cuenta de Portaty - ¡Tu código expira en 24 horas!",
-    "emailVerificationMessage": "Gracias por registrarte en Portaty. Tu código de verificación es {####}.",
+    "emailVerificationSubject": "Verification code: {####}",
+    "emailVerificationMessage": "Verification code: {####}",
     "defaultPasswordPolicy": false,
     "passwordPolicyMinLength": 8,
     "passwordPolicyCharacters": [],
@@ -59,12 +59,6 @@
       ]
     },
     "breakCircularDependency": true,
-    "dependsOn": [],
-    "triggers": {},
-    "hostedUI": false,
-    "parentStack": {
-      "Ref": "AWS::StackId"
-    },
-    "permissions": []
+    "dependsOn": []
   }
 }

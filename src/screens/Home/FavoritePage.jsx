@@ -113,13 +113,12 @@ const FavoritePage = ({ navigation, route }) => {
       });
       setPost(business.data.getBusiness);
 
-
       const listReasons = await API.graphql({
         query: queries.listReasonComplaints,
         authMode: "AWS_IAM",
       });
 
-      console.log(listReasons.data.listReasonComplaints)
+      console.log(listReasons.data.listReasonComplaints);
     } catch (error) {
       console.log(error);
     }
@@ -137,6 +136,8 @@ const FavoritePage = ({ navigation, route }) => {
     setListUpdate(!listUpdate);
     navigation.goBack();
   };
+
+
 
   const onOpenMap = (lat, lng, name) => {
     let url = "";
@@ -1052,10 +1053,9 @@ const FavoritePage = ({ navigation, route }) => {
           <Text>Modal</Text>
         </TouchableOpacity> */}
         <ModalReport
-          // text={`Seguro quieres reportar este negocio?`}
+          businessID={item.businessID}
           close={() => setVisible(false)}
           open={visible}
-          // icon={require("@/utils/images/error.png")}
         />
       </ScrollView>
     </View>
