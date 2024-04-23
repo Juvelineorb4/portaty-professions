@@ -4,7 +4,7 @@
     "name": "Portaty",
     "slug": "portaty-professions",
     "owner": "portaty",
-    "version": "0.6.1.4",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./src/utils/images/portaty.png",
     "userInterfaceStyle": "light",
@@ -48,11 +48,6 @@
             {
               "scheme": "https",
               "host": "www.portaty.com",
-              "pathPrefix": "/"
-            },
-            {
-              "scheme": "https",
-              "host": "www.portaty.com",
               "pathPrefix": "/share/business"
             }
           ],
@@ -81,7 +76,7 @@
         "foregroundImage": "./src/utils/images/portaty.png",
         "backgroundColor": "#FFFFFF"
       },
-      "versionCode": 73,
+      "versionCode": 76,
       "googleServicesFile": "./google-services.json"
     },
     "web": {
