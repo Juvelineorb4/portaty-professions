@@ -155,7 +155,7 @@ const FavoritePage = ({ navigation, route }) => {
 
   useLayoutEffect(() => {
     fetchData();
-  }, []);
+  }, [listUpdate]);
 
   if (!item) return <SkeletonExample />;
   return (
