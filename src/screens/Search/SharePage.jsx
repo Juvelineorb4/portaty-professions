@@ -43,6 +43,7 @@ import { StorageAccessFramework } from "expo-file-system";
 import { useRef } from "react";
 import ModalAlert from "@/components/ModalAlert";
 import CustomButton from "@/components/CustomButton";
+import ModalReport from "@/components/ModalReport";
 
 const SharePage = ({ route, navigation }) => {
   const userAuth = useRecoilValue(userAuthenticated);
@@ -469,7 +470,7 @@ const SharePage = ({ route, navigation }) => {
         )}
 
         {/* Reporte */}
-        {/* <TouchableOpacity
+        <TouchableOpacity
           style={{
             alignSelf: "flex-end",
             paddingHorizontal: 20,
@@ -486,7 +487,7 @@ const SharePage = ({ route, navigation }) => {
             // marginLeft: 2,
             // marginBottom: 3
           }]}>Reportar negocio</Text>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
 
         <View style={[styles.line, global.bgMidGray]} />
         <TouchableOpacity
@@ -1144,11 +1145,9 @@ const SharePage = ({ route, navigation }) => {
         >
           <Text>Modal</Text>
         </TouchableOpacity> */}
-        <ModalAlert
-          text={`Seguro quieres reportar este negocio?`}
+        <ModalReport
           close={() => setVisible(false)}
           open={visible}
-          icon={require("@/utils/images/error.png")}
         />
       </ScrollView>
     </View>

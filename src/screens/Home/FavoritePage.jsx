@@ -41,6 +41,7 @@ import { updateListFavorites } from "@/atoms";
 import * as FileSystem from "expo-file-system";
 import { StorageAccessFramework } from "expo-file-system";
 import { useRef } from "react";
+import ModalReport from "@/components/ModalReport";
 
 const FavoritePage = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
@@ -111,6 +112,14 @@ const FavoritePage = ({ navigation, route }) => {
         authMode: "AWS_IAM",
       });
       setPost(business.data.getBusiness);
+
+
+      const listReasons = await API.graphql({
+        query: queries.listReasonComplaints,
+        authMode: "AWS_IAM",
+      });
+
+      console.log(listReasons.data.listReasonComplaints)
     } catch (error) {
       console.log(error);
     }
@@ -333,26 +342,33 @@ const FavoritePage = ({ navigation, route }) => {
             {/* <MaterialIcons name="favorite" size={45} color="red" /> */}
           </TouchableOpacity>
         </View>
-
         {/* Reporte */}
-        {/* <TouchableOpacity
+        <TouchableOpacity
           style={{
             alignSelf: "flex-end",
             paddingHorizontal: 20,
             paddingBottom: 5,
             flexDirection: "row",
-            alignItems: 'center',
+            alignItems: "center",
           }}
           onPress={() => setVisible(true)}
         >
           <MaterialIcons name="report" size={22} color="black" />
-          <Text style={[global.black, {
-            fontFamily: 'bold',
-            fontSize: 12
-            // marginLeft: 2,
-            // marginBottom: 3
-          }]}>Reportar negocio</Text>
-        </TouchableOpacity> */}
+          <Text
+            style={[
+              global.black,
+              {
+                fontFamily: "bold",
+                fontSize: 12,
+                // marginLeft: 2,
+                // marginBottom: 3
+              },
+            ]}
+          >
+            Reportar negocio
+          </Text>
+        </TouchableOpacity>
+        {/* Hasta aqui */}
 
         <View style={[styles.line, global.bgMidGray]} />
         <TouchableOpacity
@@ -1035,11 +1051,11 @@ const FavoritePage = ({ navigation, route }) => {
         >
           <Text>Modal</Text>
         </TouchableOpacity> */}
-        <ModalAlert
-          text={`Seguro quieres reportar este negocio?`}
+        <ModalReport
+          // text={`Seguro quieres reportar este negocio?`}
           close={() => setVisible(false)}
           open={visible}
-          icon={require("@/utils/images/error.png")}
+          // icon={require("@/utils/images/error.png")}
         />
       </ScrollView>
     </View>
