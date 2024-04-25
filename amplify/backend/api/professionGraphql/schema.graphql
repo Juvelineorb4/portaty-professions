@@ -111,6 +111,7 @@ type Business
     @hasMany(indexName: "byBusinessFavorites", fields: ["id"])
   description: String
   prefer: Boolean @default(value: "false")
+  schedule: String
 }
 enum BusinessStatus {
   ENABLED

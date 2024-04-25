@@ -245,6 +245,7 @@ export const createUsers = /* GraphQL */ `
           tags
           description
           prefer
+          schedule
           createdAt
           updatedAt
           owner
@@ -303,6 +304,7 @@ export const updateUsers = /* GraphQL */ `
           tags
           description
           prefer
+          schedule
           createdAt
           updatedAt
           owner
@@ -361,6 +363,7 @@ export const deleteUsers = /* GraphQL */ `
           tags
           description
           prefer
+          schedule
           createdAt
           updatedAt
           owner
@@ -432,6 +435,7 @@ export const createBusiness = /* GraphQL */ `
       }
       description
       prefer
+      schedule
       createdAt
       updatedAt
       owner
@@ -497,6 +501,7 @@ export const updateBusiness = /* GraphQL */ `
       }
       description
       prefer
+      schedule
       createdAt
       updatedAt
       owner
@@ -562,6 +567,7 @@ export const deleteBusiness = /* GraphQL */ `
       }
       description
       prefer
+      schedule
       createdAt
       updatedAt
       owner
@@ -615,6 +621,7 @@ export const createFavorites = /* GraphQL */ `
         }
         description
         prefer
+        schedule
         createdAt
         updatedAt
         owner
@@ -693,6 +700,7 @@ export const updateFavorites = /* GraphQL */ `
         }
         description
         prefer
+        schedule
         createdAt
         updatedAt
         owner
@@ -771,6 +779,7 @@ export const deleteFavorites = /* GraphQL */ `
         }
         description
         prefer
+        schedule
         createdAt
         updatedAt
         owner

@@ -35,6 +35,7 @@ export const userByEmail = /* GraphQL */ `
               phone
               whatsapp
               description
+              schedule
               instagram
               facebook
               page
@@ -104,6 +105,7 @@ export const favoritesByBusinessID = /* GraphQL */ `
           facebook
           page
           description
+          schedule
           activity
           tags
           createdAt
@@ -198,6 +200,7 @@ export const getBusiness = /* GraphQL */ `
       whatsapp
       instagram
       description
+      schedule
       facebook
       page
       coordinates {
