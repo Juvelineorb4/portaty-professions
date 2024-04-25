@@ -37,6 +37,42 @@ export const listAppVersionHistories = /* GraphQL */ `
     }
   }
 `;
+export const getReports = /* GraphQL */ `
+  query GetReports($id: ID!) {
+    getReports(id: $id) {
+      id
+      userID
+      subject
+      description
+      status
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listReports = /* GraphQL */ `
+  query ListReports(
+    $filter: ModelReportsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listReports(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        userID
+        subject
+        description
+        status
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const AppVersionByDate = /* GraphQL */ `
   query AppVersionByDate(
     $platform: AppPlatform!
@@ -73,14 +109,6 @@ export const getArea = /* GraphQL */ `
       id
       name
       activities {
-        items {
-          id
-          name
-          areaID
-          createdAt
-          updatedAt
-          __typename
-        }
         nextToken
         __typename
       }
@@ -100,10 +128,6 @@ export const listAreas = /* GraphQL */ `
       items {
         id
         name
-        activities {
-          nextToken
-          __typename
-        }
         createdAt
         updatedAt
         __typename
@@ -122,10 +146,6 @@ export const getActivity = /* GraphQL */ `
       area {
         id
         name
-        activities {
-          nextToken
-          __typename
-        }
         createdAt
         updatedAt
         __typename
@@ -147,13 +167,6 @@ export const listActivities = /* GraphQL */ `
         id
         name
         areaID
-        area {
-          id
-          name
-          createdAt
-          updatedAt
-          __typename
-        }
         createdAt
         updatedAt
         __typename
@@ -182,13 +195,6 @@ export const activitiesByAreaID = /* GraphQL */ `
         id
         name
         areaID
-        area {
-          id
-          name
-          createdAt
-          updatedAt
-          __typename
-        }
         createdAt
         updatedAt
         __typename
@@ -210,44 +216,10 @@ export const getUsers = /* GraphQL */ `
       gender
       notificationToken
       favorites {
-        items {
-          id
-          businessID
-          userID
-          position
-          owner
-          createdAt
-          updatedAt
-          __typename
-        }
         nextToken
         __typename
       }
       business {
-        items {
-          id
-          userID
-          status
-          identityID
-          name
-          image
-          images
-          thumbnail
-          email
-          phone
-          whatsapp
-          instagram
-          facebook
-          page
-          activity
-          tags
-          description
-          prefer
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
         nextToken
         __typename
       }
@@ -274,14 +246,6 @@ export const listUsers = /* GraphQL */ `
         identityID
         gender
         notificationToken
-        favorites {
-          nextToken
-          __typename
-        }
-        business {
-          nextToken
-          __typename
-        }
         owner
         createdAt
         updatedAt
@@ -316,14 +280,6 @@ export const userByEmail = /* GraphQL */ `
         identityID
         gender
         notificationToken
-        favorites {
-          nextToken
-          __typename
-        }
-        business {
-          nextToken
-          __typename
-        }
         owner
         createdAt
         updatedAt
@@ -348,14 +304,6 @@ export const getBusiness = /* GraphQL */ `
         identityID
         gender
         notificationToken
-        favorites {
-          nextToken
-          __typename
-        }
-        business {
-          nextToken
-          __typename
-        }
         owner
         createdAt
         updatedAt
@@ -381,21 +329,12 @@ export const getBusiness = /* GraphQL */ `
       activity
       tags
       favorites {
-        items {
-          id
-          businessID
-          userID
-          position
-          owner
-          createdAt
-          updatedAt
-          __typename
-        }
         nextToken
         __typename
       }
       description
       prefer
+      schedule
       createdAt
       updatedAt
       owner
@@ -413,20 +352,6 @@ export const listBusinesses = /* GraphQL */ `
       items {
         id
         userID
-        user {
-          id
-          cognitoID
-          name
-          lastName
-          email
-          identityID
-          gender
-          notificationToken
-          owner
-          createdAt
-          updatedAt
-          __typename
-        }
         status
         identityID
         name
@@ -439,19 +364,11 @@ export const listBusinesses = /* GraphQL */ `
         instagram
         facebook
         page
-        coordinates {
-          lat
-          lon
-          __typename
-        }
         activity
         tags
-        favorites {
-          nextToken
-          __typename
-        }
         description
         prefer
+        schedule
         createdAt
         updatedAt
         owner
@@ -480,20 +397,6 @@ export const businessesByUserID = /* GraphQL */ `
       items {
         id
         userID
-        user {
-          id
-          cognitoID
-          name
-          lastName
-          email
-          identityID
-          gender
-          notificationToken
-          owner
-          createdAt
-          updatedAt
-          __typename
-        }
         status
         identityID
         name
@@ -506,19 +409,11 @@ export const businessesByUserID = /* GraphQL */ `
         instagram
         facebook
         page
-        coordinates {
-          lat
-          lon
-          __typename
-        }
         activity
         tags
-        favorites {
-          nextToken
-          __typename
-        }
         description
         prefer
+        schedule
         createdAt
         updatedAt
         owner
@@ -537,20 +432,6 @@ export const getFavorites = /* GraphQL */ `
       business {
         id
         userID
-        user {
-          id
-          cognitoID
-          name
-          lastName
-          email
-          identityID
-          gender
-          notificationToken
-          owner
-          createdAt
-          updatedAt
-          __typename
-        }
         status
         identityID
         name
@@ -563,19 +444,11 @@ export const getFavorites = /* GraphQL */ `
         instagram
         facebook
         page
-        coordinates {
-          lat
-          lon
-          __typename
-        }
         activity
         tags
-        favorites {
-          nextToken
-          __typename
-        }
         description
         prefer
+        schedule
         createdAt
         updatedAt
         owner
@@ -591,14 +464,6 @@ export const getFavorites = /* GraphQL */ `
         identityID
         gender
         notificationToken
-        favorites {
-          nextToken
-          __typename
-        }
-        business {
-          nextToken
-          __typename
-        }
         owner
         createdAt
         updatedAt
@@ -622,45 +487,7 @@ export const listFavorites = /* GraphQL */ `
       items {
         id
         businessID
-        business {
-          id
-          userID
-          status
-          identityID
-          name
-          image
-          images
-          thumbnail
-          email
-          phone
-          whatsapp
-          instagram
-          facebook
-          page
-          activity
-          tags
-          description
-          prefer
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
         userID
-        user {
-          id
-          cognitoID
-          name
-          lastName
-          email
-          identityID
-          gender
-          notificationToken
-          owner
-          createdAt
-          updatedAt
-          __typename
-        }
         position
         owner
         createdAt
@@ -692,45 +519,7 @@ export const favoritesByBusinessID = /* GraphQL */ `
       items {
         id
         businessID
-        business {
-          id
-          userID
-          status
-          identityID
-          name
-          image
-          images
-          thumbnail
-          email
-          phone
-          whatsapp
-          instagram
-          facebook
-          page
-          activity
-          tags
-          description
-          prefer
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
         userID
-        user {
-          id
-          cognitoID
-          name
-          lastName
-          email
-          identityID
-          gender
-          notificationToken
-          owner
-          createdAt
-          updatedAt
-          __typename
-        }
         position
         owner
         createdAt
@@ -760,45 +549,7 @@ export const favoritesByUserID = /* GraphQL */ `
       items {
         id
         businessID
-        business {
-          id
-          userID
-          status
-          identityID
-          name
-          image
-          images
-          thumbnail
-          email
-          phone
-          whatsapp
-          instagram
-          facebook
-          page
-          activity
-          tags
-          description
-          prefer
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
         userID
-        user {
-          id
-          cognitoID
-          name
-          lastName
-          email
-          identityID
-          gender
-          notificationToken
-          owner
-          createdAt
-          updatedAt
-          __typename
-        }
         position
         owner
         createdAt
@@ -817,15 +568,7 @@ export const getComplaints = /* GraphQL */ `
       userID
       businessID
       status
-      reasonID
-      reason {
-        id
-        name
-        createdAt
-        updatedAt
-        owner
-        __typename
-      }
+      reason
       description
       owner
       createdAt
@@ -846,15 +589,7 @@ export const listComplaints = /* GraphQL */ `
         userID
         businessID
         status
-        reasonID
-        reason {
-          id
-          name
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
+        reason
         description
         owner
         createdAt
