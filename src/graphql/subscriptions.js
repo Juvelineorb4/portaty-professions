@@ -229,6 +229,8 @@ export const onCreateUsers = /* GraphQL */ `
           tags
           description
           prefer
+          scheduleType
+          schedule
           createdAt
           updatedAt
           owner
@@ -292,6 +294,8 @@ export const onUpdateUsers = /* GraphQL */ `
           tags
           description
           prefer
+          scheduleType
+          schedule
           createdAt
           updatedAt
           owner
@@ -355,6 +359,8 @@ export const onDeleteUsers = /* GraphQL */ `
           tags
           description
           prefer
+          scheduleType
+          schedule
           createdAt
           updatedAt
           owner
@@ -435,6 +441,8 @@ export const onCreateBusiness = /* GraphQL */ `
       }
       description
       prefer
+      scheduleType
+      schedule
       createdAt
       updatedAt
       owner
@@ -507,6 +515,8 @@ export const onUpdateBusiness = /* GraphQL */ `
       }
       description
       prefer
+      scheduleType
+      schedule
       createdAt
       updatedAt
       owner
@@ -579,6 +589,8 @@ export const onDeleteBusiness = /* GraphQL */ `
       }
       description
       prefer
+      scheduleType
+      schedule
       createdAt
       updatedAt
       owner
@@ -636,6 +648,8 @@ export const onCreateFavorites = /* GraphQL */ `
         }
         description
         prefer
+        scheduleType
+        schedule
         createdAt
         updatedAt
         owner
@@ -722,6 +736,8 @@ export const onUpdateFavorites = /* GraphQL */ `
         }
         description
         prefer
+        scheduleType
+        schedule
         createdAt
         updatedAt
         owner
@@ -808,6 +824,8 @@ export const onDeleteFavorites = /* GraphQL */ `
         }
         description
         prefer
+        scheduleType
+        schedule
         createdAt
         updatedAt
         owner
@@ -854,15 +872,7 @@ export const onCreateComplaints = /* GraphQL */ `
       userID
       businessID
       status
-      reasonID
-      reason {
-        id
-        name
-        createdAt
-        updatedAt
-        owner
-        __typename
-      }
+      reason
       description
       owner
       createdAt
@@ -881,15 +891,7 @@ export const onUpdateComplaints = /* GraphQL */ `
       userID
       businessID
       status
-      reasonID
-      reason {
-        id
-        name
-        createdAt
-        updatedAt
-        owner
-        __typename
-      }
+      reason
       description
       owner
       createdAt
@@ -908,15 +910,7 @@ export const onDeleteComplaints = /* GraphQL */ `
       userID
       businessID
       status
-      reasonID
-      reason {
-        id
-        name
-        createdAt
-        updatedAt
-        owner
-        __typename
-      }
+      reason
       description
       owner
       createdAt

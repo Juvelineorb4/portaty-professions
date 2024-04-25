@@ -243,6 +243,8 @@ export const getUsers = /* GraphQL */ `
           tags
           description
           prefer
+          scheduleType
+          schedule
           createdAt
           updatedAt
           owner
@@ -396,6 +398,8 @@ export const getBusiness = /* GraphQL */ `
       }
       description
       prefer
+      scheduleType
+      schedule
       createdAt
       updatedAt
       owner
@@ -452,6 +456,8 @@ export const listBusinesses = /* GraphQL */ `
         }
         description
         prefer
+        scheduleType
+        schedule
         createdAt
         updatedAt
         owner
@@ -519,6 +525,8 @@ export const businessesByUserID = /* GraphQL */ `
         }
         description
         prefer
+        scheduleType
+        schedule
         createdAt
         updatedAt
         owner
@@ -576,6 +584,8 @@ export const getFavorites = /* GraphQL */ `
         }
         description
         prefer
+        scheduleType
+        schedule
         createdAt
         updatedAt
         owner
@@ -641,6 +651,8 @@ export const listFavorites = /* GraphQL */ `
           tags
           description
           prefer
+          scheduleType
+          schedule
           createdAt
           updatedAt
           owner
@@ -711,6 +723,8 @@ export const favoritesByBusinessID = /* GraphQL */ `
           tags
           description
           prefer
+          scheduleType
+          schedule
           createdAt
           updatedAt
           owner
@@ -779,6 +793,8 @@ export const favoritesByUserID = /* GraphQL */ `
           tags
           description
           prefer
+          scheduleType
+          schedule
           createdAt
           updatedAt
           owner
@@ -817,15 +833,7 @@ export const getComplaints = /* GraphQL */ `
       userID
       businessID
       status
-      reasonID
-      reason {
-        id
-        name
-        createdAt
-        updatedAt
-        owner
-        __typename
-      }
+      reason
       description
       owner
       createdAt
@@ -846,15 +854,7 @@ export const listComplaints = /* GraphQL */ `
         userID
         businessID
         status
-        reasonID
-        reason {
-          id
-          name
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
+        reason
         description
         owner
         createdAt

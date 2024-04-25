@@ -56,15 +56,7 @@ export const deleteComplaints = /* GraphQL */ `
       userID
       businessID
       status
-      reasonID
-      reason {
-        id
-        name
-        createdAt
-        updatedAt
-        owner
-        __typename
-      }
+      reason
       description
       owner
       createdAt
@@ -277,6 +269,8 @@ export const createUsers = /* GraphQL */ `
           tags
           description
           prefer
+          scheduleType
+          schedule
           createdAt
           updatedAt
           owner
@@ -340,6 +334,8 @@ export const updateUsers = /* GraphQL */ `
           tags
           description
           prefer
+          scheduleType
+          schedule
           createdAt
           updatedAt
           owner
@@ -403,6 +399,8 @@ export const deleteUsers = /* GraphQL */ `
           tags
           description
           prefer
+          scheduleType
+          schedule
           createdAt
           updatedAt
           owner
@@ -483,6 +481,8 @@ export const createBusiness = /* GraphQL */ `
       }
       description
       prefer
+      scheduleType
+      schedule
       createdAt
       updatedAt
       owner
@@ -555,6 +555,8 @@ export const updateBusiness = /* GraphQL */ `
       }
       description
       prefer
+      scheduleType
+      schedule
       createdAt
       updatedAt
       owner
@@ -627,6 +629,8 @@ export const deleteBusiness = /* GraphQL */ `
       }
       description
       prefer
+      scheduleType
+      schedule
       createdAt
       updatedAt
       owner
@@ -684,6 +688,8 @@ export const createFavorites = /* GraphQL */ `
         }
         description
         prefer
+        scheduleType
+        schedule
         createdAt
         updatedAt
         owner
@@ -770,6 +776,8 @@ export const updateFavorites = /* GraphQL */ `
         }
         description
         prefer
+        scheduleType
+        schedule
         createdAt
         updatedAt
         owner
@@ -856,6 +864,8 @@ export const deleteFavorites = /* GraphQL */ `
         }
         description
         prefer
+        scheduleType
+        schedule
         createdAt
         updatedAt
         owner
@@ -902,15 +912,7 @@ export const createComplaints = /* GraphQL */ `
       userID
       businessID
       status
-      reasonID
-      reason {
-        id
-        name
-        createdAt
-        updatedAt
-        owner
-        __typename
-      }
+      reason
       description
       owner
       createdAt
@@ -929,15 +931,7 @@ export const updateComplaints = /* GraphQL */ `
       userID
       businessID
       status
-      reasonID
-      reason {
-        id
-        name
-        createdAt
-        updatedAt
-        owner
-        __typename
-      }
+      reason
       description
       owner
       createdAt
