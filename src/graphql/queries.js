@@ -34,6 +34,39 @@ export const listAppVersionHistories = /* GraphQL */ `
     }
   }
 `;
+export const getReports = /* GraphQL */ `
+  query GetReports($id: ID!) {
+    getReports(id: $id) {
+      id
+      userID
+      subject
+      description
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listReports = /* GraphQL */ `
+  query ListReports(
+    $filter: ModelReportsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listReports(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        userID
+        subject
+        description
+        status
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const appVersionByDate = /* GraphQL */ `
   query AppVersionByDate(
     $platform: AppPlatform!
@@ -221,6 +254,7 @@ export const getUsers = /* GraphQL */ `
           tags
           description
           prefer
+          schedule
           createdAt
           updatedAt
           owner
@@ -357,6 +391,7 @@ export const getBusiness = /* GraphQL */ `
       }
       description
       prefer
+      schedule
       createdAt
       updatedAt
       owner
@@ -409,6 +444,7 @@ export const listBusinesses = /* GraphQL */ `
         }
         description
         prefer
+        schedule
         createdAt
         updatedAt
         owner
@@ -471,6 +507,7 @@ export const businessesByUserID = /* GraphQL */ `
         }
         description
         prefer
+        schedule
         createdAt
         updatedAt
         owner
@@ -523,6 +560,7 @@ export const getFavorites = /* GraphQL */ `
         }
         description
         prefer
+        schedule
         createdAt
         updatedAt
         owner
@@ -583,6 +621,7 @@ export const listFavorites = /* GraphQL */ `
           tags
           description
           prefer
+          schedule
           createdAt
           updatedAt
           owner
@@ -649,6 +688,7 @@ export const favoritesByBusinessID = /* GraphQL */ `
           tags
           description
           prefer
+          schedule
           createdAt
           updatedAt
           owner
@@ -713,6 +753,7 @@ export const favoritesByUserID = /* GraphQL */ `
           tags
           description
           prefer
+          schedule
           createdAt
           updatedAt
           owner

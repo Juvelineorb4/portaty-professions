@@ -682,6 +682,44 @@ const Page = ({ route, navigation }) => {
         </View>
         <View>
           <View style={[styles.line, global.bgMidGray]} />
+          <View style={{ padding: 20 }}>
+            <Text style={{ fontSize: 18, fontFamily: "regular" }}>
+              Tu horario comercial
+            </Text>
+
+            {item?.schedule === null ? (
+              <TouchableOpacity
+                style={[
+                  {
+                    borderColor: "#1f1f1f",
+                    borderRadius: 8,
+                    borderWidth: 0.7,
+                    padding: 20,
+                    marginTop: 10,
+                  },
+                  global.mainBgColor,
+                ]}
+                onPress={() => {
+                  navigation.navigate("Shedule", {
+                    data: item,
+                  });
+                }}
+              >
+                <Text
+                  style={[
+                    { fontSize: 14, fontFamily: "bold", textAlign: "center" },
+                    global.black,
+                  ]}
+                >
+                  Registra un horario
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <View>
+                <Text>Tu horario es este</Text>
+              </View>
+            )}
+          </View>
           <TouchableOpacity
             style={{
               padding: 20,

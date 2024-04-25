@@ -7,7 +7,6 @@ import {
   Modal,
   FlatList,
   TouchableOpacity,
-  SafeAreaView,
 } from "react-native";
 import styles from "@/utils/styles/Area.module.css";
 import React, { useEffect, useState } from "react";
@@ -17,14 +16,14 @@ import { useRecoilValue } from "recoil";
 import { areaSelect } from "@/atoms";
 import Area from "./Area";
 import { FlashList } from "@shopify/flash-list";
+import { API } from "aws-amplify";
 
 const CustomArea = ({ data }) => {
   const global = require("@/utils/styles/global.js");
   const [modalVisible, setModalVisible] = useState(false);
   const { control } = useForm();
   const area = useRecoilValue(areaSelect);
-  useEffect(() => {}, []);
-
+  console.log('aqui', data)
   return (
     <ScrollView
       style={[global.bgWhite, { flex: 1 }]}
@@ -37,12 +36,12 @@ const CustomArea = ({ data }) => {
               width: 100,
               padding: 15,
               borderRadius: 7,
-              borderColor: '#1f1f1f',
+              borderColor: "#1f1f1f",
               borderWidth: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-              alignSelf: 'flex-end',
-              marginTop: 10
+              justifyContent: "center",
+              alignItems: "center",
+              alignSelf: "flex-end",
+              marginTop: 10,
             },
             global.bgYellow,
           ]}
@@ -56,7 +55,6 @@ const CustomArea = ({ data }) => {
           >
             Buscar
           </Text>
-          <SafeAreaView style={{ flex: 1, padding: 30 }}>
 
           <Modal
             animationType="none"
@@ -124,8 +122,6 @@ const CustomArea = ({ data }) => {
               </View>
             </View>
           </Modal>
-          </SafeAreaView>
-
         </TouchableOpacity>
       </View>
     </ScrollView>

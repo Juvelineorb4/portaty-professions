@@ -74,6 +74,7 @@ export const userByEmail = /* GraphQL */ `
             email
             phone
             description
+            schedule
             whatsapp
             instagram
             facebook
@@ -115,6 +116,7 @@ export const getBusiness = /* GraphQL */ `
       whatsapp
       instagram
       description
+      schedule
       facebook
       page
       coordinates {

@@ -80,6 +80,20 @@ type Users
   owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }])
 }
 
+type Reports
+  @model
+  @auth(rules: [{ allow: private, provider: iam, operations: [create] }]) {
+  id: ID!
+  userID: ID!
+  subject: String!
+  description: String!
+  status: reportStatus @default(value: "PENDING")
+}
+
+enum reportStatus {
+  PENDING
+  RESOLVED
+}
 type Business
   @model
   @auth(
@@ -111,6 +125,7 @@ type Business
     @hasMany(indexName: "byBusinessFavorites", fields: ["id"])
   description: String
   prefer: Boolean @default(value: "false")
+  schedule: String
 }
 enum BusinessStatus {
   ENABLED
