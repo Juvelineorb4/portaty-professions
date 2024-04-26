@@ -43,6 +43,7 @@ import { StorageAccessFramework } from "expo-file-system";
 import { useRef } from "react";
 import ModalAlert from "@/components/ModalAlert";
 import CustomButton from "@/components/CustomButton";
+import ModalReport from "@/components/ModalReport";
 
 const SharePage = ({ route, navigation }) => {
   const userAuth = useRecoilValue(userAuthenticated);
@@ -126,6 +127,7 @@ const SharePage = ({ route, navigation }) => {
   };
 
   const onDeleteFavorite = async () => {
+    // return
     const favorites = await API.graphql({
       query: customFavorites.deleteFavorites,
       variables: {
@@ -136,6 +138,7 @@ const SharePage = ({ route, navigation }) => {
       authMode: "AMAZON_COGNITO_USER_POOLS",
     });
     setSave("");
+    setListUpdate(!listUpdate);
     setNumberFavorite(0);
   };
 
@@ -148,30 +151,24 @@ const SharePage = ({ route, navigation }) => {
         },
         authMode: "AWS_IAM",
       });
-
-      if (business?.data?.getBusiness) {
-        if (
-          userAuth?.attributes["custom:userTableID"] ===
-          business?.data?.getBusiness?.userID
-        ) {
-          setShowAgg(false);
-        } else {
-          setShowAgg(true);
-        }
-        const list = business?.data?.getBusiness?.images
-          .map((image) => JSON.parse(image))
-          .sort((a, b) => a.key - b.key);
-
-        setImages(list);
-        const getA = JSON.parse(business?.data?.getBusiness?.activity);
-
-        setActividad(getA);
-
-        return setPost(business?.data?.getBusiness);
+      if (
+        userAuth?.attributes["custom:userTableID"] ===
+        business?.data?.getBusiness?.userID
+      ) {
+        setShowAgg(false);
       } else {
-        setPost(null);
-        setNothing(true);
+        setShowAgg(true);
       }
+      const list = business?.data?.getBusiness?.images
+        .map((image) => JSON.parse(image))
+        .sort((a, b) => a.key - b.key);
+
+      setImages(list);
+      const getA = JSON.parse(business?.data?.getBusiness?.activity);
+
+      setActividad(getA);
+
+      return setPost(business?.data?.getBusiness);
     } catch (error) {
       setNothing(true);
       console.log("ERROR EN BUSCAR: ", error);
@@ -219,11 +216,10 @@ const SharePage = ({ route, navigation }) => {
     const url = `tel://${post?.phone}`;
     Linking.openURL(url);
   };
-
   useEffect(() => {
     if (!save) fetchFavorite();
     fetchData();
-  }, [params]);
+  }, [save]);
   if (!post && nothing)
     return (
       <View
@@ -271,7 +267,7 @@ const SharePage = ({ route, navigation }) => {
             },
           ]}
         >
-          {images?.length !== 1 &&
+          {images.length !== 1 &&
             dimensionsImages + 1 > 1 &&
             dimensionsImages <= 3 && (
               <View
@@ -292,9 +288,9 @@ const SharePage = ({ route, navigation }) => {
                 <Entypo name="triangle-left" size={24} color="#1f1f1f" />
               </View>
             )}
-          {images?.length !== 1 &&
+          {images.length !== 1 &&
             dimensionsImages >= 0 &&
-            dimensionsImages < images?.length - 1 && (
+            dimensionsImages < images.length - 1 && (
               <View
                 style={[
                   global.bgYellow,
@@ -371,7 +367,7 @@ const SharePage = ({ route, navigation }) => {
                       global.black,
                     ]}
                   >
-                    {item.key + 1}/{images?.length}
+                    {item.key + 1}/{images.length}
                   </Text>
                   <MaterialCommunityIcons
                     name="image-search-outline"
@@ -387,7 +383,6 @@ const SharePage = ({ route, navigation }) => {
             onViewableItemsChanged={onViewRef.current}
           />
         </View>
-        {console.log(showAgg)}
         {showAgg && (
           <View>
             <View
@@ -473,6 +468,34 @@ const SharePage = ({ route, navigation }) => {
             </TouchableOpacity> */}
           </View>
         )}
+
+        {/* Reporte */}
+        <TouchableOpacity
+          style={{
+            alignSelf: "flex-end",
+            paddingHorizontal: 20,
+            paddingBottom: 5,
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+          onPress={() => setVisible(true)}
+        >
+          <MaterialIcons name="report" size={22} color="black" />
+          <Text
+            style={[
+              global.black,
+              {
+                fontFamily: "bold",
+                fontSize: 12,
+                // marginLeft: 2,
+                // marginBottom: 3
+              },
+            ]}
+          >
+            Reportar negocio
+          </Text>
+        </TouchableOpacity>
+
         <View style={[styles.line, global.bgMidGray]} />
         <TouchableOpacity
           style={{
@@ -1129,11 +1152,10 @@ const SharePage = ({ route, navigation }) => {
         >
           <Text>Modal</Text>
         </TouchableOpacity> */}
-        <ModalAlert
-          text={`Seguro quieres reportar este negocio?`}
+        <ModalReport
+          businessID={post?.id}
           close={() => setVisible(false)}
           open={visible}
-          icon={require("@/utils/images/error.png")}
         />
       </ScrollView>
     </View>

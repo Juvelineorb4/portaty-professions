@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Hub } from "aws-amplify";
+import { Hub, API } from "aws-amplify";
 import { useUserManagement } from "@/hooks";
 import * as Linking from "expo-linking";
 import { useNavigation } from "@react-navigation/native";
@@ -65,6 +65,16 @@ const NavSettings = ({ checkRender }) => {
     });
     checkInitialUrl();
     checkUser();
+
+    const api = "api-opense";
+    const path = "/api/complaints";
+    const params = {
+      headers: {},
+      queryStringParameters: {},
+    };
+    API.get(api, path, params)
+      .then((r) => console.log("PUES: ", r))
+      .catch((e) => console.log("ERROR: ", e));
     return () => {
       unsubscribe;
     };

@@ -42,6 +42,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 // location
 import * as Location from "expo-location";
 import useKinesisFirehose from "@/hooks/useKinesisFirehose";
+import ModalReport from "@/components/ModalReport";
 const SearchPost = ({ route, navigation }) => {
   const userAuth = useRecoilValue(userAuthenticated);
   const userLocation = useRecoilValue(mapUser);
@@ -53,6 +54,7 @@ const SearchPost = ({ route, navigation }) => {
   const [dimensionsImages, setDimensionsImages] = useState(0);
   const [showAgg, setShowAgg] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [visibleReport, setVisibleReport] = useState(false);
   const [imageView, setImageView] = useState(null);
   const [listUpdate, setListUpdate] = useRecoilState(updateListFavorites);
   const global = require("@/utils/styles/global.js");
@@ -483,6 +485,33 @@ const SearchPost = ({ route, navigation }) => {
             </TouchableOpacity> */}
           </View>
         )}
+        {/* Reporte */}
+        <TouchableOpacity
+          style={{
+            alignSelf: "flex-end",
+            paddingHorizontal: 20,
+            paddingBottom: 5,
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+          onPress={() => setVisibleReport(true)}
+        >
+          <MaterialIcons name="report" size={22} color="black" />
+          <Text
+            style={[
+              global.black,
+              {
+                fontFamily: "bold",
+                fontSize: 12,
+                // marginLeft: 2,
+                // marginBottom: 3
+              },
+            ]}
+          >
+            Reportar negocio
+          </Text>
+        </TouchableOpacity>
+        {/* Hasta aqui */}
         <View
           style={[
             styles.line,
@@ -1184,11 +1213,10 @@ const SearchPost = ({ route, navigation }) => {
             </TouchableWithoutFeedback>
           </Modal>
         </View>
-        <ModalAlert
-          text={`Seguro quieres reportar este negocio?`}
-          close={() => setVisible(false)}
-          open={visible}
-          icon={require("@/utils/images/error.png")}
+        <ModalReport
+          businessID={item.id}
+          close={() => setVisibleReport(false)}
+          open={visibleReport}
         />
       </ScrollView>
     </View>

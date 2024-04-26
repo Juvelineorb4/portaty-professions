@@ -263,7 +263,7 @@ const Post = ({ data, image, styled, input }) => {
                         Favoritos:
                       </Text>
                       <Text style={{ fontFamily: "regular", fontSize: 14 }}>
-                        {post.favorites?.items.length}
+                        {post?.favorites?.items.length}
                       </Text>
                     </View>
                   </View>
