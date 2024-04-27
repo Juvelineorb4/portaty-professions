@@ -155,7 +155,7 @@ export const textInputSearch = atom({
 
 export const sheduleType = atom({
   key: "sheduleTypeValue",
-  default: "",
+  default: "Abierto durante un horario especifico",
 });
 export const shedulePush = atom({
   key: "shedulePushValue",

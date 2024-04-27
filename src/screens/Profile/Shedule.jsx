@@ -1,18 +1,22 @@
 import { Switch, Text, TouchableOpacity, View } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "@/utils/styles/Shedule.module.css";
 import ModalSheduleType from "@/components/ModalSheduleType";
 import ModalShedule from "@/components/ModalShedule";
 import { shedulePush, sheduleType } from "@/atoms";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Feather } from "@expo/vector-icons";
+import * as mutations from "@/graphql/CustomMutations/Profile";
+import { Auth, API, Storage } from "aws-amplify";
+import ModalAlert from "@/components/ModalAlert";
 
-const Shedule = () => {
+const Shedule = ({ route, navigation }) => {
   const global = require("@/utils/styles/global.js");
   const [visible, setVisible] = useState(false);
   const [visibleShedule, setVisibleShedule] = useState(false);
+  const [active, setActive] = useState(false);
   const [sheduleSelect, setSheduleSelect] = useState(null);
-
+  const { data } = route.params;
   const [sheduleGeneral, setSheduleGeneral] = useRecoilState(shedulePush);
   const typeSelect = useRecoilValue(sheduleType);
   const toggleDay = (index) => {
@@ -23,6 +27,31 @@ const Shedule = () => {
     };
     setSheduleGeneral(newSheduleGeneral);
   };
+
+  const updateShedule = async () => {
+    let params = {
+      type: typeSelect,
+      shedule: sheduleGeneral,
+    };
+    console.log(JSON.stringify(params))
+    try {
+      const result = await API.graphql({
+        query: mutations.updateBusinessShedule,
+        authMode: "AWS_IAM",
+        variables: {
+            id: data?.id,
+            shedule: JSON.stringify(params),
+        },
+      });
+      console.log(result);
+      setActive(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {}, []);
+
   return (
     <View
       style={[
@@ -51,7 +80,8 @@ const Shedule = () => {
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
-            marginVertical: 20,
+            marginTop: 20,
+            marginBottom: -10,
           }}
         >
           <Text
@@ -208,6 +238,29 @@ const Shedule = () => {
               </View>
             </View>
           ))}
+          <TouchableOpacity
+            style={[
+              {
+                padding: 20,
+                justifyContent: "center",
+                alignItems: "center",
+                borderColor: "#1f1f1f",
+                borderWidth: 1,
+                borderRadius: 6,
+              },
+              global.mainBgColor,
+            ]}
+            onPress={() => updateShedule()}
+          >
+            <Text
+              style={{
+                fontFamily: "bold",
+                fontSize: 16,
+              }}
+            >
+              Guardar horario
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
       <ModalSheduleType open={visible} close={() => setVisible(!visible)} />
@@ -215,6 +268,15 @@ const Shedule = () => {
         open={visibleShedule}
         data={sheduleSelect}
         close={() => setVisibleShedule(!visibleShedule)}
+      />
+      <ModalAlert
+        text={"Horario registrado correctamente"}
+        close={() => {
+          setActive(false);
+          navigation.goBack();
+        }}
+        open={visible}
+        icon={require("@/utils/images/successful.png")}
       />
     </View>
   );
