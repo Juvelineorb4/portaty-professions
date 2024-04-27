@@ -33,14 +33,16 @@ const Shedule = ({ route, navigation }) => {
       type: typeSelect,
       shedule: sheduleGeneral,
     };
-    console.log(JSON.stringify(params))
+    console.log(JSON.stringify(params));
     try {
       const result = await API.graphql({
         query: mutations.updateBusinessShedule,
-        authMode: "AWS_IAM",
+        authMode: "AMAZON_COGNITO_USER_POOLS",
         variables: {
+          input: {
             id: data?.id,
-            shedule: JSON.stringify(params),
+            schedule: JSON.stringify(params),
+          },
         },
       });
       console.log(result);
@@ -273,9 +275,9 @@ const Shedule = ({ route, navigation }) => {
         text={"Horario registrado correctamente"}
         close={() => {
           setActive(false);
-          navigation.goBack();
+          navigation.navigate('Unprofile');
         }}
-        open={visible}
+        open={active}
         icon={require("@/utils/images/successful.png")}
       />
     </View>
