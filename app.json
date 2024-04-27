@@ -48,6 +48,11 @@
             {
               "scheme": "https",
               "host": "www.portaty.com",
+              "pathPrefix": "/"
+            },
+            {
+              "scheme": "https",
+              "host": "www.portaty.com",
               "pathPrefix": "/share/business"
             }
           ],
@@ -76,7 +81,7 @@
         "foregroundImage": "./src/utils/images/portaty.png",
         "backgroundColor": "#FFFFFF"
       },
-      "versionCode": 76,
+      "versionCode": 73,
       "googleServicesFile": "./google-services.json"
     },
     "web": {

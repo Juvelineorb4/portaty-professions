@@ -1,13 +1,59 @@
-import { Text, TouchableOpacity, View } from "react-native";
-import React, { useState } from "react";
+import { Switch, Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useState } from "react";
 import styles from "@/utils/styles/Shedule.module.css";
 import ModalSheduleType from "@/components/ModalSheduleType";
 import ModalShedule from "@/components/ModalShedule";
+import { shedulePush, sheduleType } from "@/atoms";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { Feather } from "@expo/vector-icons";
+import * as mutations from "@/graphql/CustomMutations/Profile";
+import { Auth, API, Storage } from "aws-amplify";
+import ModalAlert from "@/components/ModalAlert";
 
-const Shedule = () => {
+const Shedule = ({ route, navigation }) => {
   const global = require("@/utils/styles/global.js");
   const [visible, setVisible] = useState(false);
   const [visibleShedule, setVisibleShedule] = useState(false);
+  const [active, setActive] = useState(false);
+  const [sheduleSelect, setSheduleSelect] = useState(null);
+  const { data } = route.params;
+  const [sheduleGeneral, setSheduleGeneral] = useRecoilState(shedulePush);
+  const typeSelect = useRecoilValue(sheduleType);
+  const toggleDay = (index) => {
+    let newSheduleGeneral = [...sheduleGeneral];
+    newSheduleGeneral[index] = {
+      ...newSheduleGeneral[index],
+      active: !newSheduleGeneral[index].active,
+    };
+    setSheduleGeneral(newSheduleGeneral);
+  };
+
+  const updateShedule = async () => {
+    let params = {
+      type: typeSelect,
+      shedule: sheduleGeneral,
+    };
+    console.log(JSON.stringify(params));
+    try {
+      const result = await API.graphql({
+        query: mutations.updateBusinessShedule,
+        authMode: "AMAZON_COGNITO_USER_POOLS",
+        variables: {
+          input: {
+            id: data?.id,
+            schedule: JSON.stringify(params),
+          },
+        },
+      });
+      console.log(result);
+      setActive(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {}, []);
+
   return (
     <View
       style={[
@@ -36,16 +82,18 @@ const Shedule = () => {
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
-            marginVertical: 20,
+            marginTop: 20,
+            marginBottom: -10,
           }}
         >
           <Text
             style={{
               fontFamily: "regular",
-              fontSize: 12,
+              fontSize: 14,
+              width: 170,
             }}
           >
-            No has elegido ninguna opcion
+            {typeSelect ? typeSelect : "No has elegido ninguna opcion"}
           </Text>
           <TouchableOpacity
             style={[
@@ -83,39 +131,154 @@ const Shedule = () => {
         <View style={[styles.line, global.bgMidGray]} />
         <View
           style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
+            flexDirection: "column",
             marginVertical: 20,
           }}
         >
+          {sheduleGeneral.map((item, index) => (
+            <View
+              style={{
+                height: 50,
+                borderColor: "#1f1f1f",
+                borderWidth: 1,
+                alignItems: "center",
+                padding: 10,
+                borderRadius: 5,
+                marginBottom: 10,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                backgroundColor: item.active ? "#ffb703" : "#ffffff",
+              }}
+              key={index}
+            >
+              <Text
+                style={{
+                  fontFamily: "bold",
+                }}
+              >
+                {item.name}
+              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  width: 250,
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    width: 150,
+                  }}
+                >
+                  <View
+                    style={{
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontFamily: "light",
+                      }}
+                    >
+                      Desde
+                    </Text>
+                    <Text
+                      style={{
+                        fontFamily: "bold",
+                      }}
+                    >
+                      {item.hourStart}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontFamily: "light",
+                      }}
+                    >
+                      Hasta
+                    </Text>
+                    <Text
+                      style={{
+                        fontFamily: "bold",
+                      }}
+                    >
+                      {item.hourEnd}
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setSheduleSelect(item);
+                      setVisibleShedule(true);
+                    }}
+                  >
+                    <Feather name="edit" size={24} color="black" />
+                  </TouchableOpacity>
+                </View>
+                <Switch
+                  trackColor={{
+                    false: "#767577",
+                    true: "#ffffff",
+                  }}
+                  thumbColor={item.active ? "#ffb703" : "#f4f3f4"}
+                  onValueChange={() => {
+                    console.log(item);
+                    toggleDay(index);
+                  }}
+                  value={item.active}
+                />
+              </View>
+            </View>
+          ))}
           <TouchableOpacity
             style={[
               {
+                padding: 20,
+                justifyContent: "center",
+                alignItems: "center",
                 borderColor: "#1f1f1f",
                 borderWidth: 1,
-                padding: 15,
-                borderRadius: 8,
+                borderRadius: 6,
               },
               global.mainBgColor,
             ]}
-            onPress={() => setVisibleShedule(!visibleShedule)}
+            onPress={() => updateShedule()}
           >
             <Text
               style={{
-                fontFamily: "medium",
+                fontFamily: "bold",
+                fontSize: 16,
               }}
             >
-              Agregar un horario
+              Guardar horario
             </Text>
           </TouchableOpacity>
         </View>
-        {/* <View style={[styles.line, global.bgMidGray]} /> */}
       </View>
       <ModalSheduleType open={visible} close={() => setVisible(!visible)} />
       <ModalShedule
         open={visibleShedule}
+        data={sheduleSelect}
         close={() => setVisibleShedule(!visibleShedule)}
+      />
+      <ModalAlert
+        text={"Horario registrado correctamente"}
+        close={() => {
+          setActive(false);
+          navigation.navigate('Unprofile');
+        }}
+        open={active}
+        icon={require("@/utils/images/successful.png")}
       />
     </View>
   );

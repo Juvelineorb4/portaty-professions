@@ -110,7 +110,7 @@ export const updateBusinessShedule = /* GraphQL */ `
   ) {
     updateBusiness(input: $input, condition: $condition) {
       id
-      shedule
+      schedule
     }
   }
 `;
