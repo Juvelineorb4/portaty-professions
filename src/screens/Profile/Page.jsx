@@ -724,10 +724,21 @@ const Page = ({ route, navigation }) => {
               >
                 <Text
                   style={{
-                    fontFamily: "light",
+                    fontFamily: "regular",
                     fontSize: 14,
                     marginTop: 5,
                     lineHeight: 25,
+                    textAlign: 'center'
+                  }}
+                >
+                  {scheduleType}
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: "light",
+                    fontSize: 15,
+                    lineHeight: 25,
+                    textAlign: 'center'
                   }}
                 >
                   {weeks}

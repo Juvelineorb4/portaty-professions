@@ -16,8 +16,7 @@ const ItemProfile = ({ data, identityID, styled, schedule, type }) => {
   const filterSchedule = (array, type) => {
     let scheduleG = [];
     let activeDays = array.filter((day) => day.active);
-
-    // Agrupamos los días con las mismas horas
+    
     for (let i = 0; i < activeDays.length; i++) {
       if (
         i === 0 ||
@@ -25,23 +24,37 @@ const ItemProfile = ({ data, identityID, styled, schedule, type }) => {
         activeDays[i].hourEnd !== activeDays[i - 1].hourEnd
       ) {
         scheduleG.push({
-          days: [activeDays[i].name],
+          days: [activeDays[i].name.substring(0, 3)],
           hourStart: activeDays[i].hourStart,
           hourEnd: activeDays[i].hourEnd,
         });
       } else {
         scheduleG[scheduleG.length - 1].days.push(
-          activeDays[i].name
+          activeDays[i].name.substring(0, 3)
         );
       }
     }
 
-    // Creamos el string para la etiqueta p
     let pContent = scheduleG
       .map((group) => {
         let days = group.days;
         if (days.length > 2) {
-          days = [days[0], days[days.length - 1]];
+          let consecutive = true;
+          for (let i = 1; i < days.length; i++) {
+            if (
+              array.findIndex((day) => day.name.substring(0, 3) === days[i]) !==
+              array.findIndex(
+                (day) => day.name.substring(0, 3) === days[i - 1]
+              ) +
+                1
+            ) {
+              consecutive = false;
+              break;
+            }
+          }
+          if (consecutive) {
+            days = [days[0], days[days.length - 1]];
+          }
         }
         return `${days.join(" - ")}: ${group.hourStart} - ${group.hourEnd}`;
       })
@@ -122,7 +135,7 @@ const ItemProfile = ({ data, identityID, styled, schedule, type }) => {
                 style={{
                   fontSize: 12,
                   fontFamily: "light",
-                  // textTransform: "capitalize",
+                  width: 100,
                 }}
               >
                 {actividad.main}

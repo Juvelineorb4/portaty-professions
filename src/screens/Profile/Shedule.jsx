@@ -3,7 +3,7 @@ import React, { useEffect, useLayoutEffect, useState } from "react";
 import styles from "@/utils/styles/Shedule.module.css";
 import ModalSheduleType from "@/components/ModalSheduleType";
 import ModalShedule from "@/components/ModalShedule";
-import { shedulePush, sheduleType } from "@/atoms";
+import { profileState, shedulePush, sheduleType } from "@/atoms";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Feather } from "@expo/vector-icons";
 import * as mutations from "@/graphql/CustomMutations/Profile";
@@ -19,6 +19,8 @@ const Shedule = ({ route, navigation }) => {
   const { data, schedule, scheduleType } = route.params;
   const [sheduleGeneral, setSheduleGeneral] = useRecoilState(shedulePush);
   const [typeSelect, setTypeSelect] = useRecoilState(sheduleType);
+  const [stateProfile, setStateProfile] = useRecoilState(profileState);
+
   console.log(typeSelect) 
   console.log(sheduleGeneral)
   const toggleDay = (index) => {
@@ -280,9 +282,10 @@ const Shedule = ({ route, navigation }) => {
         close={() => setVisibleShedule(!visibleShedule)}
       />
       <ModalAlert
-        text={"Horario registrado correctamente"}
+        text={"Horario guardado correctamente"}
         close={() => {
           setActive(false);
+          setStateProfile(!stateProfile)
           navigation.navigate('Unprofile');
         }}
         open={active}
