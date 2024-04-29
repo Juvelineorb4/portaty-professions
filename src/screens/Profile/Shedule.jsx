@@ -21,8 +21,6 @@ const Shedule = ({ route, navigation }) => {
   const [typeSelect, setTypeSelect] = useRecoilState(sheduleType);
   const [stateProfile, setStateProfile] = useRecoilState(profileState);
 
-  console.log(typeSelect) 
-  console.log(sheduleGeneral)
   const toggleDay = (index) => {
     let newSheduleGeneral = [...sheduleGeneral];
     newSheduleGeneral[index] = {
@@ -51,15 +49,15 @@ const Shedule = ({ route, navigation }) => {
       });
       console.log(result);
       setActive(true);
-    } catch (error) { 
+    } catch (error) {
       console.log(error);
     }
   };
 
   useLayoutEffect(() => {
-    console.log('aqui esto', schedule)
-    setSheduleGeneral(schedule)
-    setTypeSelect(scheduleType)
+
+    if (schedule !== null) setSheduleGeneral(schedule);
+    if (scheduleType !== null) setTypeSelect(scheduleType);
   }, []);
 
   return (
@@ -125,9 +123,11 @@ const Shedule = ({ route, navigation }) => {
           </TouchableOpacity>
         </View>
       </View>
-      <View style={{
-        marginBottom: 100
-      }}>
+      <View
+        style={{
+          marginBottom: 100,
+        }}
+      >
         <Text
           style={{
             fontFamily: "medium",
@@ -285,8 +285,8 @@ const Shedule = ({ route, navigation }) => {
         text={"Horario guardado correctamente"}
         close={() => {
           setActive(false);
-          setStateProfile(!stateProfile)
-          navigation.navigate('Unprofile');
+          setStateProfile(!stateProfile);
+          navigation.navigate("Unprofile");
         }}
         open={active}
         icon={require("@/utils/images/successful.png")}

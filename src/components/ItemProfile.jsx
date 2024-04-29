@@ -25,13 +25,13 @@ const ItemProfile = ({ data, identityID, styled, schedule, type }) => {
         activeDays[i].hourEnd !== activeDays[i - 1].hourEnd
       ) {
         scheduleG.push({
-          days: [activeDays[i].name.substring(0, 3)],
+          days: [activeDays[i].name],
           hourStart: activeDays[i].hourStart,
           hourEnd: activeDays[i].hourEnd,
         });
       } else {
         scheduleG[scheduleG.length - 1].days.push(
-          activeDays[i].name.substring(0, 3)
+          activeDays[i].name
         );
       }
     }
@@ -43,9 +43,9 @@ const ItemProfile = ({ data, identityID, styled, schedule, type }) => {
           let consecutive = true;
           for (let i = 1; i < days.length; i++) {
             if (
-              array.findIndex((day) => day.name.substring(0, 3) === days[i]) !==
+              array.findIndex((day) => day.name === days[i]) !==
               array.findIndex(
-                (day) => day.name.substring(0, 3) === days[i - 1]
+                (day) => day.name === days[i - 1]
               ) +
                 1
             ) {
