@@ -39,7 +39,7 @@ const StepTwo = ({ navigation, route }) => {
   const [active, setActive] = useRecoilState(activeModalScreen);
   const [selectOption, setSelectOption] = useRecoilState(optionBussines);
   const area = useRecoilValue(areaSelect);
-  const [selectError, setSelectError] = useRecoilState(errorArea)
+  const [selectError, setSelectError] = useRecoilState(errorArea);
 
   const listOptions = [
     {
@@ -70,10 +70,18 @@ const StepTwo = ({ navigation, route }) => {
   ];
 
   const MultipleData = async () => {
-    const activities = await API.graphql({
-      query: customProfile.listAreas,
-    });
-    setAreasList(activities.data.listAreas.items);
+    const api = "api-portaty";
+    const path = "/api/sectorsandactivities";
+    const params = {
+      headers: {},
+    };
+    try {
+      const response = await API.get(api, path, params);
+      console.log(response);
+      setAreasList(response);
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   const handleOption = (item) => {
@@ -197,7 +205,7 @@ const StepTwo = ({ navigation, route }) => {
                       style={{
                         fontFamily: "medium",
                         fontSize: 14,
-                        color: selectError ? 'red' : '#1f1f1f'
+                        color: selectError ? "red" : "#1f1f1f",
                       }}
                     >
                       {area?.area ? area?.area : "No has seleccionado aun"}
@@ -223,7 +231,7 @@ const StepTwo = ({ navigation, route }) => {
                       style={{
                         fontFamily: "medium",
                         fontSize: 14,
-                        color: selectError ? 'red' : '#1f1f1f'
+                        color: selectError ? "red" : "#1f1f1f",
                       }}
                     >
                       {area?.activity
@@ -281,9 +289,9 @@ const StepTwo = ({ navigation, route }) => {
                   ]}
                   onPress={() => {
                     if (Object.keys(area).length === 0) {
-                      setSelectError(true)
-                      console.log('No has elegido')
-                      return
+                      setSelectError(true);
+                      console.log("No has elegido");
+                      return;
                     }
                     navigation.push("StepThree", {
                       business: business,

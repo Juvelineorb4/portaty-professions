@@ -15,18 +15,28 @@ const List = ({ route, navigation }) => {
           global.bgWhite,
         ]}
       >
-        <Text style={{fontFamily: 'regular', fontSize: 16, marginBottom: 10}}>Tienes {data.length} negocio(s) registrado(s)</Text>
-        {data.map((post, index) => (
-          <ItemProfile
-            key={index}
-            data={post}
-            identityID={user["custom:identityID"]}
-            styled={{ column: styles.columnList }}
-          />
-        ))}
-        <View style={{
-          marginBottom: 120
-        }}></View>
+        <Text style={{ fontFamily: "regular", fontSize: 16, marginBottom: 10 }}>
+          Tienes {data.length} negocio(s) registrado(s)
+        </Text>
+
+        {data.map((post, index) => {
+          let schedule = JSON.parse(post.schedule)
+          return (
+            <ItemProfile
+              key={index}
+              data={post}
+              schedule={schedule.shedule}
+              type={schedule.type}
+              identityID={user["custom:identityID"]}
+              styled={{ column: styles.columnList }}
+            />
+          );
+        })}
+        <View
+          style={{
+            marginBottom: 120,
+          }}
+        ></View>
         {/* <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', paddingBottom: 150}}>
 
         <Text style={{fontFamily: 'regular', fontSize: 18, textAlign: 'center'}}>Solo puedes registrar 1 negocio con tu cuenta gratuita </Text>
@@ -41,7 +51,6 @@ const List = ({ route, navigation }) => {
           buttonStyles={[styles.search, global.bgYellow]}
         />
         </View> */}
-
       </ScrollView>
     );
   if (data.length === 0)

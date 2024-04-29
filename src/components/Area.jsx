@@ -35,7 +35,7 @@ const Area = ({ item }) => {
         {item.name}
       </Text>
       <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-        {item.activities?.items?.map((activity, index) => (
+        {item.activities?.map((activity, index) => (
           <TouchableOpacity
             key={index}
             style={[
@@ -50,11 +50,11 @@ const Area = ({ item }) => {
                 marginBottom: 10,
                 marginRight: index % 2 === 0 ? "4%" : 0,
               },
-              selectArea.activity === activity.name ? global.bgYellow : global.bgWhite,
+              selectArea.activity === activity ? global.bgYellow : global.bgWhite,
             ]}
             onPress={() => {
               // if (active === false) {
-              setSelectArea({ area: item.name, activity: activity.name });
+              setSelectArea({ area: item.name, activity: activity });
               setSelectError(false)
               // }
             }}
@@ -62,7 +62,7 @@ const Area = ({ item }) => {
             <Text
               style={[
                 {
-                  fontFamily: selectArea.activity === activity.name ? "bold" : "medium",
+                  fontFamily: selectArea.activity === activity ? "bold" : "medium",
                   fontSize: 12,
                   // textTransform: "capitalize",
                   textAlign: "center",
@@ -70,7 +70,7 @@ const Area = ({ item }) => {
                 global.black,
               ]}
             >
-              {activity?.name}
+              {activity}
             </Text>
           </TouchableOpacity>
         ))}

@@ -5,12 +5,70 @@ import {
   Image,
   ActivityIndicator,
 } from "react-native";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-const ItemProfile = ({ data, identityID, styled }) => {
+const ItemProfile = ({ data, identityID, styled, schedule, type }) => {
   const navigation = useNavigation();
   const actividad = JSON.parse(data.activity);
+  const [weekSchedule, setWeekSchedule] = useState("");
+
+  const filterSchedule = (array, type) => {
+    let scheduleG = [];
+    let activeDays = array.filter((day) => day.active);
+    
+    for (let i = 0; i < activeDays.length; i++) {
+      if (
+        i === 0 ||
+        activeDays[i].hourStart !== activeDays[i - 1].hourStart ||
+        activeDays[i].hourEnd !== activeDays[i - 1].hourEnd
+      ) {
+        scheduleG.push({
+          days: [activeDays[i].name.substring(0, 3)],
+          hourStart: activeDays[i].hourStart,
+          hourEnd: activeDays[i].hourEnd,
+        });
+      } else {
+        scheduleG[scheduleG.length - 1].days.push(
+          activeDays[i].name.substring(0, 3)
+        );
+      }
+    }
+
+    let pContent = scheduleG
+      .map((group) => {
+        let days = group.days;
+        if (days.length > 2) {
+          let consecutive = true;
+          for (let i = 1; i < days.length; i++) {
+            if (
+              array.findIndex((day) => day.name.substring(0, 3) === days[i]) !==
+              array.findIndex(
+                (day) => day.name.substring(0, 3) === days[i - 1]
+              ) +
+                1
+            ) {
+              consecutive = false;
+              break;
+            }
+          }
+          if (consecutive) {
+            days = [days[0], days[days.length - 1]];
+          }
+        }
+        return `${days.join(" - ")}: ${group.hourStart} - ${group.hourEnd}`;
+      })
+      .join(" / ");
+
+    console.log(pContent);
+
+    setWeekSchedule(pContent);
+  };
+
+  useEffect(() => {
+    filterSchedule(schedule, type);
+  }, []);
+
   if (identityID)
     return (
       <TouchableOpacity
@@ -22,6 +80,9 @@ const ItemProfile = ({ data, identityID, styled }) => {
               data: {
                 item: data,
                 image: JSON.parse(data.images[0]).url,
+                weeks: weekSchedule,
+                schedule: schedule,
+                scheduleType: type,
               },
             },
             // {
@@ -60,7 +121,11 @@ const ItemProfile = ({ data, identityID, styled }) => {
           >
             <View>
               <Text style={{ fontSize: 13, fontFamily: "medium" }}>Nombre</Text>
-              <Text style={{ fontSize: 12, fontFamily: "light", width: 150 }} numberOfLines={1} ellipsizeMode='tail'>
+              <Text
+                style={{ fontSize: 12, fontFamily: "light", width: 150 }}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
                 {data.name}
               </Text>
             </View>
@@ -70,7 +135,7 @@ const ItemProfile = ({ data, identityID, styled }) => {
                 style={{
                   fontSize: 12,
                   fontFamily: "light",
-                  // textTransform: "capitalize",
+                  width: 100,
                 }}
               >
                 {actividad.main}

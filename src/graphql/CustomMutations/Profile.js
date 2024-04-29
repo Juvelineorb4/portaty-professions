@@ -102,3 +102,15 @@ export const updateBusinessPage = /* GraphQL */ `
     }
   }
 `;
+
+export const updateBusinessShedule = /* GraphQL */ `
+  mutation UpdateBusiness(
+    $input: UpdateBusinessInput!
+    $condition: ModelBusinessConditionInput
+  ) {
+    updateBusiness(input: $input, condition: $condition) {
+      id
+      schedule
+    }
+  }
+`;

@@ -84,6 +84,7 @@ export const getBusiness = /* GraphQL */ `
       whatsapp
       instagram
       description
+      schedule
       facebook
       page
       coordinates {

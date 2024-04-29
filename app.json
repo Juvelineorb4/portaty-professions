@@ -54,6 +54,11 @@
             {
               "scheme": "https",
               "host": "www.portaty.com",
+              "pathPrefix": "/"
+            },
+            {
+              "scheme": "https",
+              "host": "www.portaty.com",
               "pathPrefix": "/share/business"
             },
             {
