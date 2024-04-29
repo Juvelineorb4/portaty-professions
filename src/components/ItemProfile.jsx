@@ -30,9 +30,7 @@ const ItemProfile = ({ data, identityID, styled, schedule, type }) => {
           hourEnd: activeDays[i].hourEnd,
         });
       } else {
-        scheduleG[scheduleG.length - 1].days.push(
-          activeDays[i].name
-        );
+        scheduleG[scheduleG.length - 1].days.push(activeDays[i].name);
       }
     }
 
@@ -44,20 +42,23 @@ const ItemProfile = ({ data, identityID, styled, schedule, type }) => {
           for (let i = 1; i < days.length; i++) {
             if (
               array.findIndex((day) => day.name === days[i]) !==
-              array.findIndex(
-                (day) => day.name === days[i - 1]
-              ) +
-                1
+              array.findIndex((day) => day.name === days[i - 1]) + 1
             ) {
               consecutive = false;
               break;
             }
           }
           if (consecutive) {
-            days = [days[0], days[days.length - 1]];
+            days = [days[0], "a", days[days.length - 1]];
+          } else {
+            days = days.join(" - ");
           }
+        } else if (days.length === 2) {
+          days = [days[0], "y", days[1]];
         }
-        return `${days.join(" - ")}: ${group.hourStart} - ${group.hourEnd}`;
+        return `${Array.isArray(days) ? days.join(" ") : days}: ${
+          group.hourStart
+        } - ${group.hourEnd}`;
       })
       .join(" / ");
 
