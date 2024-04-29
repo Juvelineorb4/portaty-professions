@@ -1,9 +1,9 @@
-import { Switch, Text, TouchableOpacity, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import { ScrollView, Switch, Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import styles from "@/utils/styles/Shedule.module.css";
 import ModalSheduleType from "@/components/ModalSheduleType";
 import ModalShedule from "@/components/ModalShedule";
-import { shedulePush, sheduleType } from "@/atoms";
+import { profileState, shedulePush, sheduleType } from "@/atoms";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Feather } from "@expo/vector-icons";
 import * as mutations from "@/graphql/CustomMutations/Profile";
@@ -16,9 +16,13 @@ const Shedule = ({ route, navigation }) => {
   const [visibleShedule, setVisibleShedule] = useState(false);
   const [active, setActive] = useState(false);
   const [sheduleSelect, setSheduleSelect] = useState(null);
-  const { data } = route.params;
+  const { data, schedule, scheduleType } = route.params;
   const [sheduleGeneral, setSheduleGeneral] = useRecoilState(shedulePush);
-  const typeSelect = useRecoilValue(sheduleType);
+  const [typeSelect, setTypeSelect] = useRecoilState(sheduleType);
+  const [stateProfile, setStateProfile] = useRecoilState(profileState);
+
+  console.log(typeSelect) 
+  console.log(sheduleGeneral)
   const toggleDay = (index) => {
     let newSheduleGeneral = [...sheduleGeneral];
     newSheduleGeneral[index] = {
@@ -47,15 +51,19 @@ const Shedule = ({ route, navigation }) => {
       });
       console.log(result);
       setActive(true);
-    } catch (error) {
+    } catch (error) { 
       console.log(error);
     }
   };
 
-  useEffect(() => {}, []);
+  useLayoutEffect(() => {
+    console.log('aqui esto', schedule)
+    setSheduleGeneral(schedule)
+    setTypeSelect(scheduleType)
+  }, []);
 
   return (
-    <View
+    <ScrollView
       style={[
         {
           flex: 1,
@@ -117,7 +125,9 @@ const Shedule = ({ route, navigation }) => {
           </TouchableOpacity>
         </View>
       </View>
-      <View>
+      <View style={{
+        marginBottom: 100
+      }}>
         <Text
           style={{
             fontFamily: "medium",
@@ -162,7 +172,7 @@ const Shedule = ({ route, navigation }) => {
                 style={{
                   flexDirection: "row",
                   justifyContent: "space-between",
-                  width: 250,
+                  width: 215,
                   alignItems: "center",
                 }}
               >
@@ -272,15 +282,16 @@ const Shedule = ({ route, navigation }) => {
         close={() => setVisibleShedule(!visibleShedule)}
       />
       <ModalAlert
-        text={"Horario registrado correctamente"}
+        text={"Horario guardado correctamente"}
         close={() => {
           setActive(false);
+          setStateProfile(!stateProfile)
           navigation.navigate('Unprofile');
         }}
         open={active}
         icon={require("@/utils/images/successful.png")}
       />
-    </View>
+    </ScrollView>
   );
 };
 
