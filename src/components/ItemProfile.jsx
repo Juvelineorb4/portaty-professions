@@ -14,9 +14,10 @@ const ItemProfile = ({ data, identityID, styled, schedule, type }) => {
   const [weekSchedule, setWeekSchedule] = useState("");
 
   const filterSchedule = (array, type) => {
+    if (schedule === null || type === null) return;
     let scheduleG = [];
     let activeDays = array.filter((day) => day.active);
-    
+
     for (let i = 0; i < activeDays.length; i++) {
       if (
         i === 0 ||
