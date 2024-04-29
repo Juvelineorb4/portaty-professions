@@ -29,7 +29,7 @@ const Login = ({ navigation }) => {
   const global = require("@/utils/styles/global.js");
   const EMAIL_REGEX = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
   const { updateAvailable, fetchUpdate, updateVersion, updateDate } =
-  useCheckAppVersion();
+    useCheckAppVersion();
   const [errorActive, setErrorActive] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -98,7 +98,6 @@ const Login = ({ navigation }) => {
     setVisible(false);
   };
 
-
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -121,15 +120,18 @@ const Login = ({ navigation }) => {
             {errorActive && (
               <Text style={styles.errorInputMain}>{errorActive}</Text>
             )}
-            <Image
-              style={{
-                width: 300,
-                height: 100,
-                marginBottom: 25,
-                resizeMode: "contain",
-              }}
-              source={require("@/utils/images/welcome.png")}
-            />
+            <View style={{ alignItems: "center" }}>
+              <Image
+                style={{
+                  width: 400,
+                  height: 400,
+                  marginBottom: 5,
+                  resizeMode: "contain",
+                }}
+                source={require("@/utils/images/welcome.png")}
+              />
+            </View>
+
             <CustomInput
               control={control}
               name={`email`}

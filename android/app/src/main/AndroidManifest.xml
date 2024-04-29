@@ -47,6 +47,8 @@
       <intent-filter android:autoVerify="true" data-generated="true">
         <action android:name="android.intent.action.VIEW"/>
         <data android:scheme="https" android:host="www.portaty.com" android:pathPrefix="/share/business"/>
+        <data android:scheme="https" android:host="portaty.com" android:path="/"/>
+        <data android:scheme="https" android:host="www.portaty.com" android:path="/"/>
         <category android:name="android.intent.category.BROWSABLE"/>
         <category android:name="android.intent.category.DEFAULT"/>
       </intent-filter>

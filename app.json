@@ -32,7 +32,10 @@
         "NSDocumentsFolderUsageDescription": "Permite a Portaty acceder a tus documentos",
         "UIBackgroundModes": "Permite a Portaty ejecutar ciertas tareas en segundo plano"
       },
-      "associatedDomains": ["applinks:portaty.com"],
+      "associatedDomains": [
+        "applinks:https://www.portaty.com",
+        "applinks:https://portaty.com"
+      ],
       "bundleIdentifier": "com.teamportaty.appdev",
       "versionCode": 28
     },
@@ -56,6 +59,11 @@
             {
               "scheme": "https",
               "host": "portaty.com",
+              "path": "/"
+            },
+            {
+              "scheme": "https",
+              "host": "www.portaty.com",
               "path": "/"
             }
           ],
