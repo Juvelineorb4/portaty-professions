@@ -49,7 +49,7 @@ import CustomButton from "@/components/CustomButton";
 const Page = ({ route, navigation }) => {
   const mapRef = useRef(null);
   const {
-    data: { item, image },
+    data: { item, image, weeks, schedule, scheduleType },
   } = route.params;
   const { downloadAndOpenFile } = useOpenFile();
   const [selectedImages, setSelectedImages] = useState([]);
@@ -686,8 +686,7 @@ const Page = ({ route, navigation }) => {
             <Text style={{ fontSize: 18, fontFamily: "regular" }}>
               Tu horario comercial
             </Text>
-
-            {item?.schedule === null ? (
+            {schedule === null ? (
               <TouchableOpacity
                 style={[
                   {
@@ -702,6 +701,8 @@ const Page = ({ route, navigation }) => {
                 onPress={() => {
                   navigation.navigate("Shedule", {
                     data: item,
+                    schedule: schedule,
+                    scheduleType: scheduleType,
                   });
                 }}
               >
@@ -715,8 +716,54 @@ const Page = ({ route, navigation }) => {
                 </Text>
               </TouchableOpacity>
             ) : (
-              <View>
-                <Text>Tu horario es este</Text>
+              <View
+                style={{
+                  flex: 1,
+                  position: 'relative'
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: "light",
+                    fontSize: 14,
+                    marginTop: 5,
+                    lineHeight: 25,
+                  }}
+                >
+                  {weeks}
+                </Text>
+                <TouchableOpacity
+                  style={[
+                    {
+                      borderColor: "#1f1f1f",
+                      borderRadius: 8,
+                      borderWidth: 0.7,
+                      marginTop: 10,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      width: 120,
+                      height: 50,
+                      alignSelf: 'center'
+                    },
+                    global.mainBgColor,
+                  ]}
+                  onPress={() => {
+                    navigation.navigate("Shedule", {
+                      data: item,
+                      schedule: schedule,
+                      scheduleType: scheduleType,
+                    });
+                  }}
+                >
+                  <Text
+                    style={[
+                      { fontSize: 13, fontFamily: "bold", textAlign: "center" },
+                      global.black,
+                    ]}
+                  >
+                    Editar horario
+                  </Text>
+                </TouchableOpacity>
               </View>
             )}
           </View>
