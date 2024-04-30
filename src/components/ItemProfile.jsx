@@ -14,9 +14,10 @@ const ItemProfile = ({ data, identityID, styled, schedule, type }) => {
   const [weekSchedule, setWeekSchedule] = useState("");
 
   const filterSchedule = (array, type) => {
+    if (schedule === null || type === null) return;
     let scheduleG = [];
     let activeDays = array.filter((day) => day.active);
-    
+
     for (let i = 0; i < activeDays.length; i++) {
       if (
         i === 0 ||
@@ -24,14 +25,12 @@ const ItemProfile = ({ data, identityID, styled, schedule, type }) => {
         activeDays[i].hourEnd !== activeDays[i - 1].hourEnd
       ) {
         scheduleG.push({
-          days: [activeDays[i].name.substring(0, 3)],
+          days: [activeDays[i].name],
           hourStart: activeDays[i].hourStart,
           hourEnd: activeDays[i].hourEnd,
         });
       } else {
-        scheduleG[scheduleG.length - 1].days.push(
-          activeDays[i].name.substring(0, 3)
-        );
+        scheduleG[scheduleG.length - 1].days.push(activeDays[i].name);
       }
     }
 
@@ -42,21 +41,24 @@ const ItemProfile = ({ data, identityID, styled, schedule, type }) => {
           let consecutive = true;
           for (let i = 1; i < days.length; i++) {
             if (
-              array.findIndex((day) => day.name.substring(0, 3) === days[i]) !==
-              array.findIndex(
-                (day) => day.name.substring(0, 3) === days[i - 1]
-              ) +
-                1
+              array.findIndex((day) => day.name === days[i]) !==
+              array.findIndex((day) => day.name === days[i - 1]) + 1
             ) {
               consecutive = false;
               break;
             }
           }
           if (consecutive) {
-            days = [days[0], days[days.length - 1]];
+            days = [days[0], "a", days[days.length - 1]];
+          } else {
+            days = days.join(" - ");
           }
+        } else if (days.length === 2) {
+          days = [days[0], "y", days[1]];
         }
-        return `${days.join(" - ")}: ${group.hourStart} - ${group.hourEnd}`;
+        return `${Array.isArray(days) ? days.join(" ") : days}: ${
+          group.hourStart
+        } - ${group.hourEnd}`;
       })
       .join(" / ");
 

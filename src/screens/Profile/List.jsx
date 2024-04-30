@@ -18,15 +18,14 @@ const List = ({ route, navigation }) => {
         <Text style={{ fontFamily: "regular", fontSize: 16, marginBottom: 10 }}>
           Tienes {data.length} negocio(s) registrado(s)
         </Text>
-
         {data.map((post, index) => {
           let schedule = JSON.parse(post.schedule)
           return (
             <ItemProfile
               key={index}
               data={post}
-              schedule={schedule.shedule}
-              type={schedule.type}
+              schedule={schedule ? schedule.shedule : null}
+              type={schedule ? schedule.type : null}
               identityID={user["custom:identityID"]}
               styled={{ column: styles.columnList }}
             />
