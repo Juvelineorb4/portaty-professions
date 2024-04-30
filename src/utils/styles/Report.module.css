@@ -1,0 +1,88 @@
+.line {
+    width: 150%;
+    height: 0.5px;
+    left: -10%;
+  }
+  
+  .textInput {
+    flex: 1;
+    font-family: "regular";
+    margin-left: 12px;
+    color: #1f1f1f;
+    height: 55px;
+  }
+  .errorInput {
+    position: absolute;
+    left: 0;
+    bottom: 3;
+    font-family: "medium";
+    color: red;
+    font-size: 12;
+  }
+  
+  .inputContainer {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: #fafafa;
+    border: 1px solid #404040;
+    /* width: 50%; */
+    padding: 11px 10px 11px 0px;
+    border-radius: 8px;
+    margin: 3px 0px 18px;
+    height: 55px;
+  }
+  
+  .placeholder {
+    flex: 1;
+    margin-left: 12px;
+    color: #1f1f1f;
+    font-size: 12px;
+    font-family: "regular";
+    height: 55px;
+  }
+  .labelInput {
+    font-family: "bold";
+    font-size: 14px;
+    color: #404040;
+  }
+  
+  
+  /*  */
+  .errorInputDescription {
+      position: absolute;
+      left: 0;
+      bottom: 3;
+      font-family: "medium";
+      color: red;
+      font-size: 12;
+    }
+  .inputContainerDescription {
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      background-color: #fafafa;
+      border: 1px solid #404040;
+      /* width: 50%; */
+      padding: 10px 10px 11px 0px;
+      border-radius: 8px;
+      margin: 3px 0px 18px;
+      height: 145px;
+    }
+    .placeholderDescription {
+      margin-left: 10px;
+      color: #1f1f1f;
+      font-size: 12px;
+      font-family: "regular";
+      text-align: justify;
+      height: 130px;
+      flex: 1;
+    }
+    .textInputDescription {
+      flex: 1;
+      width: 300px;
+      font-family: "regular";
+      margin-left: 12px;
+      color: #1f1f1f;
+      height: 130px;
+    }
