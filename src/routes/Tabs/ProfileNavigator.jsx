@@ -21,6 +21,7 @@ import FormNavigatorThree from "../FormNavigationThree";
 import FormNavigatorFour from "../FormNavigationFour";
 import FormNavigatorFive from "../FormNavigationFive";
 import FormNavigatorComplete from "../FormNavigationComplete";
+import Report from "@/screens/Profile/Report";
 
 const ProfileNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -142,6 +143,14 @@ const ProfileNavigator = () => {
       <Stack.Screen
         name="Contact"
         component={Contact}
+        options={{
+          animation: "slide_from_right",
+          header: (props) => <LeftHeader {...props} />,
+        }}
+      />
+      <Stack.Screen
+        name="Report"
+        component={Report}
         options={{
           animation: "slide_from_right",
           header: (props) => <LeftHeader {...props} />,

@@ -215,7 +215,7 @@ const Unprofile = ({ navigation, route }) => {
               <TouchableOpacity
                 onPress={() => navigation.navigate(button.route)}
                 style={{
-                  marginVertical: -25,
+                  marginBottom: -25,
                 }}
               >
                 <CustomSelect
@@ -237,6 +237,9 @@ const Unprofile = ({ navigation, route }) => {
             ) : button.web ? (
               <TouchableOpacity
                 onPress={() => _handlePressButtonAsync(button.web)}
+                style={{
+                  marginBottom: -25
+                }}
               >
                 {/* <View style={[styles.line, global.bgMidGray]} /> */}
                 <CustomSelect
