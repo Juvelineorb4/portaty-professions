@@ -32,6 +32,16 @@ export const settings = {
       // routePush: true,
     },
     {
+      title: "Reportar",
+      subtitle: "Cuentanos si has tenido algun problema",
+      icon: {
+        left: require("@/utils/images/bug.png"),
+        right: require("@/utils/images/arrow_right.png"),
+      },
+      route: "Report",
+      // routePush: true,
+    },
+    {
       title: "Cerrar sesión",
       icon: {
         left: require("@/utils/images/exit.png"),

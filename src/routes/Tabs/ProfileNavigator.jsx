@@ -16,6 +16,7 @@ import FormNavigator from "../FormNavigation";
 import MapScreen from "@/screens/Profile/Page/Map";
 import PageNavigator from "../PageNavigator";
 import Contact from "@/screens/Profile/Contact";
+import Report from "@/screens/Profile/Report";
 
 const ProfileNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -99,6 +100,14 @@ const ProfileNavigator = () => {
       <Stack.Screen
         name="Post"
         component={Post}
+        options={{
+          animation: "slide_from_right",
+          header: (props) => <LeftHeader {...props} />,
+        }}
+      />
+      <Stack.Screen
+        name="Report"
+        component={Report}
         options={{
           animation: "slide_from_right",
           header: (props) => <LeftHeader {...props} />,
