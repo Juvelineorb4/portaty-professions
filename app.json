@@ -4,7 +4,7 @@
     "name": "Portaty",
     "slug": "portaty-professions",
     "owner": "portaty",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "orientation": "portrait",
     "icon": "./src/utils/images/portaty.png",
     "userInterfaceStyle": "light",
@@ -17,9 +17,7 @@
       "fallbackToCacheTimeout": 0,
       "url": "https://u.expo.dev/b378d102-5cf7-49fc-93f0-b5df7f83d8ad"
     },
-    "assetBundlePatterns": [
-      "*/"
-    ],
+    "assetBundlePatterns": ["*/"],
     "ios": {
       "runtimeVersion": "exposdk:49.0.0",
       "supportsTablet": true,
@@ -33,9 +31,7 @@
         "NSPhotoLibraryUsageDescription": "Permite a Portaty acceder a tu biblioteca de fotos",
         "NSDocumentsFolderUsageDescription": "Permite a Portaty acceder a tus documentos"
       },
-      "associatedDomains": [
-        "applinks:https://www.portaty.com"
-      ],
+      "associatedDomains": ["applinks:https://www.portaty.com"],
       "bundleIdentifier": "com.teamportaty.appdev",
       "versionCode": 0,
       "buildNumber": "8",
@@ -61,10 +57,7 @@
               "pathPrefix": "/share/business"
             }
           ],
-          "category": [
-            "BROWSABLE",
-            "DEFAULT"
-          ]
+          "category": ["BROWSABLE", "DEFAULT"]
         }
       ],
       "permissions": [
@@ -94,11 +87,7 @@
     },
     "packagerOpts": {
       "config": "metro.config.js",
-      "sourceExts": [
-        "js",
-        "jsx",
-        "css"
-      ]
+      "sourceExts": ["js", "jsx", "css"]
     },
     "plugins": [
       [

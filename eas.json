@@ -23,6 +23,9 @@
       "android": {
         "buildType": "app-bundle"
       },
+      "ios": {
+        "image": "latest"
+      },
       "channel": "prod",
       "autoIncrement": true
     }
