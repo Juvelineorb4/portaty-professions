@@ -11,7 +11,7 @@ const awsmobile = {
     "aws_user_pools_id": "us-east-1_Mr2xjl1Hg",
     "aws_user_pools_web_client_id": "2tlmib17h4hrvampjlbl915jp9",
     "oauth": {
-        "domain": "3cidihu7og65-dev.auth.us-east-1.amazoncognito.com",
+        "domain": "portaty-dev.auth.us-east-1.amazoncognito.com",
         "scope": [
             "phone",
             "email",
@@ -19,8 +19,8 @@ const awsmobile = {
             "profile",
             "aws.cognito.signin.user.admin"
         ],
-        "redirectSignIn": "com.teamportaty.appdev://",
-        "redirectSignOut": "com.teamportaty.appdev://",
+        "redirectSignIn": "exp://192.168.100.4:8081/",
+        "redirectSignOut": "exp://192.168.100.4:8081/",
         "responseType": "code"
     },
     "federationTarget": "COGNITO_USER_AND_IDENTITY_POOLS",

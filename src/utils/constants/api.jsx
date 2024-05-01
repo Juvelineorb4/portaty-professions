@@ -7,4 +7,12 @@ export const api = {
     dev: "",
     prod: "portaty-app-firehose",
   },
+  rediret_signin: {
+    dev: "exp://192.168.100.4:8081/",
+    prod: "",
+  },
+  rediret_signout: {
+    dev: "exp://192.168.100.4:8081/",
+    prod: "",
+  },
 };

@@ -98,6 +98,23 @@ const Login = ({ navigation }) => {
     setVisible(false);
   };
 
+  const onHandleLoginSocial = async (type) => {
+    try {
+      switch (type) {
+        case "google":
+          Auth.federatedSignIn({
+            provider: "Google",
+            attributes: {
+              birthdays: "1998-09-20",
+            },
+          });
+
+          break;
+      }
+    } catch (error) {
+      console.log("ERROR SOCIAL: ", error);
+    }
+  };
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -123,8 +140,8 @@ const Login = ({ navigation }) => {
             <View style={{ alignItems: "center" }}>
               <Image
                 style={{
-                  width: 400,
-                  height: 400,
+                  width: 300,
+                  height: 100,
                   marginBottom: 5,
                   resizeMode: "contain",
                 }}
@@ -199,6 +216,12 @@ const Login = ({ navigation }) => {
         <View style={styles.options}>
           <TouchableOpacity onPress={() => navigation.navigate("Forgot_App")}>
             <Text style={styles.forgot}>{es.authentication.login.forgot}</Text>
+          </TouchableOpacity>
+        </View>
+        {/* BTN SOCIAL */}
+        <View>
+          <TouchableOpacity onPress={() => onHandleLoginSocial("google")}>
+            <Text>GOOGLE</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.signup}>
