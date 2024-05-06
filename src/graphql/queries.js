@@ -34,6 +34,39 @@ export const listAppVersionHistories = /* GraphQL */ `
     }
   }
 `;
+export const getReports = /* GraphQL */ `
+  query GetReports($id: ID!) {
+    getReports(id: $id) {
+      id
+      userID
+      subject
+      description
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listReports = /* GraphQL */ `
+  query ListReports(
+    $filter: ModelReportsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listReports(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        userID
+        subject
+        description
+        status
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const appVersionByDate = /* GraphQL */ `
   query AppVersionByDate(
     $platform: AppPlatform!
@@ -420,15 +453,15 @@ export const listBusinesses = /* GraphQL */ `
     }
   }
 `;
-export const businessesByUserID = /* GraphQL */ `
-  query BusinessesByUserID(
+export const listBusinessbyUserID = /* GraphQL */ `
+  query ListBusinessbyUserID(
     $userID: ID!
     $sortDirection: ModelSortDirection
     $filter: ModelBusinessFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    businessesByUserID(
+    listBusinessbyUserID(
       userID: $userID
       sortDirection: $sortDirection
       filter: $filter
@@ -683,15 +716,15 @@ export const favoritesByBusinessID = /* GraphQL */ `
     }
   }
 `;
-export const favoritesByUserID = /* GraphQL */ `
-  query FavoritesByUserID(
+export const listFavoritesbyUserID = /* GraphQL */ `
+  query ListFavoritesbyUserID(
     $userID: ID!
     $sortDirection: ModelSortDirection
     $filter: ModelFavoritesFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    favoritesByUserID(
+    listFavoritesbyUserID(
       userID: $userID
       sortDirection: $sortDirection
       filter: $filter

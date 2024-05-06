@@ -80,6 +80,20 @@ type Users
   owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }])
 }
 
+type Reports
+  @model
+  @auth(rules: [{ allow: private, provider: iam, operations: [create] }]) {
+  id: ID!
+  userID: ID!
+  subject: String!
+  description: String!
+  status: reportStatus @default(value: "PENDING")
+}
+
+enum reportStatus {
+  PENDING
+  RESOLVED
+}
 type Business
   @model
   @auth(
@@ -90,7 +104,7 @@ type Business
     ]
   ) {
   id: ID!
-  userID: ID @index(name: "byUsersBusiness")
+  userID: ID @index(name: "byUsersBusiness", queryField: "listBusinessbyUserID")
   user: Users @belongsTo(fields: ["userID"])
   status: BusinessStatus @default(value: "ENABLED")
   identityID: String
@@ -156,7 +170,7 @@ type Favorites
     )
   business: Business @belongsTo(fields: ["businessID"])
   userID: ID
-    @index(name: "byUsersFavorites")
+    @index(name: "byUsersFavorites", queryField: "listFavoritesbyUserID")
     @auth(
       rules: [
         { allow: owner }

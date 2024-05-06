@@ -40,6 +40,45 @@ export const onDeleteAppVersionHistory = /* GraphQL */ `
     }
   }
 `;
+export const onCreateReports = /* GraphQL */ `
+  subscription OnCreateReports($filter: ModelSubscriptionReportsFilterInput) {
+    onCreateReports(filter: $filter) {
+      id
+      userID
+      subject
+      description
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateReports = /* GraphQL */ `
+  subscription OnUpdateReports($filter: ModelSubscriptionReportsFilterInput) {
+    onUpdateReports(filter: $filter) {
+      id
+      userID
+      subject
+      description
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteReports = /* GraphQL */ `
+  subscription OnDeleteReports($filter: ModelSubscriptionReportsFilterInput) {
+    onDeleteReports(filter: $filter) {
+      id
+      userID
+      subject
+      description
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateArea = /* GraphQL */ `
   subscription OnCreateArea($filter: ModelSubscriptionAreaFilterInput) {
     onCreateArea(filter: $filter) {

@@ -43,6 +43,54 @@ export const deleteAppVersionHistory = /* GraphQL */ `
     }
   }
 `;
+export const createReports = /* GraphQL */ `
+  mutation CreateReports(
+    $input: CreateReportsInput!
+    $condition: ModelReportsConditionInput
+  ) {
+    createReports(input: $input, condition: $condition) {
+      id
+      userID
+      subject
+      description
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateReports = /* GraphQL */ `
+  mutation UpdateReports(
+    $input: UpdateReportsInput!
+    $condition: ModelReportsConditionInput
+  ) {
+    updateReports(input: $input, condition: $condition) {
+      id
+      userID
+      subject
+      description
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteReports = /* GraphQL */ `
+  mutation DeleteReports(
+    $input: DeleteReportsInput!
+    $condition: ModelReportsConditionInput
+  ) {
+    deleteReports(input: $input, condition: $condition) {
+      id
+      userID
+      subject
+      description
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const deleteComplaints = /* GraphQL */ `
   mutation DeleteComplaints(
     $input: DeleteComplaintsInput!

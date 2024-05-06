@@ -35,6 +35,7 @@ const Post = ({ data, image, styled, input }) => {
         authMode: "AWS_IAM",
       });
       setPost(business.data.getBusiness);
+      console.log('aqui', business.data.getBusiness)
     } catch (error) {
       console.log(error);
     }
@@ -263,7 +264,7 @@ const Post = ({ data, image, styled, input }) => {
                         Favoritos:
                       </Text>
                       <Text style={{ fontFamily: "regular", fontSize: 14 }}>
-                        {post?.favorites?.items.length}
+                        {post.favorites?.items.length}
                       </Text>
                     </View>
                   </View>
