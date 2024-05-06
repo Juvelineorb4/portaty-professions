@@ -33,6 +33,7 @@ const ItemNew = ({ data, page }) => {
         authMode: "AWS_IAM",
       });
       setPost(business?.data?.getBusiness);
+      console.log(business?.data?.getBusiness)
     } catch (error) {
       console.log(error);
     }

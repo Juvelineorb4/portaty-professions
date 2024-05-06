@@ -35,6 +35,7 @@ const Post = ({ data, image, styled, input }) => {
         authMode: "AWS_IAM",
       });
       setPost(business.data.getBusiness);
+      console.log('aqui', business.data.getBusiness)
     } catch (error) {
       console.log(error);
     }

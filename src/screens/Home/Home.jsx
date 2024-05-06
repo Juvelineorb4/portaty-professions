@@ -50,20 +50,39 @@ const Home = ({ navigation, route }) => {
   const [loading, setLoading] = useState(false);
   const fetchFavorites = async () => {
     setLoading(true);
-    const result = await API.graphql({
-      query: queries.userByEmail,
-      authMode: "AMAZON_COGNITO_USER_POOLS",
-      variables: {
-        email: userAuth?.attributes?.email,
-      },
-    });
-    let temporalList = [];
-    setFavoritesList(result?.data?.userByEmail?.items[0]?.favorites?.items);
-    if (result?.data?.userByEmail?.items[0]?.favorites?.items?.length === 0)
-      setNothing(true);
-    if (inputFavorite !== "") {
-      result?.data?.userByEmail?.items[0]?.favorites?.items?.map(
-        (item, index) => {
+    console.log(userAuth?.attributes["custom:userTableID"]);
+
+    try {
+      const fetchAllFavorites = async (nextToken, result = []) => {
+        const response = await API.graphql({
+          query: queries.listFavoritesbyUserID,
+          authMode: "AMAZON_COGNITO_USER_POOLS",
+          variables: {
+            userID: userAuth?.attributes["custom:userTableID"],
+            nextToken,
+          },
+        });
+
+        const items = response.data.listFavoritesbyUserID.items;
+        result.push(...items);
+
+        if (response.data.listFavoritesbyUserID.nextToken) {
+          return fetchAllFavorites(
+            response.data.listFavoritesbyUserID.nextToken,
+            result
+          );
+        }
+
+        return result;
+      };
+
+      const allFavorites = await fetchAllFavorites();
+      console.log(allFavorites);
+      let temporalList = [];
+      setFavoritesList(allFavorites);
+      if (allFavorites.length === 0) setNothing(true);
+      if (inputFavorite !== "") {
+        allFavorites.map((item, index) => {
           let newArray = item?.business?.tags?.map((cadena) =>
             cadena.replace(/\[|\]/g, "")
           );
@@ -76,18 +95,20 @@ const Home = ({ navigation, route }) => {
             )
               temporalList.push(item);
           });
+        });
+        if (temporalList.length !== 0) {
+          setFavoritesList(temporalList);
+        } else {
+          setResultNothing(true);
         }
-      );
-      if (temporalList.length !== 0) {
-        setFavoritesList(temporalList);
       } else {
-        setResultNothing(true);
+        setFavoritesList(allFavorites);
       }
-    } else {
-      setFavoritesList(result.data.userByEmail.items[0].favorites.items);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
     }
-    // setTimeout(() => {}, 2000);
-    setLoading(false);
   };
 
   useLayoutEffect(() => {
