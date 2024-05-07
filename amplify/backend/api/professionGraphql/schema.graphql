@@ -104,7 +104,7 @@ type Business
     ]
   ) {
   id: ID!
-  userID: ID @index(name: "byUsersBusiness")
+  userID: ID @index(name: "byUsersBusiness", queryField: "listBusinessbyUserID")
   user: Users @belongsTo(fields: ["userID"])
   status: BusinessStatus @default(value: "ENABLED")
   identityID: String
@@ -170,7 +170,7 @@ type Favorites
     )
   business: Business @belongsTo(fields: ["businessID"])
   userID: ID
-    @index(name: "byUsersFavorites")
+    @index(name: "byUsersFavorites", queryField: "listFavoritesbyUserID")
     @auth(
       rules: [
         { allow: owner }

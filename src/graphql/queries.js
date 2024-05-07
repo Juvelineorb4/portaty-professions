@@ -379,15 +379,15 @@ export const listBusinesses = /* GraphQL */ `
     }
   }
 `;
-export const businessesByUserID = /* GraphQL */ `
-  query BusinessesByUserID(
+export const listBusinessbyUserID = /* GraphQL */ `
+  query ListBusinessbyUserID(
     $userID: ID!
     $sortDirection: ModelSortDirection
     $filter: ModelBusinessFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    businessesByUserID(
+    listBusinessbyUserID(
       userID: $userID
       sortDirection: $sortDirection
       filter: $filter
@@ -531,15 +531,15 @@ export const favoritesByBusinessID = /* GraphQL */ `
     }
   }
 `;
-export const favoritesByUserID = /* GraphQL */ `
-  query FavoritesByUserID(
+export const listFavoritesbyUserID = /* GraphQL */ `
+  query ListFavoritesbyUserID(
     $userID: ID!
     $sortDirection: ModelSortDirection
     $filter: ModelFavoritesFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    favoritesByUserID(
+    listFavoritesbyUserID(
       userID: $userID
       sortDirection: $sortDirection
       filter: $filter
