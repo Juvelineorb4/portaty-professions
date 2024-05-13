@@ -11,7 +11,7 @@ import {
 import React, { useState } from "react";
 import CustomInput from "@/components/CustomInput";
 import CustomButton from "@/components/CustomButton";
-import styles from "@/utils/styles/Forgot.module.css";
+import styles from "@/utils/styles/Forgot.js";
 import { useForm } from "react-hook-form";
 import { es } from "@/utils/constants/lenguage";
 import { Auth } from "aws-amplify";

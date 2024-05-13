@@ -7,7 +7,7 @@ import {
   Modal,
   ActivityIndicator,
 } from "react-native";
-import styles from "@/utils/styles/StepFive.module.css";
+import styles from "@/utils/styles/StepFive.js";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Feather, MaterialIcons } from "@expo/vector-icons";

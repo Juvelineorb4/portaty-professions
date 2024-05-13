@@ -1,6 +1,6 @@
 import { ScrollView, Switch, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import styles from "@/utils/styles/Shedule.module.css";
+import styles from "@/utils/styles/Shedule.js";
 import ModalSheduleType from "@/components/ModalSheduleType";
 import ModalShedule from "@/components/ModalShedule";
 import { profileState, shedulePush, sheduleType } from "@/atoms";

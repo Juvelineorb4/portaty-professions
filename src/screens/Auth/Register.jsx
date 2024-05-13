@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import styles from "@/utils/styles/Register.module.css";
+import styles from "@/utils/styles/Register.js";
 import { useForm } from "react-hook-form";
 import CustomInput from "@/components/CustomInput";
 import CustomInputSelect from "@/components/CustomInputSelect";

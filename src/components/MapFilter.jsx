@@ -12,7 +12,7 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import MapView, { Marker, PROVIDER_GOOGLE, Circle } from "react-native-maps";
 import * as Location from "expo-location";
-import styles from "@/utils/styles/MapMarket.module.css";
+import styles from "@/utils/styles/MapMarket.js";
 import { useRecoilState } from "recoil";
 import { kmRadio, mapUser } from "@/atoms";
 import Slider from "@react-native-community/slider";

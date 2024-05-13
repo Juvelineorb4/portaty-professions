@@ -7,7 +7,7 @@ import {
   Modal,
   TouchableOpacity,
 } from "react-native";
-import styles from "@/utils/styles/StepFour.module.css";
+import styles from "@/utils/styles/StepFour.js";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Feather } from "@expo/vector-icons";

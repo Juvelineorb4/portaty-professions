@@ -1,0 +1,103 @@
+import { StyleSheet } from 'react-native';
+
+const styles = StyleSheet.create({
+  rightContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    flex: 1,
+    marginRight: 3,
+  },
+  leftContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    flex: 1,
+    marginLeft: 3,
+  },
+  leftGridContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    flex: 2,
+    marginLeft: 3,
+  },
+  rightGridContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    flex: 2,
+    marginRight: 3,
+  },
+  tinyRightColumn: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 110,
+    marginBottom: 3,
+    borderRadius: 2,
+    borderWidth: 0.7,
+    borderColor: '#1f1f1f',
+    width: '100%',
+  },
+  tinyLeftColumn: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 110,
+    marginBottom: 3,
+    borderRadius: 2,
+    borderWidth: 0.7,
+    borderColor: '#1f1f1f',
+    width: '100%',
+  },
+  column: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 110,
+    marginBottom: 3,
+    borderRadius: 2,
+    borderWidth: 0.7,
+    borderColor: '#1f1f1f',
+    width: '49%',
+  },
+  bigRightColumn: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 223,
+    width: '100%',
+    marginBottom: '1%',
+    borderRadius: 3,
+    borderWidth: 0.8,
+    borderColor: '#1f1f1f',
+  },
+  bigLeftColumn: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 223,
+    width: '100%',
+    marginBottom: '1%',
+    borderRadius: 3,
+    borderWidth: 0.8,
+    borderColor: '#1f1f1f',
+  },
+  bigColumn: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 223,
+    width: '100%',
+    marginBottom: '1%',
+    borderRadius: 3,
+    borderWidth: 0.8,
+    borderColor: '#1f1f1f',
+  },
+  bigRightContainer: {
+    flex: 2,
+  },
+  bigLeftContainer: {
+    flex: 2,
+  },
+  bigContainer: {
+    flex: 1,
+  },
+});
+
+export default styles;

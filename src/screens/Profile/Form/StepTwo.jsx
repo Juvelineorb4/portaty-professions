@@ -8,7 +8,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import styles from "@/utils/styles/StepTwo.module.css";
+import styles from "@/utils/styles/StepTwo.js";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import CustomInput from "@/components/CustomInput";

@@ -15,7 +15,7 @@ import * as mutations from "@/graphql/CustomMutations/Profile";
 import * as customSearch from "@/graphql/CustomQueries/Search";
 import * as queries from "@/graphql/CustomQueries/Favorites";
 import CustomSelect from "@/components/CustomSelect";
-import styles from "@/utils/styles/Profile.module.css";
+import styles from "@/utils/styles/Profile.js";
 import CustomButton from "@/components/CustomButton";
 import {
   FontAwesome5,

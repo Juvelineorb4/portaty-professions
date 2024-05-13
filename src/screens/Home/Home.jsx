@@ -20,7 +20,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import * as queries from "@/graphql/CustomQueries/Favorites";
 import * as subscriptions from "@/graphql/CustomSubscriptions/Favorites";
 import CustomButton from "@/components/CustomButton";
-import styles from "@/utils/styles/Home.module.css";
+import styles from "@/utils/styles/Home.js";
 import {
   Ionicons,
   MaterialCommunityIcons,

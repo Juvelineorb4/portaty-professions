@@ -8,7 +8,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import styles from "@/utils/styles/ModalShedule.module.css";
+import styles from "@/utils/styles/ModalShedule.js";
 import { shedule } from "@/utils/constants/shedule";
 import { useRecoilState } from "recoil";
 import { sheduleType } from "@/atoms";

@@ -16,7 +16,7 @@ import {
 import React, { useState, useEffect, useLayoutEffect } from "react";
 import * as customSearch from "@/graphql/CustomQueries/Search";
 import CustomSelect from "@/components/CustomSelect";
-import styles from "@/utils/styles/SharePage.module.css";
+import styles from "@/utils/styles/SharePage.js";
 import {
   FontAwesome5,
   MaterialCommunityIcons,

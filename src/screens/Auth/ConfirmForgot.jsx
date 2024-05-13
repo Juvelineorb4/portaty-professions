@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import styles from "@/utils/styles/Confirm.module.css";
+import styles from "@/utils/styles/Confirm.js";
 import EnterCode from "@/components/EnterCode";
 import CustomButton from "@/components/CustomButton";
 import { es } from "@/utils/constants/lenguage";

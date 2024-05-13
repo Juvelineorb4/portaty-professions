@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import QRCode from "react-native-qrcode-svg";
 import ViewShot, { captureRef } from "react-native-view-shot";
 import * as Sharing from "expo-sharing";
-import styles from "@/utils/styles/CustomQR.module.css";
+import styles from "@/utils/styles/CustomQR.js";
 import { AntDesign } from "@expo/vector-icons";
 import { API } from "aws-amplify";
 import ModalAlert from "./ModalAlert";

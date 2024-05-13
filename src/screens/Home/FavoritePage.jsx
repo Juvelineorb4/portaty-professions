@@ -15,7 +15,7 @@ import {
 } from "react-native";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import CustomSelect from "@/components/CustomSelect";
-import styles from "@/utils/styles/FavoritePage.module.css";
+import styles from "@/utils/styles/FavoritePage.js";
 import {
   FontAwesome5,
   MaterialCommunityIcons,

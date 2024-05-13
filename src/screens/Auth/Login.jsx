@@ -12,7 +12,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { Auth } from "aws-amplify";
-import styles from "@/utils/styles/Login.module.css";
+import styles from "@/utils/styles/Login.js";
 import { es } from "@/utils/constants/lenguage";
 import CustomInput from "@/components/CustomInput";
 import CustomButton from "@/components/CustomButton";

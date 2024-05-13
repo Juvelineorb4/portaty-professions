@@ -5,7 +5,7 @@ import Search from "@/screens/Search/Search";
 import SearchHeader from "@/components/Header/SearchHeader";
 import SearchPost from "@/screens/Search/SearchPost";
 import SearchIn from "@/screens/Search/SearchIn";
-import styles from "@/utils/styles/Header.module.css";
+import styles from "@/utils/styles/Header.js";
 import SearchOut from "@/screens/Search/SearchOut";
 import LeftHeader from "@/components/Header/LeftHeader";
 import AsyncStorage from "@react-native-async-storage/async-storage";

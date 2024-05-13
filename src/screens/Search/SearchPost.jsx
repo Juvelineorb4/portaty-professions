@@ -16,7 +16,7 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import * as customSearch from "@/graphql/CustomQueries/Search";
-import styles from "@/utils/styles/SearchPost.module.css";
+import styles from "@/utils/styles/SearchPost.js";
 import {
   MaterialCommunityIcons,
   AntDesign,

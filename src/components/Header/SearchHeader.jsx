@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity, Image, TextInput } from "react-native";
 import React from "react";
-import styles from "@/utils/styles/Header.module.css";
+import styles from "@/utils/styles/Header.js";
 // import { useNavigation } from "@react-navigation/native";
 
 const SearchHeader = ({navigation}) => {

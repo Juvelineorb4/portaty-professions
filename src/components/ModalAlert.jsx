@@ -8,7 +8,7 @@ import {
   View,
 } from "react-native";
 import React from "react";
-import styles from "@/utils/styles/ModalAlert.module.css";
+import styles from "@/utils/styles/ModalAlert.js";
 
 const ModalAlert = ({ text, icon, close, open }) => {
   const global = require("@/utils/styles/global.js");
