@@ -6,7 +6,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import styles from "@/utils/styles/GridProfile.module.css";
+import styles from "@/utils/styles/GridProfile.js";
 import { useNavigation } from "@react-navigation/native";
 import LeftGrid from "./LeftGrid";
 import BigRightGrid from "./BigRightGrid";

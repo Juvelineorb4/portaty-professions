@@ -7,7 +7,7 @@ import {
   RefreshControl,
 } from "react-native";
 import React, { useLayoutEffect, useState } from "react";
-import styles from "@/utils/styles/Unprofile.module.css";
+import styles from "@/utils/styles/Unprofile.js";
 import CustomSelect from "@/components/CustomSelect";
 import { settings } from "@/utils/constants/settings";
 import { useRecoilValue } from "recoil";

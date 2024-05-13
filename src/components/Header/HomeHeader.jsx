@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity, Image, TextInput } from "react-native";
 import React, { useState } from "react";
-import styles from "@/utils/styles/Header.module.css";
+import styles from "@/utils/styles/Header.js";
 import { useRecoilState } from "recoil";
 import { inputFavoritesSearch } from "@/atoms";
 

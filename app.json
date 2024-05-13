@@ -21,9 +21,10 @@
       "*/"
     ],
     "ios": {
-      "runtimeVersion": "exposdk:49.0.0",
+      "runtimeVersion": "exposdk:51.0.0",
       "supportsTablet": true,
       "infoPlist": {
+        "MinimumOSVersion": "13.4",
         "NSContactsUsageDescription": "Allow Portaty to access your contacts.",
         "NSCalendarsUsageDescription": "Portaty needs to access your calendar.",
         "NSRemindersUsageDescription": "Allow $(PRODUCT_NAME) to access your reminders",
@@ -34,7 +35,7 @@
       "versionCode": 28
     },
     "android": {
-      "runtimeVersion": "exposdk:49.0.0",
+      "runtimeVersion": "exposdk:51.0.0",
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyDN14xck20KdIg4qVLW4o7ReqTfEUvFTCc"
@@ -105,7 +106,7 @@
             "buildToolsVersion": "33.0.0"
           },
           "ios": {
-            "deploymentTarget": "13.0"
+            "deploymentTarget": "13.4"
           }
         }
       ],
@@ -159,7 +160,8 @@
           "icon": "./assets/icon_notification.png",
           "color": "#ffffff"
         }
-      ]
+      ],
+      "expo-asset"
     ],
     "extra": {
       "eas": {

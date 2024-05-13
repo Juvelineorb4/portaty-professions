@@ -1,6 +1,6 @@
 import { View, Text, ScrollView } from "react-native";
 import React from "react";
-import styles from "@/utils/styles/Mode.module.css";
+import styles from "@/utils/styles/Mode.js";
 import ItemProfile from "@/components/ItemProfile";
 import CustomButton from "@/components/CustomButton";
 

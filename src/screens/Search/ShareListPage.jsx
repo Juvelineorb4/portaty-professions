@@ -1,6 +1,6 @@
 import { View, Text, ScrollView, ActivityIndicator } from "react-native";
 import React, { useEffect, useState } from "react";
-import styles from "@/utils/styles/ShareListPage.module.css";
+import styles from "@/utils/styles/ShareListPage.js";
 import ItemShareList from "@/components/ItemShareList";
 import * as customSearch from "@/graphql/CustomQueries/Search";
 import { Auth, API, Storage } from "aws-amplify";

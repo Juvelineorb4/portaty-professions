@@ -1,6 +1,6 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
-import styles from "@/utils/styles/Mode.module.css";
+import styles from "@/utils/styles/Mode.js";
 import ItemList from "./ItemList";
 
 const List = ({ data }) => {

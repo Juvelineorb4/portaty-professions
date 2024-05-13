@@ -9,7 +9,7 @@ import {
   FlatList,
   TextInput,
 } from "react-native";
-import styles from "@/utils/styles/StepOne.module.css";
+import styles from "@/utils/styles/StepOne.js";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import CustomInput from "@/components/CustomInput";

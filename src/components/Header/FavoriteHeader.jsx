@@ -5,7 +5,7 @@ import { favoriteSelection, favoritesState, inputFavoritesSearch } from "@/atoms
 import { Auth, API, Storage } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Favorites";
 import * as customFavorites from "@/graphql/CustomMutations/Favorites";
-import styles from "@/utils/styles/Header.module.css";
+import styles from "@/utils/styles/Header.js";
 import { FontAwesome, EvilIcons } from "@expo/vector-icons";
 
 const FavoriteHeader = ({ multiple = false }) => {

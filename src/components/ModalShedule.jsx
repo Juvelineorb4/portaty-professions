@@ -9,7 +9,7 @@ import {
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import styles from "@/utils/styles/ModalShedule.module.css";
+import styles from "@/utils/styles/ModalShedule.js";
 import { shedule } from "@/utils/constants/shedule";
 import { AntDesign } from "@expo/vector-icons";
 import { useRecoilState } from "recoil";

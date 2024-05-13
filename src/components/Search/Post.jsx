@@ -11,7 +11,7 @@ import {
 import React, { useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { API, Storage } from "aws-amplify";
-import styles from "@/utils/styles/Post.module.css";
+import styles from "@/utils/styles/Post.js";
 import * as customSearch from "@/graphql/CustomQueries/Search";
 import { Entypo } from "@expo/vector-icons";
 

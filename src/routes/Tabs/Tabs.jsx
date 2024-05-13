@@ -9,7 +9,7 @@ import {
   Animated,
 } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import styles from "@/utils/styles/Tabs.module.css";
+import styles from "@/utils/styles/Tabs.js";
 import HomeNavigator from "./HomeNavigator";
 import SearchNavigator from "./SearchNavigator";
 import ProfileNavigator from "./ProfileNavigator";
