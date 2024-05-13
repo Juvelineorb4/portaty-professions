@@ -49,16 +49,38 @@ const Unprofile = ({ navigation, route }) => {
     await Auth.signOut();
   };
   const User = async () => {
-    const result = await API.graphql({
-      query: customProfile.userByEmail,
-      authMode: "AMAZON_COGNITO_USER_POOLS",
-      variables: {
-        email: userAuth?.attributes?.email,
-      },
-    });
-    if (result?.data?.userByEmail?.items[0]?.business?.items?.length !== 0)
-      setBusiness(result.data.userByEmail.items[0].business.items);
-    setDisabled(false);
+    try {
+      const fetchAllBusiness = async (nextToken, result = []) => {
+        const response = await API.graphql({
+          query: customProfile.listBusinessbyUserID,
+          authMode: "AMAZON_COGNITO_USER_POOLS",
+          variables: {
+            userID: userAuth?.attributes["custom:userTableID"],
+            nextToken,
+          },
+        });
+
+        const items = response.data.listBusinessbyUserID.items;
+        result.push(...items);
+
+        if (response.data.listBusinessbyUserID.nextToken) {
+          return fetchAllBusiness(
+            response.data.listBusinessbyUserID.nextToken,
+            result
+          );
+        }
+
+        return result;
+      };
+
+      const allBusiness = await fetchAllBusiness();
+      console.log("aqui", allBusiness);
+      if (allBusiness.length !== 0) setBusiness(allBusiness);
+      setDisabled(false);
+    } catch (error) {
+      console.log(error);
+      setDisabled(false);
+    }
   };
   const _handlePressButtonAsync = async (url) => {
     let result = await WebBrowser.openBrowserAsync(url);
@@ -215,7 +237,7 @@ const Unprofile = ({ navigation, route }) => {
               <TouchableOpacity
                 onPress={() => navigation.navigate(button.route)}
                 style={{
-                  marginVertical: -25,
+                  marginBottom: -25,
                 }}
               >
                 <CustomSelect
@@ -237,6 +259,9 @@ const Unprofile = ({ navigation, route }) => {
             ) : button.web ? (
               <TouchableOpacity
                 onPress={() => _handlePressButtonAsync(button.web)}
+                style={{
+                  marginBottom: -25,
+                }}
               >
                 {/* <View style={[styles.line, global.bgMidGray]} /> */}
                 <CustomSelect

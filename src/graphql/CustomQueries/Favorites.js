@@ -254,3 +254,69 @@ export const listReasonComplaints = /* GraphQL */ `
     }
   }
 `;
+
+export const listFavoritesbyUserID = /* GraphQL */ `
+  query ListFavoritesbyUserID(
+    $userID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelFavoritesFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listFavoritesbyUserID(
+      userID: $userID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        businessID
+        business {
+          id
+          userID
+          status
+          identityID
+          name
+          image
+          images
+          thumbnail
+          email
+          phone
+          whatsapp
+          instagram
+          facebook
+          page
+          activity
+          tags
+          description
+          prefer
+          schedule
+          createdAt
+          updatedAt
+          owner
+        }
+        userID
+        user {
+          id
+          cognitoID
+          name
+          lastName
+          email
+          identityID
+          gender
+          notificationToken
+          owner
+          createdAt
+          updatedAt
+        }
+        position
+        owner
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;

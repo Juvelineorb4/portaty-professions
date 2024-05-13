@@ -48,7 +48,9 @@
           "NAME",
           "BIRTHDATE"
         ],
-        "socialProviders": [],
+        "socialProviders": [
+          "GOOGLE"
+        ],
         "usernameAttributes": [
           "EMAIL"
         ],

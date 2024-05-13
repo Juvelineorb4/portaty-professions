@@ -9,9 +9,9 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "@/utils/styles/ModalReport.js";
-import { complaints } from "@/utils/constants/complaints";
+// import { complaints } from "@/utils/constants/complaints";
 import * as customFavorites from "@/graphql/CustomMutations/Favorites";
 import { Auth, API, Storage } from "aws-amplify";
 import { useRecoilValue } from "recoil";
@@ -20,8 +20,23 @@ import { userAuthenticated } from "@/atoms";
 const ModalReport = ({ businessID, close, open }) => {
   const global = require("@/utils/styles/global.js");
   const [complaint, setComplaint] = useState("");
+  const [complaints, setComplaints] = useState([]);
   const userAuth = useRecoilValue(userAuthenticated);
 
+  const ComplaintsData = async () => {
+    const api = "api-portaty";
+    const path = "/api/complaints";
+    const params = {
+      headers: {},
+    };
+    try {
+      const response = await API.get(api, path, params);
+      console.log('aqui',  response);
+      setComplaints(response);
+    } catch (error) {
+      console.log(error)
+    }
+  };
   const onReportBusiness = async () => {
     console.log(businessID, complaint, userAuth?.attributes["custom:userTableID"]);
     try {
@@ -43,6 +58,10 @@ const ModalReport = ({ businessID, close, open }) => {
     }
   };
 
+  useEffect(() => {
+    ComplaintsData()
+  }, [])
+  
   return (
     <Modal
       animationType="none"
@@ -63,7 +82,7 @@ const ModalReport = ({ businessID, close, open }) => {
               </View>
               <View style={{ flex: 1 }}>
                 <FlatList
-                  data={complaints.reasons}
+                  data={complaints}
                   renderItem={({ item }) => (
                     <TouchableOpacity
                       style={{
