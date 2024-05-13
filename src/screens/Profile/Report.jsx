@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
-import styles from "@/utils/styles/Report.module.css";
+import styles from "@/utils/styles/Report.js";
 import CustomInput from "@/components/CustomInput";
 import { useForm } from "react-hook-form";
 import { es } from "@/utils/constants/lenguage";
