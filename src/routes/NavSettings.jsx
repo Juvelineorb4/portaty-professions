@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Hub } from "aws-amplify";
+import { Hub, API } from "aws-amplify";
 import { useUserManagement } from "@/hooks";
 import * as Linking from "expo-linking";
 import { useNavigation } from "@react-navigation/native";
@@ -9,18 +9,20 @@ import { urlInitalShare } from "@/atoms";
 import useDeepLinkInital from "@/hooks/useDeepLinkInital";
 const NavSettings = ({ checkRender }) => {
   const setUrlInitialShare = useSetRecoilState(urlInitalShare);
+
   const { userSignIn, userSignOut, checkUser } = useUserManagement();
   const navigation = useNavigation();
   useDeepLinkInital(checkRender);
   useEffect(() => {
     // crear subscripcion
     const unsubscribe = Hub.listen("auth", ({ payload: { event, data } }) => {
+      console.log("EVENTO: ", event);
       switch (event) {
         case "signIn":
           userSignIn(data);
           break;
         case "signOut":
-          userSignOut();
+          userSignOut(data);
           break;
         case "confirmSignUp":
           break;

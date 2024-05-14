@@ -33,7 +33,7 @@ const StepOne = ({ navigation, route }) => {
   const [active, setActive] = useRecoilState(activeModalScreen);
 
   const animation = useRef(null);
-  let data = route.params
+  let data = route.params;
   async function getCountryCode(array) {
     const countryCode = await Cellular.getIsoCountryCodeAsync();
     array.map((item, index) => {
@@ -78,9 +78,7 @@ const StepOne = ({ navigation, route }) => {
           <ScrollView style={{ flex: 1 }}>
             <View style={[styles.modalContent]}>
               <View style={[styles.modalTop]}>
-              <StepClear
-                  navig={() => navigation.navigate("Unprofile")}
-                />
+                <StepClear navig={() => navigation.navigate("Unprofile")} />
                 {/* <Pressable
                   onPress={() => {
                     navigation.navigate("Unprofile");
@@ -146,7 +144,7 @@ const StepOne = ({ navigation, route }) => {
                     input: [styles.inputContainer],
                     placeholder: styles.placeholder,
                   }}
-                  defaultValue={data === undefined ? '' : data?.business?.name}
+                  defaultValue={data === undefined ? "" : data?.business?.name}
                   text={`Nombre del negocio (*)`}
                   rules={{
                     required: es.businessForm.register.company.rules,
@@ -163,12 +161,13 @@ const StepOne = ({ navigation, route }) => {
                     input: [styles.inputContainer],
                     placeholder: styles.placeholder,
                   }}
-                  defaultValue={data === undefined ? '' : data?.business?.email}
+                  defaultValue={data === undefined ? "" : data?.business?.email}
                   text={`Correo electronico (*)`}
                   rules={{
                     required: es.businessForm.register.email.rules,
                     pattern: {
-                      value: /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/,
+                      value:
+                        /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)\s*$/,
                       message: "Correo no valido",
                     },
                   }}
@@ -293,7 +292,7 @@ const StepOne = ({ navigation, route }) => {
                                         alignItems: "center",
                                         marginHorizontal: 5,
                                         borderRadius: 8,
-                                        marginBottom: 5
+                                        marginBottom: 5,
                                       },
                                     ]}
                                     onPress={() => {
@@ -347,14 +346,16 @@ const StepOne = ({ navigation, route }) => {
                       input: [styles.inputContainerP],
                       placeholder: styles.placeholder,
                     }}
-                    defaultValue={data === undefined ? '' : data?.business?.phone}
+                    defaultValue={
+                      data === undefined ? "" : data?.business?.phone
+                    }
                     text={` `}
                     rules={{
                       required: es.businessForm.register.email.rules,
                       pattern: {
                         value: /^[0-9]+$/i,
-                        message: "Solo se permiten números"
-                      }
+                        message: "Solo se permiten números",
+                      },
                     }}
                     inputmode="numeric"
                   />

@@ -12,76 +12,16 @@ import { PieChart, BarChart } from "react-native-gifted-charts";
 // amplify
 import { API } from "aws-amplify";
 import SkeletonAnalytics from "@/components/SkeletonAnalytics";
-
+import { api } from "@/utils/constants/api";
 const buttons = [
   {
     id: 1,
     value: "Visitas",
   },
-  // {
-  //   id: 2,
-  //   value: "Favoritos: Nuevos",
-  // },
-  // {
-  //   id: 3,
-  //   value: "Favoritos: Perdidos",
-  // },
 ];
 
-// const Labels = ({ slices }) => {
-//   return slices.map((slice, index) => {
-//     const { labelCentroid, data } = slice;
-//     return (
-//       <Text
-//         key={index}
-//         x={labelCentroid[0]}
-//         y={labelCentroid[1]}
-//         fill="#1f1f1f"
-//         textAnchor="middle"
-//         alignmentBaseline="middle"
-//         fontSize={10}
-//         fontWeight={700}
-//       >
-//         {`${data.amount === 0 ? "" : data.amount}`}
-//       </Text>
-//     );
-//   });
-// };
-
-// const Decorator = ({ x, y, backUp }) => {
-//   return backUp.map((value, index) => (
-//     <G key={index}>
-//       <Line
-//         x1={x(index)}
-//         y1={y(value)}
-//         x2={x(index)}
-//         y2={y(0)}
-//         stroke="grey"
-//         strokeDasharray={[5, 5]}
-//       />
-//       <Circle
-//         cx={x(index)}
-//         cy={y(value)}
-//         r={4}
-//         stroke="rgb(31, 31, 31)"
-//         fill="#1f1f1f"
-//       />
-//       <Text
-//         x={x(index)}
-//         y={y(value) - 10}
-//         fontSize={10}
-//         fill="black"
-//         alignmentBaseline="middle"
-//         textAnchor="middle"
-//         fontFamily="bold"
-//       >
-//         {value}
-//       </Text>
-//     </G>
-//   ));
-// };
-
 const Analytics = ({ route }) => {
+  const { data } = route.params;
   const [type, setType] = useState(1);
   const [timeGraph, setTimeGraph] = useState(1);
   const [locationGraph, setLocationGraph] = useState(1);
@@ -99,11 +39,78 @@ const Analytics = ({ route }) => {
   const [dataCityPie, setDataCityPie] = useState(null);
   const [dataCountryPie, setDataCountryPie] = useState(null);
   const [dataAgePie, setDataAgePie] = useState(null);
-  // const [currentData, setCurrentData] = useState(latestData);
   /* Condicionales */
   const [allZeroGender, setAllZeroGender] = useState(false);
   const [allZeroCity, setAllZeroCity] = useState(false);
   const [allZeroAge, setAllZeroAge] = useState(false);
+
+  // funciones de busquedas de analisis
+  const fetchAnalyticsViews = async () => {
+    const {
+      last30days,
+      last12moths,
+      genderPercentage,
+      countryPercentage,
+      agePercentage,
+    } = api.paths.analytics.views;
+
+    const endpoints = [
+      last30days,
+      last12moths,
+      genderPercentage,
+      countryPercentage,
+      agePercentage,
+    ];
+    const params = {
+      headers: {},
+      queryStringParameters: {
+        businessID: data?.id,
+      },
+    };
+    const requests = endpoints.map((endpoint) =>
+      API.get("api-portaty", endpoint, params)
+    );
+
+    const results = await Promise.allSettled(requests);
+
+    results.forEach((result, index) => {
+      if (result.status === "fulfilled") {
+        const resultData = result?.value;
+        switch (index) {
+          case 0:
+            getDataLikesMonths(resultData?.data);
+            break;
+          case 1:
+            getDataLikesYears(resultData?.data);
+            break;
+
+          case 2:
+            getDataGender(resultData?.data);
+            break;
+          case 3:
+            getDataCity(resultData?.data?.city);
+            getDataCountry(resultData?.data?.country);
+            break;
+          case 4:
+            getDataAge(resultData?.data);
+            break;
+          default:
+            break;
+        }
+        // console.log(
+        //   `La petición al endpoint ${endpoints[index]} fue exitosa con el siguiente resultado:`,
+        //   result.value
+        // );
+      } else {
+        // console.log(
+        //   `La petición al endpoint ${endpoints[index]} falló con el siguiente error:`,
+        //   result.reason
+        // );
+      }
+    });
+  };
+  // fin funciones de busquedas
+
   const customLabel = (val) => {
     return (
       <View style={{ width: 70, marginLeft: 7 }}>
@@ -111,347 +118,331 @@ const Analytics = ({ route }) => {
       </View>
     );
   };
-  const { data } = route.params;
-  const getData = async () => {
-    const api = "api-portaty";
-    const path = "/athena/example2";
-    const params = {
-      headers: {},
-      queryStringParameters: {
-        businessID: data?.id,
-      },
-    };
-    try {
-      const response = await API.get(api, path, params);
-      /* Likes */
-      const dataForXAxis = Object.entries(response.data.likesData.days)
-        .map(([date, value]) => ({
-          value: Number(value),
-          label: date.substring(5),
-        }))
-        .reverse();
 
-      const likes = Object.values(response.data.likesData.days)
-        .map((value) => +value)
-        .reverse();
-      const value = Math.max(...likes);
+  const getDataLikesMonths = (data) => {
+    /* Likes */
+    const dataForXAxis = Object.entries(data)
+      .map(([date, value]) => ({
+        value: Number(value),
+        label: date.substring(5),
+      }))
+      .reverse();
 
-      /* Likes year */
-
-      const dataForXAxisYear = Object.entries(response.data.likesData.year)
-        .map(([date, value]) => ({
-          value: Number(value),
-          label: date,
-        }))
-        .reverse();
-
-      const likesYear = Object.values(response.data.likesData.year)
-        .map((value) => +value)
-        .reverse();
-
-      const valueYear = Math.max(...likesYear);
-
-      /* Gender */
-      const dataGender = response.data.gender;
-      const gender = [];
-
-      dataGender.map((item, index) => {
-        if (item.genero === "Male") {
-          gender.push({
-            key: 1,
-            value: Number(item.porcentaje_visitas),
-            svg: { fill: "#ffb703" },
-            label: "Hombre",
-            amount: Number(item.cantidad_visitas),
-          });
-        }
-        if (item.genero === "Female") {
-          gender.push({
-            key: 2,
-            value: Number(item.porcentaje_visitas),
-            svg: { fill: "#FFFA15" },
-            label: "Mujer",
-            amount: Number(item.cantidad_visitas),
-          });
-        }
-        if (item.genero === "Others") {
-          gender.push({
-            key: 3,
-            value: Number(item.porcentaje_visitas),
-            svg: { fill: "#b28002" },
-            label: "Otro",
-            amount: Number(item.cantidad_visitas),
-          });
-        }
-      });
-
-      let maxObj = gender.reduce(
-        (max, obj) =>
-          parseInt(obj.porcentaje_visitas) > parseInt(max.porcentaje_visitas)
-            ? obj
-            : max,
-        gender[0]
-      );
-
-      maxObj.arc = { outerRadius: "120%", cornerRadius: 10 };
-      const genderPie = [];
-      gender.map((item, index) => {
-        genderPie.push({
-          value: item.value,
-          color: item.svg.fill,
-          text: item.amount,
-        });
-      });
-
-      /* City */
-      const dataCity = response.data.city;
-
-      let sortedData = [...dataCity].sort(
-        (a, b) => b.porcentaje_visitas - a.porcentaje_visitas
-      );
-
-      let topThree = sortedData.slice(0, 3);
-
-      const cities = [];
-
-      topThree.map((item, index) => {
-        if (index === 0) {
-          cities.push({
-            key: 1,
-            value: Number(item.porcentaje_visitas),
-            svg: { fill: "#FFFA15" },
-            label: item.ciudad,
-            amount: Number(item.numero_de_visitas),
-          });
-        }
-        if (index === 1) {
-          cities.push({
-            key: 2,
-            value: Number(item.porcentaje_visitas),
-            svg: { fill: "#b28002" },
-            label: item.ciudad,
-            amount: Number(item.numero_de_visitas),
-          });
-        }
-        if (index === 2) {
-          cities.push({
-            key: 3,
-            value: Number(item.porcentaje_visitas),
-            svg: { fill: "#D6D211" },
-            label: item.ciudad,
-            amount: Number(item.numero_de_visitas),
-          });
-        }
-      });
-
-      let remainingSum = sortedData
-        .slice(3)
-        .reduce((sum, item) => sum + item.porcentaje_visitas, 0);
-
-      let remaining = {
-        key: 4,
-        value: remainingSum,
-        svg: { fill: "#ffb703" },
-        label: "Otros",
-        amount: sortedData
-          .slice(3)
-          .reduce((sum, item) => sum + item.numero_de_visitas, 0),
-      };
-      cities.push(remaining);
-
-      let maxCity = cities.reduce(
-        (max, obj) =>
-          parseInt(obj.porcentaje_visitas) > parseInt(max.porcentaje_visitas)
-            ? obj
-            : max,
-        cities[0]
-      );
-
-      maxCity.arc = { outerRadius: "120%", cornerRadius: 10 };
-      const citiesPie = [];
-      cities.map((item, index) => {
-        citiesPie.push({
-          value: item.value,
-          color: item.svg.fill,
-          text: item.amount,
-        });
-      });
-
-      /* Country */
-
-      const dataCountry = response.data.country;
-      let sortedDataCountry = [...dataCountry].sort(
-        (a, b) => b.porcentaje_visitas - a.porcentaje_visitas
-      );
-
-      let ThreeCountry = sortedDataCountry.slice(0, 3);
-
-      const countries = [];
-
-      ThreeCountry.map((item, index) => {
-        if (index === 0) {
-          countries.push({
-            key: 1,
-            value: Number(item.porcentaje_visitas),
-            svg: { fill: "#FFFA15" },
-            label: item.pais,
-            amount: Number(item.numero_de_visitas),
-          });
-        }
-        if (index === 1) {
-          countries.push({
-            key: 2,
-            value: Number(item.porcentaje_visitas),
-            svg: { fill: "#b28002" },
-            label: item.pais,
-            amount: Number(item.numero_de_visitas),
-          });
-        }
-        if (index === 2) {
-          countries.push({
-            key: 3,
-            value: Number(item.porcentaje_visitas),
-            svg: { fill: "#D6D211" },
-            label: item.pais,
-            amount: Number(item.numero_de_visitas),
-          });
-        }
-      });
-
-      let remainingSumCountry = sortedDataCountry
-        .slice(3)
-        .reduce((sum, item) => sum + item.porcentaje_visitas, 0);
-
-      let remainingCountry = {
-        key: 4,
-        value: remainingSumCountry,
-        svg: { fill: "#ffb703" },
-        label: "Otros",
-        amount: sortedDataCountry
-          .slice(3)
-          .reduce((sum, item) => sum + item.numero_de_visitas, 0),
-      };
-      countries.push(remainingCountry);
-
-      let maxCountry = countries.reduce(
-        (max, obj) =>
-          parseInt(obj.porcentaje_visitas) > parseInt(max.porcentaje_visitas)
-            ? obj
-            : max,
-        countries[0]
-      );
-
-      maxCountry.arc = { outerRadius: "120%", cornerRadius: 10 };
-
-      const countriesPie = [];
-      countries.map((item, index) => {
-        countriesPie.push({
-          value: item.value,
-          color: item.svg.fill,
-          text: item.amount,
-        });
-      });
-      /* Age */
-
-      const dataAge = response.data.age;
-
-      const age = [];
-
-      dataAge.map((item, index) => {
-        if (item.rango_edad === "18-25") {
-          age.push({
-            key: 1,
-            value: Number(item.porcentaje),
-            svg: { fill: "#b28002" },
-            label: "18-25 años",
-            amount: Number(item.cantidad),
-          });
-        }
-        if (item.rango_edad === "26-30") {
-          age.push({
-            key: 2,
-            value: Number(item.porcentaje),
-            svg: { fill: "#D6D211" },
-            label: "26-30 años",
-            amount: Number(item.cantidad),
-          });
-        }
-        if (item.rango_edad === "31-40") {
-          age.push({
-            key: 3,
-            value: Number(item.porcentaje),
-            svg: { fill: "#FFD700" },
-            label: "31-40 años",
-            amount: Number(item.cantidad),
-          });
-        }
-        if (item.rango_edad === "41-50") {
-          age.push({
-            key: 4,
-            value: Number(item.porcentaje),
-            svg: { fill: "#ffb703" },
-            label: "41-50 años",
-            amount: Number(item.cantidad),
-          });
-        }
-        if (item.rango_edad === "50+") {
-          age.push({
-            key: 5,
-            value: Number(item.porcentaje),
-            svg: { fill: "#FFFA15" },
-            label: "50+ años",
-            amount: Number(item.cantidad),
-          });
-        }
-      });
-
-      let maxAge = age.reduce(
-        (max, obj) =>
-          parseInt(obj.porcentaje) > parseInt(max.porcentaje) ? obj : max,
-        age[0]
-      );
-
-      maxAge.arc = { outerRadius: "120%", cornerRadius: 10 };
-
-      const agePie = [];
-      age.map((item, index) => {
-        agePie.push({
-          value: item.value,
-          color: item.svg.fill,
-          text: item.amount,
-        });
-      });
-
-      setAllZeroGender(gender.every((item) => item.value === 0));
-      setAllZeroCity(cities.every((item) => item.value === 0));
-      setAllZeroAge(age.every((item) => item.value === 0));
-
-      setDataGenderPie(gender);
-      setDataGenderPieGraph(genderPie);
-      setDataAgePie(age);
-      setDataAgePieGraph(agePie);
-      setDataCityPie(cities);
-      setDataCityPieGraph(citiesPie);
-      setDataCountryPie(countries);
-      setDataCountryPieGraph(countriesPie);
-      setDataGraph(dataForXAxis);
-      setMaxValue(value);
-      setDataLikes(likes);
-      setDataGraphYear(dataForXAxisYear);
-      setMaxValueYear(valueYear);
-      setDataLikesYear(likesYear);
-    } catch (error) {
-      console.log(error);
-    }
+    const likes = Object.values(data)
+      .map((value) => +value)
+      .reverse();
+    const value = Math.max(...likes);
+    setDataGraph(dataForXAxis);
+    setMaxValue(value);
+    setDataLikes(likes);
   };
-  // const lineData = [
-  //   { value: 10, label: "2024-03-15" },
-  //   { label: "2024-03-14", value: 5 },
-  // ];
+
+  const getDataLikesYears = (data) => {
+    const dataForXAxisYear = Object.entries(data)
+      .map(([date, value]) => ({
+        value: Number(value),
+        label: date,
+      }))
+      .reverse();
+
+    const likesYear = Object.values(data)
+      .map((value) => +value)
+      .reverse();
+
+    const valueYear = Math.max(...likesYear);
+    setDataGraphYear(dataForXAxisYear);
+    setMaxValueYear(valueYear);
+    setDataLikesYear(likesYear);
+  };
+
+  const getDataGender = (data) => {
+    const dataGender = data;
+    const gender = [];
+
+    dataGender.map((item, index) => {
+      if (item.genero === "Male") {
+        gender.push({
+          key: 1,
+          value: Number(item.porcentaje_visitas),
+          svg: { fill: "#ffb703" },
+          label: "Hombre",
+          amount: Number(item.cantidad_visitas),
+        });
+      }
+      if (item.genero === "Female") {
+        gender.push({
+          key: 2,
+          value: Number(item.porcentaje_visitas),
+          svg: { fill: "#FFFA15" },
+          label: "Mujer",
+          amount: Number(item.cantidad_visitas),
+        });
+      }
+      if (item.genero === "Others") {
+        gender.push({
+          key: 3,
+          value: Number(item.porcentaje_visitas),
+          svg: { fill: "#b28002" },
+          label: "Otro",
+          amount: Number(item.cantidad_visitas),
+        });
+      }
+    });
+
+    let maxObj = gender.reduce(
+      (max, obj) =>
+        parseInt(obj.porcentaje_visitas) > parseInt(max.porcentaje_visitas)
+          ? obj
+          : max,
+      gender[0]
+    );
+
+    maxObj.arc = { outerRadius: "120%", cornerRadius: 10 };
+    const genderPie = [];
+    gender.map((item, index) => {
+      genderPie.push({
+        value: item.value,
+        color: item.svg.fill,
+        text: item.amount,
+      });
+    });
+
+    setAllZeroGender(gender.every((item) => item.value === 0));
+    setDataGenderPie(gender);
+    setDataGenderPieGraph(genderPie);
+  };
+  const getDataCity = (data) => {
+    const dataCity = data;
+
+    let sortedData = [...dataCity].sort(
+      (a, b) => b.porcentaje_visitas - a.porcentaje_visitas
+    );
+
+    let topThree = sortedData.slice(0, 3);
+
+    const cities = [];
+
+    topThree.map((item, index) => {
+      if (index === 0) {
+        cities.push({
+          key: 1,
+          value: Number(item.porcentaje_visitas),
+          svg: { fill: "#FFFA15" },
+          label: item.ciudad,
+          amount: Number(item.numero_de_visitas),
+        });
+      }
+      if (index === 1) {
+        cities.push({
+          key: 2,
+          value: Number(item.porcentaje_visitas),
+          svg: { fill: "#b28002" },
+          label: item.ciudad,
+          amount: Number(item.numero_de_visitas),
+        });
+      }
+      if (index === 2) {
+        cities.push({
+          key: 3,
+          value: Number(item.porcentaje_visitas),
+          svg: { fill: "#D6D211" },
+          label: item.ciudad,
+          amount: Number(item.numero_de_visitas),
+        });
+      }
+    });
+
+    let remainingSum = sortedData
+      .slice(3)
+      .reduce((sum, item) => sum + item.porcentaje_visitas, 0);
+
+    let remaining = {
+      key: 4,
+      value: remainingSum,
+      svg: { fill: "#ffb703" },
+      label: "Otros",
+      amount: sortedData
+        .slice(3)
+        .reduce((sum, item) => sum + item.numero_de_visitas, 0),
+    };
+    cities.push(remaining);
+
+    let maxCity = cities.reduce(
+      (max, obj) =>
+        parseInt(obj.porcentaje_visitas) > parseInt(max.porcentaje_visitas)
+          ? obj
+          : max,
+      cities[0]
+    );
+
+    maxCity.arc = { outerRadius: "120%", cornerRadius: 10 };
+    const citiesPie = [];
+    cities.map((item, index) => {
+      citiesPie.push({
+        value: item.value,
+        color: item.svg.fill,
+        text: item.amount,
+      });
+    });
+
+    setAllZeroCity(cities.every((item) => item.value === 0));
+    setDataCityPie(cities);
+    setDataCityPieGraph(citiesPie);
+  };
+  const getDataCountry = (data) => {
+    const dataCountry = data;
+    let sortedDataCountry = [...dataCountry].sort(
+      (a, b) => b.porcentaje_visitas - a.porcentaje_visitas
+    );
+
+    let ThreeCountry = sortedDataCountry.slice(0, 3);
+
+    const countries = [];
+
+    ThreeCountry.map((item, index) => {
+      if (index === 0) {
+        countries.push({
+          key: 1,
+          value: Number(item.porcentaje_visitas),
+          svg: { fill: "#FFFA15" },
+          label: item.pais,
+          amount: Number(item.numero_de_visitas),
+        });
+      }
+      if (index === 1) {
+        countries.push({
+          key: 2,
+          value: Number(item.porcentaje_visitas),
+          svg: { fill: "#b28002" },
+          label: item.pais,
+          amount: Number(item.numero_de_visitas),
+        });
+      }
+      if (index === 2) {
+        countries.push({
+          key: 3,
+          value: Number(item.porcentaje_visitas),
+          svg: { fill: "#D6D211" },
+          label: item.pais,
+          amount: Number(item.numero_de_visitas),
+        });
+      }
+    });
+
+    let remainingSumCountry = sortedDataCountry
+      .slice(3)
+      .reduce((sum, item) => sum + item.porcentaje_visitas, 0);
+
+    let remainingCountry = {
+      key: 4,
+      value: remainingSumCountry,
+      svg: { fill: "#ffb703" },
+      label: "Otros",
+      amount: sortedDataCountry
+        .slice(3)
+        .reduce((sum, item) => sum + item.numero_de_visitas, 0),
+    };
+    countries.push(remainingCountry);
+
+    let maxCountry = countries.reduce(
+      (max, obj) =>
+        parseInt(obj.porcentaje_visitas) > parseInt(max.porcentaje_visitas)
+          ? obj
+          : max,
+      countries[0]
+    );
+
+    maxCountry.arc = { outerRadius: "120%", cornerRadius: 10 };
+
+    const countriesPie = [];
+    countries.map((item, index) => {
+      countriesPie.push({
+        value: item.value,
+        color: item.svg.fill,
+        text: item.amount,
+      });
+    });
+    setDataCountryPie(countries);
+    setDataCountryPieGraph(countriesPie);
+  };
+  const getDataAge = (data) => {
+    const dataAge = data;
+
+    const age = [];
+
+    dataAge.map((item, index) => {
+      if (item.rango_edad === "18-25") {
+        age.push({
+          key: 1,
+          value: Number(item.porcentaje),
+          svg: { fill: "#b28002" },
+          label: "18-25 años",
+          amount: Number(item.cantidad),
+        });
+      }
+      if (item.rango_edad === "26-30") {
+        age.push({
+          key: 2,
+          value: Number(item.porcentaje),
+          svg: { fill: "#D6D211" },
+          label: "26-30 años",
+          amount: Number(item.cantidad),
+        });
+      }
+      if (item.rango_edad === "31-40") {
+        age.push({
+          key: 3,
+          value: Number(item.porcentaje),
+          svg: { fill: "#FFD700" },
+          label: "31-40 años",
+          amount: Number(item.cantidad),
+        });
+      }
+      if (item.rango_edad === "41-50") {
+        age.push({
+          key: 4,
+          value: Number(item.porcentaje),
+          svg: { fill: "#ffb703" },
+          label: "41-50 años",
+          amount: Number(item.cantidad),
+        });
+      }
+      if (item.rango_edad === "50+") {
+        age.push({
+          key: 5,
+          value: Number(item.porcentaje),
+          svg: { fill: "#FFFA15" },
+          label: "50+ años",
+          amount: Number(item.cantidad),
+        });
+      }
+    });
+
+    let maxAge = age.reduce(
+      (max, obj) =>
+        parseInt(obj.porcentaje) > parseInt(max.porcentaje) ? obj : max,
+      age[0]
+    );
+
+    maxAge.arc = { outerRadius: "120%", cornerRadius: 10 };
+
+    const agePie = [];
+    age.map((item, index) => {
+      agePie.push({
+        value: item.value,
+        color: item.svg.fill,
+        text: item.amount,
+      });
+    });
+
+    setAllZeroAge(age.every((item) => item.value === 0));
+    setDataAgePie(age);
+    setDataAgePieGraph(agePie);
+  };
 
   useEffect(() => {
-    getData();
-  }, []);
+    if (data?.id) fetchAnalyticsViews();
+  }, [data]);
 
   if (
     dataGraph !== null &&
@@ -586,7 +577,7 @@ const Analytics = ({ route }) => {
                 }}
               >
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                  <View style={{ width: dataGraph.length * 64}}>
+                  <View style={{ width: dataGraph.length * 64 }}>
                     <BarChart
                       barWidth={22}
                       spacing={40}
@@ -609,7 +600,7 @@ const Analytics = ({ route }) => {
               >
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                   <View style={{ width: dataGraphYear.length * 90 }}>
-                  <BarChart
+                    <BarChart
                       barWidth={22}
                       spacing={60}
                       noOfSections={2}

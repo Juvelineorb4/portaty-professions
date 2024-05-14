@@ -64,6 +64,16 @@
   },
   "function": {},
   "geo": {},
+  "parameters": {
+    "AMPLIFY_auth_professions_googleClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "professions"
+        }
+      ]
+    }
+  },
   "storage": {
     "s3Professions": {
       "dependsOn": [],

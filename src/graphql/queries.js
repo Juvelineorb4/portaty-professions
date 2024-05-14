@@ -9,6 +9,7 @@ export const getAppVersionHistory = /* GraphQL */ `
       latestVersion
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -29,8 +30,10 @@ export const listAppVersionHistories = /* GraphQL */ `
         latestVersion
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -44,6 +47,7 @@ export const getReports = /* GraphQL */ `
       status
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -62,12 +66,14 @@ export const listReports = /* GraphQL */ `
         status
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
-export const appVersionByDate = /* GraphQL */ `
+export const AppVersionByDate = /* GraphQL */ `
   query AppVersionByDate(
     $platform: AppPlatform!
     $createdAt: ModelStringKeyConditionInput
@@ -90,8 +96,10 @@ export const appVersionByDate = /* GraphQL */ `
         latestVersion
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -101,17 +109,12 @@ export const getArea = /* GraphQL */ `
       id
       name
       activities {
-        items {
-          id
-          name
-          areaID
-          createdAt
-          updatedAt
-        }
         nextToken
+        __typename
       }
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -125,13 +128,12 @@ export const listAreas = /* GraphQL */ `
       items {
         id
         name
-        activities {
-          nextToken
-        }
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -144,14 +146,13 @@ export const getActivity = /* GraphQL */ `
       area {
         id
         name
-        activities {
-          nextToken
-        }
         createdAt
         updatedAt
+        __typename
       }
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -166,16 +167,12 @@ export const listActivities = /* GraphQL */ `
         id
         name
         areaID
-        area {
-          id
-          name
-          createdAt
-          updatedAt
-        }
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -198,16 +195,12 @@ export const activitiesByAreaID = /* GraphQL */ `
         id
         name
         areaID
-        area {
-          id
-          name
-          createdAt
-          updatedAt
-        }
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -223,47 +216,17 @@ export const getUsers = /* GraphQL */ `
       gender
       notificationToken
       favorites {
-        items {
-          id
-          businessID
-          userID
-          position
-          owner
-          createdAt
-          updatedAt
-        }
         nextToken
+        __typename
       }
       business {
-        items {
-          id
-          userID
-          status
-          identityID
-          name
-          image
-          images
-          thumbnail
-          email
-          phone
-          whatsapp
-          instagram
-          facebook
-          page
-          activity
-          tags
-          description
-          prefer
-          schedule
-          createdAt
-          updatedAt
-          owner
-        }
         nextToken
+        __typename
       }
       owner
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -283,17 +246,13 @@ export const listUsers = /* GraphQL */ `
         identityID
         gender
         notificationToken
-        favorites {
-          nextToken
-        }
-        business {
-          nextToken
-        }
         owner
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -321,17 +280,13 @@ export const userByEmail = /* GraphQL */ `
         identityID
         gender
         notificationToken
-        favorites {
-          nextToken
-        }
-        business {
-          nextToken
-        }
         owner
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -349,15 +304,10 @@ export const getBusiness = /* GraphQL */ `
         identityID
         gender
         notificationToken
-        favorites {
-          nextToken
-        }
-        business {
-          nextToken
-        }
         owner
         createdAt
         updatedAt
+        __typename
       }
       status
       identityID
@@ -374,20 +324,13 @@ export const getBusiness = /* GraphQL */ `
       coordinates {
         lat
         lon
+        __typename
       }
       activity
       tags
       favorites {
-        items {
-          id
-          businessID
-          userID
-          position
-          owner
-          createdAt
-          updatedAt
-        }
         nextToken
+        __typename
       }
       description
       prefer
@@ -395,6 +338,7 @@ export const getBusiness = /* GraphQL */ `
       createdAt
       updatedAt
       owner
+      __typename
     }
   }
 `;
@@ -408,19 +352,6 @@ export const listBusinesses = /* GraphQL */ `
       items {
         id
         userID
-        user {
-          id
-          cognitoID
-          name
-          lastName
-          email
-          identityID
-          gender
-          notificationToken
-          owner
-          createdAt
-          updatedAt
-        }
         status
         identityID
         name
@@ -433,23 +364,18 @@ export const listBusinesses = /* GraphQL */ `
         instagram
         facebook
         page
-        coordinates {
-          lat
-          lon
-        }
         activity
         tags
-        favorites {
-          nextToken
-        }
         description
         prefer
         schedule
         createdAt
         updatedAt
         owner
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -471,19 +397,6 @@ export const listBusinessbyUserID = /* GraphQL */ `
       items {
         id
         userID
-        user {
-          id
-          cognitoID
-          name
-          lastName
-          email
-          identityID
-          gender
-          notificationToken
-          owner
-          createdAt
-          updatedAt
-        }
         status
         identityID
         name
@@ -496,23 +409,18 @@ export const listBusinessbyUserID = /* GraphQL */ `
         instagram
         facebook
         page
-        coordinates {
-          lat
-          lon
-        }
         activity
         tags
-        favorites {
-          nextToken
-        }
         description
         prefer
         schedule
         createdAt
         updatedAt
         owner
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -524,19 +432,6 @@ export const getFavorites = /* GraphQL */ `
       business {
         id
         userID
-        user {
-          id
-          cognitoID
-          name
-          lastName
-          email
-          identityID
-          gender
-          notificationToken
-          owner
-          createdAt
-          updatedAt
-        }
         status
         identityID
         name
@@ -549,21 +444,15 @@ export const getFavorites = /* GraphQL */ `
         instagram
         facebook
         page
-        coordinates {
-          lat
-          lon
-        }
         activity
         tags
-        favorites {
-          nextToken
-        }
         description
         prefer
         schedule
         createdAt
         updatedAt
         owner
+        __typename
       }
       userID
       user {
@@ -575,20 +464,16 @@ export const getFavorites = /* GraphQL */ `
         identityID
         gender
         notificationToken
-        favorites {
-          nextToken
-        }
-        business {
-          nextToken
-        }
         owner
         createdAt
         updatedAt
+        __typename
       }
       position
       owner
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -602,50 +487,15 @@ export const listFavorites = /* GraphQL */ `
       items {
         id
         businessID
-        business {
-          id
-          userID
-          status
-          identityID
-          name
-          image
-          images
-          thumbnail
-          email
-          phone
-          whatsapp
-          instagram
-          facebook
-          page
-          activity
-          tags
-          description
-          prefer
-          schedule
-          createdAt
-          updatedAt
-          owner
-        }
         userID
-        user {
-          id
-          cognitoID
-          name
-          lastName
-          email
-          identityID
-          gender
-          notificationToken
-          owner
-          createdAt
-          updatedAt
-        }
         position
         owner
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -669,50 +519,15 @@ export const favoritesByBusinessID = /* GraphQL */ `
       items {
         id
         businessID
-        business {
-          id
-          userID
-          status
-          identityID
-          name
-          image
-          images
-          thumbnail
-          email
-          phone
-          whatsapp
-          instagram
-          facebook
-          page
-          activity
-          tags
-          description
-          prefer
-          schedule
-          createdAt
-          updatedAt
-          owner
-        }
         userID
-        user {
-          id
-          cognitoID
-          name
-          lastName
-          email
-          identityID
-          gender
-          notificationToken
-          owner
-          createdAt
-          updatedAt
-        }
         position
         owner
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -734,50 +549,15 @@ export const listFavoritesbyUserID = /* GraphQL */ `
       items {
         id
         businessID
-        business {
-          id
-          userID
-          status
-          identityID
-          name
-          image
-          images
-          thumbnail
-          email
-          phone
-          whatsapp
-          instagram
-          facebook
-          page
-          activity
-          tags
-          description
-          prefer
-          schedule
-          createdAt
-          updatedAt
-          owner
-        }
         userID
-        user {
-          id
-          cognitoID
-          name
-          lastName
-          email
-          identityID
-          gender
-          notificationToken
-          owner
-          createdAt
-          updatedAt
-        }
         position
         owner
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -793,6 +573,7 @@ export const getComplaints = /* GraphQL */ `
       owner
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -813,8 +594,10 @@ export const listComplaints = /* GraphQL */ `
         owner
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -826,6 +609,7 @@ export const getReasonComplaints = /* GraphQL */ `
       createdAt
       updatedAt
       owner
+      __typename
     }
   }
 `;
@@ -846,8 +630,10 @@ export const listReasonComplaints = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -864,6 +650,7 @@ export const getLogs = /* GraphQL */ `
       name
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -885,8 +672,10 @@ export const listLogs = /* GraphQL */ `
         name
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;

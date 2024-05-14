@@ -15,12 +15,33 @@ import { StatusBar } from "expo-status-bar";
 import * as Constants from "expo-constants";
 import * as SplashScreen from "expo-splash-screen";
 import { api } from "@/utils/constants/api.jsx";
-
+import * as WebBrowser from 'expo-web-browser';
 const ENDPOINT =
   Constants?.AppOwnership?.Expo === "expo"
     ? api?.stage_endpoint?.dev
     : api?.stage_endpoint?.prod;
+
+const REDIRECT_SIGNIN =
+  Constants?.AppOwnership?.Expo === "expo"
+    ? api?.rediret_signin?.dev
+    : api?.rediret_signin?.prod;
+const REDIRECT_SIGNOUT =
+  Constants?.AppOwnership?.Expo === "expo"
+    ? api?.rediret_signout?.dev
+    : api?.rediret_signout?.prod;
 console.log("ENDPOINT: ", ENDPOINT);
+
+async function urlOpener(url, redirectUrl) {
+  const { type, url: newUrl } = await WebBrowser.openAuthSessionAsync(
+    url,
+    redirectUrl
+  );
+
+  if (type === 'success' && Platform.OS === 'ios') {
+    WebBrowser.dismissBrowser();
+    return Linking.openURL(newUrl);
+  }
+}
 Amplify.configure({
   ...awsconfig,
   API: {
@@ -44,6 +65,12 @@ Amplify.configure({
       region: awsconfig.aws_project_region,
     },
   },
+  oauth: {
+    ...awsconfig.oauth,
+    redirectSignIn: REDIRECT_SIGNIN,
+    redirectSignOut: REDIRECT_SIGNOUT,
+    urlOpener
+  }
 });
 
 Analytics.addPluggable(new AWSKinesisFirehoseProvider());
@@ -95,20 +122,20 @@ export default function App() {
       </SafeAreaIOS>
     );
 
-    return (
-      <SafeAreaAndroid style={{ flex: 1 }}>
-        <SafeAreaProvider>
-          <GestureHandlerRootView style={{ flex: 1 }}>
-            <RecoilRoot>
-              <RootSiblingParent>
-                <StatusBar style="dark" backgroundColor="#fff" />
-                <Navigation />
-              </RootSiblingParent>
-            </RecoilRoot>
-          </GestureHandlerRootView>
-        </SafeAreaProvider>
-      </SafeAreaAndroid>
-    );
+  return (
+    <SafeAreaAndroid style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <RecoilRoot>
+            <RootSiblingParent>
+              <StatusBar style="dark" backgroundColor="#fff" />
+              <Navigation />
+            </RootSiblingParent>
+          </RecoilRoot>
+        </GestureHandlerRootView>
+      </SafeAreaProvider>
+    </SafeAreaAndroid>
+  );
 }
 
 const styles = StyleSheet.create({

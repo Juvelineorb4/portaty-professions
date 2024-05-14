@@ -1,4 +1,5 @@
 import React from "react";
+import { Platform } from "react-native";
 // amplify
 import { Auth, API } from "aws-amplify";
 import { userByEmail } from "@/graphql/CustomQueries/Navigation";
@@ -7,29 +8,42 @@ import { updateUsers } from "@/graphql/CustomMutations/Navigation";
 import { useRecoilState } from "recoil";
 import { userAuthenticated, userTable } from "@/atoms/index";
 import { useNavigation } from "@react-navigation/native";
-
+// functions
+import { registerEvent } from "@/functions/Analytics";
 const useUserManagement = () => {
   const [userAuth, setUserAuth] = useRecoilState(userAuthenticated);
-  const navigation = useNavigation();
-  
+
   const userSignIn = async (data) => {
     try {
       const result = await Auth.currentAuthenticatedUser();
       setUserAuth(result);
       checkAttributes(result);
-      setTimeout(() => {
-        // navigation.navigate("Tabs_Navigation", { screen: "Home_Tab" });
-      }, 1000);
+      const { attributes } = result;
+      const params = {
+        type: "signIn",
+        userid: attributes["custom:userTableID"],
+        birthdate: attributes?.birthdate,
+        gender: attributes["custom:gender"],
+        platform: Platform.OS.toUpperCase(),
+      };
+      registerEvent("user_auth", params);
     } catch (error) {
       setUserAuth(null);
     }
   };
 
-  const userSignOut = () => {
+  const userSignOut = async (data) => {
+    const { attributes } = data;
+    const params = {
+      type: "signOut",
+      userid: attributes["custom:userTableID"],
+      birthdate: attributes?.birthdate,
+      gender: attributes["custom:gender"],
+      platform: Platform.OS.toUpperCase(),
+    };
+    console.log(params);
+    registerEvent("user_auth", params);
     setUserAuth(null);
-    setTimeout(() => {
-      // navigation.navigate("Login_Welcome", { screen: "Login" });
-    }, 1000);
   };
   const checkUser = async () => {
     try {

@@ -14,7 +14,7 @@ import {
   Pressable,
   ActivityIndicator,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import * as customSearch from "@/graphql/CustomQueries/Search";
 import styles from "@/utils/styles/SearchPost.js";
 import {
@@ -35,18 +35,17 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { updateListFavorites, userAuthenticated, mapUser } from "@/atoms/index";
 import * as FileSystem from "expo-file-system";
 import { StorageAccessFramework } from "expo-file-system";
-import { useRef } from "react";
-import ModalAlert from "@/components/ModalAlert";
 // storage
 import AsyncStorage from "@react-native-async-storage/async-storage";
 // location
 import * as Location from "expo-location";
-import useKinesisFirehose from "@/hooks/useKinesisFirehose";
+// functions
+import { registerEvent } from "@/functions/Analytics";
 import ModalReport from "@/components/ModalReport";
 const SearchPost = ({ route, navigation }) => {
+  const timerRef = useRef();
   const userAuth = useRecoilValue(userAuthenticated);
   const userLocation = useRecoilValue(mapUser);
-  const [kinesisStreamName] = useKinesisFirehose();
   const [post, setPost] = useState(null);
   const [save, setSave] = useState("");
   const [open, setOpen] = useState(false);
@@ -57,6 +56,7 @@ const SearchPost = ({ route, navigation }) => {
   const [visibleReport, setVisibleReport] = useState(false);
   const [imageView, setImageView] = useState(null);
   const [listUpdate, setListUpdate] = useRecoilState(updateListFavorites);
+  const [countryCity, setCountryCity] = useState(null);
   const global = require("@/utils/styles/global.js");
 
   const {
@@ -107,13 +107,12 @@ const SearchPost = ({ route, navigation }) => {
 
   const onCreateFavorite = async () => {
     try {
-      const { attributes } = await Auth.currentAuthenticatedUser();
       const favorites = await API.graphql({
         query: customFavorites.createFavorites,
         variables: {
           input: {
             businessID: post?.id,
-            userID: attributes["custom:userTableID"],
+            userID: userAuth?.attributes["custom:userTableID"],
             position: 0,
           },
         },
@@ -122,11 +121,23 @@ const SearchPost = ({ route, navigation }) => {
       setSave(favorites?.data?.createFavorites?.id);
       setNumberFavorite(post?.favorites?.items?.length + 1);
       setListUpdate(!listUpdate);
+      // registramos el evento
+
+      const { country, city } = countryCity;
+
+      registerEvent("user_add_business", {
+        userid: userAuth?.attributes["custom:userTableID"],
+        businessid: post?.id,
+        birthdate: userAuth?.attributes?.birthdate,
+        gender: userAuth?.attributes["custom:gender"],
+        country,
+        city,
+      });
     } catch (error) {
       console.log("ERRO AL CARGAR UN FAVORITO: ", error);
     }
   };
-  console.log("HOAAAAAAAAAAAA", kinesisStreamName);
+
   const onDeleteFavorite = async () => {
     const favorites = await API.graphql({
       query: customFavorites.deleteFavorites,
@@ -136,6 +147,15 @@ const SearchPost = ({ route, navigation }) => {
         },
       },
       authMode: "AMAZON_COGNITO_USER_POOLS",
+    });
+    const { country, city } = countryCity;
+    registerEvent("user_remove_business", {
+      userid: userAuth?.attributes["custom:userTableID"],
+      businessid: save,
+      birthdate: userAuth?.attributes?.birthdate,
+      gender: userAuth?.attributes["custom:gender"],
+      country,
+      city,
     });
     setSave("");
     setNumberFavorite(0);
@@ -158,7 +178,7 @@ const SearchPost = ({ route, navigation }) => {
       } else {
         setShowAgg(true);
       }
-      console.log(business?.data?.getBusiness);
+
       return setPost(business?.data?.getBusiness);
     } catch (error) {
       console.log(error);
@@ -221,10 +241,9 @@ const SearchPost = ({ route, navigation }) => {
       }
 
       // De no haber visualizacion Registrarla en analytics
-      const addressArr = await Location.reverseGeocodeAsync(userLocation);
-      const { country, city } = addressArr[0];
+
+      const { country, city } = countryCity;
       const params = {
-        eventname: "user_viewed_business",
         userid: userID,
         birthdate: userAuth?.attributes?.birthdate,
         gender: userAuth?.attributes["custom:gender"],
@@ -232,15 +251,7 @@ const SearchPost = ({ route, navigation }) => {
         city,
         businessid: businessID,
       };
-
-      Analytics.record(
-        {
-          data: params,
-          streamName: kinesisStreamName,
-        },
-        "AWSKinesisFirehose"
-      );
-
+      registerEvent("user_viewed_business", params);
       // Almacena la información de la última visualización en AsyncStorage
       const currentViewInfo = {
         businessID: businessID,
@@ -254,11 +265,34 @@ const SearchPost = ({ route, navigation }) => {
       console.log("Error al registrar analitica: ", error);
     }
   };
+  // para la carga default
   useEffect(() => {
     if (!save) fetchFavorite();
     fetchData();
-    registerViewBusiness(userAuth?.attributes["custom:userTableID"], item.id);
   }, []);
+  // para obetener el pais y ciudad
+  useEffect(() => {
+    const registerCountryCity = async () => {
+      const addressArr = await Location.reverseGeocodeAsync(userLocation);
+      setCountryCity(addressArr[0]);
+    };
+    if (userLocation) registerCountryCity();
+  }, [userLocation]);
+  // para cuando este pais y ciudad registrar en el evento de vista
+  useEffect(() => {
+    // Inicia el temporizador cuando el componente se monta y countryCity y userAuth existen
+    if (countryCity && userAuth) {
+      timerRef.current = setTimeout(() => {
+        console.log("PASARON LOS SEGUNDOS");
+        registerViewBusiness(
+          userAuth?.attributes["custom:userTableID"],
+          item.id
+        );
+      }, 3000);
+    }
+    // Limpia el temporizador cuando el componente se desmonta
+    return () => clearTimeout(timerRef.current);
+  }, [countryCity, userAuth]);
 
   if (!post) return <SkeletonExample />;
   return (
