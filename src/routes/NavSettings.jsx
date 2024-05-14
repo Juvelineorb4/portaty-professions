@@ -9,6 +9,7 @@ import { urlInitalShare } from "@/atoms";
 import useDeepLinkInital from "@/hooks/useDeepLinkInital";
 const NavSettings = ({ checkRender }) => {
   const setUrlInitialShare = useSetRecoilState(urlInitalShare);
+
   const { userSignIn, userSignOut, checkUser } = useUserManagement();
   const navigation = useNavigation();
   useDeepLinkInital(checkRender);
@@ -16,13 +17,12 @@ const NavSettings = ({ checkRender }) => {
     // crear subscripcion
     const unsubscribe = Hub.listen("auth", ({ payload: { event, data } }) => {
       console.log("EVENTO: ", event);
-      console.log("DATA: ", data);
       switch (event) {
         case "signIn":
           userSignIn(data);
           break;
         case "signOut":
-          userSignOut();
+          userSignOut(data);
           break;
         case "confirmSignUp":
           break;
@@ -67,16 +67,6 @@ const NavSettings = ({ checkRender }) => {
     });
     checkInitialUrl();
     checkUser();
-
-    const api = "api-opense";
-    const path = "/api/complaints";
-    const params = {
-      headers: {},
-      queryStringParameters: {},
-    };
-    API.get(api, path, params)
-      .then((r) => console.log("PUES: ", r))
-      .catch((e) => console.log("ERROR: ", e));
     return () => {
       unsubscribe;
     };
