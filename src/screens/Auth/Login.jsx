@@ -132,6 +132,7 @@ const Login = ({ navigation }) => {
             <View
               style={{
                 flex: 1,
+                marginBottom: 10
               }}
             >
               <CustomInput
@@ -189,7 +190,7 @@ const Login = ({ navigation }) => {
         </ScrollView>
       </TouchableWithoutFeedback>
       <View style={styles.panel}>
-        <View style={{ height: 65 }}>
+        <View style={{ height: 65, marginBottom: 5 }}>
           <CustomButton
             text={
               isLoading ? (

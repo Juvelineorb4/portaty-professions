@@ -97,7 +97,7 @@ const Forgot = ({ navigation, route }) => {
                   label: [styles.labelInput, global.topGray],
                   error: styles.errorInput,
                   placeholder: styles.placeholder,
-                  input: [styles.inputContainer, global.bgWhiteSoft],
+                  input: [styles.inputContainer, global.bgWhite],
                 }}
                 // icon={require("@/utils/images/email.png")}
                 text={es.authentication.forgot.email.title}
@@ -125,7 +125,7 @@ const Forgot = ({ navigation, route }) => {
                   label: styles.labelInput,
                   error: styles.errorInput,
                   placeholder: styles.placeholder,
-                  input: [styles.inputContainer, global.bgWhiteSoft],
+                  input: [styles.inputContainer, global.bgWhite],
                   security: styles.security,
                 }}
                 text={es.authentication.forgot.password.title}
@@ -154,7 +154,7 @@ const Forgot = ({ navigation, route }) => {
                   label: styles.labelInput,
                   error: styles.errorInput,
                   placeholder: styles.placeholder,
-                  input: [styles.inputContainer, global.bgWhiteSoft],
+                  input: [styles.inputContainer, global.bgWhite],
                   security: styles.security,
                 }}
                 text={es.authentication.forgot.repeat.title}
@@ -167,7 +167,7 @@ const Forgot = ({ navigation, route }) => {
               />
             </View>
           </ScrollView>
-          <View style={{ height: 65 }}>
+          <View style={{ height: 65, marginBottom: 43 }}>
             <CustomButton
               text={
                 isLoading ? (

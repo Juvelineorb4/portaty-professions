@@ -167,8 +167,6 @@ const Register = ({ navigation }) => {
               />
             </View>
 
-            
-
             <View
               style={{
                 flex: 1,
@@ -310,21 +308,27 @@ const Register = ({ navigation }) => {
             onPressed={_handlePressButtonAsync}
             rules={{ required: "Requerido" }}
           />
+          <View style={{
+            marginBottom: 30
+          }}></View>
         </ScrollView>
-        <View style={{ height: 65 }}>
-          <CustomButton
-            text={
-              isLoading ? (
-                <ActivityIndicator color={`#1f1f1f`} />
-              ) : (
-                es.authentication.register.button
-              )
-            }
-            disabled={isLoading}
-            handlePress={handleSubmit(onHandleRegister)}
-            textStyles={[styles.textContinue, global.black]}
-            buttonStyles={[styles.continue, global.mainBgColor]}
-          />
+        <View style={{
+        }}>
+          <View style={{ height: 65, marginBottom: 42 }}>
+            <CustomButton
+              text={
+                isLoading ? (
+                  <ActivityIndicator color={`#1f1f1f`} />
+                ) : (
+                  es.authentication.register.button
+                )
+              }
+              disabled={isLoading}
+              handlePress={handleSubmit(onHandleRegister)}
+              textStyles={[styles.textContinue, global.black]}
+              buttonStyles={[styles.continue, global.mainBgColor]}
+            />
+          </View>
         </View>
       </View>
       <ModalAlert
