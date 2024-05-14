@@ -26,7 +26,8 @@ import { notificationToken } from "@/atoms/index";
 import { useRecoilValue } from "recoil";
 const Register = ({ navigation }) => {
   const token = useRecoilValue(notificationToken);
-  const EMAIL_REGEX = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
+  const EMAIL_REGEX =
+    /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)\s*$/;
   const [isLoading, setIsLoading] = useState(false);
   const [visible, setVisible] = useState(false);
 
@@ -265,13 +266,11 @@ const Register = ({ navigation }) => {
             rules={{ required: "Requerido" }}
           />
         </ScrollView>
-        <View
-          style={{ height: 65 }}
-        >
+        <View style={{ height: 65 }}>
           <CustomButton
             text={
               isLoading ? (
-                <ActivityIndicator color={`#1f1f1f`}/>
+                <ActivityIndicator color={`#1f1f1f`} />
               ) : (
                 es.authentication.register.button
               )

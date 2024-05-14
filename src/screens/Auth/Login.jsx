@@ -27,7 +27,8 @@ const Login = ({ navigation }) => {
   const { control, handleSubmit, watch } = useForm();
   const emailForm = watch("email");
   const global = require("@/utils/styles/global.js");
-  const EMAIL_REGEX = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
+  const EMAIL_REGEX =
+    /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)\s*$/;
   const { updateAvailable, fetchUpdate, updateVersion, updateDate } =
     useCheckAppVersion();
   const [errorActive, setErrorActive] = useState("");
