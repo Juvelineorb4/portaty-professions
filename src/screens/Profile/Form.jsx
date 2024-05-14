@@ -11,7 +11,7 @@ import {
   FlatList,
   TextInput,
 } from "react-native";
-import styles from "@/utils/styles/RegisterForm.module.css";
+import styles from "@/utils/styles/RegisterForm.js";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import CustomInput from "@/components/CustomInput";

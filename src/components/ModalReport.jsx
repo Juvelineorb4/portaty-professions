@@ -10,7 +10,7 @@ import {
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import styles from "@/utils/styles/ModalReport.module.css";
+import styles from "@/utils/styles/ModalReport.js";
 // import { complaints } from "@/utils/constants/complaints";
 import * as customFavorites from "@/graphql/CustomMutations/Favorites";
 import { Auth, API, Storage } from "aws-amplify";

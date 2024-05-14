@@ -16,7 +16,7 @@ import {
   Switch,
 } from "react-native";
 import React, { useState, useEffect, useRef } from "react";
-import styles from "@/utils/styles/Unprofile.module.css";
+import styles from "@/utils/styles/Unprofile.js";
 import {
   MaterialCommunityIcons,
   AntDesign,

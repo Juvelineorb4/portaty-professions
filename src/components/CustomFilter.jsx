@@ -6,7 +6,7 @@ import {
   Modal,
   TouchableOpacity,
 } from "react-native";
-import styles from "@/utils/styles/Tags.module.css";
+import styles from "@/utils/styles/Tags.js";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRecoilState } from "recoil";

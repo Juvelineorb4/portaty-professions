@@ -1,6 +1,6 @@
 import { View, Text, Image } from "react-native";
 import React from "react";
-import styles from "@/utils/styles/Header.module.css";
+import styles from "@/utils/styles/Header.js";
 
 const ProfileHeader = () => {
   const global = require("@/utils/styles/global.js");

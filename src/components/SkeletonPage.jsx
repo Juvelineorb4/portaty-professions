@@ -1,6 +1,6 @@
 import { View, ScrollView } from "react-native";
 import React from "react";
-import styles from "@/utils/styles/Unprofile.module.css";
+import styles from "@/utils/styles/Unprofile.js";
 import { Skeleton } from "@rneui/themed";
 
 const SkeletonExample = () => {

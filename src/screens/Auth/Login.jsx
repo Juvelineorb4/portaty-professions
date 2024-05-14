@@ -12,7 +12,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { Auth } from "aws-amplify";
-import styles from "@/utils/styles/Login.module.css";
+import styles from "@/utils/styles/Login.js";
 import { es } from "@/utils/constants/lenguage";
 import CustomInput from "@/components/CustomInput";
 import CustomButton from "@/components/CustomButton";
@@ -99,23 +99,6 @@ const Login = ({ navigation }) => {
     setVisible(false);
   };
 
-  const onHandleLoginSocial = async (type) => {
-    try {
-      switch (type) {
-        case "google":
-          Auth.federatedSignIn({
-            provider: "Google",
-            attributes: {
-              birthdays: "1998-09-20",
-            },
-          });
-
-          break;
-      }
-    } catch (error) {
-      console.log("ERROR SOCIAL: ", error);
-    }
-  };
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -138,18 +121,15 @@ const Login = ({ navigation }) => {
             {errorActive && (
               <Text style={styles.errorInputMain}>{errorActive}</Text>
             )}
-            <View style={{ alignItems: "center" }}>
-              <Image
-                style={{
-                  width: 300,
-                  height: 100,
-                  marginBottom: 5,
-                  resizeMode: "contain",
-                }}
-                source={require("@/utils/images/welcome.png")}
-              />
-            </View>
-
+            <Image
+              style={{
+                width: 300,
+                height: 100,
+                marginBottom: 25,
+                resizeMode: "contain",
+              }}
+              source={require("@/utils/images/welcome.png")}
+            />
             <CustomInput
               control={control}
               name={`email`}
@@ -217,12 +197,6 @@ const Login = ({ navigation }) => {
         <View style={styles.options}>
           <TouchableOpacity onPress={() => navigation.navigate("Forgot_App")}>
             <Text style={styles.forgot}>{es.authentication.login.forgot}</Text>
-          </TouchableOpacity>
-        </View>
-        {/* BTN SOCIAL */}
-        <View>
-          <TouchableOpacity onPress={() => onHandleLoginSocial("google")}>
-            <Text>GOOGLE</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.signup}>

@@ -1,6 +1,6 @@
 import { View, TextInput, Text, TouchableOpacity } from "react-native";
 import React, { useRef } from "react";
-import styles from "@/utils/styles/EnterCode.module.css";
+import styles from "@/utils/styles/EnterCode.js";
 import { Controller } from "react-hook-form";
 
 const EnterCode = ({ title, subtitle, control, onResendCode }) => {

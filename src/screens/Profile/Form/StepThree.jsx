@@ -7,7 +7,7 @@ import {
   Modal,
   ActivityIndicator,
 } from "react-native";
-import styles from "@/utils/styles/StepThree.module.css";
+import styles from "@/utils/styles/StepThree.js";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import LottieView from "lottie-react-native";

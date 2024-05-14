@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { RootSiblingParent } from "react-native-root-siblings";
 import {
@@ -7,16 +7,15 @@ import {
 } from "react-native-safe-area-context";
 import { RecoilRoot } from "recoil";
 import { useFonts } from "expo-font";
-import * as WebBrowser from 'expo-web-browser';
-import { Platform, SafeAreaView as SafeAreaIOS } from "react-native";
+import { Platform, SafeAreaView as SafeAreaIOS, View, Text, StyleSheet } from "react-native";
 import Navigation from "@/routes/Navigation";
-// amplify
 import { Amplify, AWSKinesisFirehoseProvider, Analytics } from "aws-amplify";
 import awsconfig from "./src/aws-exports.js";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet } from "react-native";
 import * as Constants from "expo-constants";
+import * as SplashScreen from "expo-splash-screen";
 import { api } from "@/utils/constants/api.jsx";
+import * as WebBrowser from 'expo-web-browser';
 const ENDPOINT =
   Constants?.AppOwnership?.Expo === "expo"
     ? api?.stage_endpoint?.dev
@@ -75,7 +74,7 @@ Amplify.configure({
 });
 
 Analytics.addPluggable(new AWSKinesisFirehoseProvider());
-
+// SplashScreen.preventAutoHideAsync();
 export default function App() {
   const global = require("@/utils/styles/global.js");
   const [fontsLoaded] = useFonts({
@@ -101,7 +100,11 @@ export default function App() {
   }, [fontsLoaded]);
 
   if (!fontsLoaded) {
-    return null;
+    return (
+      <View>
+        <Text>No cargo</Text>
+      </View>
+    );
   }
 
   if (Platform.OS === "ios")

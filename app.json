@@ -19,28 +19,21 @@
     },
     "assetBundlePatterns": ["*/"],
     "ios": {
-      "runtimeVersion": "exposdk:49.0.0",
+      "runtimeVersion": "exposdk:51.0.0",
       "supportsTablet": true,
       "infoPlist": {
-        "NSMicrophoneUsageDescription": "Permite a Portaty acceder a tu micrófono",
-        "NSContactsUsageDescription": "Permite a Portaty acceder a tus contactos",
-        "NSCalendarsUsageDescription": "Permite a Portaty acceder a tu calendario",
-        "NSCameraUsageDescription": "Permite a Portaty acceder a tu cámara",
-        "NSLocationWhenInUseUsageDescription": "Permite a Portaty acceder a tu ubicación cuando la aplicación está en uso",
-        "NSLocationAlwaysAndWhenInUseUsageDescription": "Permite a Portaty acceder a tu ubicación siempre y cuando la aplicación está en uso",
-        "NSPhotoLibraryUsageDescription": "Permite a Portaty acceder a tu biblioteca de fotos",
-        "NSDocumentsFolderUsageDescription": "Permite a Portaty acceder a tus documentos",
-        "UIBackgroundModes": "Permite a Portaty ejecutar ciertas tareas en segundo plano"
+        "MinimumOSVersion": "13.4",
+        "NSContactsUsageDescription": "Allow Portaty to access your contacts.",
+        "NSCalendarsUsageDescription": "Portaty needs to access your calendar.",
+        "NSRemindersUsageDescription": "Allow $(PRODUCT_NAME) to access your reminders",
+        "NSPhotoLibraryUsageDescription": "Allow Portasty to access your photos.",
+        "NSPhotoLibraryAddUsageDescription": "Allow Portaty to save photos."
       },
-      "associatedDomains": [
-        "applinks:https://www.portaty.com",
-        "applinks:https://portaty.com"
-      ],
       "bundleIdentifier": "com.teamportaty.appdev",
       "versionCode": 28
     },
     "android": {
-      "runtimeVersion": "exposdk:49.0.0",
+      "runtimeVersion": "exposdk:51.0.0",
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyDN14xck20KdIg4qVLW4o7ReqTfEUvFTCc"
@@ -114,7 +107,7 @@
             "buildToolsVersion": "33.0.0"
           },
           "ios": {
-            "deploymentTarget": "15.0"
+            "deploymentTarget": "13.4"
           }
         }
       ],
@@ -168,7 +161,8 @@
           "icon": "./assets/icon_notification.png",
           "color": "#ffffff"
         }
-      ]
+      ],
+      "expo-asset"
     ],
     "extra": {
       "eas": {
