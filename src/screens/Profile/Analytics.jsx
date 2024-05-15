@@ -18,6 +18,14 @@ const buttons = [
     id: 1,
     value: "Visitas",
   },
+  {
+    id: 2,
+    value: "Favoritos (nuevos)",
+  },
+  {
+    id: 3,
+    value: "Favoritos (salientes)",
+  },
 ];
 
 const Analytics = ({ route }) => {
@@ -45,27 +53,19 @@ const Analytics = ({ route }) => {
   const [allZeroCity, setAllZeroCity] = useState(false);
   const [allZeroAge, setAllZeroAge] = useState(false);
 
-  // funciones de busquedas de analisis
-  const fetchAnalyticsViews = async () => {
-    const {
-      last30days,
-      last12moths,
-      genderPercentage,
-      countryPercentage,
-      agePercentage,
-    } = api.paths.analytics.views;
+  const views = api.paths.analytics.views;
+  const addFavorites = api.paths.analytics.favorites.add;
+  const removeFavorites = api.paths.analytics.favorites.remove;
 
-    const endpoints = [
-      last30days,
-      last12moths,
-      genderPercentage,
-      countryPercentage,
-      agePercentage,
-    ];
+  const fetchAnalytics = async (analytics) => {
+    setStatusFetch(false);
+
+    let endpoints = analytics;
     const params = {
       headers: {},
       queryStringParameters: {
         businessID: data?.id,
+        userID: data?.userID,
       },
     };
     const requests = endpoints.map((endpoint) =>
@@ -73,54 +73,84 @@ const Analytics = ({ route }) => {
     );
 
     const results = await Promise.allSettled(requests);
-    console.log("aqui estoy", results);
+    console.log("por aca mi bro", endpoints, results);
 
+    // return
+    // const functions = [
+    //   (resultData) => getDataLikesMonths(resultData?.data),
+    //   (resultData) => getDataLikesYears(resultData?.data),
+    //   (resultData) => getDataGender(resultData?.data),
+    //   (resultData) => {
+    //     getDataCity(resultData?.data?.city);
+    //     getDataCountry(resultData?.data?.country);
+    //   },
+    //   (resultData) => getDataAge(resultData?.data),
+    // ];
+    // const functions = [
+    //   (resultData) => new Promise(resolve => resolve(getDataLikesMonths(resultData?.data))),
+    //   (resultData) => new Promise(resolve => resolve(getDataLikesYears(resultData?.data))),
+    //   (resultData) => new Promise(resolve => resolve(getDataGender(resultData?.data))),
+    //   (resultData) => new Promise(resolve => {
+    //     resolve(getDataCity(resultData?.data?.city));
+    //     resolve(getDataCountry(resultData?.data?.country));
+    //   }),
+    //   (resultData) => new Promise(resolve => resolve(getDataAge(resultData?.data))),
+    // ];
     // results?.map((item, index) => {
     //   if (item.status === "fulfilled") {
     //     let resultData = item?.value;
-    //     switch (index) {
-    //       case 0:
-    //         getDataLikesMonths(resultData?.data);
-    //         break;
-    //       case 1:
-    //         getDataLikesYears(resultData?.data);
-    //         break;
-
-    //       case 2:
-    //         getDataGender(resultData?.data);
-    //         break;
-    //       case 3:
-    //         getDataCity(resultData?.data?.city);
-    //         getDataCountry(resultData?.data?.country);
-    //         break;
-    //       case 4:
-    //         getDataAge(resultData?.data);
-    //         break;
-    //       default:
-    //         break;
+    //     if (functions[index]) {
+    //       console.log(index, item.value);
+    //       functions[index](resultData);
     //     }
     //   }
     // });
+    let counter = results.length;
+
     const functions = [
-      (resultData) => getDataLikesMonths(resultData?.data),
-      (resultData) => getDataLikesYears(resultData?.data),
-      (resultData) => getDataGender(resultData?.data),
-      (resultData) => {
-        getDataCity(resultData?.data?.city);
-        getDataCountry(resultData?.data?.country);
+      async (resultData) => {
+        await getDataLikesMonths(resultData?.data);
+        counter--;
+        checkCounter();
       },
-      (resultData) => getDataAge(resultData?.data),
+      async (resultData) => {
+        await getDataLikesYears(resultData?.data);
+        counter--;
+        checkCounter();
+      },
+      async (resultData) => {
+        await getDataGender(resultData?.data);
+        counter--;
+        checkCounter();
+      },
+      async (resultData) => {
+        await getDataCity(resultData?.data?.city);
+        await getDataCountry(resultData?.data?.country);
+        counter--;
+        checkCounter();
+      },
+      async (resultData) => {
+        await getDataAge(resultData?.data);
+        counter--;
+        checkCounter();
+      },
     ];
+
+    const checkCounter = () => {
+      if (counter === 0) {
+        setStatusFetch(true);
+      }
+    };
 
     results?.map((item, index) => {
       if (item.status === "fulfilled") {
         let resultData = item?.value;
         if (functions[index]) {
+          console.log(index, item.value);
           functions[index](resultData);
         }
       }
     });
-    setStatusFetch(true);
   };
 
   const customLabel = (val) => {
@@ -226,7 +256,6 @@ const Analytics = ({ route }) => {
   };
   const getDataCity = (data) => {
     const dataCity = data;
-    console.log("data", data);
     let sortedData = [...dataCity].sort(
       (a, b) => b.porcentaje_visitas - a.porcentaje_visitas
     );
@@ -264,7 +293,6 @@ const Analytics = ({ route }) => {
         });
       }
     });
-    console.log("data", cities);
     let remainingSum = sortedData
       .slice(3)
       .reduce((sum, item) => sum + item.porcentaje_visitas, 0);
@@ -454,19 +482,10 @@ const Analytics = ({ route }) => {
   };
 
   useEffect(() => {
-    if (data?.id) fetchAnalyticsViews();
+    if (data?.id && type === 1) fetchAnalytics(views);
   }, [data]);
 
-  if (
-    dataGraph !== null &&
-    dataLikes !== null &&
-    maxValue !== null &&
-    dataGenderPie !== null &&
-    dataCityPie !== null &&
-    dataCountryPie !== null &&
-    dataAgePie !== null &&
-    statusFetch === true
-  ) {
+  if (statusFetch !== false) {
     return (
       <ScrollView
         style={{
@@ -489,9 +508,20 @@ const Analytics = ({ route }) => {
                 alignItems: "center",
                 backgroundColor: item.id === type ? "#ffb703" : "#ffffff",
               }}
-              onPress={() => setType(item.id)}
+              onPress={() => {
+                setType(item.id);
+                if (item.id === 1) fetchAnalytics(views);
+                if (item.id === 2) fetchAnalytics(addFavorites);
+                if (item.id === 3) fetchAnalytics(removeFavorites);
+              }}
             >
-              <RNText style={{ fontFamily: "bold", fontSize: 12 }}>
+              <RNText
+                style={{
+                  fontFamily: "bold",
+                  fontSize: 12,
+                  textAlign: "center",
+                }}
+              >
                 {item.value}
               </RNText>
             </TouchableOpacity>
@@ -533,7 +563,11 @@ const Analytics = ({ route }) => {
                 marginBottom: 20,
               }}
             >
-              Grafico de visitas
+              {type === 1
+                ? "Grafico de visitas"
+                : type === 2
+                ? "Grafico de favoritos (nuevos)"
+                : "Grafico de favoritos (salientes)"}
             </RNText>
             <View
               style={{
@@ -675,7 +709,11 @@ const Analytics = ({ route }) => {
               Desde que existe el negocio
             </RNText>
             <RNText style={{ fontFamily: "bold", fontSize: 14, marginTop: 5 }}>
-              Visitas: diagrama de genero
+              {type === 1
+                ? "Visitas: diagrama de genero"
+                : type === 2
+                ? "Favoritos (nuevos): diagrama de genero"
+                : "Favoritos (salientes): diagrama de genero"}
             </RNText>
             <View
               style={{
@@ -736,14 +774,18 @@ const Analytics = ({ route }) => {
                         fontFamily: "medium",
                       }}
                     >
-                      {`${entry.label}: ${entry.value}% - ${entry.amount} cant.`}
+                      {`${entry.label}: ${entry.value.toFixed(2)}% - ${entry.amount} cant.`}
                     </RNText>
                   </View>
                 ))}
               </View>
             </View>
             <RNText style={{ fontFamily: "bold", fontSize: 14, marginTop: 15 }}>
-              Visitas: diagrama de edad
+              {type === 1
+                ? "Visitas: diagrama de edad"
+                : type === 2
+                ? "Favoritos (nuevos): diagrama de edad"
+                : "Favoritos (salientes): diagrama de edad"}
             </RNText>
             <View
               style={{
@@ -805,14 +847,18 @@ const Analytics = ({ route }) => {
                         fontFamily: "medium",
                       }}
                     >
-                      {`${entry.label}: ${entry.value}% - ${entry.amount} cant.`}
+                      {`${entry.label}: ${entry.value.toFixed(2)}% - ${entry.amount} cant.`}
                     </RNText>
                   </View>
                 ))}
               </View>
             </View>
             <RNText style={{ fontFamily: "bold", fontSize: 14, marginTop: 15 }}>
-              Visitas: diagrama de ubicacion
+              {type === 1
+                ? "Visitas: diagrama de ubicacion"
+                : type === 2
+                ? "Favoritos (nuevos): diagrama de ubicacion"
+                : "Favoritos (salientes): diagrama de ubicacion"}
             </RNText>
 
             <View
@@ -925,12 +971,13 @@ const Analytics = ({ route }) => {
                       <RNText
                         key={index}
                         style={{
+                          width: 125,
                           fontSize: 10,
                           marginLeft: 5,
                           fontFamily: "medium",
                         }}
                       >
-                        {`${entry.label}: ${entry.value}% - ${entry.amount} cant.`}
+                        {`${entry.label}: ${entry.value.toFixed(2)}% - ${entry.amount} cant.`}
                       </RNText>
                     </View>
                   ))}
