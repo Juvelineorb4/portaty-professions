@@ -39,6 +39,7 @@ const Analytics = ({ route }) => {
   const [dataCityPie, setDataCityPie] = useState(null);
   const [dataCountryPie, setDataCountryPie] = useState(null);
   const [dataAgePie, setDataAgePie] = useState(null);
+  const [statusFetch, setStatusFetch] = useState(false);
   /* Condicionales */
   const [allZeroGender, setAllZeroGender] = useState(false);
   const [allZeroCity, setAllZeroCity] = useState(false);
@@ -72,44 +73,55 @@ const Analytics = ({ route }) => {
     );
 
     const results = await Promise.allSettled(requests);
+    console.log("aqui estoy", results);
 
-    results.forEach((result, index) => {
-      if (result.status === "fulfilled") {
-        const resultData = result?.value;
-        switch (index) {
-          case 0:
-            getDataLikesMonths(resultData?.data);
-            break;
-          case 1:
-            getDataLikesYears(resultData?.data);
-            break;
+    // results?.map((item, index) => {
+    //   if (item.status === "fulfilled") {
+    //     let resultData = item?.value;
+    //     switch (index) {
+    //       case 0:
+    //         getDataLikesMonths(resultData?.data);
+    //         break;
+    //       case 1:
+    //         getDataLikesYears(resultData?.data);
+    //         break;
 
-          case 2:
-            getDataGender(resultData?.data);
-            break;
-          case 3:
-            getDataCity(resultData?.data?.city);
-            getDataCountry(resultData?.data?.country);
-            break;
-          case 4:
-            getDataAge(resultData?.data);
-            break;
-          default:
-            break;
+    //       case 2:
+    //         getDataGender(resultData?.data);
+    //         break;
+    //       case 3:
+    //         getDataCity(resultData?.data?.city);
+    //         getDataCountry(resultData?.data?.country);
+    //         break;
+    //       case 4:
+    //         getDataAge(resultData?.data);
+    //         break;
+    //       default:
+    //         break;
+    //     }
+    //   }
+    // });
+    const functions = [
+      (resultData) => getDataLikesMonths(resultData?.data),
+      (resultData) => getDataLikesYears(resultData?.data),
+      (resultData) => getDataGender(resultData?.data),
+      (resultData) => {
+        getDataCity(resultData?.data?.city);
+        getDataCountry(resultData?.data?.country);
+      },
+      (resultData) => getDataAge(resultData?.data),
+    ];
+
+    results?.map((item, index) => {
+      if (item.status === "fulfilled") {
+        let resultData = item?.value;
+        if (functions[index]) {
+          functions[index](resultData);
         }
-        // console.log(
-        //   `La petición al endpoint ${endpoints[index]} fue exitosa con el siguiente resultado:`,
-        //   result.value
-        // );
-      } else {
-        // console.log(
-        //   `La petición al endpoint ${endpoints[index]} falló con el siguiente error:`,
-        //   result.reason
-        // );
       }
     });
+    setStatusFetch(true);
   };
-  // fin funciones de busquedas
 
   const customLabel = (val) => {
     return (
@@ -132,6 +144,7 @@ const Analytics = ({ route }) => {
       .map((value) => +value)
       .reverse();
     const value = Math.max(...likes);
+
     setDataGraph(dataForXAxis);
     setMaxValue(value);
     setDataLikes(likes);
@@ -150,6 +163,7 @@ const Analytics = ({ route }) => {
       .reverse();
 
     const valueYear = Math.max(...likesYear);
+
     setDataGraphYear(dataForXAxisYear);
     setMaxValueYear(valueYear);
     setDataLikesYear(likesYear);
@@ -158,7 +172,6 @@ const Analytics = ({ route }) => {
   const getDataGender = (data) => {
     const dataGender = data;
     const gender = [];
-
     dataGender.map((item, index) => {
       if (item.genero === "Male") {
         gender.push({
@@ -213,7 +226,7 @@ const Analytics = ({ route }) => {
   };
   const getDataCity = (data) => {
     const dataCity = data;
-
+    console.log("data", data);
     let sortedData = [...dataCity].sort(
       (a, b) => b.porcentaje_visitas - a.porcentaje_visitas
     );
@@ -251,7 +264,7 @@ const Analytics = ({ route }) => {
         });
       }
     });
-
+    console.log("data", cities);
     let remainingSum = sortedData
       .slice(3)
       .reduce((sum, item) => sum + item.porcentaje_visitas, 0);
@@ -451,7 +464,8 @@ const Analytics = ({ route }) => {
     dataGenderPie !== null &&
     dataCityPie !== null &&
     dataCountryPie !== null &&
-    dataAgePie !== null
+    dataAgePie !== null &&
+    statusFetch === true
   ) {
     return (
       <ScrollView
@@ -923,6 +937,16 @@ const Analytics = ({ route }) => {
                 </View>
               </View>
             ) : (
+              // <View>
+              //   <RNText
+              //     style={{
+              //       fontFamily: "medium",
+              //       fontSize: 14,
+              //     }}
+              //   >
+              //     Sin datos
+              //   </RNText>
+              // </View>
               <View
                 style={{
                   flexDirection: "row",
