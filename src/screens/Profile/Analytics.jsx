@@ -72,9 +72,12 @@ const Analytics = ({ route }) => {
     );
 
     const results = await Promise.allSettled(requests);
-
-    results.forEach((result, index) => {
+    results.map((result, index) => {
       if (result.status === "fulfilled") {
+        // console.log(
+        //   `La petición al endpoint ${endpoints[index]} fue exitosa con el siguiente resultado:`,
+        //   result.value.data
+        // );
         const resultData = result?.value;
         switch (index) {
           case 0:
@@ -97,15 +100,11 @@ const Analytics = ({ route }) => {
           default:
             break;
         }
-        // console.log(
-        //   `La petición al endpoint ${endpoints[index]} fue exitosa con el siguiente resultado:`,
-        //   result.value
-        // );
       } else {
-        // console.log(
-        //   `La petición al endpoint ${endpoints[index]} falló con el siguiente error:`,
-        //   result.reason
-        // );
+        console.log(
+          `La petición al endpoint ${endpoints[index]} falló con el siguiente error:`,
+          result.reason
+        );
       }
     });
   };
@@ -213,7 +212,6 @@ const Analytics = ({ route }) => {
   };
   const getDataCity = (data) => {
     const dataCity = data;
-
     let sortedData = [...dataCity].sort(
       (a, b) => b.porcentaje_visitas - a.porcentaje_visitas
     );
@@ -367,7 +365,6 @@ const Analytics = ({ route }) => {
   };
   const getDataAge = (data) => {
     const dataAge = data;
-
     const age = [];
 
     dataAge.map((item, index) => {
@@ -434,7 +431,8 @@ const Analytics = ({ route }) => {
         text: item.amount,
       });
     });
-
+    console.log("AGEEE: ", age);
+    console.log("PIE AGE: ", agePie);
     setAllZeroAge(age.every((item) => item.value === 0));
     setDataAgePie(age);
     setDataAgePieGraph(agePie);
@@ -443,6 +441,9 @@ const Analytics = ({ route }) => {
   useEffect(() => {
     if (data?.id) fetchAnalyticsViews();
   }, [data]);
+  useEffect(() => {
+    console.log("Age: ", dataAgePieGraph);
+  }, [dataAgePieGraph]);
 
   if (
     dataGraph !== null &&
@@ -451,7 +452,8 @@ const Analytics = ({ route }) => {
     dataGenderPie !== null &&
     dataCityPie !== null &&
     dataCountryPie !== null &&
-    dataAgePie !== null
+    dataAgePie !== null &&
+    dataAgePieGraph !== null
   ) {
     return (
       <ScrollView

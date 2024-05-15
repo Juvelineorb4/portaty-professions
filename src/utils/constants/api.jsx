@@ -24,10 +24,6 @@ export const api = {
         countryPercentage: "/analytics/events/views/country-percentage",
         agePercentage: "/analytics/events/views/age-percentage",
       },
-      favorities: {
-        addLast30days: "/analytics/events/favorites/add-last-30-days",
-        removeLast30days: "/analytics/events/favorites/remove-last-30-days",
-      },
     },
   },
 };
