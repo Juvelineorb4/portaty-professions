@@ -278,6 +278,11 @@ export const listFavoritesbyUserID = /* GraphQL */ `
           userID
           status
           identityID
+          coordinates {
+            lat
+            lon
+            __typename
+           }
           name
           image
           images

@@ -56,6 +56,7 @@ const FavoritePage = ({ navigation, route }) => {
   const {
     data: { item, image },
   } = route.params;
+  console.log("DATA: ", item);
   const actividad = JSON.parse(item.business.activity);
   const list = item?.business?.images
     .map((image) => JSON.parse(image))
@@ -136,8 +137,6 @@ const FavoritePage = ({ navigation, route }) => {
     setListUpdate(!listUpdate);
     navigation.goBack();
   };
-
-
 
   const onOpenMap = (lat, lng, name) => {
     let url = "";

@@ -17,31 +17,28 @@ export const api = {
   },
   paths: {
     analytics: {
-      views: {
-        last30days: "/analytics/events/views/last-30-days",
-        last12moths: "/analytics/events/views/last-12-months",
-        genderPercentage: "/analytics/events/views/gender-percentage",
-        countryPercentage: "/analytics/events/views/country-percentage",
-        agePercentage: "/analytics/events/views/age-percentage",
-      },
+      views: [
+        "/analytics/events/views/last-30-days",
+        "/analytics/events/views/last-12-months",
+        "/analytics/events/views/gender-percentage",
+        "/analytics/events/views/country-percentage",
+        "/analytics/events/views/age-percentage",
+      ],
       favorites: {
-        add: {
-          last30days: "/analytics/events/favorites/add/last-30-days",
-          last12moths: "/analytics/events/favorites/add/last-12-months",
-          genderPercentage: "/analytics/events/favorites/add/gender-percentage",
-          countryPercentage:
-            "/analytics/events/favorites/add/country-percentage",
-          agePercentage: "/analytics/events/favorites/add/age-percentage",
-        },
-        remove: {
-          last30days: "/analytics/events/favorites/remove/last-30-days",
-          last12moths: "/analytics/events/favorites/remove/last-12-months",
-          genderPercentage:
-            "/analytics/events/favorites/remove/gender-percentage",
-          countryPercentage:
-            "/analytics/events/favorites/remove/country-percentage",
-          agePercentage: "/analytics/events/favorites/remove/age-percentage",
-        },
+        add: [
+          "/analytics/events/favorites/add/last-30-days",
+          "/analytics/events/favorites/add/last-12-months",
+          "/analytics/events/favorites/add/gender-percentage",
+          "/analytics/events/favorites/add/country-percentage",
+          "/analytics/events/favorites/add/age-percentage",
+        ],
+        remove: [
+          "/analytics/events/favorites/remove/last-30-days",
+          "/analytics/events/favorites/remove/last-12-months",
+          "/analytics/events/favorites/remove/gender-percentage",
+          "/analytics/events/favorites/remove/country-percentage",
+          "/analytics/events/favorites/remove/age-percentage",
+        ],
       },
     },
   },
