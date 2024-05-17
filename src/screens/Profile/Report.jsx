@@ -17,7 +17,6 @@ const Report = ({navigation}) => {
   const userAuth = useRecoilValue(userAuthenticated);
   const updateShedule = async (data) => {
     const { reason, description } = data;
-    console.log(reason, description);
     try {
       const result = await API.graphql({
         query: mutations.createReports,
@@ -31,7 +30,6 @@ const Report = ({navigation}) => {
           },
         },
       });
-      console.log(result);
       setActive(true);
     } catch (error) {
       console.log(error);

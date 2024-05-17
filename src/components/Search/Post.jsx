@@ -35,7 +35,6 @@ const Post = ({ data, image, styled, input }) => {
         authMode: "AWS_IAM",
       });
       setPost(business.data.getBusiness);
-      console.log('aqui', business.data.getBusiness)
     } catch (error) {
       console.log(error);
     }
@@ -61,7 +60,6 @@ const Post = ({ data, image, styled, input }) => {
         ]}
         onPress={() => {
           setModalVisible(!modalVisible);
-          console.log("desde el modal", input);
         }}
       >
         {/* {!url ? (

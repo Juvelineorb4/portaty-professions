@@ -29,7 +29,7 @@ const Navigation = () => {
   const [userState, setUserState] = useState(false);
   const [isFirsTime, setIsFirsTime] = useState(false);
   const userAuth = useRecoilValue(userAuthenticated);
-
+  // NavSettings(checkRender);
   const renderNavigation = () => {
     setCheckRender(true);
 

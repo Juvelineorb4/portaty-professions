@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Hub } from "aws-amplify";
+import { Hub, API } from "aws-amplify";
 import { useUserManagement } from "@/hooks";
 import * as Linking from "expo-linking";
 import { useNavigation } from "@react-navigation/native";
@@ -9,6 +9,7 @@ import { urlInitalShare } from "@/atoms";
 import useDeepLinkInital from "@/hooks/useDeepLinkInital";
 const NavSettings = ({ checkRender }) => {
   const setUrlInitialShare = useSetRecoilState(urlInitalShare);
+
   const { userSignIn, userSignOut, checkUser } = useUserManagement();
   const navigation = useNavigation();
   useDeepLinkInital(checkRender);
@@ -20,7 +21,7 @@ const NavSettings = ({ checkRender }) => {
           userSignIn(data);
           break;
         case "signOut":
-          userSignOut();
+          userSignOut(data);
           break;
         case "confirmSignUp":
           break;
@@ -47,7 +48,6 @@ const NavSettings = ({ checkRender }) => {
     };
     Linking.addEventListener("url", ({ url }) => {
       const { hostname, path, queryParams } = Linking.parse(url);
-      console.log("A VER URL: ", queryParams?.id);
       if (url) {
         // if (path === "share/list" && queryParams?.id) {
         //   return navigation.navigate("ShareNavigator", {

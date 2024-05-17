@@ -27,6 +27,7 @@ import {
   Entypo,
   MaterialIcons,
   Octicons,
+  Ionicons,
 } from "@expo/vector-icons";
 import { Auth, API, Storage } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Favorites";
@@ -52,10 +53,70 @@ const FavoritePage = ({ navigation, route }) => {
   const [imageView, setImageView] = useState(null);
   const [dimensionsImages, setDimensionsImages] = useState(0);
   const [open, setOpen] = useState(false);
+  const [weekSchedule, setWeekSchedule] = useState("");
+  const [starRating, setStarRating] = useState(null);
 
   const {
     data: { item, image },
   } = route.params;
+  let schedule = JSON.parse(item.business?.schedule);
+  const filterSchedule = (array, type) => {
+    if (array === null || type === null) return;
+    console.log("toy por aqui");
+    console.log(array);
+    console.log(type);
+    // return;
+    let scheduleG = [];
+    let activeDays = array.filter((day) => day.active);
+
+    for (let i = 0; i < activeDays.length; i++) {
+      if (
+        i === 0 ||
+        activeDays[i].hourStart !== activeDays[i - 1].hourStart ||
+        activeDays[i].hourEnd !== activeDays[i - 1].hourEnd
+      ) {
+        scheduleG.push({
+          days: [activeDays[i].name],
+          hourStart: activeDays[i].hourStart,
+          hourEnd: activeDays[i].hourEnd,
+        });
+      } else {
+        scheduleG[scheduleG.length - 1].days.push(activeDays[i].name);
+      }
+    }
+
+    let pContent = scheduleG
+      .map((group) => {
+        let days = group.days;
+        if (days.length > 2) {
+          let consecutive = true;
+          for (let i = 1; i < days.length; i++) {
+            if (
+              array.findIndex((day) => day.name === days[i]) !==
+              array.findIndex((day) => day.name === days[i - 1]) + 1
+            ) {
+              consecutive = false;
+              break;
+            }
+          }
+          if (consecutive) {
+            days = [days[0], "a", days[days.length - 1]];
+          } else {
+            days = days.join(" - ");
+          }
+        } else if (days.length === 2) {
+          days = [days[0], "y", days[1]];
+        }
+        return `${Array.isArray(days) ? days.join(" ") : days}: ${
+          group.hourStart
+        } - ${group.hourEnd}`;
+      })
+      .join(" / ");
+
+    console.log(pContent);
+
+    setWeekSchedule(pContent);
+  };
   const actividad = JSON.parse(item.business.activity);
   const list = item?.business?.images
     .map((image) => JSON.parse(image))
@@ -95,9 +156,7 @@ const FavoritePage = ({ navigation, route }) => {
             encoding: FileSystem.EncodingType.Base64,
           });
         })
-        .catch((e) => {
-          console.log(e);
-        });
+        .catch((e) => {});
     } catch (error) {
       console.log("Error en pdf: ", error.message);
     }
@@ -112,11 +171,11 @@ const FavoritePage = ({ navigation, route }) => {
         authMode: "AWS_IAM",
       });
       setPost(business.data.getBusiness);
-
     } catch (error) {
-      console.log(error);
+      console.log("eres tu", error);
     }
   };
+
   const onDeleteFavorite = async () => {
     const favorites = await API.graphql({
       query: customFavorites.deleteFavorites,
@@ -157,6 +216,7 @@ const FavoritePage = ({ navigation, route }) => {
 
   useLayoutEffect(() => {
     fetchData();
+    filterSchedule(schedule.shedule, schedule.type);
   }, [listUpdate]);
 
   if (!item) return <SkeletonExample />;
@@ -301,6 +361,66 @@ const FavoritePage = ({ navigation, route }) => {
         </View>
         <View
           style={{
+            flexDirection: "row",
+            paddingHorizontal: 20,
+            justifyContent: "center",
+            alignItems: "center",
+            paddingTop: 5,
+          }}
+        >
+          <View
+            style={{
+              alignItems: "center",
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: "regular",
+                  fontSize: 16,
+                  marginRight: 3,
+                }}
+              >
+                4.7
+              </Text>
+              <Ionicons name="star" size={16} color="#ffb703" />
+            </View>
+
+            <Text
+              style={{
+                fontFamily: "lightItalic",
+                fontSize: 12,
+              }}
+            >
+              100+ valoraciones
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginLeft: 25,
+            }}
+          >
+            <MaterialCommunityIcons name="medal" size={20} color="#ffb703" />
+            <Text
+              style={{
+                fontFamily: "lightItalic",
+                fontSize: 12,
+              }}
+            >
+              Nº 14 en Turismo
+            </Text>
+          </View>
+        </View>
+
+        <View
+          style={{
             // flex: 1,
             flexDirection: "row",
             alignItems: "center",
@@ -346,13 +466,13 @@ const FavoritePage = ({ navigation, route }) => {
           }}
           onPress={() => setVisible(true)}
         >
-          <MaterialIcons name="report" size={22} color="black" />
+          <MaterialIcons name="report" size={16} color="black" />
           <Text
             style={[
               global.black,
               {
                 fontFamily: "bold",
-                fontSize: 12,
+                fontSize: 10,
                 // marginLeft: 2,
                 // marginBottom: 3
               },
@@ -364,6 +484,202 @@ const FavoritePage = ({ navigation, route }) => {
         {/* Hasta aqui */}
 
         <View style={[styles.line, global.bgMidGray]} />
+        {/* <View
+          style={{
+            padding: 20,
+          }}
+        >
+          <Text style={{ fontSize: 18, fontFamily: "regular" }}>
+            Valoración
+          </Text>
+          <View style={styles.stars}>
+            {[1, 2, 3, 4, 5].map((rating) => (
+              <TouchableWithoutFeedback
+                key={rating}
+                onPress={() => setStarRating(rating)}
+              >
+                <MaterialIcons
+                  name={rating <= starRating ? "star" : "star-border"}
+                  size={32}
+                  style={styles.star}
+                />
+              </TouchableWithoutFeedback>
+            ))}
+          </View>
+          <Text
+            style={{
+              fontFamily: "light",
+              fontSize: 15,
+              lineHeight: 25,
+              textAlign: "center",
+            }}
+          >
+            {`Aun no has puntuado este negocio`}
+          </Text>
+          <TouchableOpacity
+            style={[
+              {
+                borderColor: "#1f1f1f",
+                borderRadius: 8,
+                borderWidth: 0.7,
+                padding: 20,
+                marginTop: 10,
+              },
+              global.mainBgColor,
+            ]}
+          >
+            <Text
+              style={[
+                { fontSize: 14, fontFamily: "bold", textAlign: "center" },
+                global.black,
+              ]}
+            >
+              Puntualo
+            </Text>
+          </TouchableOpacity>
+        </View> */}
+        <View
+          style={{
+            paddingHorizontal: 20,
+            paddingTop: 20
+          }}
+        >
+          <Text style={{ fontSize: 18, fontFamily: "regular" }}>
+            Horario comercial
+          </Text>
+          {schedule !== null ? (
+            <View>
+              <Text
+                style={{
+                  fontFamily: "regular",
+                  fontSize: 14,
+                  marginTop: 5,
+                  lineHeight: 25,
+                  textAlign: "center",
+                }}
+              >
+                {schedule.type}
+              </Text>
+              <Text
+                style={{
+                  fontFamily: "light",
+                  fontSize: 15,
+                  lineHeight: 25,
+                  textAlign: "center",
+                }}
+              >
+                {weekSchedule}
+              </Text>
+            </View>
+          ) : (
+            <View>
+              <Text
+                style={{
+                  fontFamily: "regular",
+                  fontSize: 18,
+                  marginTop: 8,
+                  textAlign: "center",
+                  marginBottom: -10,
+                }}
+              >
+                {`No definido`}
+              </Text>
+            </View>
+          )}
+        </View>
+        <View
+          style={{
+            paddingHorizontal: 20,
+            paddingTop: 10
+          }}
+        >
+          <View
+            style={{
+              borderWidth: 0.6,
+              borderColor: "#1f1f1f",
+              height: 130,
+              borderRadius: 8,
+              padding: 10,
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "flex-end",
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: "bold",
+                  fontSize: 13,
+                }}
+              >
+                Este negocio tiene 21 reseñas
+              </Text>
+            </View>
+            <View
+              style={{
+                marginTop: 10,
+                backgroundColor: '#efeded',
+                padding: 5,
+                borderRadius: 8
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: "regular",
+                    fontSize: 13,
+                    marginRight: 3,
+                  }}
+                >
+                  4 de 5
+                </Text>
+                <Ionicons name="star" size={12} color="#ffb703" />
+                <Text
+                  style={{
+                    fontFamily: "medium",
+                    fontSize: 12,
+                    marginLeft: 5,
+                  }}
+                >
+                  Christopher Alvarez
+                </Text>
+              </View>
+              <Text
+                style={{
+                  fontFamily: "regular",
+                  fontSize: 13,
+                }}
+              >
+                Un sitio agradable, y muy buena atencion al cliente
+              </Text>
+            </View>
+            <View style={{
+              flexDirection: 'row',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              marginTop: 5
+            }}>
+              <Text
+                style={{
+                  fontFamily: "mediumItalic",
+                  fontSize: 12,
+                  marginRight: 3
+                }}
+              >
+                Ver todas las reseñas
+              </Text>
+              <AntDesign name="arrowright" size={13} color="black" />
+            </View>
+          </View>
+        </View>
+        
         <TouchableOpacity
           style={{
             padding: 20,

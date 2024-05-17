@@ -86,7 +86,8 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: 'regular',
-    margin: '15% 10px 10%',
+    marginHorizontal: 10,
+    marginBottom: '10%',
     textAlign: 'center',
     fontSize: 32,
     color: '#1f1f1f',
@@ -106,13 +107,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
     color: '#404040',
-    margin: '0px 0px 40px',
+    // margin: '0px 0px 40px',
+    marginBottom: 40
   },
   textRules: {
     fontFamily: 'regular',
     fontSize: 14,
     color: '#9d9d9d',
-    margin: '0px 0px 40px',
+    // margin: '0px 0px 40px',
+    marginBottom: 40
+
   },
   emailText: {
     fontFamily: 'medium',

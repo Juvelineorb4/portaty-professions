@@ -53,7 +53,6 @@ const ItemShareList = ({ data, styled }) => {
       };
 
       const allFavorites = await fetchAllFavorites();
-      console.log(allFavorites);
       if (allFavorites.length !== 0) setSave(allFavorites[0].id);
     } catch (error) {
       console.log(error);
