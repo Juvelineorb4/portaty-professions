@@ -24,6 +24,7 @@ import {
   Feather,
   Entypo,
   MaterialIcons,
+  Ionicons
 } from "@expo/vector-icons";
 import { Auth, API, Analytics } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Favorites";
@@ -495,6 +496,65 @@ const SearchPost = ({ route, navigation }) => {
             onViewableItemsChanged={onViewRef.current}
           />
         </View>
+        <View
+          style={{
+            flexDirection: "row",
+            paddingHorizontal: 20,
+            justifyContent: "center",
+            alignItems: "center",
+            paddingTop: 5,
+          }}
+        >
+          <View
+            style={{
+              alignItems: "center",
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: "regular",
+                  fontSize: 16,
+                  marginRight: 3,
+                }}
+              >
+                4.7
+              </Text>
+              <Ionicons name="star" size={16} color="#ffb703" />
+            </View>
+
+            <Text
+              style={{
+                fontFamily: "lightItalic",
+                fontSize: 12,
+              }}
+            >
+              100+ valoraciones
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginLeft: 25,
+            }}
+          >
+            <MaterialCommunityIcons name="medal" size={20} color="#ffb703" />
+            <Text
+              style={{
+                fontFamily: "lightItalic",
+                fontSize: 12,
+              }}
+            >
+              Nº 14 en Turismo
+            </Text>
+          </View>
+        </View>
         {showAgg && (
           <View>
             <View
@@ -552,32 +612,6 @@ const SearchPost = ({ route, navigation }) => {
                 )}
               </TouchableOpacity>
             </View>
-            {/* Reporte */}
-            {/* <TouchableOpacity
-              style={{
-                alignSelf: "flex-end",
-                paddingHorizontal: 20,
-                paddingBottom: 5,
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-              onPress={() => setVisible(true)}
-            >
-              <MaterialIcons name="report" size={22} color="black" />
-              <Text
-                style={[
-                  global.black,
-                  {
-                    fontFamily: "bold",
-                    fontSize: 12,
-                    // marginLeft: 2,
-                    // marginBottom: 3
-                  },
-                ]}
-              >
-                Reportar negocio
-              </Text>
-            </TouchableOpacity> */}
           </View>
         )}
         {/* Reporte */}
@@ -591,13 +625,13 @@ const SearchPost = ({ route, navigation }) => {
           }}
           onPress={() => setVisibleReport(true)}
         >
-          <MaterialIcons name="report" size={22} color="black" />
+          <MaterialIcons name="report" size={16} color="black" />
           <Text
             style={[
               global.black,
               {
                 fontFamily: "bold",
-                fontSize: 12,
+                fontSize: 10,
                 // marginLeft: 2,
                 // marginBottom: 3
               },
@@ -667,6 +701,97 @@ const SearchPost = ({ route, navigation }) => {
               </Text>
             </View>
           )}
+        </View>
+        <View
+          style={{
+            paddingHorizontal: 20,
+          }}
+        >
+          <View
+            style={{
+              borderWidth: 0.6,
+              borderColor: "#1f1f1f",
+              height: 130,
+              borderRadius: 8,
+              padding: 10,
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "flex-end",
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: "bold",
+                  fontSize: 13,
+                }}
+              >
+                Este negocio tiene 21 reseñas
+              </Text>
+            </View>
+            <View
+              style={{
+                marginTop: 10,
+                backgroundColor: '#efeded',
+                padding: 5,
+                borderRadius: 8
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: "regular",
+                    fontSize: 13,
+                    marginRight: 3,
+                  }}
+                >
+                  4 de 5
+                </Text>
+                <Ionicons name="star" size={12} color="#ffb703" />
+                <Text
+                  style={{
+                    fontFamily: "medium",
+                    fontSize: 12,
+                    marginLeft: 5,
+                  }}
+                >
+                  Christopher Alvarez
+                </Text>
+              </View>
+              <Text
+                style={{
+                  fontFamily: "regular",
+                  fontSize: 13,
+                }}
+              >
+                Un sitio agradable, y muy buena atencion al cliente
+              </Text>
+            </View>
+            <View style={{
+              flexDirection: 'row',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              marginTop: 5
+            }}>
+              <Text
+                style={{
+                  fontFamily: "mediumItalic",
+                  fontSize: 12,
+                  marginRight: 3
+                }}
+              >
+                Ver todas las reseñas
+              </Text>
+              <AntDesign name="arrowright" size={13} color="black" />
+            </View>
+          </View>
         </View>
         <TouchableOpacity
           style={{
