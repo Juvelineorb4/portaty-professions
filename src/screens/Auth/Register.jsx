@@ -265,6 +265,9 @@ const Register = ({ navigation }) => {
             onPressed={_handlePressButtonAsync}
             rules={{ required: "Requerido" }}
           />
+          <View style={{
+            marginBottom: 30
+          }}></View>
         </ScrollView>
         <View style={{ height: 65, marginBottom: 40 }}>
           <CustomButton

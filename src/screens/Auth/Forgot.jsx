@@ -148,19 +148,21 @@ const Forgot = ({ navigation, route }) => {
             />
           </ScrollView>
           <View style={{ height: 65, marginBottom: 43 }}>
-            <CustomButton
-              text={
-                isLoading ? (
-                  <ActivityIndicator color={`#1f1f1f`} />
-                ) : (
-                  es.authentication.forgot.button
-                )
-              }
-              disabled={isLoading}
-              handlePress={handleSubmit(onHandleSendCodeEmail)}
-              textStyles={[styles.textContinue, global.black]}
-              buttonStyles={[styles.continue, global.bgYellow]}
-            />
+            <View style={{ height: 65, marginBottom: 43 }}>
+              <CustomButton
+                text={
+                  isLoading ? (
+                    <ActivityIndicator color={`#1f1f1f`} />
+                  ) : (
+                    es.authentication.forgot.button
+                  )
+                }
+                disabled={isLoading}
+                handlePress={handleSubmit(onHandleSendCodeEmail)}
+                textStyles={[styles.textContinue, global.black]}
+                buttonStyles={[styles.continue, global.bgYellow]}
+              />
+            </View>
           </View>
         </View>
       </TouchableWithoutFeedback>
