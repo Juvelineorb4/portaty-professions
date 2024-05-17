@@ -58,6 +58,8 @@ const SearchPost = ({ route, navigation }) => {
   const [listUpdate, setListUpdate] = useRecoilState(updateListFavorites);
   const [countryCity, setCountryCity] = useState(null);
   const global = require("@/utils/styles/global.js");
+  const [weekSchedule, setWeekSchedule] = useState("");
+  const [typeSchedule, setTypeSchedule] = useState("");
 
   const {
     data: { item, images },
@@ -91,9 +93,7 @@ const SearchPost = ({ route, navigation }) => {
             encoding: FileSystem.EncodingType.Base64,
           });
         })
-        .catch((e) => {
-          console.log(e);
-        });
+        .catch((e) => {});
     } catch (error) {
       console.log("Error en pdf: ", error.message);
     }
@@ -179,6 +179,8 @@ const SearchPost = ({ route, navigation }) => {
         setShowAgg(true);
       }
 
+      let schedule = JSON.parse(business?.data?.getBusiness.schedule);
+      filterSchedule(schedule.shedule, schedule.type);
       return setPost(business?.data?.getBusiness);
     } catch (error) {
       console.log(error);
@@ -265,6 +267,66 @@ const SearchPost = ({ route, navigation }) => {
       console.log("Error al registrar analitica: ", error);
     }
   };
+
+  const filterSchedule = (array, type) => {
+    if (array === null || type === null) return;
+    console.log("toy por aqui");
+    console.log(array);
+    console.log(type);
+    // return;
+    let scheduleG = [];
+    let activeDays = array.filter((day) => day.active);
+
+    for (let i = 0; i < activeDays.length; i++) {
+      if (
+        i === 0 ||
+        activeDays[i].hourStart !== activeDays[i - 1].hourStart ||
+        activeDays[i].hourEnd !== activeDays[i - 1].hourEnd
+      ) {
+        scheduleG.push({
+          days: [activeDays[i].name],
+          hourStart: activeDays[i].hourStart,
+          hourEnd: activeDays[i].hourEnd,
+        });
+      } else {
+        scheduleG[scheduleG.length - 1].days.push(activeDays[i].name);
+      }
+    }
+
+    let pContent = scheduleG
+      .map((group) => {
+        let days = group.days;
+        if (days.length > 2) {
+          let consecutive = true;
+          for (let i = 1; i < days.length; i++) {
+            if (
+              array.findIndex((day) => day.name === days[i]) !==
+              array.findIndex((day) => day.name === days[i - 1]) + 1
+            ) {
+              consecutive = false;
+              break;
+            }
+          }
+          if (consecutive) {
+            days = [days[0], "a", days[days.length - 1]];
+          } else {
+            days = days.join(" - ");
+          }
+        } else if (days.length === 2) {
+          days = [days[0], "y", days[1]];
+        }
+        return `${Array.isArray(days) ? days.join(" ") : days}: ${
+          group.hourStart
+        } - ${group.hourEnd}`;
+      })
+      .join(" / ");
+
+    console.log(pContent);
+
+    setWeekSchedule(pContent);
+    setTypeSchedule(type);
+  };
+
   // para la carga default
   useEffect(() => {
     if (!save) fetchFavorite();
@@ -283,7 +345,6 @@ const SearchPost = ({ route, navigation }) => {
     // Inicia el temporizador cuando el componente se monta y countryCity y userAuth existen
     if (countryCity && userAuth) {
       timerRef.current = setTimeout(() => {
-        console.log("PASARON LOS SEGUNDOS");
         registerViewBusiness(
           userAuth?.attributes["custom:userTableID"],
           item.id
@@ -559,6 +620,54 @@ const SearchPost = ({ route, navigation }) => {
           ]}
         />
 
+        <View
+          style={{
+            padding: 20,
+          }}
+        >
+          <Text style={{ fontSize: 18, fontFamily: "regular" }}>
+            Horario comercial
+          </Text>
+          {post.schedule !== null ? (
+            <View>
+              <Text
+                style={{
+                  fontFamily: "regular",
+                  fontSize: 14,
+                  marginTop: 5,
+                  lineHeight: 25,
+                  textAlign: "center",
+                }}
+              >
+                {typeSchedule}
+              </Text>
+              <Text
+                style={{
+                  fontFamily: "light",
+                  fontSize: 15,
+                  lineHeight: 25,
+                  textAlign: "center",
+                }}
+              >
+                {weekSchedule}
+              </Text>
+            </View>
+          ) : (
+            <View>
+              <Text
+                style={{
+                  fontFamily: "regular",
+                  fontSize: 18,
+                  marginTop: 8,
+                  textAlign: "center",
+                  marginBottom: -10,
+                }}
+              >
+                {`No definido`}
+              </Text>
+            </View>
+          )}
+        </View>
         <TouchableOpacity
           style={{
             padding: 20,

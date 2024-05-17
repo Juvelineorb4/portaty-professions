@@ -35,7 +35,6 @@ const Shedule = ({ route, navigation }) => {
       type: typeSelect,
       shedule: sheduleGeneral,
     };
-    console.log(JSON.stringify(params));
     try {
       const result = await API.graphql({
         query: mutations.updateBusinessShedule,
@@ -47,7 +46,6 @@ const Shedule = ({ route, navigation }) => {
           },
         },
       });
-      console.log(result);
       setActive(true);
     } catch (error) {
       console.log(error);
@@ -242,7 +240,6 @@ const Shedule = ({ route, navigation }) => {
                   }}
                   thumbColor={item.active ? "#ffb703" : "#f4f3f4"}
                   onValueChange={() => {
-                    console.log(item);
                     toggleDay(index);
                   }}
                   value={item.active}

@@ -9,7 +9,6 @@ const useCheckUpdate = () => {
     async function checkForUpdate() {
       try {
         const update = await Updates.checkForUpdateAsync();
-        console.log("RESULTADO DE BUSQUEDA DE ACTUALIZACION: ", update);
         setUpdateVersion(update?.manifest?.runtimeVersion);
         setUpdateDate(update?.manifest?.createdAt);
         setUpdateAvailable(update.isAvailable);

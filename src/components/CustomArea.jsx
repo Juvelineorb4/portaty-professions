@@ -23,7 +23,6 @@ const CustomArea = ({ data }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const { control } = useForm();
   const area = useRecoilValue(areaSelect);
-  console.log('aqui', data)
   return (
     <ScrollView
       style={[global.bgWhite, { flex: 1 }]}

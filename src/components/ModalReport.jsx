@@ -31,14 +31,12 @@ const ModalReport = ({ businessID, close, open }) => {
     };
     try {
       const response = await API.get(api, path, params);
-      console.log('aqui',  response);
       setComplaints(response);
     } catch (error) {
       console.log(error)
     }
   };
   const onReportBusiness = async () => {
-    console.log(businessID, complaint, userAuth?.attributes["custom:userTableID"]);
     try {
       const report = await API.graphql({
         query: customFavorites.createComplaints,
@@ -52,7 +50,6 @@ const ModalReport = ({ businessID, close, open }) => {
         },
         authMode: "AMAZON_COGNITO_USER_POOLS",
       });
-      console.log(report.data.createComplaints);
     } catch (error) {
       console.log(error);
     }

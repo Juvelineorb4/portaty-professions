@@ -74,7 +74,6 @@ const Unprofile = ({ navigation, route }) => {
       };
 
       const allBusiness = await fetchAllBusiness();
-      console.log("aqui", allBusiness);
       if (allBusiness.length !== 0) setBusiness(allBusiness);
       setDisabled(false);
     } catch (error) {

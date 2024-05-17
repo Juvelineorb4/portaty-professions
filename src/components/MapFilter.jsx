@@ -34,7 +34,6 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
     const {
       nativeEvent: { coordinate },
     } = e;
-    // console.log(e)
 
     if (mapRef.current) {
       const newRegion = mapRef.current.__lastRegion;

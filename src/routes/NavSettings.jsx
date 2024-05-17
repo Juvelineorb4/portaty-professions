@@ -16,7 +16,6 @@ const NavSettings = ({ checkRender }) => {
   useEffect(() => {
     // crear subscripcion
     const unsubscribe = Hub.listen("auth", ({ payload: { event, data } }) => {
-      console.log("EVENTO: ", event);
       switch (event) {
         case "signIn":
           userSignIn(data);
@@ -49,7 +48,6 @@ const NavSettings = ({ checkRender }) => {
     };
     Linking.addEventListener("url", ({ url }) => {
       const { hostname, path, queryParams } = Linking.parse(url);
-      console.log("A VER URL: ", queryParams?.id);
       if (url) {
         // if (path === "share/list" && queryParams?.id) {
         //   return navigation.navigate("ShareNavigator", {

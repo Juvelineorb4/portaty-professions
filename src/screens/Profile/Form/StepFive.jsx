@@ -193,7 +193,6 @@ const StepFive = ({ navigation, route }) => {
         headers: {},
       };
       const result = await API.post(apiName, path, myInit);
-      console.log("QUE SALE: ", result);
       setLoading(false);
       Finished();
     } catch (error) {

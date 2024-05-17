@@ -12,7 +12,6 @@ const useCheckAppVersion = () => {
   useEffect(() => {
     async function checkForUpdate() {
       try {
-        console.log(localOS);
         const result = await API.graphql({
           query: queries.AppVersionByDate,
           authMode: "AWS_IAM",
