@@ -484,60 +484,7 @@ const FavoritePage = ({ navigation, route }) => {
         {/* Hasta aqui */}
 
         <View style={[styles.line, global.bgMidGray]} />
-        {/* <View
-          style={{
-            padding: 20,
-          }}
-        >
-          <Text style={{ fontSize: 18, fontFamily: "regular" }}>
-            Valoración
-          </Text>
-          <View style={styles.stars}>
-            {[1, 2, 3, 4, 5].map((rating) => (
-              <TouchableWithoutFeedback
-                key={rating}
-                onPress={() => setStarRating(rating)}
-              >
-                <MaterialIcons
-                  name={rating <= starRating ? "star" : "star-border"}
-                  size={32}
-                  style={styles.star}
-                />
-              </TouchableWithoutFeedback>
-            ))}
-          </View>
-          <Text
-            style={{
-              fontFamily: "light",
-              fontSize: 15,
-              lineHeight: 25,
-              textAlign: "center",
-            }}
-          >
-            {`Aun no has puntuado este negocio`}
-          </Text>
-          <TouchableOpacity
-            style={[
-              {
-                borderColor: "#1f1f1f",
-                borderRadius: 8,
-                borderWidth: 0.7,
-                padding: 20,
-                marginTop: 10,
-              },
-              global.mainBgColor,
-            ]}
-          >
-            <Text
-              style={[
-                { fontSize: 14, fontFamily: "bold", textAlign: "center" },
-                global.black,
-              ]}
-            >
-              Puntualo
-            </Text>
-          </TouchableOpacity>
-        </View> */}
+
         <View
           style={{
             paddingHorizontal: 20,
@@ -587,10 +534,15 @@ const FavoritePage = ({ navigation, route }) => {
             </View>
           )}
         </View>
-        <View
+
+        {/* Interactions */}
+        <TouchableOpacity
           style={{
             paddingHorizontal: 20,
             paddingTop: 10
+          }}
+          onPress={() => {
+            navigation.navigate('InteractionsFavorites')
           }}
         >
           <View
@@ -678,7 +630,7 @@ const FavoritePage = ({ navigation, route }) => {
               <AntDesign name="arrowright" size={13} color="black" />
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
         
         <TouchableOpacity
           style={{
