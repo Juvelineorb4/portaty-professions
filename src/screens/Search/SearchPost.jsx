@@ -702,9 +702,15 @@ const SearchPost = ({ route, navigation }) => {
             </View>
           )}
         </View>
-        <View
+
+        {/* Interactions */}
+        <TouchableOpacity
           style={{
             paddingHorizontal: 20,
+            paddingTop: 10
+          }}
+          onPress={() => {
+            navigation.navigate('InteractionsSearch')
           }}
         >
           <View
@@ -792,7 +798,8 @@ const SearchPost = ({ route, navigation }) => {
               <AntDesign name="arrowright" size={13} color="black" />
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
+
         <TouchableOpacity
           style={{
             padding: 20,
