@@ -34,8 +34,8 @@ const styles = StyleSheet.create({
   star: { color: "#ffb703" },
   errorInputDescription: {
     position: "absolute",
-    left: 0,
-    bottom: 3,
+    left: 3,
+    bottom: -12,
     fontFamily: "medium",
     color: "red",
     fontSize: 12,

@@ -252,6 +252,19 @@ export const onCreateUsers = /* GraphQL */ `
         }
         nextToken
       }
+      comments {
+        items {
+          id
+          userID
+          businessID
+          stars
+          description
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       owner
       createdAt
       updatedAt
@@ -305,6 +318,19 @@ export const onUpdateUsers = /* GraphQL */ `
           description
           prefer
           schedule
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      comments {
+        items {
+          id
+          userID
+          businessID
+          stars
+          description
           createdAt
           updatedAt
           owner
@@ -370,6 +396,19 @@ export const onDeleteUsers = /* GraphQL */ `
         }
         nextToken
       }
+      comments {
+        items {
+          id
+          userID
+          businessID
+          stars
+          description
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       owner
       createdAt
       updatedAt
@@ -399,6 +438,9 @@ export const onCreateBusiness = /* GraphQL */ `
         business {
           nextToken
         }
+        comments {
+          nextToken
+        }
         owner
         createdAt
         updatedAt
@@ -436,6 +478,19 @@ export const onCreateBusiness = /* GraphQL */ `
       description
       prefer
       schedule
+      comments {
+        items {
+          id
+          userID
+          businessID
+          stars
+          description
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       createdAt
       updatedAt
       owner
@@ -465,6 +520,9 @@ export const onUpdateBusiness = /* GraphQL */ `
         business {
           nextToken
         }
+        comments {
+          nextToken
+        }
         owner
         createdAt
         updatedAt
@@ -502,6 +560,19 @@ export const onUpdateBusiness = /* GraphQL */ `
       description
       prefer
       schedule
+      comments {
+        items {
+          id
+          userID
+          businessID
+          stars
+          description
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       createdAt
       updatedAt
       owner
@@ -531,6 +602,9 @@ export const onDeleteBusiness = /* GraphQL */ `
         business {
           nextToken
         }
+        comments {
+          nextToken
+        }
         owner
         createdAt
         updatedAt
@@ -568,6 +642,136 @@ export const onDeleteBusiness = /* GraphQL */ `
       description
       prefer
       schedule
+      comments {
+        items {
+          id
+          userID
+          businessID
+          stars
+          description
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onCreateBusinessComment = /* GraphQL */ `
+  subscription OnCreateBusinessComment(
+    $filter: ModelSubscriptionBusinessCommentFilterInput
+    $owner: String
+  ) {
+    onCreateBusinessComment(filter: $filter, owner: $owner) {
+      id
+      userID
+      user {
+        id
+        cognitoID
+        name
+        lastName
+        email
+        identityID
+        gender
+        notificationToken
+        favorites {
+          nextToken
+        }
+        business {
+          nextToken
+        }
+        comments {
+          nextToken
+        }
+        owner
+        createdAt
+        updatedAt
+      }
+      businessID
+      stars
+      description
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdateBusinessComment = /* GraphQL */ `
+  subscription OnUpdateBusinessComment(
+    $filter: ModelSubscriptionBusinessCommentFilterInput
+    $owner: String
+  ) {
+    onUpdateBusinessComment(filter: $filter, owner: $owner) {
+      id
+      userID
+      user {
+        id
+        cognitoID
+        name
+        lastName
+        email
+        identityID
+        gender
+        notificationToken
+        favorites {
+          nextToken
+        }
+        business {
+          nextToken
+        }
+        comments {
+          nextToken
+        }
+        owner
+        createdAt
+        updatedAt
+      }
+      businessID
+      stars
+      description
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteBusinessComment = /* GraphQL */ `
+  subscription OnDeleteBusinessComment(
+    $filter: ModelSubscriptionBusinessCommentFilterInput
+    $owner: String
+  ) {
+    onDeleteBusinessComment(filter: $filter, owner: $owner) {
+      id
+      userID
+      user {
+        id
+        cognitoID
+        name
+        lastName
+        email
+        identityID
+        gender
+        notificationToken
+        favorites {
+          nextToken
+        }
+        business {
+          nextToken
+        }
+        comments {
+          nextToken
+        }
+        owner
+        createdAt
+        updatedAt
+      }
+      businessID
+      stars
+      description
       createdAt
       updatedAt
       owner
@@ -622,6 +826,9 @@ export const onCreateFavorites = /* GraphQL */ `
         description
         prefer
         schedule
+        comments {
+          nextToken
+        }
         createdAt
         updatedAt
         owner
@@ -640,6 +847,9 @@ export const onCreateFavorites = /* GraphQL */ `
           nextToken
         }
         business {
+          nextToken
+        }
+        comments {
           nextToken
         }
         owner
@@ -701,6 +911,9 @@ export const onUpdateFavorites = /* GraphQL */ `
         description
         prefer
         schedule
+        comments {
+          nextToken
+        }
         createdAt
         updatedAt
         owner
@@ -719,6 +932,9 @@ export const onUpdateFavorites = /* GraphQL */ `
           nextToken
         }
         business {
+          nextToken
+        }
+        comments {
           nextToken
         }
         owner
@@ -780,6 +996,9 @@ export const onDeleteFavorites = /* GraphQL */ `
         description
         prefer
         schedule
+        comments {
+          nextToken
+        }
         createdAt
         updatedAt
         owner
@@ -798,6 +1017,9 @@ export const onDeleteFavorites = /* GraphQL */ `
           nextToken
         }
         business {
+          nextToken
+        }
+        comments {
           nextToken
         }
         owner

@@ -261,6 +261,19 @@ export const getUsers = /* GraphQL */ `
         }
         nextToken
       }
+      comments {
+        items {
+          id
+          userID
+          businessID
+          stars
+          description
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       owner
       createdAt
       updatedAt
@@ -287,6 +300,9 @@ export const listUsers = /* GraphQL */ `
           nextToken
         }
         business {
+          nextToken
+        }
+        comments {
           nextToken
         }
         owner
@@ -327,6 +343,9 @@ export const userByEmail = /* GraphQL */ `
         business {
           nextToken
         }
+        comments {
+          nextToken
+        }
         owner
         createdAt
         updatedAt
@@ -353,6 +372,9 @@ export const getBusiness = /* GraphQL */ `
           nextToken
         }
         business {
+          nextToken
+        }
+        comments {
           nextToken
         }
         owner
@@ -392,6 +414,19 @@ export const getBusiness = /* GraphQL */ `
       description
       prefer
       schedule
+      comments {
+        items {
+          id
+          userID
+          businessID
+          stars
+          description
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       createdAt
       updatedAt
       owner
@@ -445,6 +480,9 @@ export const listBusinesses = /* GraphQL */ `
         description
         prefer
         schedule
+        comments {
+          nextToken
+        }
         createdAt
         updatedAt
         owner
@@ -508,6 +546,167 @@ export const listBusinessbyUserID = /* GraphQL */ `
         description
         prefer
         schedule
+        comments {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const getBusinessComment = /* GraphQL */ `
+  query GetBusinessComment($id: ID!) {
+    getBusinessComment(id: $id) {
+      id
+      userID
+      user {
+        id
+        cognitoID
+        name
+        lastName
+        email
+        identityID
+        gender
+        notificationToken
+        favorites {
+          nextToken
+        }
+        business {
+          nextToken
+        }
+        comments {
+          nextToken
+        }
+        owner
+        createdAt
+        updatedAt
+      }
+      businessID
+      stars
+      description
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listBusinessComments = /* GraphQL */ `
+  query ListBusinessComments(
+    $filter: ModelBusinessCommentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listBusinessComments(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userID
+        user {
+          id
+          cognitoID
+          name
+          lastName
+          email
+          identityID
+          gender
+          notificationToken
+          owner
+          createdAt
+          updatedAt
+        }
+        businessID
+        stars
+        description
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const businessCommentsByUserID = /* GraphQL */ `
+  query BusinessCommentsByUserID(
+    $userID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelBusinessCommentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    businessCommentsByUserID(
+      userID: $userID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userID
+        user {
+          id
+          cognitoID
+          name
+          lastName
+          email
+          identityID
+          gender
+          notificationToken
+          owner
+          createdAt
+          updatedAt
+        }
+        businessID
+        stars
+        description
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const businessCommentsByBusinessID = /* GraphQL */ `
+  query BusinessCommentsByBusinessID(
+    $businessID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelBusinessCommentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    businessCommentsByBusinessID(
+      businessID: $businessID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userID
+        user {
+          id
+          cognitoID
+          name
+          lastName
+          email
+          identityID
+          gender
+          notificationToken
+          owner
+          createdAt
+          updatedAt
+        }
+        businessID
+        stars
+        description
         createdAt
         updatedAt
         owner
@@ -561,6 +760,9 @@ export const getFavorites = /* GraphQL */ `
         description
         prefer
         schedule
+        comments {
+          nextToken
+        }
         createdAt
         updatedAt
         owner
@@ -579,6 +781,9 @@ export const getFavorites = /* GraphQL */ `
           nextToken
         }
         business {
+          nextToken
+        }
+        comments {
           nextToken
         }
         owner

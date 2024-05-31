@@ -51,6 +51,22 @@ export const createComplaints = /* GraphQL */ `
       businessID
       status
       reason
+      description
+    }
+  }
+`;
+
+export const createBusinessComment = /* GraphQL */ `
+  mutation CreateBusinessComment(
+    $input: CreateBusinessCommentInput!
+    $condition: ModelBusinessCommentConditionInput
+  ) {
+    createBusinessComment(input: $input, condition: $condition) {
+      id
+      userID
+      businessID
+      stars
+      description
     }
   }
 `;

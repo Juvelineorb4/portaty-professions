@@ -61,6 +61,7 @@ const SearchPost = ({ route, navigation }) => {
   const global = require("@/utils/styles/global.js");
   const [weekSchedule, setWeekSchedule] = useState("");
   const [typeSchedule, setTypeSchedule] = useState("");
+  const [listRatings, setListRatings] = useState(null);
 
   const {
     data: { item, images },
@@ -271,9 +272,6 @@ const SearchPost = ({ route, navigation }) => {
 
   const filterSchedule = (array, type) => {
     if (array === null || type === null) return;
-    console.log("toy por aqui");
-    console.log(array);
-    console.log(type);
     // return;
     let scheduleG = [];
     let activeDays = array.filter((day) => day.active);
@@ -322,16 +320,59 @@ const SearchPost = ({ route, navigation }) => {
       })
       .join(" / ");
 
-    console.log(pContent);
 
     setWeekSchedule(pContent);
     setTypeSchedule(type);
+  };
+
+  const fetchRatings = async () => {
+    let business = item;
+    console.log(business.id);
+    try {
+      const fetchAllRatings = async (nextToken, result = []) => {
+        const response = await API.graphql({
+          query: queries.businessCommentsByBusinessID,
+          authMode: "AMAZON_COGNITO_USER_POOLS",
+          variables: {
+            businessID: business?.id,
+            nextToken,
+          },
+        });
+
+        const items = response.data.businessCommentsByBusinessID.items;
+        result.push(...items);
+
+        if (response.data.businessCommentsByBusinessID.nextToken) {
+          return fetchAllRatings(
+            response.data.businessCommentsByBusinessID.nextToken,
+            result
+          );
+        }
+
+        return result;
+      };
+      
+      const allRatings = await fetchAllRatings();
+      console.log(allRatings);
+      setListRatings(allRatings)
+      // const ratings = await API.graphql({
+      //   query: queries.businessCommentsByBusinessID,
+      //   variables: {
+      //     businessID: business?.businessID,
+      //   },
+      //   authMode: "AWS_IAM",
+      // });
+      // console.log(ratings.data.businessCommentsByBusinessID.items)
+    } catch (error) {
+      console.log("eres tu", error);
+    }
   };
 
   // para la carga default
   useEffect(() => {
     if (!save) fetchFavorite();
     fetchData();
+    fetchRatings()
   }, []);
   // para obetener el pais y ciudad
   useEffect(() => {
@@ -356,7 +397,7 @@ const SearchPost = ({ route, navigation }) => {
     return () => clearTimeout(timerRef.current);
   }, [countryCity, userAuth]);
 
-  if (!post) return <SkeletonExample />;
+  if (!post || !listRatings) return <SkeletonExample />;
   return (
     <View
       style={[
@@ -707,10 +748,13 @@ const SearchPost = ({ route, navigation }) => {
         <TouchableOpacity
           style={{
             paddingHorizontal: 20,
-            paddingTop: 10
+            paddingTop: 10,
           }}
           onPress={() => {
-            navigation.navigate('InteractionsSearch')
+            navigation.navigate("InteractionsSearch", {
+              business: item,
+              list: listRatings
+            });
           }}
         >
           <View
@@ -734,15 +778,15 @@ const SearchPost = ({ route, navigation }) => {
                   fontSize: 13,
                 }}
               >
-                Este negocio tiene 21 reseñas
+                Este negocio tiene {listRatings.length} reseña(s)
               </Text>
             </View>
             <View
               style={{
                 marginTop: 10,
-                backgroundColor: '#efeded',
+                backgroundColor: "#efeded",
                 padding: 5,
-                borderRadius: 8
+                borderRadius: 8,
               }}
             >
               <View
@@ -758,7 +802,7 @@ const SearchPost = ({ route, navigation }) => {
                     marginRight: 3,
                   }}
                 >
-                  4 de 5
+                  {listRatings[0].stars} de 5
                 </Text>
                 <Ionicons name="star" size={12} color="#ffb703" />
                 <Text
@@ -768,7 +812,7 @@ const SearchPost = ({ route, navigation }) => {
                     marginLeft: 5,
                   }}
                 >
-                  Christopher Alvarez
+                  {listRatings[0].user.name} {listRatings[0].user.lastName}
                 </Text>
               </View>
               <Text
@@ -777,20 +821,22 @@ const SearchPost = ({ route, navigation }) => {
                   fontSize: 13,
                 }}
               >
-                Un sitio agradable, y muy buena atencion al cliente
+                {listRatings[0].description}
               </Text>
             </View>
-            <View style={{
-              flexDirection: 'row',
-              justifyContent: 'flex-end',
-              alignItems: 'center',
-              marginTop: 5
-            }}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                alignItems: "center",
+                marginTop: 5,
+              }}
+            >
               <Text
                 style={{
                   fontFamily: "mediumItalic",
                   fontSize: 12,
-                  marginRight: 3
+                  marginRight: 3,
                 }}
               >
                 Ver todas las reseñas
