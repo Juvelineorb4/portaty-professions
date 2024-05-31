@@ -54,7 +54,7 @@ const FavoritePage = ({ navigation, route }) => {
   const [dimensionsImages, setDimensionsImages] = useState(0);
   const [open, setOpen] = useState(false);
   const [weekSchedule, setWeekSchedule] = useState("");
-  const [starRating, setStarRating] = useState(null);
+  const [listRatings, setListRatings] = useState(null);
 
   const {
     data: { item, image },
@@ -176,6 +176,48 @@ const FavoritePage = ({ navigation, route }) => {
     }
   };
 
+  const fetchRatings = async ({ data }) => {
+    let business = item;
+    console.log(business.businessID);
+    try {
+      const fetchAllRatings = async (nextToken, result = []) => {
+        const response = await API.graphql({
+          query: queries.businessCommentsByBusinessID,
+          authMode: "AMAZON_COGNITO_USER_POOLS",
+          variables: {
+            businessID: business?.businessID,
+            nextToken,
+          },
+        });
+
+        const items = response.data.businessCommentsByBusinessID.items;
+        result.push(...items);
+
+        if (response.data.businessCommentsByBusinessID.nextToken) {
+          return fetchAllRatings(
+            response.data.businessCommentsByBusinessID.nextToken,
+            result
+          );
+        }
+
+        return result;
+      };
+      
+      const allRatings = await fetchAllRatings();
+      console.log(allRatings);
+      setListRatings(allRatings)
+      // const ratings = await API.graphql({
+      //   query: queries.businessCommentsByBusinessID,
+      //   variables: {
+      //     businessID: business?.businessID,
+      //   },
+      //   authMode: "AWS_IAM",
+      // });
+      // console.log(ratings.data.businessCommentsByBusinessID.items)
+    } catch (error) {
+      console.log("eres tu", error);
+    }
+  };
   const onDeleteFavorite = async () => {
     const favorites = await API.graphql({
       query: customFavorites.deleteFavorites,
@@ -216,10 +258,11 @@ const FavoritePage = ({ navigation, route }) => {
 
   useLayoutEffect(() => {
     fetchData();
+    fetchRatings(item);
     filterSchedule(schedule.shedule, schedule.type);
   }, [listUpdate]);
 
-  if (!item) return <SkeletonExample />;
+  if (!item || !listRatings) return <SkeletonExample />;
   return (
     <View
       style={[
@@ -488,7 +531,7 @@ const FavoritePage = ({ navigation, route }) => {
         <View
           style={{
             paddingHorizontal: 20,
-            paddingTop: 20
+            paddingTop: 20,
           }}
         >
           <Text style={{ fontSize: 18, fontFamily: "regular" }}>
@@ -539,10 +582,13 @@ const FavoritePage = ({ navigation, route }) => {
         <TouchableOpacity
           style={{
             paddingHorizontal: 20,
-            paddingTop: 10
+            paddingTop: 10,
           }}
           onPress={() => {
-            navigation.navigate('InteractionsFavorites')
+            navigation.navigate("InteractionsFavorites", {
+              business: item,
+              list: listRatings
+            });
           }}
         >
           <View
@@ -566,15 +612,15 @@ const FavoritePage = ({ navigation, route }) => {
                   fontSize: 13,
                 }}
               >
-                Este negocio tiene 21 reseñas
+                Este negocio tiene {listRatings.length} reseña(s)
               </Text>
             </View>
             <View
               style={{
                 marginTop: 10,
-                backgroundColor: '#efeded',
+                backgroundColor: "#efeded",
                 padding: 5,
-                borderRadius: 8
+                borderRadius: 8,
               }}
             >
               <View
@@ -590,7 +636,7 @@ const FavoritePage = ({ navigation, route }) => {
                     marginRight: 3,
                   }}
                 >
-                  4 de 5
+                  {listRatings[0].stars} de 5
                 </Text>
                 <Ionicons name="star" size={12} color="#ffb703" />
                 <Text
@@ -600,7 +646,7 @@ const FavoritePage = ({ navigation, route }) => {
                     marginLeft: 5,
                   }}
                 >
-                  Christopher Alvarez
+                  {listRatings[0].user.name} {listRatings[0].user.lastName}
                 </Text>
               </View>
               <Text
@@ -609,20 +655,22 @@ const FavoritePage = ({ navigation, route }) => {
                   fontSize: 13,
                 }}
               >
-                Un sitio agradable, y muy buena atencion al cliente
+                {listRatings[0].description}
               </Text>
             </View>
-            <View style={{
-              flexDirection: 'row',
-              justifyContent: 'flex-end',
-              alignItems: 'center',
-              marginTop: 5
-            }}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                alignItems: "center",
+                marginTop: 5,
+              }}
+            >
               <Text
                 style={{
                   fontFamily: "mediumItalic",
                   fontSize: 12,
-                  marginRight: 3
+                  marginRight: 3,
                 }}
               >
                 Ver todas las reseñas
@@ -631,7 +679,7 @@ const FavoritePage = ({ navigation, route }) => {
             </View>
           </View>
         </TouchableOpacity>
-        
+
         <TouchableOpacity
           style={{
             padding: 20,

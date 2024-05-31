@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import styles from "@/utils/styles/ModalInteractions.js";
@@ -23,47 +24,39 @@ import { es } from "@/utils/constants/lenguage";
 
 const ModalInteractions = ({ businessID, close, open }) => {
   const global = require("@/utils/styles/global.js");
-  const [complaint, setComplaint] = useState("");
-  const [complaints, setComplaints] = useState([]);
   const [starRating, setStarRating] = useState(null);
+  const [loading, setLoading] = useState(false);
   const { control, handleSubmit } = useForm();
   const userAuth = useRecoilValue(userAuthenticated);
 
-  const ComplaintsData = async () => {
-    const api = "api-portaty";
-    const path = "/api/complaints";
-    const params = {
-      headers: {},
-    };
+  const fetchInteractions = async (data) => {
+    const { description } = data;
+    console.log(description, starRating, businessID);
+    setLoading(true);
     try {
-      const response = await API.get(api, path, params);
-      setComplaints(response);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const onReportBusiness = async () => {
-    try {
-      const report = await API.graphql({
-        query: customFavorites.createComplaints,
+      const rating = await API.graphql({
+        query: customFavorites.createBusinessComment,
         variables: {
           input: {
             userID: userAuth?.attributes["custom:userTableID"],
             businessID: businessID,
-            reason: complaint,
-            status: "PENDING",
+            stars: starRating,
+            description: description,
           },
         },
         authMode: "AMAZON_COGNITO_USER_POOLS",
       });
+      console.log(rating);
+      setLoading(false);
+      close();
     } catch (error) {
       console.log(error);
+      setLoading(false);
+      close();
     }
   };
 
-  useEffect(() => {
-    ComplaintsData();
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <Modal
@@ -94,7 +87,7 @@ const ModalInteractions = ({ businessID, close, open }) => {
                       fontFamily: "bold",
                       fontSize: 14,
                       color: "#404040",
-                      marginLeft: -20
+                      marginLeft: -20,
                     }}
                   >
                     Valoración
@@ -134,8 +127,8 @@ const ModalInteractions = ({ businessID, close, open }) => {
                   max={500}
                 />
               </View>
-              <Pressable
-                onPress={() => {}}
+              <TouchableOpacity
+                onPress={handleSubmit(fetchInteractions)}
                 style={[
                   global.bgYellow,
                   {
@@ -151,10 +144,14 @@ const ModalInteractions = ({ businessID, close, open }) => {
                   },
                 ]}
               >
-                <Text style={[global.black, { fontFamily: "bold" }]}>
-                  Publicar
-                </Text>
-              </Pressable>
+                {loading ? (
+                  <ActivityIndicator size="small" color="#1f1f1f" />
+                ) : (
+                  <Text style={[global.black, { fontFamily: "bold" }]}>
+                    Publicar
+                  </Text>
+                )}
+              </TouchableOpacity>
             </View>
           </TouchableWithoutFeedback>
         </View>
