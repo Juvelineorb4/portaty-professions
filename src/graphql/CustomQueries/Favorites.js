@@ -290,6 +290,10 @@ export const listFavoritesbyUserID = /* GraphQL */ `
           email
           phone
           whatsapp
+          coordinates {
+            lat
+            lon
+          }
           instagram
           facebook
           page

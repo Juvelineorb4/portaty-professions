@@ -86,6 +86,7 @@ const Search = ({ route }) => {
     };
     try {
       const response = await API.get(api, path, params);
+      console.log("RESPUESTA DE BUSQUEDA DEFAULT ", response);
       setTotalData(response.total);
       setTotalLimit(response.limit);
       // let newItems = [];
@@ -99,7 +100,7 @@ const Search = ({ route }) => {
       setSearchCacheActive(newRenderItems);
       return setItems(newRenderItems);
     } catch (error) {
-      return console.log(error);
+      return console.log("ERROR EN BSUQUEDA DEFAULT:  ", error);
     }
   };
   const getFilterData = async () => {

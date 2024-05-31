@@ -10,17 +10,23 @@ import {
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import styles from "@/utils/styles/ModalReport.js";
+import styles from "@/utils/styles/ModalInteractions.js";
 // import { complaints } from "@/utils/constants/complaints";
 import * as customFavorites from "@/graphql/CustomMutations/Favorites";
 import { Auth, API, Storage } from "aws-amplify";
 import { useRecoilValue } from "recoil";
 import { userAuthenticated } from "@/atoms";
+import { MaterialIcons } from "@expo/vector-icons";
+import CustomInput from "./CustomInput";
+import { useForm } from "react-hook-form";
+import { es } from "@/utils/constants/lenguage";
 
-const ModalReport = ({ businessID, close, open }) => {
+const ModalInteractions = ({ businessID, close, open }) => {
   const global = require("@/utils/styles/global.js");
   const [complaint, setComplaint] = useState("");
   const [complaints, setComplaints] = useState([]);
+  const [starRating, setStarRating] = useState(null);
+  const { control, handleSubmit } = useForm();
   const userAuth = useRecoilValue(userAuthenticated);
 
   const ComplaintsData = async () => {
@@ -33,7 +39,7 @@ const ModalReport = ({ businessID, close, open }) => {
       const response = await API.get(api, path, params);
       setComplaints(response);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
   const onReportBusiness = async () => {
@@ -56,9 +62,9 @@ const ModalReport = ({ businessID, close, open }) => {
   };
 
   useEffect(() => {
-    ComplaintsData()
-  }, [])
-  
+    ComplaintsData();
+  }, []);
+
   return (
     <Modal
       animationType="none"
@@ -72,49 +78,64 @@ const ModalReport = ({ businessID, close, open }) => {
             <View style={styles.modalContent}>
               <View style={{ marginBottom: 15 }}>
                 <View>
-                  <Text style={{ fontFamily: "regular", fontSize: 16 }}>
-                    Elige un motivo de reporte
+                  <Text style={{ fontFamily: "regular", fontSize: 14 }}>
+                    Puntua y comenta para publicar tu reseña
                   </Text>
                 </View>
               </View>
               <View style={{ flex: 1 }}>
-                <FlatList
-                  data={complaints}
-                  renderItem={({ item }) => (
-                    <TouchableOpacity
-                      style={{
-                        height: 50,
-                        borderWidth: 0.5,
-                        borderColor: "#1f1f1f",
-                        padding: 5,
-                        borderRadius: 3,
-                        marginBottom: 2,
-                        justifyContent: "center",
-                        backgroundColor:
-                          item === complaint ? "#ffb703" : "#ffffff",
-                        // alignItems: 'center'
-                      }}
-                      onPress={() => setComplaint(item)}
-                    >
-                      <Text style={{ fontFamily: "regular", fontSize: 14 }}>
-                        {item}
-                      </Text>
-                    </TouchableOpacity>
-                  )}
-                  keyExtractor={(item, index) => index}
-                  showsVerticalScrollIndicator={false}
+                <View
+                  style={{
+                    padding: 20,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: "bold",
+                      fontSize: 14,
+                      color: "#404040",
+                      marginLeft: -20
+                    }}
+                  >
+                    Valoración
+                  </Text>
+                  <View style={styles.stars}>
+                    {[1, 2, 3, 4, 5].map((rating) => (
+                      <TouchableWithoutFeedback
+                        key={rating}
+                        onPress={() => setStarRating(rating)}
+                      >
+                        <MaterialIcons
+                          name={rating <= starRating ? "star" : "star-border"}
+                          size={25}
+                          style={styles.star}
+                        />
+                      </TouchableWithoutFeedback>
+                    ))}
+                  </View>
+                </View>
+                <CustomInput
+                  control={control}
+                  name={`description`}
+                  placeholder={`Escribe un comentario para este negocio`}
+                  styled={{
+                    text: styles.textInputDescription,
+                    label: [styles.labelInput],
+                    error: styles.errorInputDescription,
+                    input: [styles.inputContainerDescription],
+                    placeholder: styles.placeholderDescription,
+                  }}
+                  lines={10}
+                  area={true}
+                  text={`Descripcion`}
+                  rules={{
+                    required: es.businessForm.register.company.rules,
+                  }}
+                  max={500}
                 />
               </View>
               <Pressable
-                onPress={() => {
-                  if (complaint !== "") {
-                    onReportBusiness();
-                    setComplaint("");
-                    close();
-                  }
-                  setComplaint("");
-                  close();
-                }}
+                onPress={() => {}}
                 style={[
                   global.bgYellow,
                   {
@@ -131,7 +152,7 @@ const ModalReport = ({ businessID, close, open }) => {
                 ]}
               >
                 <Text style={[global.black, { fontFamily: "bold" }]}>
-                  Aceptar
+                  Publicar
                 </Text>
               </Pressable>
             </View>
@@ -142,4 +163,4 @@ const ModalReport = ({ businessID, close, open }) => {
   );
 };
 
-export default ModalReport;
+export default ModalInteractions;

@@ -73,7 +73,6 @@ const Analytics = ({ route }) => {
     );
 
     const results = await Promise.allSettled(requests);
-    console.log("por aca mi bro", endpoints, results);
 
     // return
     // const functions = [
@@ -146,7 +145,6 @@ const Analytics = ({ route }) => {
       if (item.status === "fulfilled") {
         let resultData = item?.value;
         if (functions[index]) {
-          console.log(index, item.value);
           functions[index](resultData);
         }
       }

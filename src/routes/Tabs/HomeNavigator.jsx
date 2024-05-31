@@ -8,6 +8,7 @@ import { useRecoilValue } from "recoil";
 import { favoriteSelection } from "@/atoms";
 import FavoriteHeader from "@/components/Header/FavoriteHeader";
 import CustomQR from "@/components/CustomQR";
+import CustomInteractions from "@/components/CustomInteractions";
 
 
 const HomeNavigator = ({ route, navigation }) => {
@@ -42,6 +43,14 @@ const HomeNavigator = ({ route, navigation }) => {
       <Stack.Screen
         name="ViewQR"
         component={CustomQR}
+        options={{
+          animation: "slide_from_right",
+          header: (props) => <LeftHeader {...props} />,
+        }}
+      />
+      <Stack.Screen
+        name="InteractionsFavorites"
+        component={CustomInteractions}
         options={{
           animation: "slide_from_right",
           header: (props) => <LeftHeader {...props} />,

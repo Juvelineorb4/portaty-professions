@@ -209,6 +209,10 @@ export const onCreateUsers = /* GraphQL */ `
         nextToken
         __typename
       }
+      comments {
+        nextToken
+        __typename
+      }
       owner
       createdAt
       updatedAt
@@ -238,6 +242,10 @@ export const onUpdateUsers = /* GraphQL */ `
         nextToken
         __typename
       }
+      comments {
+        nextToken
+        __typename
+      }
       owner
       createdAt
       updatedAt
@@ -264,6 +272,10 @@ export const onDeleteUsers = /* GraphQL */ `
         __typename
       }
       business {
+        nextToken
+        __typename
+      }
+      comments {
         nextToken
         __typename
       }
@@ -322,6 +334,10 @@ export const onCreateBusiness = /* GraphQL */ `
       description
       prefer
       schedule
+      comments {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       owner
@@ -377,6 +393,10 @@ export const onUpdateBusiness = /* GraphQL */ `
       description
       prefer
       schedule
+      comments {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       owner
@@ -432,6 +452,106 @@ export const onDeleteBusiness = /* GraphQL */ `
       description
       prefer
       schedule
+      comments {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const onCreateBusinessComment = /* GraphQL */ `
+  subscription OnCreateBusinessComment(
+    $filter: ModelSubscriptionBusinessCommentFilterInput
+    $owner: String
+  ) {
+    onCreateBusinessComment(filter: $filter, owner: $owner) {
+      id
+      userID
+      user {
+        id
+        cognitoID
+        name
+        lastName
+        email
+        identityID
+        gender
+        notificationToken
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
+      businessID
+      stars
+      description
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const onUpdateBusinessComment = /* GraphQL */ `
+  subscription OnUpdateBusinessComment(
+    $filter: ModelSubscriptionBusinessCommentFilterInput
+    $owner: String
+  ) {
+    onUpdateBusinessComment(filter: $filter, owner: $owner) {
+      id
+      userID
+      user {
+        id
+        cognitoID
+        name
+        lastName
+        email
+        identityID
+        gender
+        notificationToken
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
+      businessID
+      stars
+      description
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const onDeleteBusinessComment = /* GraphQL */ `
+  subscription OnDeleteBusinessComment(
+    $filter: ModelSubscriptionBusinessCommentFilterInput
+    $owner: String
+  ) {
+    onDeleteBusinessComment(filter: $filter, owner: $owner) {
+      id
+      userID
+      user {
+        id
+        cognitoID
+        name
+        lastName
+        email
+        identityID
+        gender
+        notificationToken
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
+      businessID
+      stars
+      description
       createdAt
       updatedAt
       owner

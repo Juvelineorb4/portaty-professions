@@ -24,6 +24,7 @@ import {
   Feather,
   Entypo,
   MaterialIcons,
+  Ionicons
 } from "@expo/vector-icons";
 import { Auth, API, Analytics } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Favorites";
@@ -58,6 +59,8 @@ const SearchPost = ({ route, navigation }) => {
   const [listUpdate, setListUpdate] = useRecoilState(updateListFavorites);
   const [countryCity, setCountryCity] = useState(null);
   const global = require("@/utils/styles/global.js");
+  const [weekSchedule, setWeekSchedule] = useState("");
+  const [typeSchedule, setTypeSchedule] = useState("");
 
   const {
     data: { item, images },
@@ -91,9 +94,7 @@ const SearchPost = ({ route, navigation }) => {
             encoding: FileSystem.EncodingType.Base64,
           });
         })
-        .catch((e) => {
-          console.log(e);
-        });
+        .catch((e) => {});
     } catch (error) {
       console.log("Error en pdf: ", error.message);
     }
@@ -179,6 +180,8 @@ const SearchPost = ({ route, navigation }) => {
         setShowAgg(true);
       }
 
+      let schedule = JSON.parse(business?.data?.getBusiness.schedule);
+      filterSchedule(schedule.shedule, schedule.type);
       return setPost(business?.data?.getBusiness);
     } catch (error) {
       console.log(error);
@@ -265,6 +268,66 @@ const SearchPost = ({ route, navigation }) => {
       console.log("Error al registrar analitica: ", error);
     }
   };
+
+  const filterSchedule = (array, type) => {
+    if (array === null || type === null) return;
+    console.log("toy por aqui");
+    console.log(array);
+    console.log(type);
+    // return;
+    let scheduleG = [];
+    let activeDays = array.filter((day) => day.active);
+
+    for (let i = 0; i < activeDays.length; i++) {
+      if (
+        i === 0 ||
+        activeDays[i].hourStart !== activeDays[i - 1].hourStart ||
+        activeDays[i].hourEnd !== activeDays[i - 1].hourEnd
+      ) {
+        scheduleG.push({
+          days: [activeDays[i].name],
+          hourStart: activeDays[i].hourStart,
+          hourEnd: activeDays[i].hourEnd,
+        });
+      } else {
+        scheduleG[scheduleG.length - 1].days.push(activeDays[i].name);
+      }
+    }
+
+    let pContent = scheduleG
+      .map((group) => {
+        let days = group.days;
+        if (days.length > 2) {
+          let consecutive = true;
+          for (let i = 1; i < days.length; i++) {
+            if (
+              array.findIndex((day) => day.name === days[i]) !==
+              array.findIndex((day) => day.name === days[i - 1]) + 1
+            ) {
+              consecutive = false;
+              break;
+            }
+          }
+          if (consecutive) {
+            days = [days[0], "a", days[days.length - 1]];
+          } else {
+            days = days.join(" - ");
+          }
+        } else if (days.length === 2) {
+          days = [days[0], "y", days[1]];
+        }
+        return `${Array.isArray(days) ? days.join(" ") : days}: ${
+          group.hourStart
+        } - ${group.hourEnd}`;
+      })
+      .join(" / ");
+
+    console.log(pContent);
+
+    setWeekSchedule(pContent);
+    setTypeSchedule(type);
+  };
+
   // para la carga default
   useEffect(() => {
     if (!save) fetchFavorite();
@@ -283,7 +346,6 @@ const SearchPost = ({ route, navigation }) => {
     // Inicia el temporizador cuando el componente se monta y countryCity y userAuth existen
     if (countryCity && userAuth) {
       timerRef.current = setTimeout(() => {
-        console.log("PASARON LOS SEGUNDOS");
         registerViewBusiness(
           userAuth?.attributes["custom:userTableID"],
           item.id
@@ -434,6 +496,65 @@ const SearchPost = ({ route, navigation }) => {
             onViewableItemsChanged={onViewRef.current}
           />
         </View>
+        <View
+          style={{
+            flexDirection: "row",
+            paddingHorizontal: 20,
+            justifyContent: "center",
+            alignItems: "center",
+            paddingTop: 5,
+          }}
+        >
+          <View
+            style={{
+              alignItems: "center",
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: "regular",
+                  fontSize: 16,
+                  marginRight: 3,
+                }}
+              >
+                4.7
+              </Text>
+              <Ionicons name="star" size={16} color="#ffb703" />
+            </View>
+
+            <Text
+              style={{
+                fontFamily: "lightItalic",
+                fontSize: 12,
+              }}
+            >
+              100+ valoraciones
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginLeft: 25,
+            }}
+          >
+            <MaterialCommunityIcons name="medal" size={20} color="#ffb703" />
+            <Text
+              style={{
+                fontFamily: "lightItalic",
+                fontSize: 12,
+              }}
+            >
+              Nº 14 en Turismo
+            </Text>
+          </View>
+        </View>
         {showAgg && (
           <View>
             <View
@@ -491,32 +612,6 @@ const SearchPost = ({ route, navigation }) => {
                 )}
               </TouchableOpacity>
             </View>
-            {/* Reporte */}
-            {/* <TouchableOpacity
-              style={{
-                alignSelf: "flex-end",
-                paddingHorizontal: 20,
-                paddingBottom: 5,
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-              onPress={() => setVisible(true)}
-            >
-              <MaterialIcons name="report" size={22} color="black" />
-              <Text
-                style={[
-                  global.black,
-                  {
-                    fontFamily: "bold",
-                    fontSize: 12,
-                    // marginLeft: 2,
-                    // marginBottom: 3
-                  },
-                ]}
-              >
-                Reportar negocio
-              </Text>
-            </TouchableOpacity> */}
           </View>
         )}
         {/* Reporte */}
@@ -530,13 +625,13 @@ const SearchPost = ({ route, navigation }) => {
           }}
           onPress={() => setVisibleReport(true)}
         >
-          <MaterialIcons name="report" size={22} color="black" />
+          <MaterialIcons name="report" size={16} color="black" />
           <Text
             style={[
               global.black,
               {
                 fontFamily: "bold",
-                fontSize: 12,
+                fontSize: 10,
                 // marginLeft: 2,
                 // marginBottom: 3
               },
@@ -559,6 +654,151 @@ const SearchPost = ({ route, navigation }) => {
           ]}
         />
 
+        <View
+          style={{
+            padding: 20,
+          }}
+        >
+          <Text style={{ fontSize: 18, fontFamily: "regular" }}>
+            Horario comercial
+          </Text>
+          {post.schedule !== null ? (
+            <View>
+              <Text
+                style={{
+                  fontFamily: "regular",
+                  fontSize: 14,
+                  marginTop: 5,
+                  lineHeight: 25,
+                  textAlign: "center",
+                }}
+              >
+                {typeSchedule}
+              </Text>
+              <Text
+                style={{
+                  fontFamily: "light",
+                  fontSize: 15,
+                  lineHeight: 25,
+                  textAlign: "center",
+                }}
+              >
+                {weekSchedule}
+              </Text>
+            </View>
+          ) : (
+            <View>
+              <Text
+                style={{
+                  fontFamily: "regular",
+                  fontSize: 18,
+                  marginTop: 8,
+                  textAlign: "center",
+                  marginBottom: -10,
+                }}
+              >
+                {`No definido`}
+              </Text>
+            </View>
+          )}
+        </View>
+
+        {/* Interactions */}
+        <TouchableOpacity
+          style={{
+            paddingHorizontal: 20,
+            paddingTop: 10
+          }}
+          onPress={() => {
+            navigation.navigate('InteractionsSearch')
+          }}
+        >
+          <View
+            style={{
+              borderWidth: 0.6,
+              borderColor: "#1f1f1f",
+              height: 130,
+              borderRadius: 8,
+              padding: 10,
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "flex-end",
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: "bold",
+                  fontSize: 13,
+                }}
+              >
+                Este negocio tiene 21 reseñas
+              </Text>
+            </View>
+            <View
+              style={{
+                marginTop: 10,
+                backgroundColor: '#efeded',
+                padding: 5,
+                borderRadius: 8
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: "regular",
+                    fontSize: 13,
+                    marginRight: 3,
+                  }}
+                >
+                  4 de 5
+                </Text>
+                <Ionicons name="star" size={12} color="#ffb703" />
+                <Text
+                  style={{
+                    fontFamily: "medium",
+                    fontSize: 12,
+                    marginLeft: 5,
+                  }}
+                >
+                  Christopher Alvarez
+                </Text>
+              </View>
+              <Text
+                style={{
+                  fontFamily: "regular",
+                  fontSize: 13,
+                }}
+              >
+                Un sitio agradable, y muy buena atencion al cliente
+              </Text>
+            </View>
+            <View style={{
+              flexDirection: 'row',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              marginTop: 5
+            }}>
+              <Text
+                style={{
+                  fontFamily: "mediumItalic",
+                  fontSize: 12,
+                  marginRight: 3
+                }}
+              >
+                Ver todas las reseñas
+              </Text>
+              <AntDesign name="arrowright" size={13} color="black" />
+            </View>
+          </View>
+        </TouchableOpacity>
         <TouchableOpacity
           style={{
             padding: 20,

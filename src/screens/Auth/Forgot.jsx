@@ -26,7 +26,6 @@ const Forgot = ({ navigation, route }) => {
       email: params?.email,
     },
   });
-  console.log(params);
   const email = watch("email");
   const pwd = watch("password");
   const EMAIL_REGEX = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;

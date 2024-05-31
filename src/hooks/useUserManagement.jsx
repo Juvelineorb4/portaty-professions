@@ -41,7 +41,6 @@ const useUserManagement = () => {
       gender: attributes["custom:gender"],
       platform: Platform.OS.toUpperCase(),
     };
-    console.log(params);
     registerEvent("user_auth", params);
     setUserAuth(null);
   };

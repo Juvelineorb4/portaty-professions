@@ -6,7 +6,6 @@ const useOpenFile = () => {
   // PANA ESTO LO COPIE DE INTERNET
   // https://stackoverflow.com/questions/59812941/view-or-open-pdf-files-stored-locally-expo-react-native
   // si se nos olvida pailas
-  // console.log('toy')
   
   const openFile = (uri, contentType) => {
 

@@ -13,6 +13,7 @@ import Other from "@/screens/Search/Other";
 import CustomQR from "@/components/CustomQR";
 import { useRecoilState } from "recoil";
 import { activeSearch, textInputSearch } from "@/atoms";
+import CustomInteractions from "@/components/CustomInteractions";
 
 const SearchNavigator = ({ navigation }) => {
   const [active, setActive] = useState(false);
@@ -178,6 +179,14 @@ const SearchNavigator = ({ navigation }) => {
       <Stack.Screen
         name="ViewQR"
         component={CustomQR}
+        options={{
+          animation: "slide_from_right",
+          header: (props) => <LeftHeader {...props} />,
+        }}
+      />
+      <Stack.Screen
+        name="InteractionsSearch"
+        component={CustomInteractions}
         options={{
           animation: "slide_from_right",
           header: (props) => <LeftHeader {...props} />,

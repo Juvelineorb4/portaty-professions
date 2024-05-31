@@ -97,6 +97,38 @@ export const deleteReports = /* GraphQL */ `
     }
   }
 `;
+export const deleteBusinessComment = /* GraphQL */ `
+  mutation DeleteBusinessComment(
+    $input: DeleteBusinessCommentInput!
+    $condition: ModelBusinessCommentConditionInput
+  ) {
+    deleteBusinessComment(input: $input, condition: $condition) {
+      id
+      userID
+      user {
+        id
+        cognitoID
+        name
+        lastName
+        email
+        identityID
+        gender
+        notificationToken
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
+      businessID
+      stars
+      description
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
 export const deleteComplaints = /* GraphQL */ `
   mutation DeleteComplaints(
     $input: DeleteComplaintsInput!
@@ -258,6 +290,10 @@ export const createUsers = /* GraphQL */ `
         nextToken
         __typename
       }
+      comments {
+        nextToken
+        __typename
+      }
       owner
       createdAt
       updatedAt
@@ -287,6 +323,10 @@ export const updateUsers = /* GraphQL */ `
         nextToken
         __typename
       }
+      comments {
+        nextToken
+        __typename
+      }
       owner
       createdAt
       updatedAt
@@ -313,6 +353,10 @@ export const deleteUsers = /* GraphQL */ `
         __typename
       }
       business {
+        nextToken
+        __typename
+      }
+      comments {
         nextToken
         __typename
       }
@@ -371,6 +415,10 @@ export const createBusiness = /* GraphQL */ `
       description
       prefer
       schedule
+      comments {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       owner
@@ -426,6 +474,10 @@ export const updateBusiness = /* GraphQL */ `
       description
       prefer
       schedule
+      comments {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       owner
@@ -481,6 +533,74 @@ export const deleteBusiness = /* GraphQL */ `
       description
       prefer
       schedule
+      comments {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const createBusinessComment = /* GraphQL */ `
+  mutation CreateBusinessComment(
+    $input: CreateBusinessCommentInput!
+    $condition: ModelBusinessCommentConditionInput
+  ) {
+    createBusinessComment(input: $input, condition: $condition) {
+      id
+      userID
+      user {
+        id
+        cognitoID
+        name
+        lastName
+        email
+        identityID
+        gender
+        notificationToken
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
+      businessID
+      stars
+      description
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const updateBusinessComment = /* GraphQL */ `
+  mutation UpdateBusinessComment(
+    $input: UpdateBusinessCommentInput!
+    $condition: ModelBusinessCommentConditionInput
+  ) {
+    updateBusinessComment(input: $input, condition: $condition) {
+      id
+      userID
+      user {
+        id
+        cognitoID
+        name
+        lastName
+        email
+        identityID
+        gender
+        notificationToken
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
+      businessID
+      stars
+      description
       createdAt
       updatedAt
       owner

@@ -50,7 +50,6 @@ const Home = ({ navigation, route }) => {
   const [loading, setLoading] = useState(false);
   const fetchFavorites = async () => {
     setLoading(true);
-    // console.log(userAuth?.attributes["custom:userTableID"]);
 
     try {
       const fetchAllFavorites = async (nextToken, result = []) => {
@@ -77,7 +76,6 @@ const Home = ({ navigation, route }) => {
       };
 
       const allFavorites = await fetchAllFavorites();
-      // console.log(allFavorites);
       let temporalList = [];
       setFavoritesList(allFavorites);
       if (allFavorites.length === 0) setNothing(true);

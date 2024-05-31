@@ -60,8 +60,22 @@ type Users
   ) {
   id: ID
   cognitoID: ID @auth(rules: [{ allow: owner, operations: [read, delete] }])
-  name: String @auth(rules: [{ allow: owner }])
-  lastName: String @auth(rules: [{ allow: owner }])
+  name: String
+    @auth(
+      rules: [
+        { allow: owner }
+        { allow: private, provider: iam, operations: [read] }
+        { allow: public, provider: iam, operations: [read] }
+      ]
+    )
+  lastName: String
+    @auth(
+      rules: [
+        { allow: owner }
+        { allow: private, provider: iam, operations: [read] }
+        { allow: public, provider: iam, operations: [read] }
+      ]
+    )
   email: String
     @auth(rules: [{ allow: owner }])
     @index(name: "byEmailUser", queryField: "userByEmail")
@@ -77,6 +91,8 @@ type Users
     @auth(rules: [{ allow: owner, operations: [read, delete] }])
   favorites: [Favorites] @hasMany(indexName: "byUsersFavorites", fields: ["id"])
   business: [Business] @hasMany(indexName: "byUsersBusiness", fields: ["id"])
+  comments: [BusinessComment]
+    @hasMany(indexName: "byUserComments", fields: ["id"])
   owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }])
 }
 
@@ -126,6 +142,8 @@ type Business
   description: String
   prefer: Boolean @default(value: "false")
   schedule: String
+  comments: [BusinessComment]
+    @hasMany(indexName: "byBusinessComments", fields: ["id"])
 }
 enum BusinessStatus {
   ENABLED
@@ -133,9 +151,21 @@ enum BusinessStatus {
   SUSPENDED
 }
 
-type ImageBusiness {
-  key: Int
-  url: String
+type BusinessComment
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: private, provider: iam, operations: [read] }
+      { allow: public, provider: iam, operations: [read] }
+    ]
+  ) {
+  id: ID!
+  userID: ID! @index(name: "byUserComments")
+  user: Users @belongsTo(fields: ["userID"])
+  businessID: ID! @index(name: "byBusinessComments")
+  stars: Int!
+  description: String
 }
 
 type Favorites
