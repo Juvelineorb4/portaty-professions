@@ -18,15 +18,17 @@ const styles = StyleSheet.create({
   },
   modalTop: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-end',
     borderWidth: 1,
     borderColor: '#1f1f1f',
     backgroundColor: '#ffb703',
+    height: 75
   },
   modalText: {
     fontFamily: 'bold',
     fontSize: 14,
     marginLeft: 5,
+    marginBottom: 12
   },
   modalContent: {
     backgroundColor: 'white',

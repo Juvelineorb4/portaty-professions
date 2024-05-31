@@ -110,7 +110,7 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
           <View style={{ flex: 1 }}>
             {open && (
               <MapView
-                provider={PROVIDER_GOOGLE}
+                // provider={PROVIDER_GOOGLE}
                 style={{ flex: 1 }}
                 showsUserLocation={open}
                 ref={mapRef}
@@ -142,7 +142,8 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
                 borderRadius: 5,
                 borderColor: "#1f1f1f",
                 borderWidth: 0.7,
-                width: 235,
+                width: 295,
+                height: 50,
                 backgroundColor: "#fff",
               }}
             >
@@ -166,7 +167,7 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
                     justifyContent: "center",
                     alignContent: "center",
                     borderRadius: 5,
-                    height: 40,
+                    height: 50,
                     width: 60,
                     alignItems: "center",
                     borderColor: "#1f1f1f",
@@ -279,11 +280,13 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
                   position: "absolute",
                   bottom: 20,
                   right: 20,
+                  height: 70,
                   paddingHorizontal: 10,
                   paddingVertical: 15,
                   borderRadius: 5,
                   width: 100,
                   alignItems: "center",
+                  justifyContent: 'center',
                   borderColor: "#1f1f1f",
                   borderWidth: 1,
                 },

@@ -255,7 +255,7 @@ const Search = ({ route }) => {
                 >
                   <TouchableOpacity
                     style={[
-                      styles.inputContainerBot,
+                      styles.inputContainer,
                       {
                         height: 50,
                         width: "100%",
