@@ -115,6 +115,7 @@ type Business
   @auth(
     rules: [
       { allow: owner }
+      { allow: public }
       { allow: private, provider: iam, operations: [read] }
       { allow: private, operations: [read] }
     ]
@@ -144,6 +145,7 @@ type Business
   schedule: String
   comments: [BusinessComment]
     @hasMany(indexName: "byBusinessComments", fields: ["id"])
+  catalogpdf: String
 }
 enum BusinessStatus {
   ENABLED

@@ -202,10 +202,10 @@ const FavoritePage = ({ navigation, route }) => {
 
         return result;
       };
-      
+
       const allRatings = await fetchAllRatings();
       console.log(allRatings);
-      setListRatings(allRatings)
+      setListRatings(allRatings);
       // const ratings = await API.graphql({
       //   query: queries.businessCommentsByBusinessID,
       //   variables: {
@@ -587,7 +587,7 @@ const FavoritePage = ({ navigation, route }) => {
           onPress={() => {
             navigation.navigate("InteractionsFavorites", {
               business: item,
-              list: listRatings
+              list: listRatings,
             });
           }}
         >

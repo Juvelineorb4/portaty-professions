@@ -41,6 +41,7 @@ import { TextInput } from "react-native";
 import { StorageAccessFramework } from "expo-file-system";
 import * as FileSystem from "expo-file-system";
 import * as IntentLauncher from "expo-intent-launcher";
+import * as DocumentPicker from "expo-document-picker";
 import * as Sharing from "expo-sharing";
 // hooks
 import useOpenFile from "@/hooks/useOpenFile";
@@ -453,6 +454,41 @@ const Page = ({ route, navigation }) => {
     });
   };
 
+  const uploadCatalogPDF = async () => {
+    try {
+      console.log("COMENZO");
+      // Seleccionar el archivo PDF
+      let result = await DocumentPicker.getDocumentAsync({
+        copyToCacheDirectory: true,
+        type: "application/pdf",
+      });
+
+      if (result?.assets !== null && result?.canceled !== true) {
+        console.log(result);
+        const response = await fetch(result?.assets[0]?.uri);
+
+        const blob = await response.blob();
+        const ejel = await Storage.put(
+          `business/${item?.id}/catalog.pdf`,
+          blob,
+          {
+            contentType: "application/pdf",
+            level: "protected",
+            metadata: {
+              businessid: item?.id,
+            },
+          }
+        );
+        console.log(
+          "File successfully uploaded and URL saved to database!",
+          ejel
+        );
+      }
+    } catch (error) {
+      console.error("Error uploading file: ", error);
+    }
+  };
+
   if (!item || storageImages?.length === 0) return <SkeletonPage />;
   return (
     <View
@@ -719,7 +755,7 @@ const Page = ({ route, navigation }) => {
               <View
                 style={{
                   flex: 1,
-                  position: 'relative'
+                  position: "relative",
                 }}
               >
                 <Text
@@ -728,7 +764,7 @@ const Page = ({ route, navigation }) => {
                     fontSize: 14,
                     marginTop: 5,
                     lineHeight: 25,
-                    textAlign: 'center'
+                    textAlign: "center",
                   }}
                 >
                   {scheduleType}
@@ -738,7 +774,7 @@ const Page = ({ route, navigation }) => {
                     fontFamily: "light",
                     fontSize: 15,
                     lineHeight: 25,
-                    textAlign: 'center'
+                    textAlign: "center",
                   }}
                 >
                   {weeks}
@@ -754,7 +790,7 @@ const Page = ({ route, navigation }) => {
                       alignItems: "center",
                       width: 120,
                       height: 50,
-                      alignSelf: 'center'
+                      alignSelf: "center",
                     },
                     global.mainBgColor,
                   ]}
@@ -1001,6 +1037,11 @@ const Page = ({ route, navigation }) => {
             }}
             source={require("@/utils/images/arrow_right.png")}
           />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={uploadCatalogPDF}>
+          <View>
+            <Text>CARGAR PDF</Text>
+          </View>
         </TouchableOpacity>
         <View style={{ marginBottom: 80 }}>
           <View

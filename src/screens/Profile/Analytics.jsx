@@ -772,7 +772,9 @@ const Analytics = ({ route }) => {
                         fontFamily: "medium",
                       }}
                     >
-                      {`${entry.label}: ${entry.value.toFixed(2)}% - ${entry.amount} cant.`}
+                      {`${entry.label}: ${entry.value.toFixed(2)}% - ${
+                        entry.amount
+                      } cant.`}
                     </RNText>
                   </View>
                 ))}
@@ -845,7 +847,9 @@ const Analytics = ({ route }) => {
                         fontFamily: "medium",
                       }}
                     >
-                      {`${entry.label}: ${entry.value.toFixed(2)}% - ${entry.amount} cant.`}
+                      {`${entry.label}: ${entry.value.toFixed(2)}% - ${
+                        entry.amount
+                      } cant.`}
                     </RNText>
                   </View>
                 ))}
@@ -975,7 +979,9 @@ const Analytics = ({ route }) => {
                           fontFamily: "medium",
                         }}
                       >
-                        {`${entry.label}: ${entry.value.toFixed(2)}% - ${entry.amount} cant.`}
+                        {`${entry.label}: ${entry.value.toFixed(2)}% - ${
+                          entry.amount
+                        } cant.`}
                       </RNText>
                     </View>
                   ))}
