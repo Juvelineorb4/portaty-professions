@@ -419,6 +419,7 @@ export const createBusiness = /* GraphQL */ `
         nextToken
         __typename
       }
+      catalogpdf
       createdAt
       updatedAt
       owner
@@ -478,6 +479,7 @@ export const updateBusiness = /* GraphQL */ `
         nextToken
         __typename
       }
+      catalogpdf
       createdAt
       updatedAt
       owner
@@ -537,6 +539,7 @@ export const deleteBusiness = /* GraphQL */ `
         nextToken
         __typename
       }
+      catalogpdf
       createdAt
       updatedAt
       owner
@@ -636,6 +639,7 @@ export const createFavorites = /* GraphQL */ `
         description
         prefer
         schedule
+        catalogpdf
         createdAt
         updatedAt
         owner
@@ -692,6 +696,7 @@ export const updateFavorites = /* GraphQL */ `
         description
         prefer
         schedule
+        catalogpdf
         createdAt
         updatedAt
         owner
@@ -748,6 +753,7 @@ export const deleteFavorites = /* GraphQL */ `
         description
         prefer
         schedule
+        catalogpdf
         createdAt
         updatedAt
         owner

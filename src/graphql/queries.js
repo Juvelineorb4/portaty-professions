@@ -343,6 +343,7 @@ export const getBusiness = /* GraphQL */ `
         nextToken
         __typename
       }
+      catalogpdf
       createdAt
       updatedAt
       owner
@@ -377,6 +378,7 @@ export const listBusinesses = /* GraphQL */ `
         description
         prefer
         schedule
+        catalogpdf
         createdAt
         updatedAt
         owner
@@ -422,6 +424,7 @@ export const listBusinessbyUserID = /* GraphQL */ `
         description
         prefer
         schedule
+        catalogpdf
         createdAt
         updatedAt
         owner
@@ -575,6 +578,7 @@ export const getFavorites = /* GraphQL */ `
         description
         prefer
         schedule
+        catalogpdf
         createdAt
         updatedAt
         owner
