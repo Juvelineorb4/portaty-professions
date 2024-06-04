@@ -329,3 +329,37 @@ export const listFavoritesbyUserID = /* GraphQL */ `
     }
   }
 `;
+
+export const businessCommentsByBusinessID = /* GraphQL */ `
+  query BusinessCommentsByBusinessID(
+    $businessID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelBusinessCommentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    businessCommentsByBusinessID(
+      businessID: $businessID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userID
+        user {
+          id
+          name
+          lastName
+        }
+        businessID
+        stars
+        description
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
