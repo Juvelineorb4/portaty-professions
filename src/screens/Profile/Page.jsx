@@ -23,6 +23,7 @@ import {
   EvilIcons,
   Entypo,
   Ionicons,
+  Octicons,
 } from "@expo/vector-icons";
 import { Auth, API, Storage } from "aws-amplify";
 import * as subscriptions from "@/graphql/CustomSubscriptions/Profile";
@@ -158,34 +159,14 @@ const Page = ({ route, navigation }) => {
         identityid: identityId,
       },
     };
-    let fileUri = "";
     try {
       // creo el pdf url
       const result = await API.get(api, path, params);
       // la ruta de guardado
       await Linking.openURL(result?.url);
-      return;
-      const localUri = `${FileSystem.documentDirectory}qr.pdf`;
-
-      const file = await FileSystem.downloadAsync(result?.url, localUri);
-
-      FileSystem.getContentUriAsync(file.uri).then((cUri) => {
-        if (Platform.OS === "ios") {
-          Sharing.shareAsync(cUri);
-        } else {
-          IntentLauncher.startActivityAsync("android.intent.action.VIEW", {
-            data: cUri,
-            flags: 1,
-            type: "application/pdf",
-          }).catch((e) => console.log("ERROR AL ABRIR ARCHIVO: ", e));
-        }
-      });
-      // descargo en almacenamiento local y luego abro
-      // downloadAndOpenFile(result.url, localUri, "application/pdf");
     } catch (error) {
       console.log("Error en pdf: ", error.message);
     }
-    return fileUri;
   };
 
   const onOpenMap = (lat, lng, name) => {
@@ -456,8 +437,6 @@ const Page = ({ route, navigation }) => {
 
   const uploadCatalogPDF = async () => {
     try {
-      console.log("COMENZO");
-      // Seleccionar el archivo PDF
       let result = await DocumentPicker.getDocumentAsync({
         copyToCacheDirectory: true,
         type: "application/pdf",
@@ -466,9 +445,8 @@ const Page = ({ route, navigation }) => {
       if (result?.assets !== null && result?.canceled !== true) {
         console.log(result);
         const response = await fetch(result?.assets[0]?.uri);
-
         const blob = await response.blob();
-        const ejel = await Storage.put(
+        const pdf = await Storage.put(
           `business/${item?.id}/catalog.pdf`,
           blob,
           {
@@ -479,13 +457,19 @@ const Page = ({ route, navigation }) => {
             },
           }
         );
-        console.log(
-          "File successfully uploaded and URL saved to database!",
-          ejel
-        );
+        console.log(pdf);
       }
     } catch (error) {
-      console.error("Error uploading file: ", error);
+      console.log(error);
+    }
+  };
+
+  const getCatalogPDF = async () => {
+    try {
+      const url = item?.catalogpdf;
+      Linking.openURL(url);
+    } catch (error) {
+      console.log("Error en catalogo: ", error);
     }
   };
 
@@ -1038,11 +1022,92 @@ const Page = ({ route, navigation }) => {
             source={require("@/utils/images/arrow_right.png")}
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress={uploadCatalogPDF}>
+
+        {/* Catalogo */}
+        <View>
+          {item?.catalogpdf === "" ? (
+            <TouchableOpacity
+              style={[
+                {
+                  borderColor: "#1f1f1f",
+                  borderRadius: 8,
+                  borderWidth: 0.7,
+                  marginBottom: 10,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: 120,
+                  height: 50,
+                  alignSelf: "center",
+                },
+                global.mainBgColor,
+              ]}
+              onPress={() => uploadCatalogPDF}
+            >
+              <Text
+                style={[
+                  { fontSize: 13, fontFamily: "bold", textAlign: "center" },
+                  global.black,
+                ]}
+              >
+                Subir un catalogo
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={{
+                padding: 20,
+                marginTop: -25,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+              onPress={getCatalogPDF}
+            >
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <View
+                  style={[
+                    {
+                      width: 58,
+                      height: 58,
+                      borderRadius: 10,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderColor: "#1f1f1f",
+                      borderWidth: 0.7,
+                    },
+                    global.bgYellow,
+                  ]}
+                >
+                  <Octicons name="checklist" size={21} color="#1f1f1f" />
+                </View>
+                <View style={{ marginLeft: 10 }}>
+                  <Text style={{ fontFamily: "medium", fontSize: 15 }}>
+                    Catalogo
+                  </Text>
+                  <Text
+                    style={{ fontFamily: "regular", fontSize: 12, width: 150 }}
+                  >
+                    Mira la lista de productos y servicios de tu negocio
+                  </Text>
+                </View>
+              </View>
+              <Image
+                style={{
+                  width: 40,
+                  height: 40,
+                  resizeMode: "cover",
+                }}
+                source={require("@/utils/images/arrow_right.png")}
+              />
+            </TouchableOpacity>
+          )}
+        </View>
+
+        {/* <TouchableOpacity onPress={uploadCatalogPDF}>
           <View>
             <Text>CARGAR PDF</Text>
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <View style={{ marginBottom: 80 }}>
           <View
             style={{

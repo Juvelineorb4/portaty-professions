@@ -235,6 +235,10 @@ export const listBusinessbyUserID = /* GraphQL */ `
         description
         prefer
         schedule
+        comments {
+          nextToken
+        }
+        catalogpdf
         createdAt
         updatedAt
         owner

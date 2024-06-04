@@ -256,6 +256,15 @@ const FavoritePage = ({ navigation, route }) => {
     Linking.openURL(url);
   };
 
+  const getCatalogPDF = async () => {
+    try {
+      const url = item?.catalogpdf;
+      Linking.openURL(url);
+    } catch (error) {
+      console.log("Error en catalogo: ", error);
+    }
+  };
+
   useLayoutEffect(() => {
     fetchData();
     fetchRatings(item);
@@ -587,7 +596,7 @@ const FavoritePage = ({ navigation, route }) => {
           onPress={() => {
             navigation.navigate("InteractionsFavorites", {
               business: item,
-              list: listRatings,
+              list: listRatings
             });
           }}
         >
@@ -595,7 +604,7 @@ const FavoritePage = ({ navigation, route }) => {
             style={{
               borderWidth: 0.6,
               borderColor: "#1f1f1f",
-              height: 130,
+              height:listRatings.length !== 0 ? 130 : 60,
               borderRadius: 8,
               padding: 10,
             }}
@@ -615,7 +624,7 @@ const FavoritePage = ({ navigation, route }) => {
                 Este negocio tiene {listRatings.length} reseña(s)
               </Text>
             </View>
-            <View
+            {listRatings.length !== 0 && <View
               style={{
                 marginTop: 10,
                 backgroundColor: "#efeded",
@@ -636,7 +645,7 @@ const FavoritePage = ({ navigation, route }) => {
                     marginRight: 3,
                   }}
                 >
-                  {listRatings[0].stars} de 5
+                  {listRatings[0]?.stars} de 5
                 </Text>
                 <Ionicons name="star" size={12} color="#ffb703" />
                 <Text
@@ -646,7 +655,7 @@ const FavoritePage = ({ navigation, route }) => {
                     marginLeft: 5,
                   }}
                 >
-                  {listRatings[0].user.name} {listRatings[0].user.lastName}
+                  {listRatings[0]?.user?.name} {listRatings[0]?.user?.lastName}
                 </Text>
               </View>
               <Text
@@ -655,9 +664,9 @@ const FavoritePage = ({ navigation, route }) => {
                   fontSize: 13,
                 }}
               >
-                {listRatings[0].description}
+                {listRatings[0]?.description}
               </Text>
-            </View>
+            </View>}
             <View
               style={{
                 flexDirection: "row",
@@ -673,13 +682,12 @@ const FavoritePage = ({ navigation, route }) => {
                   marginRight: 3,
                 }}
               >
-                Ver todas las reseñas
+                {listRatings.length !== 0 ? 'Ver todas las reseñas' : 'Publicar una reseña'}
               </Text>
               <AntDesign name="arrowright" size={13} color="black" />
             </View>
           </View>
         </TouchableOpacity>
-
         <TouchableOpacity
           style={{
             padding: 20,
@@ -776,51 +784,6 @@ const FavoritePage = ({ navigation, route }) => {
             source={require("@/utils/images/arrow_right.png")}
           />
         </TouchableOpacity>
-        {/* <TouchableOpacity
-          style={{
-            padding: 20,
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginTop: -27,
-          }}
-          onPress={getPdf}
-        >
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <View
-              style={[
-                {
-                  width: 58,
-                  height: 58,
-                  borderRadius: 10,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderWidth: 0.7,
-                  borderColor: "#1f1f1f",
-                },
-                global.bgYellow,
-              ]}
-            >
-              <AntDesign name="qrcode" size={24} color="#1f1f1f" />
-            </View>
-            <View style={{ marginLeft: 10 }}>
-              <Text style={{ fontFamily: "medium", fontSize: 15 }}>
-                Descargar QR
-              </Text>
-              <Text style={{ fontFamily: "light", fontSize: 12, width: 150 }}>
-                Descarga el QR del negocio para pegarlo en donde quieras
-              </Text>
-            </View>
-          </View>
-          <Image
-            style={{
-              width: 40,
-              height: 40,
-              resizeMode: "cover",
-            }}
-            source={require("@/utils/images/arrow_right.png")}
-          />
-        </TouchableOpacity> */}
         <TouchableOpacity
           style={{
             padding: 20,
@@ -864,6 +827,58 @@ const FavoritePage = ({ navigation, route }) => {
             source={require("@/utils/images/arrow_right.png")}
           />
         </TouchableOpacity>
+
+        {/* Catalogo */}
+        {item?.catalogpdf !== "" && (
+          <TouchableOpacity
+            style={{
+              padding: 20,
+              marginTop: -25,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+            onPress={getCatalogPDF}
+          >
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <View
+                style={[
+                  {
+                    width: 58,
+                    height: 58,
+                    borderRadius: 10,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderColor: "#1f1f1f",
+                    borderWidth: 0.7,
+                  },
+                  global.bgYellow,
+                ]}
+              >
+                <Octicons name="checklist" size={21} color="#1f1f1f" />
+              </View>
+              <View style={{ marginLeft: 10 }}>
+                <Text style={{ fontFamily: "medium", fontSize: 15 }}>
+                  Catalogo
+                </Text>
+                <Text
+                  style={{ fontFamily: "regular", fontSize: 12, width: 150 }}
+                >
+                  Mira la lista de productos y servicios del negocio
+                </Text>
+              </View>
+            </View>
+            <Image
+              style={{
+                width: 40,
+                height: 40,
+                resizeMode: "cover",
+              }}
+              source={require("@/utils/images/arrow_right.png")}
+            />
+          </TouchableOpacity>
+        )}
+
         <View style={{ marginBottom: 80 }}>
           <Text style={{ fontSize: 22, fontFamily: "regular", padding: 10 }}>
             Datos

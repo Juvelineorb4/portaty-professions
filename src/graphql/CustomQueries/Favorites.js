@@ -290,6 +290,7 @@ export const listFavoritesbyUserID = /* GraphQL */ `
           email
           phone
           whatsapp
+          catalogpdf
           coordinates {
             lat
             lon
