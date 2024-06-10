@@ -130,8 +130,6 @@ type Business
   images: [String]
   thumbnail: String
   email: String
-  emailVerified: Boolean @default(value: "false")
-  emailConfirmationCode: String @default(value: "")
   phone: String
   whatsapp: String
   instagram: String

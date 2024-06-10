@@ -396,8 +396,6 @@ export const createBusiness = /* GraphQL */ `
       images
       thumbnail
       email
-      emailVerified
-      emailConfirmationCode
       phone
       whatsapp
       instagram
@@ -458,8 +456,6 @@ export const updateBusiness = /* GraphQL */ `
       images
       thumbnail
       email
-      emailVerified
-      emailConfirmationCode
       phone
       whatsapp
       instagram
@@ -520,8 +516,6 @@ export const deleteBusiness = /* GraphQL */ `
       images
       thumbnail
       email
-      emailVerified
-      emailConfirmationCode
       phone
       whatsapp
       instagram
@@ -635,8 +629,6 @@ export const createFavorites = /* GraphQL */ `
         images
         thumbnail
         email
-        emailVerified
-        emailConfirmationCode
         phone
         whatsapp
         instagram
@@ -694,8 +686,6 @@ export const updateFavorites = /* GraphQL */ `
         images
         thumbnail
         email
-        emailVerified
-        emailConfirmationCode
         phone
         whatsapp
         instagram
@@ -753,8 +743,6 @@ export const deleteFavorites = /* GraphQL */ `
         images
         thumbnail
         email
-        emailVerified
-        emailConfirmationCode
         phone
         whatsapp
         instagram

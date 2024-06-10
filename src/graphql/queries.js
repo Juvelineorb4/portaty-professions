@@ -320,8 +320,6 @@ export const getBusiness = /* GraphQL */ `
       images
       thumbnail
       email
-      emailVerified
-      emailConfirmationCode
       phone
       whatsapp
       instagram
@@ -370,8 +368,6 @@ export const listBusinesses = /* GraphQL */ `
         images
         thumbnail
         email
-        emailVerified
-        emailConfirmationCode
         phone
         whatsapp
         instagram
@@ -418,8 +414,6 @@ export const listBusinessbyUserID = /* GraphQL */ `
         images
         thumbnail
         email
-        emailVerified
-        emailConfirmationCode
         phone
         whatsapp
         instagram
@@ -574,8 +568,6 @@ export const getFavorites = /* GraphQL */ `
         images
         thumbnail
         email
-        emailVerified
-        emailConfirmationCode
         phone
         whatsapp
         instagram
