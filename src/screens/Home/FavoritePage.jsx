@@ -596,7 +596,7 @@ const FavoritePage = ({ navigation, route }) => {
           onPress={() => {
             navigation.navigate("InteractionsFavorites", {
               business: item,
-              list: listRatings
+              list: listRatings,
             });
           }}
         >
@@ -604,7 +604,7 @@ const FavoritePage = ({ navigation, route }) => {
             style={{
               borderWidth: 0.6,
               borderColor: "#1f1f1f",
-              height:listRatings.length !== 0 ? 130 : 60,
+              height: listRatings.length !== 0 ? 130 : 60,
               borderRadius: 8,
               padding: 10,
             }}
@@ -624,49 +624,52 @@ const FavoritePage = ({ navigation, route }) => {
                 Este negocio tiene {listRatings.length} reseña(s)
               </Text>
             </View>
-            {listRatings.length !== 0 && <View
-              style={{
-                marginTop: 10,
-                backgroundColor: "#efeded",
-                padding: 5,
-                borderRadius: 8,
-              }}
-            >
+            {listRatings.length !== 0 && (
               <View
                 style={{
-                  flexDirection: "row",
-                  alignItems: "center",
+                  marginTop: 10,
+                  backgroundColor: "#efeded",
+                  padding: 5,
+                  borderRadius: 8,
                 }}
               >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: "regular",
+                      fontSize: 13,
+                      marginRight: 3,
+                    }}
+                  >
+                    {listRatings[0]?.stars} de 5
+                  </Text>
+                  <Ionicons name="star" size={12} color="#ffb703" />
+                  <Text
+                    style={{
+                      fontFamily: "medium",
+                      fontSize: 12,
+                      marginLeft: 5,
+                    }}
+                  >
+                    {listRatings[0]?.user?.name}{" "}
+                    {listRatings[0]?.user?.lastName}
+                  </Text>
+                </View>
                 <Text
                   style={{
                     fontFamily: "regular",
                     fontSize: 13,
-                    marginRight: 3,
                   }}
                 >
-                  {listRatings[0]?.stars} de 5
-                </Text>
-                <Ionicons name="star" size={12} color="#ffb703" />
-                <Text
-                  style={{
-                    fontFamily: "medium",
-                    fontSize: 12,
-                    marginLeft: 5,
-                  }}
-                >
-                  {listRatings[0]?.user?.name} {listRatings[0]?.user?.lastName}
+                  {listRatings[0]?.description}
                 </Text>
               </View>
-              <Text
-                style={{
-                  fontFamily: "regular",
-                  fontSize: 13,
-                }}
-              >
-                {listRatings[0]?.description}
-              </Text>
-            </View>}
+            )}
             <View
               style={{
                 flexDirection: "row",
@@ -682,7 +685,9 @@ const FavoritePage = ({ navigation, route }) => {
                   marginRight: 3,
                 }}
               >
-                {listRatings.length !== 0 ? 'Ver todas las reseñas' : 'Publicar una reseña'}
+                {listRatings.length !== 0
+                  ? "Ver todas las reseñas"
+                  : "Publicar una reseña"}
               </Text>
               <AntDesign name="arrowright" size={13} color="black" />
             </View>

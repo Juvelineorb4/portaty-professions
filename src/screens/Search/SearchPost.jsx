@@ -25,7 +25,7 @@ import {
   Entypo,
   MaterialIcons,
   Ionicons,
-  Octicons
+  Octicons,
 } from "@expo/vector-icons";
 import { Auth, API, Analytics } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Favorites";
@@ -67,7 +67,7 @@ const SearchPost = ({ route, navigation }) => {
   const {
     data: { item, images },
   } = route.params;
-  console.log(item)
+  console.log(item);
   const actividad = JSON.parse(item.activity);
   const getPdf = async () => {
     const permissions =
@@ -322,7 +322,6 @@ const SearchPost = ({ route, navigation }) => {
       })
       .join(" / ");
 
-
     setWeekSchedule(pContent);
     setTypeSchedule(type);
   };
@@ -353,10 +352,10 @@ const SearchPost = ({ route, navigation }) => {
 
         return result;
       };
-      
+
       const allRatings = await fetchAllRatings();
       console.log(allRatings);
-      setListRatings(allRatings)
+      setListRatings(allRatings);
       // const ratings = await API.graphql({
       //   query: queries.businessCommentsByBusinessID,
       //   variables: {
@@ -372,7 +371,7 @@ const SearchPost = ({ route, navigation }) => {
   const getCatalogPDF = async () => {
     try {
       const url = post?.catalogpdf;
-      console.log(post)
+      console.log(post);
       Linking.openURL(url);
     } catch (error) {
       console.log("Error en catalogo: ", error);
@@ -382,7 +381,7 @@ const SearchPost = ({ route, navigation }) => {
   useEffect(() => {
     if (!save) fetchFavorite();
     fetchData();
-    fetchRatings()
+    fetchRatings();
   }, []);
   // para obetener el pais y ciudad
   useEffect(() => {
@@ -763,7 +762,7 @@ const SearchPost = ({ route, navigation }) => {
           onPress={() => {
             navigation.navigate("InteractionsSearch", {
               business: item,
-              list: listRatings
+              list: listRatings,
             });
           }}
         >
@@ -771,7 +770,7 @@ const SearchPost = ({ route, navigation }) => {
             style={{
               borderWidth: 0.6,
               borderColor: "#1f1f1f",
-              height:listRatings.length !== 0 ? 130 : 60,
+              height: listRatings.length !== 0 ? 130 : 60,
               borderRadius: 8,
               padding: 10,
             }}
@@ -791,49 +790,52 @@ const SearchPost = ({ route, navigation }) => {
                 Este negocio tiene {listRatings.length} reseña(s)
               </Text>
             </View>
-            {listRatings.length !== 0 && <View
-              style={{
-                marginTop: 10,
-                backgroundColor: "#efeded",
-                padding: 5,
-                borderRadius: 8,
-              }}
-            >
+            {listRatings.length !== 0 && (
               <View
                 style={{
-                  flexDirection: "row",
-                  alignItems: "center",
+                  marginTop: 10,
+                  backgroundColor: "#efeded",
+                  padding: 5,
+                  borderRadius: 8,
                 }}
               >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: "regular",
+                      fontSize: 13,
+                      marginRight: 3,
+                    }}
+                  >
+                    {listRatings[0]?.stars} de 5
+                  </Text>
+                  <Ionicons name="star" size={12} color="#ffb703" />
+                  <Text
+                    style={{
+                      fontFamily: "medium",
+                      fontSize: 12,
+                      marginLeft: 5,
+                    }}
+                  >
+                    {listRatings[0]?.user?.name}{" "}
+                    {listRatings[0]?.user?.lastName}
+                  </Text>
+                </View>
                 <Text
                   style={{
                     fontFamily: "regular",
                     fontSize: 13,
-                    marginRight: 3,
                   }}
                 >
-                  {listRatings[0]?.stars} de 5
-                </Text>
-                <Ionicons name="star" size={12} color="#ffb703" />
-                <Text
-                  style={{
-                    fontFamily: "medium",
-                    fontSize: 12,
-                    marginLeft: 5,
-                  }}
-                >
-                  {listRatings[0]?.user?.name} {listRatings[0]?.user?.lastName}
+                  {listRatings[0]?.description}
                 </Text>
               </View>
-              <Text
-                style={{
-                  fontFamily: "regular",
-                  fontSize: 13,
-                }}
-              >
-                {listRatings[0]?.description}
-              </Text>
-            </View>}
+            )}
             <View
               style={{
                 flexDirection: "row",
@@ -849,7 +851,9 @@ const SearchPost = ({ route, navigation }) => {
                   marginRight: 3,
                 }}
               >
-                {listRatings.length !== 0 ? 'Ver todas las reseñas' : 'Publicar una reseña'}
+                {listRatings.length !== 0
+                  ? "Ver todas las reseñas"
+                  : "Publicar una reseña"}
               </Text>
               <AntDesign name="arrowright" size={13} color="black" />
             </View>
@@ -995,7 +999,7 @@ const SearchPost = ({ route, navigation }) => {
           />
         </TouchableOpacity>
         {/* Catalogo */}
-        {post?.catalogpdf !== "" && (
+        {post?.catalogpdf !== "" && post?.catalogpdf && (
           <TouchableOpacity
             style={{
               padding: 20,

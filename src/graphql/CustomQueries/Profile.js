@@ -218,6 +218,7 @@ export const listBusinessbyUserID = /* GraphQL */ `
         images
         thumbnail
         email
+        emailVerified
         phone
         whatsapp
         instagram

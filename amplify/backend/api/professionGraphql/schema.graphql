@@ -130,6 +130,8 @@ type Business
   images: [String]
   thumbnail: String
   email: String
+  emailVerified: Boolean @default(value: "false")
+  emailConfirmationCode: String @default(value: "")
   phone: String
   whatsapp: String
   instagram: String
@@ -145,7 +147,7 @@ type Business
   schedule: String
   comments: [BusinessComment]
     @hasMany(indexName: "byBusinessComments", fields: ["id"])
-  catalogpdf: String
+  catalogpdf: String @default(value: "")
 }
 enum BusinessStatus {
   ENABLED

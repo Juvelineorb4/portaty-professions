@@ -53,6 +53,7 @@ const Page = ({ route, navigation }) => {
   const {
     data: { item, image, weeks, schedule, scheduleType },
   } = route.params;
+
   const { downloadAndOpenFile } = useOpenFile();
   const [selectedImages, setSelectedImages] = useState([]);
   const [open, setOpen] = useState(false);
@@ -73,6 +74,9 @@ const Page = ({ route, navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [favoritesQY, setFavoritesQY] = useState(0);
   const [enableFavorites, setEnableFavorites] = useState(false);
+  const [emailVerified, setEmailVerified] = useState(item?.emailVerified);
+  const [confirmEmail, setConfirmEmail] = useState(false);
+  const [codeEmail, setCodeEmail] = useState("");
   // coordinates
   const [coordinate, setCoordinate] = useState({
     latitude: item.coordinates.lat,
@@ -473,6 +477,47 @@ const Page = ({ route, navigation }) => {
     }
   };
 
+  const onSendCodeConfirmEmail = async () => {
+    try {
+      const apiName = "api-portaty"; // replace this with your api name.
+      const path = "/business/sendCodeConfirm"; //replace this with the path you have configured on your API
+      const myInit = {
+        body: {
+          businessID: item?.id,
+        }, // replace this with attributes you need
+        headers: {}, // OPTIONAL
+      };
+
+      const result = await API.post(apiName, path, myInit);
+      if (result?.success) setConfirmEmail(true);
+      console.log("SEND CODE: ", result);
+    } catch (error) {
+      console.log("ERROR AL ENVIAR CODIGO: ", error);
+    }
+  };
+  const onConfirmEmailCode = async () => {
+    try {
+      const apiName = "api-portaty"; // replace this with your api name.
+      const path = "/business/confirmEmail"; //replace this with the path you have configured on your API
+      const myInit = {
+        body: {
+          businessID: item?.id,
+          code: codeEmail,
+        }, // replace this with attributes you need
+        headers: {}, // OPTIONAL
+      };
+
+      const result = await API.post(apiName, path, myInit);
+
+      console.log("CONFIRM CODE: ", result);
+      if (result?.success) {
+        setConfirmEmail(false);
+        setEmailVerified(true);
+      }
+    } catch (error) {
+      console.log("ERROR AL ENVIAR CODIGO: ", error);
+    }
+  };
   if (!item || storageImages?.length === 0) return <SkeletonPage />;
   return (
     <View
@@ -1471,6 +1516,16 @@ const Page = ({ route, navigation }) => {
               >
                 Correo
               </Text>
+              <TouchableOpacity onPress={onSendCodeConfirmEmail}>
+                <Text
+                  style={[
+                    { fontFamily: "lightItalic", fontSize: 15 },
+                    global.black,
+                  ]}
+                >
+                  {emailVerified !== true && " Verificar"}
+                </Text>
+              </TouchableOpacity>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <TextInput
@@ -1500,6 +1555,58 @@ const Page = ({ route, navigation }) => {
               </Text> */}
             </View>
           </View>
+          {confirmEmail && (
+            <>
+              <View style={[styles.line, global.bgMidGray]} />
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: 20,
+                }}
+              >
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  {/* <MaterialCommunityIcons
+                name="email-open-multiple-outline"
+                size={20}
+                color="#1f1f1f"
+              /> */}
+                  <TouchableOpacity onPress={onConfirmEmailCode}>
+                    <Text
+                      style={[
+                        { fontFamily: "lightItalic", fontSize: 15 },
+                        global.black,
+                      ]}
+                    >
+                      Confirmar Codigo
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <TextInput
+                    onChangeText={setCodeEmail}
+                    value={codeEmail}
+                    style={[
+                      {
+                        fontSize: 13,
+                        fontFamily: "regular",
+                        padding: 10,
+                        borderColor: "#1f1f1f",
+                        borderWidth: 0.7,
+                        borderRadius: 4,
+                        textTransform: "capitalize",
+                      },
+                      editActive ? global.bgWhite : global.bgWhiteSoft,
+                    ]}
+                  />
+                  {/* <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
+                {item.email}
+              </Text> */}
+                </View>
+              </View>
+            </>
+          )}
           <View style={[styles.line, global.bgMidGray]} />
           {/* <View
             style={{
