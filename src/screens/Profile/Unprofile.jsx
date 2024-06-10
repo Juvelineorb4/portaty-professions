@@ -44,6 +44,16 @@ const Unprofile = ({ navigation, route }) => {
   };
   const isFocused = navigation.isFocused();
   const status = useRecoilValue(profileState);
+  const fetchOtro = async () => {
+    const result = await API.graphql({
+      query: customProfile.getBusiness2,
+      authMode: "AWS_IAM",
+      variables: {
+        id: "9eec6b66-f536-41a9-9bdd-e4d963cfc6a0",
+      },
+    });
+    console.log("QUE SUELTA", result);
+  };
 
   const onHandleLogout = async () => {
     await Auth.signOut();
@@ -87,6 +97,7 @@ const Unprofile = ({ navigation, route }) => {
 
   useLayoutEffect(() => {
     User();
+    fetchOtro();
   }, [userAuth, status, refreshing, isFocused]);
 
   if (!userAuth?.attributes) return <SkeletonUnprofile />;

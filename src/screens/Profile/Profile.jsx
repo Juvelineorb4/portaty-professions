@@ -32,13 +32,14 @@ const Profile = ({ route, navigation }) => {
   const { user } = route.params;
   const [name, setName] = useState(user?.name);
   const [lastName, setLastName] = useState(user["custom:lastName"]);
-  const [email, setEmail] = useState(user?.email);
+  const [newEmail, setNewEmail] = useState(user?.email);
   const [editActive, setEditActive] = useState(false);
   const [isSave, setIsSave] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [favoritesQY, setFavoritesQY] = useState(0);
+  const [confirmEmail, setConfirmEmail] = useState(false);
+  const [codeEmail, setCodeEmail] = useState("");
 
-  
   const onShare = async () => {
     try {
       await Share.share({
@@ -48,8 +49,6 @@ const Profile = ({ route, navigation }) => {
       console.error("Error sharing:", error);
     }
   };
-
-
 
   const onCheckChange = () => {
     if (
@@ -71,15 +70,31 @@ const Profile = ({ route, navigation }) => {
       },
     });
 
-    setFavoritesQY(result?.data?.userByEmail?.items[0]?.favorites?.items.length)
-  }
-  
+    setFavoritesQY(
+      result?.data?.userByEmail?.items[0]?.favorites?.items.length
+    );
+  };
+
   const onSaveChange = async () => {
     setIsLoading(true);
     const data = await Auth.currentAuthenticatedUser();
     const tableID = data?.attributes["custom:userTableID"];
-
+    const sub = data?.attributes["sub"];
     try {
+      if (user?.email !== newEmail?.trim()) {
+        const apiName = "api-portaty"; // replace this with your api name.
+        const path = "/changeEmail"; //replace this with the path you have configured on your API
+        const myInit = {
+          body: {
+            username: sub,
+            newEmail,
+          }, // replace this with attributes you need
+          headers: {}, // OPTIONAL
+        };
+
+        const result = await API.post(apiName, path, myInit);
+        if (result?.success) setConfirmEmail(true);
+      }
       // Cambiar en Cognito
       await Auth.updateUserAttributes(data, {
         name: name,
@@ -102,11 +117,39 @@ const Profile = ({ route, navigation }) => {
       console.log("ERROR AL ACTUALIZAR ATRIBUTO IDENTITY ID: ", message);
     }
     setIsLoading(false);
-    setEditActive(!editActive)
+    setEditActive(!editActive);
   };
-
+  const onConfirmCodeEmail = async () => {
+    setIsLoading(true);
+    const data = await Auth.currentAuthenticatedUser();
+    const tableID = data?.attributes["custom:userTableID"];
+    try {
+      const result = await Auth.verifyCurrentUserAttributeSubmit(
+        "email",
+        codeEmail
+      );
+      console.log("RESULT: ", result);
+      if (result === "SUCCESS") {
+        const result = await API.graphql({
+          query: mutations.updateUsers,
+          authMode: "AMAZON_COGNITO_USER_POOLS",
+          variables: {
+            input: {
+              id: tableID,
+              email: newEmail,
+            },
+          },
+        });
+      }
+    } catch (error) {
+      console.log("ERROR AL CONFIRMAR CODIGO  ", error);
+    }
+    setIsLoading(false);
+    setConfirmEmail(false);
+    setCodeEmail("");
+  };
   useEffect(() => {
-    onFavorites()
+    onFavorites();
     onCheckChange();
   }, [name, lastName]);
 
@@ -128,7 +171,9 @@ const Profile = ({ route, navigation }) => {
             marginBottom: 20,
           }}
         >
-          <Text style={{ fontSize: 24, fontFamily: "medium" }}>{favoritesQY}</Text>
+          <Text style={{ fontSize: 24, fontFamily: "medium" }}>
+            {favoritesQY}
+          </Text>
           <Text style={{ fontSize: 20, fontFamily: "light" }}>
             Mis Favoritos
           </Text>
@@ -196,8 +241,8 @@ const Profile = ({ route, navigation }) => {
                   borderRadius: 10,
                   alignItems: "center",
                   justifyContent: "center",
-                  borderColor: '#1f1f1f',
-                  borderWidth: 0.7
+                  borderColor: "#1f1f1f",
+                  borderWidth: 0.7,
                 },
                 global.bgYellow,
               ]}
@@ -222,7 +267,9 @@ const Profile = ({ route, navigation }) => {
           />
         </TouchableOpacity>
         <View style={{ marginBottom: 80 }}>
-          <Text style={{ fontSize: 22, fontFamily: "lightItalic", padding: 10 }}>
+          <Text
+            style={{ fontSize: 22, fontFamily: "lightItalic", padding: 10 }}
+          >
             Datos personales
           </Text>
           <View style={[styles.line, global.bgMidGray]} />
@@ -329,7 +376,8 @@ const Profile = ({ route, navigation }) => {
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <TextInput
-                value={email}
+                value={newEmail}
+                onChangeText={setNewEmail}
                 style={[
                   {
                     fontSize: 12,
@@ -341,17 +389,67 @@ const Profile = ({ route, navigation }) => {
                   },
                   global.bgWhiteSoft,
                 ]}
-                editable={false}
+                editable={editActive ? true : false}
               />
             </View>
           </View>
+          {confirmEmail && (
+            <>
+              <View style={[styles.line, global.bgMidGray]} />
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: 20,
+                }}
+              >
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  {/* <MaterialCommunityIcons
+                  name="email-open-multiple-outline"
+                  size={20}
+                  color="#1f1f1f"
+                /> */}
+                  <Text
+                    style={[
+                      { fontFamily: "lightItalic", fontSize: 15 },
+                      global.black,
+                    ]}
+                  >
+                    Confirmar Codigo
+                  </Text>
+                </View>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <TextInput
+                    value={codeEmail}
+                    onChangeText={setCodeEmail}
+                    style={[
+                      {
+                        fontSize: 12,
+                        fontFamily: "regular",
+                        padding: 10,
+                        borderColor: "#1f1f1f",
+                        borderWidth: 0.3,
+                        borderRadius: 4,
+                      },
+                      global.bgWhiteSoft,
+                    ]}
+                  />
+                </View>
+              </View>
+            </>
+          )}
           <View
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
           >
-            {editActive && (
+            {editActive ? (
               <CustomButton
                 text={
-                  isLoading ? <ActivityIndicator color={`#1f1f1f`} /> : "Guardar"
+                  isLoading ? (
+                    <ActivityIndicator color={`#1f1f1f`} />
+                  ) : (
+                    "Guardar"
+                  )
                 }
                 handlePress={onSaveChange}
                 textStyles={[
@@ -366,14 +464,46 @@ const Profile = ({ route, navigation }) => {
                     flexDirection: "row",
                     justifyContent: "center",
                     alignItems: "center",
-                    borderColor: '#1f1f1f',
-                    borderWidth: 0.7
+                    borderColor: "#1f1f1f",
+                    borderWidth: 0.7,
                   },
                   global.bgYellow,
                   ,
                 ]}
                 disabled={!isSave && isLoading}
               />
+            ) : (
+              confirmEmail && (
+                <CustomButton
+                  text={
+                    isLoading ? (
+                      <ActivityIndicator color={`#1f1f1f`} />
+                    ) : (
+                      "Confirmar Codigo"
+                    )
+                  }
+                  handlePress={onConfirmCodeEmail}
+                  textStyles={[
+                    global.black,
+                    { fontFamily: "bold", marginLeft: 25 },
+                  ]}
+                  buttonStyles={[
+                    {
+                      width: 200,
+                      height: 50,
+                      borderRadius: 6,
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      borderColor: "#1f1f1f",
+                      borderWidth: 0.7,
+                    },
+                    global.bgYellow,
+                    ,
+                  ]}
+                  // disabled={!isSave && isLoading}
+                />
+              )
             )}
           </View>
         </View>

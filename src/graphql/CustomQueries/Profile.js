@@ -139,6 +139,15 @@ export const getBusiness = /* GraphQL */ `
     }
   }
 `;
+export const getBusiness2 = /* GraphQL */ `
+  query GetBusiness($id: ID!) {
+    getBusiness(id: $id) {
+      id
+      catalogpdf
+      __typename
+    }
+  }
+`;
 export const getBusinessFavorites = /* GraphQL */ `
   query GetBusiness($id: ID!) {
     getBusiness(id: $id) {

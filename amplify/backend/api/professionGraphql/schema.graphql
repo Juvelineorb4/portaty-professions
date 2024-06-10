@@ -145,7 +145,7 @@ type Business
   schedule: String
   comments: [BusinessComment]
     @hasMany(indexName: "byBusinessComments", fields: ["id"])
-  catalogpdf: String
+  catalogpdf: String @default(value: "")
 }
 enum BusinessStatus {
   ENABLED
