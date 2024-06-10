@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     fontFamily: 'medium',
     marginTop: 0,
     marginHorizontal: 10,
-    marginBottom: '10%',
+    marginBottom: '0%',
     // margin: '10% 10px 0%',
     textAlign: 'center',
     fontSize: 32,
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontFamily: 'light',
-    marginTop: "10%",
+    marginTop: "5%",
     marginHorizontal: 10,
     marginBottom: 0,
     // margin: '0 10px 10%',
@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#1f1f1f',
     height: 55,
+    marginBottom: 10
   },
   labelInput: {
     fontFamily: 'bold',
@@ -114,6 +115,7 @@ const styles = StyleSheet.create({
     fontFamily: 'bold',
     color: '#1f1f1f',
     fontSize: 15,
+    marginBottom: 10
   },
   options: {
     flexDirection: 'row',
@@ -122,7 +124,8 @@ const styles = StyleSheet.create({
   },
   security: {
     position: 'relative',
-    right: 27,
+    right: 40,
+    alignSelf: 'center'
   },
 });
 

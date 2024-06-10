@@ -132,6 +132,14 @@ export const codeFields = atom({
   key: "codeFieldsValue",
   default: "",
 });
+export const codeProfile = atom({
+  key: "codeProfileValue",
+  default: "",
+});
+export const confirmCodeProfile = atom({
+  key: "confirmCodeProfileValue",
+  default: false,
+});
 
 export const updateListFavorites = atom({
   key: "updateListFavoritesValue",

@@ -13,20 +13,26 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: 'bold',
-    margin: '15% 10px 0%',
+    // margin: '15% 10px 0%',
+    marginTop: '15%',
+    marginHorizontal: '10%',
     textAlign: 'center',
     fontSize: 36,
     color: '#ffb703',
   },
   inputContainer: {
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: '0px 10px 11px 0px',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    padding: '11px 10px 11px 0px',
     borderRadius: 8,
-    margin: 3,
+    margin: '3px 0px 10px',
     borderWidth: 1,
     borderColor: '#1f1f1f',
     height: 55,
+    marginBottom: 10
   },
   labelInput: {
     fontFamily: 'bold',
@@ -65,7 +71,8 @@ const styles = StyleSheet.create({
   },
   security: {
     position: 'relative',
-    right: 27,
+    right: 45,
+    alignSelf: 'center'
   },
   continue: {
     flex: 1,

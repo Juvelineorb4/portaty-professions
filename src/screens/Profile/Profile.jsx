@@ -8,6 +8,10 @@ import {
   Switch,
   Share,
   ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Auth, API, Storage } from "aws-amplify";
@@ -26,6 +30,10 @@ import {
   EvilIcons,
   Feather,
 } from "@expo/vector-icons";
+import CustomCodeField from "@/components/CustomCodeField";
+import { codeProfile, confirmCodeProfile } from "@/atoms";
+import { useRecoilState, useRecoilValue } from "recoil";
+import CustomCodeProfile from "@/components/CustomCodeProfile";
 // amplify
 const Profile = ({ route, navigation }) => {
   const global = require("@/utils/styles/global.js");
@@ -37,8 +45,9 @@ const Profile = ({ route, navigation }) => {
   const [isSave, setIsSave] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [favoritesQY, setFavoritesQY] = useState(0);
-  const [confirmEmail, setConfirmEmail] = useState(false);
+  const [confirmEmail, setConfirmEmail] = useRecoilState(confirmCodeProfile);
   const [codeEmail, setCodeEmail] = useState("");
+  const codeInputs = useRecoilValue(codeProfile);
 
   const onShare = async () => {
     try {
@@ -120,13 +129,14 @@ const Profile = ({ route, navigation }) => {
     setEditActive(!editActive);
   };
   const onConfirmCodeEmail = async () => {
+    console.log(codeInputs)
     setIsLoading(true);
     const data = await Auth.currentAuthenticatedUser();
     const tableID = data?.attributes["custom:userTableID"];
     try {
       const result = await Auth.verifyCurrentUserAttributeSubmit(
         "email",
-        codeEmail
+        codeInputs
       );
       console.log("RESULT: ", result);
       if (result === "SUCCESS") {
@@ -154,361 +164,297 @@ const Profile = ({ route, navigation }) => {
   }, [name, lastName]);
 
   return (
-    <View
-      style={[
-        {
-          flex: 1,
-        },
-        global.bgWhite,
-      ]}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={[styles.container, global.bgWhite]}
+      keyboardVerticalOffset={32}
     >
-      <ScrollView style={{ flex: 1, marginTop: 40 }}>
-        <View
-          style={{
-            flex: 1,
-            alignItems: "center",
-            justifyContent: "center",
-            marginBottom: 20,
-          }}
-        >
-          <Text style={{ fontSize: 24, fontFamily: "medium" }}>
-            {favoritesQY}
-          </Text>
-          <Text style={{ fontSize: 20, fontFamily: "light" }}>
-            Mis Favoritos
-          </Text>
-        </View>
-        <View style={[styles.line, global.bgMidGray]} />
-        {/* <TouchableOpacity
-          style={{
-            padding: 20,
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-          onPress={onShare}
-        >
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <View
-              style={[
-                {
-                  width: 58,
-                  height: 58,
-                  borderRadius: 10,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderColor: '#1f1f1f',
-                  borderWidth: 0.7
-                },
-                global.bgYellow,
-              ]}
-            >
-              <EvilIcons name="share-google" size={30} color="#1f1f1f" />
-            </View>
-            <View style={{ marginLeft: 10 }}>
-              <Text style={{ fontFamily: "medium", fontSize: 15 }}>
-                Compartir tus favoritos
-              </Text>
-              <Text style={{ fontFamily: "regular", fontSize: 12, width: 150 }}>
-                Comparte con tus amigos y familiares la lista de tus favoritos
-              </Text>
-            </View>
-          </View>
-          <Image
-            style={{
-              width: 40,
-              height: 40,
-              resizeMode: "cover",
-            }}
-            source={require("@/utils/images/arrow_right.png")}
-          />
-        </TouchableOpacity> */}
-        <TouchableOpacity
-          style={{
-            padding: 20,
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginTop: -5,
-          }}
-        >
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <View
-              style={[
-                {
-                  width: 58,
-                  height: 58,
-                  borderRadius: 10,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderColor: "#1f1f1f",
-                  borderWidth: 0.7,
-                },
-                global.bgYellow,
-              ]}
-            >
-              <FontAwesome name="edit" size={21} color="#1f1f1f" />
-            </View>
-            <View style={{ marginLeft: 10 }}>
-              <Text style={{ fontFamily: "medium", fontSize: 15 }}>Editar</Text>
-              <Text style={{ fontFamily: "regular", fontSize: 12, width: 150 }}>
-                Actualiza tus datos
-              </Text>
-            </View>
-          </View>
-          <Switch
-            trackColor={{
-              false: "#767577",
-              true: "#ffb703",
-            }}
-            thumbColor={editActive ? "#FFFFFF" : "#f4f3f4"}
-            onValueChange={() => setEditActive(!editActive)}
-            value={editActive}
-          />
-        </TouchableOpacity>
-        <View style={{ marginBottom: 80 }}>
-          <Text
-            style={{ fontSize: 22, fontFamily: "lightItalic", padding: 10 }}
-          >
-            Datos personales
-          </Text>
-          <View style={[styles.line, global.bgMidGray]} />
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView style={{ flex: 1, marginTop: 40 }}>
           <View
             style={{
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+              marginBottom: 20,
+            }}
+          >
+            <Text style={{ fontSize: 24, fontFamily: "medium" }}>
+              {favoritesQY}
+            </Text>
+            <Text style={{ fontSize: 20, fontFamily: "light" }}>
+              Mis Favoritos
+            </Text>
+          </View>
+          <View style={[styles.line, global.bgMidGray]} />
+          <TouchableOpacity
+            style={{
+              padding: 20,
               flexDirection: "row",
               justifyContent: "space-between",
               alignItems: "center",
-              padding: 20,
+              marginTop: -5,
             }}
           >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              {/* <Foundation name="torso-business" size={22} color="#1f1f1f" /> */}
-              <Text
-                style={[
-                  { fontFamily: "lightItalic", fontSize: 15 },
-                  global.black,
-                ]}
-              >
-                Nombre
-              </Text>
-            </View>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <TextInput
-                onChangeText={setName}
-                value={name}
-                style={[
-                  {
-                    fontSize: 12,
-                    fontFamily: "regular",
-                    padding: 10,
-                    borderColor: "#1f1f1f",
-                    borderWidth: 0.7,
-                    borderRadius: 4,
-                  },
-                  editActive ? global.bgWhite : global.bgWhiteSoft,
-                ]}
-                editable={editActive ? true : false}
-              />
-            </View>
-          </View>
-          <View style={[styles.line, global.bgMidGray]} />
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              padding: 20,
-            }}
-          >
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              {/* <FontAwesome5 name="store" size={16} color="#1f1f1f" /> */}
-              <Text
-                style={[
-                  { fontFamily: "lightItalic", fontSize: 15 },
-                  global.black,
-                ]}
-              >
-                Apellido
-              </Text>
-            </View>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <TextInput
-                onChangeText={setLastName}
-                value={lastName}
-                style={[
-                  {
-                    fontSize: 12,
-                    fontFamily: "regular",
-                    padding: 10,
-                    borderColor: "#1f1f1f",
-                    borderWidth: 0.7,
-                    borderRadius: 4,
-                  },
-                  editActive ? global.bgWhite : global.bgWhiteSoft,
-                ]}
-                editable={editActive ? true : false}
-              />
-            </View>
-          </View>
-          <View style={[styles.line, global.bgMidGray]} />
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              padding: 20,
-            }}
-          >
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              {/* <MaterialCommunityIcons
-                  name="email-open-multiple-outline"
-                  size={20}
-                  color="#1f1f1f"
-                /> */}
-              <Text
-                style={[
-                  { fontFamily: "lightItalic", fontSize: 15 },
-                  global.black,
-                ]}
-              >
-                Correo
-              </Text>
-            </View>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <TextInput
-                value={newEmail}
-                onChangeText={setNewEmail}
-                style={[
-                  {
-                    fontSize: 12,
-                    fontFamily: "regular",
-                    padding: 10,
-                    borderColor: "#1f1f1f",
-                    borderWidth: 0.3,
-                    borderRadius: 4,
-                  },
-                  global.bgWhiteSoft,
-                ]}
-                editable={editActive ? true : false}
-              />
-            </View>
-          </View>
-          {confirmEmail && (
-            <>
-              <View style={[styles.line, global.bgMidGray]} />
               <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: 20,
-                }}
+                style={[
+                  {
+                    width: 58,
+                    height: 58,
+                    borderRadius: 10,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderColor: "#1f1f1f",
+                    borderWidth: 0.7,
+                  },
+                  global.bgYellow,
+                ]}
               >
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  {/* <MaterialCommunityIcons
-                  name="email-open-multiple-outline"
-                  size={20}
-                  color="#1f1f1f"
-                /> */}
+                <FontAwesome name="edit" size={21} color="#1f1f1f" />
+              </View>
+              <View style={{ marginLeft: 10 }}>
+                <Text style={{ fontFamily: "medium", fontSize: 15 }}>
+                  Editar
+                </Text>
+                <Text
+                  style={{ fontFamily: "regular", fontSize: 12, width: 150 }}
+                >
+                  Actualiza tus datos
+                </Text>
+              </View>
+            </View>
+            <Switch
+              trackColor={{
+                false: "#767577",
+                true: "#ffb703",
+              }}
+              thumbColor={editActive ? "#FFFFFF" : "#f4f3f4"}
+              onValueChange={() => setEditActive(!editActive)}
+              value={editActive}
+            />
+          </TouchableOpacity>
+
+          <View style={{  }}>
+            <Text
+              style={{ fontSize: 22, fontFamily: "lightItalic", padding: 10 }}
+            >
+              Datos personales
+            </Text>
+            <View style={[styles.line, global.bgMidGray]} />
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: 20,
+              }}
+            >
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Text
+                  style={[
+                    { fontFamily: "lightItalic", fontSize: 15 },
+                    global.black,
+                  ]}
+                >
+                  Nombre
+                </Text>
+              </View>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <TextInput
+                  onChangeText={setName}
+                  value={name}
+                  style={[
+                    {
+                      fontSize: 12,
+                      fontFamily: "regular",
+                      padding: 10,
+                      borderColor: "#1f1f1f",
+                      borderWidth: 0.7,
+                      borderRadius: 4,
+                    },
+                    editActive ? global.bgWhite : global.bgWhiteSoft,
+                  ]}
+                  editable={editActive ? true : false}
+                />
+              </View>
+            </View>
+            <View style={[styles.line, global.bgMidGray]} />
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: 20,
+              }}
+            >
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Text
+                  style={[
+                    { fontFamily: "lightItalic", fontSize: 15 },
+                    global.black,
+                  ]}
+                >
+                  Apellido
+                </Text>
+              </View>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <TextInput
+                  onChangeText={setLastName}
+                  value={lastName}
+                  style={[
+                    {
+                      fontSize: 12,
+                      fontFamily: "regular",
+                      padding: 10,
+                      borderColor: "#1f1f1f",
+                      borderWidth: 0.7,
+                      borderRadius: 4,
+                    },
+                    editActive ? global.bgWhite : global.bgWhiteSoft,
+                  ]}
+                  editable={editActive ? true : false}
+                />
+              </View>
+            </View>
+            <View style={[styles.line, global.bgMidGray]} />
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: 20,
+              }}
+            >
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Text
+                  style={[
+                    { fontFamily: "lightItalic", fontSize: 15 },
+                    global.black,
+                  ]}
+                >
+                  Correo
+                </Text>
+              </View>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <TextInput
+                  value={newEmail}
+                  onChangeText={setNewEmail}
+                  style={[
+                    {
+                      fontSize: 12,
+                      fontFamily: "regular",
+                      padding: 10,
+                      borderColor: "#1f1f1f",
+                      borderWidth: 0.3,
+                      borderRadius: 4,
+                    },
+                    global.bgWhiteSoft,
+                  ]}
+                  editable={editActive ? true : false}
+                />
+              </View>
+            </View>
+            {confirmEmail && (
+              <>
+                <View style={[styles.line, global.bgMidGray]} />
+                <View
+                  style={{
+                    // flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    padding: 20,
+                  }}
+                >
                   <Text
                     style={[
                       { fontFamily: "lightItalic", fontSize: 15 },
                       global.black,
                     ]}
                   >
-                    Confirmar Codigo
+                    Confirmar codigo
                   </Text>
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <CustomCodeProfile />
+                  </View>
                 </View>
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <TextInput
-                    value={codeEmail}
-                    onChangeText={setCodeEmail}
-                    style={[
-                      {
-                        fontSize: 12,
-                        fontFamily: "regular",
-                        padding: 10,
-                        borderColor: "#1f1f1f",
-                        borderWidth: 0.3,
-                        borderRadius: 4,
-                      },
-                      global.bgWhiteSoft,
-                    ]}
-                  />
-                </View>
-              </View>
-            </>
-          )}
-          <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-          >
-            {editActive ? (
-              <CustomButton
-                text={
-                  isLoading ? (
-                    <ActivityIndicator color={`#1f1f1f`} />
-                  ) : (
-                    "Guardar"
-                  )
-                }
-                handlePress={onSaveChange}
-                textStyles={[
-                  global.black,
-                  { fontFamily: "bold", marginLeft: 25 },
-                ]}
-                buttonStyles={[
-                  {
-                    width: 200,
-                    height: 50,
-                    borderRadius: 6,
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    borderColor: "#1f1f1f",
-                    borderWidth: 0.7,
-                  },
-                  global.bgYellow,
-                  ,
-                ]}
-                disabled={!isSave && isLoading}
-              />
-            ) : (
-              confirmEmail && (
-                <CustomButton
-                  text={
-                    isLoading ? (
-                      <ActivityIndicator color={`#1f1f1f`} />
-                    ) : (
-                      "Confirmar Codigo"
-                    )
-                  }
-                  handlePress={onConfirmCodeEmail}
-                  textStyles={[
-                    global.black,
-                    { fontFamily: "bold", marginLeft: 25 },
-                  ]}
-                  buttonStyles={[
-                    {
-                      width: 200,
-                      height: 50,
-                      borderRadius: 6,
-                      flexDirection: "row",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      borderColor: "#1f1f1f",
-                      borderWidth: 0.7,
-                    },
-                    global.bgYellow,
-                    ,
-                  ]}
-                  // disabled={!isSave && isLoading}
-                />
-              )
+              </>
             )}
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            ></View>
           </View>
-        </View>
-      </ScrollView>
-    </View>
+        </ScrollView>
+      </TouchableWithoutFeedback>
+      <View
+        style={{
+          // flex: 1,
+          paddingTop: 20,
+          marginBottom: 100,
+          alignSelf: 'center'
+        }}
+      >
+        {editActive ? (
+          <CustomButton
+            text={
+              isLoading ? <ActivityIndicator color={`#1f1f1f`} /> : "Guardar"
+            }
+            handlePress={onSaveChange}
+            textStyles={[global.black, { fontFamily: "bold", marginLeft: 25 }]}
+            buttonStyles={[
+              {
+                width: 200,
+                height: 50,
+                borderRadius: 6,
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                borderColor: "#1f1f1f",
+                borderWidth: 0.7,
+              },
+              global.bgYellow,
+              ,
+            ]}
+            disabled={!isSave && isLoading}
+          />
+        ) : (
+          confirmEmail && (
+            <CustomButton
+              text={
+                isLoading ? (
+                  <ActivityIndicator color={`#1f1f1f`} />
+                ) : (
+                  "Confirmar Codigo"
+                )
+              }
+              handlePress={onConfirmCodeEmail}
+              textStyles={[
+                global.black,
+                { fontFamily: "bold", marginLeft: 25 },
+              ]}
+              buttonStyles={[
+                {
+                  width: 200,
+                  height: 50,
+                  borderRadius: 6,
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderColor: "#1f1f1f",
+                  borderWidth: 0.7,
+                },
+                global.bgYellow,
+                ,
+              ]}
+            />
+          )
+        )}
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 
