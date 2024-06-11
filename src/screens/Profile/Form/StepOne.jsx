@@ -21,7 +21,7 @@ import { Feather } from "@expo/vector-icons";
 import { activeModalScreen, userAuthenticated } from "@/atoms";
 import { useRecoilState, useRecoilValue } from "recoil";
 import StepClear from "./StepClear";
-
+import { API } from "aws-amplify";
 const StepOne = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
   const { control, handleSubmit } = useForm();
@@ -47,6 +47,26 @@ const StepOne = ({ navigation, route }) => {
 
   const StepParams = async (data) => {
     const { company, email, phone } = data;
+
+    try {
+      // check name existing
+      const apiName = "api-portaty"; // replace this with your api name.
+      const path = "/business/checkName"; //replace this with the path you have configured on your API
+      const myInit = {
+        queryStringParameters: {
+          name: company,
+        },
+        headers: {}, // OPTIONAL
+      };
+
+      const result = await API.get(apiName, path, myInit);
+      console.log("EJELE: ", result);
+    } catch (error) {
+      console.log("ERROR AL CHECK NAME: ", error.response.data);
+    }
+
+    // if (result?.success) setConfirmEmail(true);
+    return;
     let code = country?.idd?.root;
     for (let i = 0; i < country?.idd?.suffixes.length; i++) {
       code += country?.idd?.suffixes[i];
