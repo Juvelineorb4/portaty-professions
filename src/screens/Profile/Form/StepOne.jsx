@@ -50,15 +50,20 @@ const StepOne = ({ navigation, route }) => {
 
     try {
       // check name existing
-      const apiName = "api-portaty"; // replace this with your api name.
-      const path = "/business/checkName"; //replace this with the path you have configured on your API
+      const apiName = "api-portaty";
+      const path = "/business/checkName";
       const myInit = {
         queryStringParameters: {
           name: company,
         },
         headers: {}, // OPTIONAL
       };
-
+      /*
+        los resultado de la data son 
+        success: si es true es que hubo buena respuesta del servidor
+        existing: si es true existe el nombre y no esta disponible 
+        message el mensaje.
+      */
       const result = await API.get(apiName, path, myInit);
       console.log("EJELE: ", result);
     } catch (error) {
