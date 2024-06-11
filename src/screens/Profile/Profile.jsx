@@ -102,6 +102,7 @@ const Profile = ({ route, navigation }) => {
         };
 
         const result = await API.post(apiName, path, myInit);
+        console.log("EJELE: ", result);
         if (result?.success) setConfirmEmail(true);
       }
       // Cambiar en Cognito
@@ -122,14 +123,16 @@ const Profile = ({ route, navigation }) => {
         },
       });
     } catch (error) {
-      const { message } = new Error(error);
-      console.log("ERROR AL ACTUALIZAR ATRIBUTO IDENTITY ID: ", message);
+      // status code del mensaje
+      console.log("ERROR: ", error.response.status);
+      // data del mensaje
+      console.log("ERROR: ", error.response.data);
     }
     setIsLoading(false);
     setEditActive(!editActive);
   };
   const onConfirmCodeEmail = async () => {
-    console.log(codeInputs)
+    console.log(codeInputs);
     setIsLoading(true);
     const data = await Auth.currentAuthenticatedUser();
     const tableID = data?.attributes["custom:userTableID"];
@@ -235,7 +238,7 @@ const Profile = ({ route, navigation }) => {
             />
           </TouchableOpacity>
 
-          <View style={{  }}>
+          <View style={{}}>
             <Text
               style={{ fontSize: 22, fontFamily: "lightItalic", padding: 10 }}
             >
@@ -395,7 +398,7 @@ const Profile = ({ route, navigation }) => {
           // flex: 1,
           paddingTop: 20,
           marginBottom: 100,
-          alignSelf: 'center'
+          alignSelf: "center",
         }}
       >
         {editActive ? (
