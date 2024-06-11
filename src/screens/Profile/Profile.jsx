@@ -47,6 +47,8 @@ const Profile = ({ route, navigation }) => {
   const [favoritesQY, setFavoritesQY] = useState(0);
   const [confirmEmail, setConfirmEmail] = useRecoilState(confirmCodeProfile);
   const [codeEmail, setCodeEmail] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [errorEmail, setErrorEmail] = useState(false);
   const codeInputs = useRecoilValue(codeProfile);
 
   const onShare = async () => {
@@ -103,7 +105,11 @@ const Profile = ({ route, navigation }) => {
 
         const result = await API.post(apiName, path, myInit);
         console.log("EJELE: ", result);
-        if (result?.success) setConfirmEmail(true);
+        if (result?.success) {
+          setConfirmEmail(true);
+          setEditActive(!editActive);
+          setErrorEmail(false);
+        }
       }
       // Cambiar en Cognito
       await Auth.updateUserAttributes(data, {
@@ -127,9 +133,12 @@ const Profile = ({ route, navigation }) => {
       console.log("ERROR: ", error.response.status);
       // data del mensaje
       console.log("ERROR: ", error.response.data);
+      if (error.response.data.success === false) {
+        setErrorMessage(error.response.data.message);
+        setErrorEmail(true);
+      }
     }
     setIsLoading(false);
-    setEditActive(!editActive);
   };
   const onConfirmCodeEmail = async () => {
     console.log(codeInputs);
@@ -339,7 +348,7 @@ const Profile = ({ route, navigation }) => {
                   Correo
                 </Text>
               </View>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <View style={{ alignItems: "center" }}>
                 <TextInput
                   value={newEmail}
                   onChangeText={setNewEmail}
@@ -358,6 +367,12 @@ const Profile = ({ route, navigation }) => {
                 />
               </View>
             </View>
+            {errorEmail && <Text style={{
+              textAlign: 'center',
+              color: 'red',
+              fontFamily: 'medium'
+            }}>{errorMessage}</Text>}
+
             {confirmEmail && (
               <>
                 <View style={[styles.line, global.bgMidGray]} />
