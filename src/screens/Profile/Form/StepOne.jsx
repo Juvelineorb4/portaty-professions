@@ -29,6 +29,7 @@ const StepOne = ({ navigation, route }) => {
   const [country, setCountry] = useState(null);
   const [countries, setCountries] = useState([]);
   const [visibleCountries, setVisibleCountries] = useState(false);
+  const [errorName, setErrorName] = useState(false);
   const [searchCountry, setSearchCountry] = useState("");
   const [active, setActive] = useRecoilState(activeModalScreen);
 
@@ -48,30 +49,22 @@ const StepOne = ({ navigation, route }) => {
   const StepParams = async (data) => {
     const { company, email, phone } = data;
 
-    try {
-      // check name existing
-      const apiName = "api-portaty";
-      const path = "/business/checkName";
-      const myInit = {
-        queryStringParameters: {
-          name: company,
-        },
-        headers: {}, // OPTIONAL
-      };
-      /*
-        los resultado de la data son 
-        success: si es true es que hubo buena respuesta del servidor
-        existing: si es true existe el nombre y no esta disponible 
-        message el mensaje.
-      */
-      const result = await API.get(apiName, path, myInit);
-      console.log("EJELE: ", result);
-    } catch (error) {
-      console.log("ERROR AL CHECK NAME: ", error.response.data);
-    }
+    const apiName = "api-portaty";
+    const path = "/business/checkName";
+    const myInit = {
+      queryStringParameters: {
+        name: company,
+      },
+      headers: {},
+    };
 
-    // if (result?.success) setConfirmEmail(true);
-    return;
+    const result = await API.get(apiName, path, myInit);
+    console.log("QUE TARE: ", result);
+    if (result?.existing) {
+      setErrorName(true);
+      return;
+    }
+    setErrorName(false);
     let code = country?.idd?.root;
     for (let i = 0; i < country?.idd?.suffixes.length; i++) {
       code += country?.idd?.suffixes[i];
@@ -175,6 +168,20 @@ const StepOne = ({ navigation, route }) => {
                     required: es.businessForm.register.company.rules,
                   }}
                 />
+                {errorName && (
+                  <Text
+                    style={{
+                      fontFamily: "light",
+                      color: "red",
+                      fontSize: 12,
+                      marginLeft: 5,
+                      marginTop: -5,
+                      marginBottom: 5,
+                    }}
+                  >
+                    Ya existe un negocio con este nombre
+                  </Text>
+                )}
                 <CustomInput
                   control={control}
                   name={`email`}
@@ -210,7 +217,7 @@ const StepOne = ({ navigation, route }) => {
                       style={[
                         styles.inputContainerBot,
                         {
-                          height: 50,
+                          height: 55,
                           width: 100,
                           marginRight: 10,
                           borderColor: "#404040",

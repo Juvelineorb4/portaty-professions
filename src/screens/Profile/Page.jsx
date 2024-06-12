@@ -436,6 +436,7 @@ const Page = ({ route, navigation }) => {
   };
 
   const uploadCatalogPDF = async () => {
+    console.log("QUERIEDNO SUBIRF");
     try {
       let result = await DocumentPicker.getDocumentAsync({
         copyToCacheDirectory: true,
@@ -1025,7 +1026,8 @@ const Page = ({ route, navigation }) => {
 
         {/* Catalogo */}
         <View>
-          {item?.catalogpdf === "" ? (
+          {console.log(item?.catalogpdf)}
+          {item?.catalogpdf === "" || !item?.catalogpdf ? (
             <TouchableOpacity
               style={[
                 {
@@ -1041,7 +1043,7 @@ const Page = ({ route, navigation }) => {
                 },
                 global.mainBgColor,
               ]}
-              onPress={() => uploadCatalogPDF}
+              onPress={uploadCatalogPDF}
             >
               <Text
                 style={[
