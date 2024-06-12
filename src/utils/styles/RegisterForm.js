@@ -79,7 +79,8 @@ const styles = StyleSheet.create({
   },
   textInputDescription: {
     width: '100%',
-    padding: '0 10px',
+    // padding: '0 10px',
+    paddingHorizontal: 10,
     color: '#fb8500',
     fontFamily: 'light',
     textAlign: 'justify',
