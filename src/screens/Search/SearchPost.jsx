@@ -67,7 +67,7 @@ const SearchPost = ({ route, navigation }) => {
   const {
     data: { item, images },
   } = route.params;
-  console.log(item);
+
   const actividad = JSON.parse(item.activity);
   const getPdf = async () => {
     const permissions =
@@ -184,7 +184,10 @@ const SearchPost = ({ route, navigation }) => {
       }
 
       let schedule = JSON.parse(business?.data?.getBusiness.schedule);
-      filterSchedule(schedule.shedule, schedule.type);
+      if (business?.data?.getBusiness.schedule) {
+        filterSchedule(schedule?.shedule, schedule?.type);
+      }
+
       return setPost(business?.data?.getBusiness);
     } catch (error) {
       console.log(error);
@@ -354,7 +357,8 @@ const SearchPost = ({ route, navigation }) => {
       };
 
       const allRatings = await fetchAllRatings();
-      console.log(allRatings);
+      // console.log(allRatings);
+
       setListRatings(allRatings);
       // const ratings = await API.graphql({
       //   query: queries.businessCommentsByBusinessID,
@@ -377,11 +381,29 @@ const SearchPost = ({ route, navigation }) => {
       console.log("Error en catalogo: ", error);
     }
   };
+  const fetchRatings2 = async () => {
+    try {
+      const api = "api-portaty";
+      const path = "/business/ratings";
+      const params = {
+        headers: {},
+        queryStringParameters: {
+          businessID: item?.id,
+        },
+      };
+
+      const response = await API.get(api, path, params);
+      console.log("RESPONSEEEEEEEEEEEEEEEEEEEEEEEEEE: ", response);
+    } catch (error) {
+      console.error("ERROR A BUSCAR RATINGS: ", error.response.data);
+    }
+  };
   // para la carga default
   useEffect(() => {
     if (!save) fetchFavorite();
     fetchData();
     fetchRatings();
+    fetchRatings2();
   }, []);
   // para obetener el pais y ciudad
   useEffect(() => {

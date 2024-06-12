@@ -59,11 +59,12 @@ const StepOne = ({ navigation, route }) => {
     };
 
     const result = await API.get(apiName, path, myInit);
-    if (!result?.success) {
-      setErrorName(true)
-      return
-    };
-    setErrorName(false)
+    console.log("QUE TARE: ", result);
+    if (result?.existing) {
+      setErrorName(true);
+      return;
+    }
+    setErrorName(false);
     let code = country?.idd?.root;
     for (let i = 0; i < country?.idd?.suffixes.length; i++) {
       code += country?.idd?.suffixes[i];
@@ -167,7 +168,20 @@ const StepOne = ({ navigation, route }) => {
                     required: es.businessForm.register.company.rules,
                   }}
                 />
-                {errorName && <Text style={{fontFamily: 'light', color: 'red', fontSize: 12, marginLeft: 5, marginTop: -5, marginBottom: 5}}>Ya existe un negocio con este nombre</Text> }
+                {errorName && (
+                  <Text
+                    style={{
+                      fontFamily: "light",
+                      color: "red",
+                      fontSize: 12,
+                      marginLeft: 5,
+                      marginTop: -5,
+                      marginBottom: 5,
+                    }}
+                  >
+                    Ya existe un negocio con este nombre
+                  </Text>
+                )}
                 <CustomInput
                   control={control}
                   name={`email`}

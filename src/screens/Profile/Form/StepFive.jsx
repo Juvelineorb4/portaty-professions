@@ -196,7 +196,7 @@ const StepFive = ({ navigation, route }) => {
       setLoading(false);
       Finished();
     } catch (error) {
-      console.log(`Error al cargar negocio`, error?.message);
+      console.log(`Error al cargar negocio`, error?.response.data);
       switch (error?.message) {
         case "Request failed with status code 401":
           setError(`Usuario no Autorizado para cargar Negocio`);
