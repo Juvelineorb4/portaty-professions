@@ -63,6 +63,7 @@ const SearchPost = ({ route, navigation }) => {
   const [weekSchedule, setWeekSchedule] = useState("");
   const [typeSchedule, setTypeSchedule] = useState("");
   const [listRatings, setListRatings] = useState(null);
+  const [ratingsDetails, setRatingsDetails] = useState(null);
 
   const {
     data: { item, images },
@@ -124,7 +125,6 @@ const SearchPost = ({ route, navigation }) => {
       });
       setSave(favorites?.data?.createFavorites?.id);
       setNumberFavorite(post?.favorites?.items?.length + 1);
-      setListUpdate(!listUpdate);
       // registramos el evento
 
       const { country, city } = countryCity;
@@ -187,7 +187,7 @@ const SearchPost = ({ route, navigation }) => {
       if (business?.data?.getBusiness.schedule) {
         filterSchedule(schedule?.shedule, schedule?.type);
       }
-
+      setListUpdate(false)
       return setPost(business?.data?.getBusiness);
     } catch (error) {
       console.log(error);
@@ -336,7 +336,7 @@ const SearchPost = ({ route, navigation }) => {
       const fetchAllRatings = async (nextToken, result = []) => {
         const response = await API.graphql({
           query: queries.businessCommentsByBusinessID,
-          authMode: "AMAZON_COGNITO_USER_POOLS",
+          authMode: "AWS_IAM",
           variables: {
             businessID: business?.id,
             nextToken,
@@ -358,7 +358,7 @@ const SearchPost = ({ route, navigation }) => {
 
       const allRatings = await fetchAllRatings();
       // console.log(allRatings);
-
+      console.log("Resenas", allRatings);
       setListRatings(allRatings);
       // const ratings = await API.graphql({
       //   query: queries.businessCommentsByBusinessID,
@@ -394,6 +394,7 @@ const SearchPost = ({ route, navigation }) => {
 
       const response = await API.get(api, path, params);
       console.log("RESPONSEEEEEEEEEEEEEEEEEEEEEEEEEE: ", response);
+      setRatingsDetails(response.data);
     } catch (error) {
       console.error("ERROR A BUSCAR RATINGS: ", error.response.data);
     }
@@ -404,7 +405,7 @@ const SearchPost = ({ route, navigation }) => {
     fetchData();
     fetchRatings();
     fetchRatings2();
-  }, []);
+  }, [listUpdate]);
   // para obetener el pais y ciudad
   useEffect(() => {
     const registerCountryCity = async () => {
@@ -428,7 +429,7 @@ const SearchPost = ({ route, navigation }) => {
     return () => clearTimeout(timerRef.current);
   }, [countryCity, userAuth]);
 
-  if (!post || !listRatings) return <SkeletonExample />;
+  if (!post || !listRatings || listUpdate) return <SkeletonExample />;
   return (
     <View
       style={[
@@ -595,7 +596,7 @@ const SearchPost = ({ route, navigation }) => {
                   marginRight: 3,
                 }}
               >
-                4.7
+                {ratingsDetails?.average}
               </Text>
               <Ionicons name="star" size={16} color="#ffb703" />
             </View>
@@ -606,10 +607,11 @@ const SearchPost = ({ route, navigation }) => {
                 fontSize: 12,
               }}
             >
-              100+ valoraciones
+              {ratingsDetails?.ratings_message}
             </Text>
           </View>
-          <View
+          {/* Aun no es lo del */}
+          {/* <View
             style={{
               flexDirection: "row",
               alignItems: "center",
@@ -625,7 +627,7 @@ const SearchPost = ({ route, navigation }) => {
             >
               Nº 14 en Turismo
             </Text>
-          </View>
+          </View> */}
         </View>
         {showAgg && (
           <View>
