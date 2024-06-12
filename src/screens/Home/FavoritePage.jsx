@@ -55,12 +55,15 @@ const FavoritePage = ({ navigation, route }) => {
   const [open, setOpen] = useState(false);
   const [weekSchedule, setWeekSchedule] = useState("");
   const [listRatings, setListRatings] = useState(null);
+  const [ratingsDetails, setRatingsDetails] = useState(null);
 
   const {
     data: { item, image },
   } = route.params;
   let schedule = JSON.parse(item.business?.schedule);
   const filterSchedule = (array, type) => {
+    console.log(schedule);
+    return;
     if (array === null || type === null) return;
     console.log("toy por aqui");
     console.log(array);
@@ -170,6 +173,7 @@ const FavoritePage = ({ navigation, route }) => {
         },
         authMode: "AWS_IAM",
       });
+      setListUpdate(false)
       setPost(business.data.getBusiness);
     } catch (error) {
       console.log("eres tu", error);
@@ -183,7 +187,7 @@ const FavoritePage = ({ navigation, route }) => {
       const fetchAllRatings = async (nextToken, result = []) => {
         const response = await API.graphql({
           query: queries.businessCommentsByBusinessID,
-          authMode: "AMAZON_COGNITO_USER_POOLS",
+          authMode: "AWS_IAM",
           variables: {
             businessID: business?.businessID,
             nextToken,
@@ -216,6 +220,25 @@ const FavoritePage = ({ navigation, route }) => {
       // console.log(ratings.data.businessCommentsByBusinessID.items)
     } catch (error) {
       console.log("eres tu", error);
+    }
+  };
+  const fetchRatings2 = async () => {
+    let business = item;
+    try {
+      const api = "api-portaty";
+      const path = "/business/ratings";
+      const params = {
+        headers: {},
+        queryStringParameters: {
+          businessID: business.businessID,
+        },
+      };
+
+      const response = await API.get(api, path, params);
+      console.log("RESPONSEEEEEEEEEEEEEEEEEEEEEEEEEE: ", response);
+      setRatingsDetails(response.data);
+    } catch (error) {
+      console.error("ERROR A BUSCAR RATINGS: ", error.response.data);
     }
   };
   const onDeleteFavorite = async () => {
@@ -268,10 +291,11 @@ const FavoritePage = ({ navigation, route }) => {
   useLayoutEffect(() => {
     fetchData();
     fetchRatings(item);
-    filterSchedule(schedule.shedule, schedule.type);
+    fetchRatings2();
+    if (schedule !== null) filterSchedule(schedule?.shedule, schedule?.type);
   }, [listUpdate]);
 
-  if (!item || !listRatings) return <SkeletonExample />;
+  if (!item || !listRatings || listUpdate) return <SkeletonExample />;
   return (
     <View
       style={[
@@ -438,7 +462,7 @@ const FavoritePage = ({ navigation, route }) => {
                   marginRight: 3,
                 }}
               >
-                4.7
+                {ratingsDetails?.average}
               </Text>
               <Ionicons name="star" size={16} color="#ffb703" />
             </View>
@@ -449,10 +473,11 @@ const FavoritePage = ({ navigation, route }) => {
                 fontSize: 12,
               }}
             >
-              100+ valoraciones
+              {ratingsDetails?.ratings_message}
             </Text>
           </View>
-          <View
+          {/* Pa despues */}
+          {/* <View
             style={{
               flexDirection: "row",
               alignItems: "center",
@@ -468,7 +493,7 @@ const FavoritePage = ({ navigation, route }) => {
             >
               Nº 14 en Turismo
             </Text>
-          </View>
+          </View> */}
         </View>
 
         <View
@@ -541,6 +566,7 @@ const FavoritePage = ({ navigation, route }) => {
           style={{
             paddingHorizontal: 20,
             paddingTop: 20,
+            marginBottom: 15
           }}
         >
           <Text style={{ fontSize: 18, fontFamily: "regular" }}>

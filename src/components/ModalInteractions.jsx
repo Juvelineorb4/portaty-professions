@@ -15,8 +15,8 @@ import styles from "@/utils/styles/ModalInteractions.js";
 // import { complaints } from "@/utils/constants/complaints";
 import * as customFavorites from "@/graphql/CustomMutations/Favorites";
 import { Auth, API, Storage } from "aws-amplify";
-import { useRecoilValue } from "recoil";
-import { userAuthenticated } from "@/atoms";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { updateListFavorites, userAuthenticated } from "@/atoms";
 import { MaterialIcons } from "@expo/vector-icons";
 import CustomInput from "./CustomInput";
 import { useForm } from "react-hook-form";
@@ -28,6 +28,7 @@ const ModalInteractions = ({ businessID, close, open }) => {
   const [loading, setLoading] = useState(false);
   const { control, handleSubmit } = useForm();
   const userAuth = useRecoilValue(userAuthenticated);
+  const [listUpdate, setListUpdate] = useRecoilState(updateListFavorites);
 
   const fetchInteractions = async (data) => {
     const { description } = data;
@@ -48,6 +49,7 @@ const ModalInteractions = ({ businessID, close, open }) => {
       });
       console.log(rating);
       setLoading(false);
+      setListUpdate(true)
       close();
     } catch (error) {
       console.log(error);

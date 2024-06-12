@@ -1,15 +1,32 @@
 import { Text, View, ScrollView, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import CustomButton from "./CustomButton";
 import styles from "@/utils/styles/Interactions.js";
 import ModalInteractions from "./ModalInteractions";
+import { useRecoilValue } from "recoil";
+import { userAuthenticated } from "@/atoms";
 
-const CustomInteractions = ({ route }) => {
+const CustomInteractions = ({ route, navigation }) => {
   const global = require("@/utils/styles/global.js");
   const comments = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
   const [active, setActive] = useState(false);
   const { business, list } = route.params;
+  const userAuth = useRecoilValue(userAuthenticated);
+  const [errorRating, setErrorRating] = useState(false);
+
+  const checkList = () => {
+    list.map((item, index) => {
+      if (userAuth.attributes["custom:userTableID"] === item.userID)
+        setErrorRating(true);
+    });
+  };
+
+  useEffect(() => {
+    checkList();
+  }, []);
+
+  // console.log(list)
   return (
     <ScrollView
       style={[
@@ -96,13 +113,25 @@ const CustomInteractions = ({ route }) => {
         </View>
       </ScrollView>
       <CustomButton
-        text={`Deja tu valoracion y comentario`}
-        handlePress={() => setActive(true)}
+        text={
+          errorRating
+            ? `Ya has dejado una valoracion`
+            : `Deja tu valoracion y comentario`
+        }
+        handlePress={() => {
+          if (!errorRating) setActive(true);
+        }}
         textStyles={[styles.textButton, global.black]}
-        buttonStyles={[styles.button, global.bgYellow]}
+        buttonStyles={[
+          styles.button,
+          errorRating ? global.bgWhite : global.bgYellow,
+        ]}
       />
       <ModalInteractions
-        close={() => setActive(false)}
+        close={() => {
+          setActive(false)
+          navigation.goBack()
+        }}
         open={active}
         businessID={business.businessID ? business.businessID : business.id}
       />
