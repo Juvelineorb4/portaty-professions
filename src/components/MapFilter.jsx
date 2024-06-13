@@ -15,6 +15,7 @@ import styles from "@/utils/styles/MapMarket.js";
 import { useRecoilState } from "recoil";
 import { kmRadio } from "@/atoms";
 import Slider from "@react-native-community/slider";
+import { API } from "aws-amplify";
 
 const MapFilter = ({ open, close, initialLocation, country, city }) => {
   const global = require("@/utils/styles/global.js");
@@ -28,7 +29,18 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
     latitudeDelta: 0.018,
     longitudeDelta: 0.018,
   });
+  const [searchTerm, setSearchTerm] = useState("");
   let mapRef = useRef(null);
+  const timerIdRef = useRef(null); // Referencia para almacenar el identificador del temporizador
+
+  // Actualiza searchTerm con un retraso de 300 milisegundos después de que el usuario deja de escribir
+  const handleInputChange = (e) => {
+    setDescription(e);
+    clearTimeout(timerIdRef.current);
+    timerIdRef.current = setTimeout(() => {
+      setSearchTerm(e);
+    }, 300);
+  };
 
   const onHandlePress = (e) => {
     const {
@@ -37,7 +49,6 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
 
     if (mapRef.current) {
       const newRegion = mapRef.current.__lastRegion;
-
     }
     setRegion({
       latitude: coordinate.latitude,
@@ -62,7 +73,6 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
 
     let direcciones = await Location.reverseGeocodeAsync(coordenadas[0]);
 
-
     if (direcciones[0].country !== country || direcciones[0].city === null) {
       return;
     }
@@ -83,7 +93,35 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
       7000
     );
   };
-  useEffect(() => {}, []);
+  // Llama a la función de búsqueda cuando searchTerm cambia
+  useEffect(() => {
+    if (searchTerm === "") return;
+
+    const api = "api-opense";
+    const path = "/location/_search";
+    const params = {
+      headers: {},
+      queryStringParameters: {
+        text: searchTerm, //texto a buscar
+        location: JSON.stringify({
+          // para darle prioridad de busqueda desde la ubicacion que te enceuntras
+          latitude: initialLocation.latitude,
+          longitude: initialLocation.longitude,
+        }),
+      },
+    };
+
+    const search = async () => {
+      try {
+        const response = await API.get(api, path, params);
+        console.log("QUE ENCONTRO: ", response.data);
+      } catch (error) {
+        console.log("Error buscando algo", error);
+      }
+    };
+
+    search();
+  }, [searchTerm]); // Dependencia de searchTerm
   return (
     <Modal animationType="none" transparent={true} visible={open}>
       <View style={styles.modalContainer}>
@@ -148,15 +186,14 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
             >
               <TextInput
                 value={description}
-                onChangeText={(e) => {
-                  setDescription(e);
-                }}
+                onChangeText={handleInputChange}
                 placeholder={`Introduce una direccion`}
                 style={{
                   fontFamily: "regular",
                   fontSize: 14,
                 }}
               />
+
               <TouchableOpacity
                 style={[
                   {

@@ -23,7 +23,8 @@ export const settings = {
     },
     {
       title: "Contáctanos",
-      subtitle: "Encuentra todas las maneras de ponerte en contacto con nosotros",
+      subtitle:
+        "Encuentra todas las maneras de ponerte en contacto con nosotros",
       icon: {
         left: require("@/utils/images/info_white.png"),
         right: require("@/utils/images/arrow_right.png"),
@@ -39,6 +40,15 @@ export const settings = {
         right: require("@/utils/images/arrow_right.png"),
       },
       route: "Report",
+      // routePush: true,
+    },
+    {
+      title: "Eliminar cuenta",
+      subtitle: "Enviar una solicitud para eliminar su cuenta",
+      icon: {
+        left: require("@/utils/images/bug.png"),
+      },
+      modal: true,
       // routePush: true,
     },
     {
