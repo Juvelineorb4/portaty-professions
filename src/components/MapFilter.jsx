@@ -7,41 +7,49 @@ import {
   TextInput,
   TouchableOpacity,
   ActivityIndicator,
+  FlatList,
 } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import MapView, { Marker, PROVIDER_GOOGLE, Circle } from "react-native-maps";
 import * as Location from "expo-location";
 import styles from "@/utils/styles/MapMarket.js";
 import { useRecoilState } from "recoil";
-import { kmRadio } from "@/atoms";
+import { kmRadio, mapUserChange, searchAddressInitial } from "@/atoms";
 import Slider from "@react-native-community/slider";
 import { API } from "aws-amplify";
+import { debounce } from "lodash";
 
 const MapFilter = ({ open, close, initialLocation, country, city }) => {
   const global = require("@/utils/styles/global.js");
   const [description, setDescription] = useState("");
+  const [labelSelected, setLabelSelected] = useState(null);
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [filterRadio, setFilterRadio] = useRecoilState(kmRadio);
   const [changeTag, setChangeTag] = useState(filterRadio);
+  const [searchActive, setSearchActive] = useState(false);
+  const [suggestions, setSuggestions] = useState(null);
+  const [searchAddress, setSearchAddress] =
+    useRecoilState(searchAddressInitial);
+  const [mapChange, setMapChange] = useRecoilState(mapUserChange);
+
   const [region, setRegion] = useState({
-    latitude: initialLocation.latitude,
-    longitude: initialLocation.longitude,
+    latitude: initialLocation?.latitude,
+    longitude: initialLocation?.longitude,
     latitudeDelta: 0.018,
     longitudeDelta: 0.018,
   });
   const [searchTerm, setSearchTerm] = useState("");
   let mapRef = useRef(null);
-  const timerIdRef = useRef(null); // Referencia para almacenar el identificador del temporizador
+  const timerIdRef = useRef(null);
 
-  // Actualiza searchTerm con un retraso de 300 milisegundos después de que el usuario deja de escribir
-  const handleInputChange = (e) => {
-    setDescription(e);
-    clearTimeout(timerIdRef.current);
-    timerIdRef.current = setTimeout(() => {
-      setSearchTerm(e);
-    }, 300);
+  const getAddress = async (obj) => {
+    setSearchAddress(obj?.label);
+    setMapChange({
+      latitude: obj?.latitude,
+      longitude: obj?.longitude,
+    });
+    console.log(obj?.label);
   };
-
   const onHandlePress = (e) => {
     const {
       nativeEvent: { coordinate },
@@ -56,17 +64,31 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
       latitudeDelta: 0.018,
       longitudeDelta: 0.018,
     });
-    // mapRef.current.animateToRegion(
-    //   {
-    //     latitude: coordinate.latitude,
-    //     longitude: coordinate.longitude,
-    //     // latitudeDelta: 0.018,
-    //     // longitudeDelta: 0.018,
-    //   },
-    //   7000
-    // );
   };
 
+  const autocompleteCoords = (label, latitude, longitude) => {
+    setLabelSelected({
+      label: label,
+      latitude: latitude,
+      longitude: longitude,
+    });
+    setRegion({
+      latitude: latitude,
+      longitude: longitude,
+      latitudeDelta: 0.018,
+      longitudeDelta: 0.018,
+    });
+    mapRef.current.animateToRegion(
+      {
+        latitude: latitude,
+        longitude: longitude,
+        latitudeDelta: 0.018,
+        longitudeDelta: 0.018,
+      },
+      7000
+    );
+    setSuggestions(null);
+  };
   const obtenerCoordenadas = async (address) => {
     const direccionComplete = `${address}, ${city}, ${country}`;
     let coordenadas = await Location.geocodeAsync(direccionComplete);
@@ -93,35 +115,47 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
       7000
     );
   };
-  // Llama a la función de búsqueda cuando searchTerm cambia
-  useEffect(() => {
-    if (searchTerm === "") return;
 
+  const search = async () => {
+    console.log("desde search", searchActive);
+    setSuggestions(null);
+    if (description === "") return;
     const api = "api-opense";
     const path = "/location/_search";
     const params = {
       headers: {},
       queryStringParameters: {
-        text: searchTerm, //texto a buscar
+        text: description, //texto a buscar
         location: JSON.stringify({
-          // para darle prioridad de busqueda desde la ubicacion que te enceuntras
-          latitude: initialLocation.latitude,
-          longitude: initialLocation.longitude,
+          latitude: initialLocation?.latitude,
+          longitude: initialLocation?.longitude,
         }),
       },
     };
+    try {
+      const response = await API.get(api, path, params);
+      console.log("QUE ENCONTRO: ", response.data);
+      setSuggestions(response.data);
+      console.log(suggestions);
+    } catch (error) {
+      console.log("Error buscando algo", error);
+    }
+  };
 
-    const search = async () => {
-      try {
-        const response = await API.get(api, path, params);
-        console.log("QUE ENCONTRO: ", response.data);
-      } catch (error) {
-        console.log("Error buscando algo", error);
-      }
-    };
+  const handleInputChange = (e) => {
+    setDescription(e);
+  };
 
-    search();
-  }, [searchTerm]); // Dependencia de searchTerm
+  useEffect(() => {
+    const debouncedSetSearch = debounce((e) => {
+      console.log(e);
+      search(e);
+    }, 1000);
+
+    if (description !== "") {
+      debouncedSetSearch(description);
+    }
+  }, [description]);
   return (
     <Modal animationType="none" transparent={true} visible={open}>
       <View style={styles.modalContainer}>
@@ -193,7 +227,53 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
                   fontSize: 14,
                 }}
               />
-
+              {suggestions && (
+                <FlatList
+                  data={suggestions}
+                  showsVerticalScrollIndicator={true}
+                  keyExtractor={(item) => item?.Label}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      style={{
+                        paddingVertical: 8,
+                        borderBottomColor: "#1f1f1f",
+                        borderBottomWidth: 1,
+                      }}
+                      onPress={() =>
+                        autocompleteCoords(
+                          item?.Label,
+                          item?.Point[1],
+                          item?.Point[0]
+                        )
+                      }
+                    >
+                      <Text
+                        style={{
+                          fontFamily: "light",
+                          fontSize: 12,
+                        }}
+                      >
+                        {item?.Label}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                  style={{
+                    flex: 1,
+                    position: "absolute",
+                    backgroundColor: "white",
+                    padding: 10,
+                    paddingTop: 0,
+                    borderColor: "#1f1f1f",
+                    borderWidth: 1,
+                    top: 40,
+                    width: 235,
+                    borderBottomRightRadius: 8,
+                    borderBottomLeftRadius: 8,
+                    // height: 200,
+                    zIndex: 100,
+                  }}
+                />
+              )}
               <TouchableOpacity
                 style={[
                   {
@@ -327,6 +407,7 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
                 global.bgYellow,
               ]}
               onPress={() => {
+                getAddress(labelSelected);
                 close();
               }}
             >
