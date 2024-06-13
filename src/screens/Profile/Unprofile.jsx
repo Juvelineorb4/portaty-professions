@@ -334,10 +334,6 @@ const Unprofile = ({ navigation, route }) => {
                   }}
                   icon={button.icon}
                 />
-                {console.log(
-                  "QUE HAY: ",
-                  userAuth?.attributes["custom:requestDeleting"]
-                )}
               </TouchableOpacity>
             ) : button.modal ? (
               <>
