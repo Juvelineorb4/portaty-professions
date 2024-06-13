@@ -34,7 +34,10 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: 'regular',
-    margin: '15% 10px 10%',
+    // margin: '15% 10px 10%',
+    marginHorizontal: 10,
+    marginTop: '15%',
+    marginBottom: '10%',
     textAlign: 'center',
     fontSize: 32,
   },
