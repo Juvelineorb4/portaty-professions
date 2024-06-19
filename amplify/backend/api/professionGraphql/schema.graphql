@@ -56,16 +56,24 @@ type Users
     rules: [
       { allow: owner }
       { allow: private, provider: iam, operations: [read] }
+      { allow: groups, groups: ["admin"], operations: [read] }
     ]
   ) {
   id: ID
-  cognitoID: ID @auth(rules: [{ allow: owner, operations: [read, delete] }])
+  cognitoID: ID
+    @auth(
+      rules: [
+        { allow: owner, operations: [read, delete] }
+        { allow: groups, groups: ["admin"], operations: [read] }
+      ]
+    )
   name: String
     @auth(
       rules: [
         { allow: owner }
         { allow: private, provider: iam, operations: [read] }
         { allow: public, provider: iam, operations: [read] }
+        { allow: groups, groups: ["admin"], operations: [read] }
       ]
     )
   lastName: String
@@ -74,6 +82,7 @@ type Users
         { allow: owner }
         { allow: private, provider: iam, operations: [read] }
         { allow: public, provider: iam, operations: [read] }
+        { allow: groups, groups: ["admin"], operations: [read] }
       ]
     )
   email: String
@@ -84,16 +93,34 @@ type Users
       rules: [
         { allow: owner }
         { allow: private, provider: iam, operations: [read] }
+        { allow: groups, groups: ["admin"], operations: [read] }
       ]
     )
-  gender: String @auth(rules: [{ allow: owner, operations: [read, delete] }])
+  gender: String
+    @auth(
+      rules: [
+        { allow: owner, operations: [read, delete] }
+        { allow: groups, groups: ["admin"], operations: [read] }
+      ]
+    )
   notificationToken: [String]
-    @auth(rules: [{ allow: owner, operations: [read, delete] }])
+    @auth(
+      rules: [
+        { allow: owner, operations: [read, delete] }
+        { allow: groups, groups: ["admin"], operations: [read] }
+      ]
+    )
   favorites: [Favorites] @hasMany(indexName: "byUsersFavorites", fields: ["id"])
   business: [Business] @hasMany(indexName: "byUsersBusiness", fields: ["id"])
   comments: [BusinessComment]
     @hasMany(indexName: "byUserComments", fields: ["id"])
-  owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }])
+  owner: String
+    @auth(
+      rules: [
+        { allow: owner, operations: [read, delete] }
+        { allow: groups, groups: ["admin"], operations: [read] }
+      ]
+    )
 }
 
 type Reports
