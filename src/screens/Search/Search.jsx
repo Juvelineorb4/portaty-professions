@@ -35,7 +35,7 @@ import MapFilter from "@/components/MapFilter";
 const Search = ({ route }) => {
   const global = require("@/utils/styles/global.js");
   const userLocation = useRecoilValue(mapUser);
-  console.log(userLocation)
+  console.log(userLocation);
   const [moreItems, setMoreItems] = useState(1);
   const [items, setItems] = useState([]);
   const [searchActive, setSearchActive] = useRecoilState(searchStatus);
@@ -65,7 +65,7 @@ const Search = ({ route }) => {
         direccion.region === null ? "" : direccion.region
       }, ${direccion.postalCode === null ? "" : direccion.postalCode} `;
       setSearchAddress(direccionString);
-      console.log(direccionString)
+      console.log(direccionString);
       setRegion(direccion.region);
       setCity(direccion.city);
     }
@@ -118,19 +118,22 @@ const Search = ({ route }) => {
     let countryCodes = geocode[0].isoCountryCode;
     array.map((item, index) => {
       if (item.cca2 === countryCodes.toUpperCase()) {
-        let arrayCountries = [...array]
+        let arrayCountries = [...array];
         setCountry(item);
-        let country = arrayCountries.filter(item => item.cca2 === countryCodes.toUpperCase());
+        let country = arrayCountries.filter(
+          (item) => item.cca2 === countryCodes.toUpperCase()
+        );
 
         if (country.length > 0) {
           // Eliminar el país del array original
-          arrayCountries = arrayCountries.filter(item => item.cca2 !== countryCodes.toUpperCase());
-        
+          arrayCountries = arrayCountries.filter(
+            (item) => item.cca2 !== countryCodes.toUpperCase()
+          );
+
           // Agregar el país al principio del array
           arrayCountries.unshift(country[0]);
         }
         setCountries(arrayCountries);
-
       }
     });
   }
@@ -156,13 +159,13 @@ const Search = ({ route }) => {
   /* Refresh */
 
   useEffect(() => {
-    getAddress(userLocation)
+    getAddress(userLocation);
     fetch(`https://restcountries.com/v3.1/all?fields=name,flags,idd,cca2`)
       .then((response) => {
         return response.json();
       })
       .then((item) => {
-        console.log(item[0])
+        console.log(item[0]);
         getCountryCode(item);
       });
     if (userLocation) getData();

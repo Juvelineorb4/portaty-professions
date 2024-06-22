@@ -15,6 +15,7 @@ import linking from "./linking";
 import LeftHeaderShare from "@/components/Header/LeftHeaderShare";
 // hooks
 import useLocation from "@/hooks/useLocation";
+import useUserTracking from "@/hooks/useUserTracking";
 import usePushNotification from "@/hooks/usePushNotification";
 import ShareNavigator from "./ShareNavigator";
 import SplashScreen from "@/components/SplashScreen";
@@ -23,6 +24,7 @@ import Loading from "@/components/Loading";
 const Navigation = () => {
   useLocation();
   usePushNotification();
+  useUserTracking();
   const Stack = createNativeStackNavigator();
   const global = require("@/utils/styles/global.js");
   const [checkRender, setCheckRender] = useState(true);

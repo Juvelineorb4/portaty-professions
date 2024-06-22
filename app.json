@@ -4,7 +4,7 @@
     "name": "Portaty",
     "slug": "portaty-professions",
     "owner": "portaty",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "orientation": "portrait",
     "icon": "./src/utils/images/portaty.png",
     "userInterfaceStyle": "light",
@@ -17,9 +17,7 @@
       "fallbackToCacheTimeout": 0,
       "url": "https://u.expo.dev/b378d102-5cf7-49fc-93f0-b5df7f83d8ad"
     },
-    "assetBundlePatterns": [
-      "*/"
-    ],
+    "assetBundlePatterns": ["*/"],
     "ios": {
       "runtimeVersion": "exposdk:49.0.0",
       "supportsTablet": true,
@@ -31,14 +29,13 @@
         "NSLocationWhenInUseUsageDescription": "Portaty utiliza tu ubicación cuando la app está en uso para mostrarte profesionales y servicios cercanos a ti.",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "Portaty puede requerir acceso constante a tu ubicación para enviarte notificaciones de servicios cerca de ti, incluso cuando la app no está en uso.",
         "NSPhotoLibraryUsageDescription": "Portaty necesita acceder a tu biblioteca de fotos para que puedas seleccionar imágenes al crear o actualizar tu perfil.",
-        "NSDocumentsFolderUsageDescription": "Portaty accede a tus documentos para permitirte compartir archivos importantes con tus contactos dentro de la aplicación."
+        "NSDocumentsFolderUsageDescription": "Portaty accede a tus documentos para permitirte compartir archivos importantes con tus contactos dentro de la aplicación.",
+        "NSUserTrackingUsageDescription": "Portaty utiliza este identificador para ofrecerte una experiencia personalizada, mostrando anuncios y recomendaciones relevantes según tus intereses. Tu privacidad es nuestra prioridad, y solo usaremos esta información para mejorar tu experiencia en la aplicación."
       },
-      "associatedDomains": [
-        "applinks:https://www.portaty.com"
-      ],
+      "associatedDomains": ["applinks:https://www.portaty.com"],
       "bundleIdentifier": "com.teamportaty.appdev",
       "versionCode": 0,
-      "buildNumber": "12",
+      "buildNumber": "13",
       "config": {
         "googleMapsApiKey": "AIzaSyBaNnjNEIkGO3wo3HgOXDWFKliZD2Ynb5s"
       }
@@ -61,10 +58,7 @@
               "pathPrefix": "/share/business"
             }
           ],
-          "category": [
-            "BROWSABLE",
-            "DEFAULT"
-          ]
+          "category": ["BROWSABLE", "DEFAULT"]
         }
       ],
       "permissions": [
@@ -94,11 +88,7 @@
     },
     "packagerOpts": {
       "config": "metro.config.js",
-      "sourceExts": [
-        "js",
-        "jsx",
-        "css"
-      ]
+      "sourceExts": ["js", "jsx", "css"]
     },
     "plugins": [
       [
@@ -163,6 +153,12 @@
         {
           "icon": "./assets/icon_notification.png",
           "color": "#ffffff"
+        }
+      ],
+      [
+        "expo-tracking-transparency",
+        {
+          "userTrackingPermission": "This identifier will be used to deliver personalized ads to you."
         }
       ]
     ],

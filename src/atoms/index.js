@@ -169,3 +169,8 @@ export const notificationToken = atom({
   key: "notificationTokenValue",
   default: null,
 });
+
+export const isUserTracking = atom({
+  key: "isUserTrackingValue",
+  default: false,
+});
