@@ -1001,20 +1001,41 @@ const FavoritePage = ({ navigation, route }) => {
                             marginTop: 10,
                           }}
                         >
-                          <TextInput
-                            value={imageView?.description}
-                            editable={false}
-                            style={{
-                              flex: 1,
-                              // width: 100,
-                              fontFamily: "regular",
-                              fontSize: 14,
-                              alignItems: "flex-start",
-                              color: "#000",
-                            }}
-                            multiline={true}
-                            numberOfLines={5}
-                          />
+                          {imageView?.key === 0 ? (
+                            <TextInput
+                              value={
+                                imageView?.description !== ""
+                                  ? imageView?.description
+                                  : item.business.description
+                              }
+                              editable={false}
+                              style={{
+                                flex: 1,
+                                // width: 100,
+                                fontFamily: "regular",
+                                fontSize: 14,
+                                alignItems: "flex-start",
+                                color: "#000",
+                              }}
+                              multiline={true}
+                              numberOfLines={5}
+                            />
+                          ) : (
+                            <TextInput
+                              value={imageView?.description}
+                              editable={false}
+                              style={{
+                                flex: 1,
+                                // width: 100,
+                                fontFamily: "regular",
+                                fontSize: 14,
+                                alignItems: "flex-start",
+                                color: "#000",
+                              }}
+                              multiline={true}
+                              numberOfLines={5}
+                            />
+                          )}
                         </View>
                       </View>
                     )}
