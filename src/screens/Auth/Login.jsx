@@ -29,7 +29,7 @@ const Login = ({ navigation }) => {
   const global = require("@/utils/styles/global.js");
   const EMAIL_REGEX = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
   const { updateAvailable, fetchUpdate, updateVersion, updateDate } =
-  useCheckAppVersion();
+    useCheckAppVersion();
   const [errorActive, setErrorActive] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -97,7 +97,6 @@ const Login = ({ navigation }) => {
     }
     setVisible(false);
   };
-
 
   return (
     <KeyboardAvoidingView

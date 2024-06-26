@@ -265,13 +265,11 @@ const Register = ({ navigation }) => {
             rules={{ required: "Requerido" }}
           />
         </ScrollView>
-        <View
-          style={{ height: 65 }}
-        >
+        <View style={{ height: 65 }}>
           <CustomButton
             text={
               isLoading ? (
-                <ActivityIndicator color={`#1f1f1f`}/>
+                <ActivityIndicator color={`#1f1f1f`} />
               ) : (
                 es.authentication.register.button
               )
