@@ -184,7 +184,7 @@ const SharePage = ({ route, navigation }) => {
           userID: { eq: attributes["custom:userTableID"] },
         },
       });
-    
+
       if (favorite?.data?.favoritesByBusinessID?.items?.length !== 0)
         setSave(favorite?.data?.favoritesByBusinessID?.items[0]?.id);
     } catch (error) {
@@ -857,9 +857,19 @@ const SharePage = ({ route, navigation }) => {
             <Pressable
               style={{ flexDirection: "row", alignItems: "center" }}
               onPress={() => {
-                if (post?.whatsapp === "" || post?.whatsapp === null) return;
-                const url = `${post?.whatsapp}`;
-                Linking.openURL(url);
+                let isWhatsAppLink =
+                  post?.whatsapp.startsWith("https://wa.me/") ||
+                  post?.whatsapp.startsWith(
+                    "https://api.whatsapp.com/send?text="
+                  );
+                if (isWhatsAppLink) {
+                  const url = `${post?.whatsapp}`;
+                  Linking.openURL(url);
+                } else {
+                  const phoneRegex = post?.phone.replace("+", "");
+                  const url = `https://wa.me/${phoneRegex}`;
+                  Linking.openURL(url);
+                }
               }}
             >
               <Text
@@ -868,22 +878,14 @@ const SharePage = ({ route, navigation }) => {
                     fontSize: 13,
                     fontFamily: "regular",
                     marginRight: 5,
-                    color:
-                      post?.whatsapp === "" || post?.whatsapp === null
-                        ? "#1f1f1f"
-                        : "blue",
+                    color: "blue",
                   },
                 ]}
               >
-                {post?.whatsapp === "" || post?.whatsapp === null
-                  ? "No"
-                  : post?.whatsapp}
+                {"Ir al WhatsApp"}
               </Text>
-              {post?.whatsapp === "" || post?.whatsapp === null ? (
-                ""
-              ) : (
-                <Feather name="external-link" size={16} color="#1f1f1f" />
-              )}
+
+              <Feather name="external-link" size={16} color="#1f1f1f" />
             </Pressable>
           </View>
           <View style={[styles.line, global.bgMidGray]} />

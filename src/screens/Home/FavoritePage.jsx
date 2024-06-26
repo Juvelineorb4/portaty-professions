@@ -727,13 +727,19 @@ const FavoritePage = ({ navigation, route }) => {
             <Pressable
               style={{ flexDirection: "row", alignItems: "center" }}
               onPress={() => {
-                if (
-                  item.business?.whatsapp === "" ||
-                  item.business?.whatsapp === null
-                )
-                  return;
-                const url = `${item.business?.whatsapp}`;
-                Linking.openURL(url);
+                let isWhatsAppLink =
+                  item?.business?.phone.startsWith("https://wa.me/") ||
+                  item?.business?.phone.startsWith(
+                    "https://api.whatsapp.com/send?text="
+                  );
+                if (isWhatsAppLink) {
+                  const url = `${item?.business?.phone}`;
+                  Linking.openURL(url);
+                } else {
+                  const phoneRegex = item?.business?.phone.replace("+", "");
+                  const url = `https://wa.me/${phoneRegex}`;
+                  Linking.openURL(url);
+                }
               }}
             >
               <Text
@@ -742,25 +748,14 @@ const FavoritePage = ({ navigation, route }) => {
                     fontSize: 13,
                     fontFamily: "regular",
                     marginRight: 5,
-                    color:
-                      item.business?.whatsapp === "" ||
-                      item.business?.whatsapp === null
-                        ? "#1f1f1f"
-                        : "blue",
+                    color: "blue",
                   },
                 ]}
               >
-                {item.business?.whatsapp === "" ||
-                item.business?.whatsapp === null
-                  ? "No"
-                  : item.business?.whatsapp}
+                {"Ir al WhatsApp"}
               </Text>
-              {item.business?.whatsapp === "" ||
-              item.business?.whatsapp === null ? (
-                ""
-              ) : (
-                <Feather name="external-link" size={16} color="#1f1f1f" />
-              )}
+
+              <Feather name="external-link" size={16} color="blue" />
             </Pressable>
           </View>
           <View style={[styles.line, global.bgMidGray]} />
