@@ -329,7 +329,7 @@ const SharePage = ({ route, navigation }) => {
                     style={{
                       width: "100%",
                       height: "100%",
-                      resizeMode: "cover",
+                      resizeMode: "contain",
                       borderRadius: 5,
                       backgroundColor: "#fff",
                       borderWidth: 0.7,
@@ -1084,7 +1084,7 @@ const SharePage = ({ route, navigation }) => {
                         style={{
                           width: 35,
                           height: 35,
-                          resizeMode: "contain",
+                          resizeMode: "cover",
                         }}
                         source={require("@/utils/images/arrow_back.png")}
                       />
@@ -1095,7 +1095,7 @@ const SharePage = ({ route, navigation }) => {
                       style={{
                         width: "100%",
                         height: "60%",
-                        resizeMode: "cover",
+                        resizeMode: "contain",
                         borderRadius: 5,
                         borderWidth: 0.7,
                         borderColor: "#1f1f1f",

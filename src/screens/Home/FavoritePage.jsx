@@ -244,7 +244,7 @@ const FavoritePage = ({ navigation, route }) => {
                     style={{
                       width: "100%",
                       height: "100%",
-                      resizeMode: "cover",
+                      resizeMode: "contain",
                       borderRadius: 5,
                       backgroundColor: "#fff",
                       borderWidth: 0.7,
@@ -979,7 +979,7 @@ const FavoritePage = ({ navigation, route }) => {
                       style={{
                         width: "100%",
                         height: "60%",
-                        resizeMode: "cover",
+                        resizeMode: "contain",
                         borderRadius: 5,
                         borderWidth: 0.7,
                         borderColor: "#1f1f1f",
