@@ -25,7 +25,6 @@ import {
 } from "@/atoms";
 import { useRecoilState, useRecoilValue } from "recoil";
 import * as Location from "expo-location";
-import useLocation from "@/hooks/useLocation";
 import SkeletonSearch from "@/components/SkeletonSearch";
 import SkeletonMoreItems from "@/components/SkeletonMoreItems";
 import * as Cellular from "expo-cellular";
@@ -33,6 +32,8 @@ import { Entypo } from "@expo/vector-icons";
 import MapFilter from "@/components/MapFilter";
 
 const Search = ({ route }) => {
+  
+
   const global = require("@/utils/styles/global.js");
   const userLocation = useRecoilValue(mapUser);
   const [moreItems, setMoreItems] = useState(1);
@@ -44,7 +45,7 @@ const Search = ({ route }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [statusFilter, setStatusFilter] = useState(false);
   const [filterRadio, setFilterRadio] = useRecoilState(kmRadio);
-  // const { location } = useLocation();
+
   const [country, setCountry] = useState(null);
   const [countries, setCountries] = useState([]);
   const [visibleCountries, setVisibleCountries] = useState(false);
@@ -105,6 +106,7 @@ const Search = ({ route }) => {
   const getFilterData = async () => {
     setStatusFilter(true);
     getData();
+
     // setTimeout(() => {}, 3000);
     setStatusFilter(false);
   };

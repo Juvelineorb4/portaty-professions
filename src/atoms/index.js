@@ -115,6 +115,10 @@ export const mapUser = atom({
   key: "mapUserValue",
   default: null,
 });
+export const locationPermission = atom({
+  key: "locationPermissionValue",
+  default: '',
+});
 export const favoriteSelection = atom({
   key: "favoriteSelectionValue",
   default: [],
