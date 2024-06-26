@@ -732,7 +732,7 @@ const FavoritePage = ({ navigation, route }) => {
                   item.business?.whatsapp === null
                 )
                   return;
-                const url = `https://${item.business?.whatsapp}`;
+                const url = `${item.business?.whatsapp}`;
                 Linking.openURL(url);
               }}
             >

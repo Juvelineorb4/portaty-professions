@@ -904,7 +904,7 @@ const SearchPost = ({ route, navigation }) => {
               style={{ flexDirection: "row", alignItems: "center" }}
               onPress={() => {
                 if (post?.whatsapp === "" || post?.whatsapp === null) return;
-                const url = `https://${post?.whatsapp}`;
+                const url = `${post?.whatsapp}`;
                 Linking.openURL(url);
               }}
             >

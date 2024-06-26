@@ -56,6 +56,7 @@ const Unprofile = ({ navigation, route }) => {
         email: userAuth?.attributes?.email,
       },
     });
+    console.log(result)
     if (result?.data?.userByEmail?.items[0]?.business?.items?.length !== 0)
       setBusiness(result.data.userByEmail.items[0].business.items);
     setDisabled(false);

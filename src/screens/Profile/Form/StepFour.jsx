@@ -13,7 +13,12 @@ import { useForm } from "react-hook-form";
 import { Feather } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { useRecoilState } from "recoil";
-import { activeModalScreen, base64Business, blobBusiness, imageBusiness } from "@/atoms";
+import {
+  activeModalScreen,
+  base64Business,
+  blobBusiness,
+  imageBusiness,
+} from "@/atoms";
 import StepClear from "./StepClear";
 
 const StepFour = ({ navigation, route }) => {
@@ -22,7 +27,7 @@ const StepFour = ({ navigation, route }) => {
   const [blobImage, setBlobImage] = useRecoilState(blobBusiness);
   const [imageB64, setImageB64] = useRecoilState(base64Business);
   const [active, setActive] = useRecoilState(activeModalScreen);
-  const [error, setError] = useState(false)
+  const [error, setError] = useState(false);
   const { business } = route.params;
 
   function urlToBlob(url) {
@@ -43,8 +48,8 @@ const StepFour = ({ navigation, route }) => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [6, 4],
-      quality: 0.1,
+      // aspect: [6, 4],
+      quality: 0.8,
       base64: true,
     });
     if (!result.canceled) {
@@ -53,7 +58,7 @@ const StepFour = ({ navigation, route }) => {
       const blobData = await urlToBlob(uri);
       setBlobImage(blobData);
       setImage(uri);
-      setError(false)
+      setError(false);
     }
   };
   // useEffect(() => {}, []);
@@ -64,9 +69,7 @@ const StepFour = ({ navigation, route }) => {
           <ScrollView style={{ flex: 1 }}>
             <View style={[styles.modalContent]}>
               <View style={[styles.modalTop]}>
-              <StepClear
-                  navig={() => navigation.navigate("Unprofile")}
-                />
+                <StepClear navig={() => navigation.navigate("Unprofile")} />
                 {/* <Pressable
                   onPress={() => {
                     navigation.navigate("Unprofile");
@@ -130,6 +133,7 @@ const StepFour = ({ navigation, route }) => {
                           width: 295,
                           height: 295,
                           borderRadius: 5,
+                          resizeMode: "stretch",
                         }}
                         source={{ uri: image }}
                       />
@@ -145,7 +149,21 @@ const StepFour = ({ navigation, route }) => {
                     )}
                   </View>
                 </Pressable>
-                {error && <Text style={{fontFamily: 'bold', fontSize: 16, color: 'red', textAlign: 'center', position: 'absolute', bottom: -30, left: 40}}>Tienes que subir una imagen</Text>}
+                {error && (
+                  <Text
+                    style={{
+                      fontFamily: "bold",
+                      fontSize: 16,
+                      color: "red",
+                      textAlign: "center",
+                      position: "absolute",
+                      bottom: -30,
+                      left: 40,
+                    }}
+                  >
+                    Tienes que subir una imagen
+                  </Text>
+                )}
               </View>
               <View style={[styles.modalBott]}>
                 <Pressable
@@ -194,9 +212,9 @@ const StepFour = ({ navigation, route }) => {
                   ]}
                   onPress={() => {
                     if (!image) {
-                      setError(true)
-                      return
-                    };
+                      setError(true);
+                      return;
+                    }
                     navigation.push("StepFive", {
                       business: business,
                     });

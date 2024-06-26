@@ -13,6 +13,7 @@ import {
   imageBusiness,
   mapBusiness,
   optionBussines,
+  profileState,
   selectLocation,
 } from "@/atoms";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -31,7 +32,10 @@ const StepClear = ({ navig, complete = false }) => {
     useRecoilState(directionBusiness);
   const [active, setActive] = useRecoilState(activeModalScreen);
   const [selectOption, setSelectOption] = useRecoilState(optionBussines);
+  const [stateProfile, setStateProfile] = useRecoilState(profileState);
+
   const BlankInputs = () => {
+    setStateProfile(!stateProfile)
     setDirection({});
     setMap({});
     setImage(null);
