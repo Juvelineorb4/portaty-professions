@@ -1,22 +1,25 @@
 import React, { useState, useEffect } from "react";
 import * as Location from "expo-location";
 // recoil
-import { useSetRecoilState } from "recoil";
-import { mapUser } from "@/atoms";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { locationPermission, mapUser } from "@/atoms";
 const useLocation = () => {
   const [location, setLocation] = useState(null);
   const setUserLocation = useSetRecoilState(mapUser);
+  const [locationStatus, setLocationStatus] =
+    useRecoilState(locationPermission);
   useEffect(() => {
     let subscription;
 
     const startLocationUpdates = async () => {
       try {
         const { status } = await Location.requestForegroundPermissionsAsync();
-
         if (status !== "granted") {
-          setError("Permiso de ubicación denegado");
+          setLocationStatus(status);
           return;
         }
+
+        setLocationStatus(status);
 
         subscription = await Location.watchPositionAsync(
           {

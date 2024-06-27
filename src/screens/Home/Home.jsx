@@ -1,10 +1,13 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
+import * as Location from "expo-location";
 import {
   View,
   Text,
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
+  Linking,
+  PermissionsAndroid,
 } from "react-native";
 import { Auth, API } from "aws-amplify";
 import Grid from "@/components/Home/Grid";
@@ -90,7 +93,39 @@ const Home = ({ navigation, route }) => {
     setLoading(false);
   };
 
+  /* Permiso Ubicacion */
+
+  const openAppSettings = async () => {
+    try {
+      // await Linking.openSettings();
+    } catch (error) {
+      console.log("Error al abrir la configuración:", error);
+    }
+  };
+
+  const checkLocationPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+      );
+      if (granted) {
+        console.log("Permiso de ubicación concedido");
+
+        // Realiza acciones según el permiso concedido
+      } else {
+        console.log("Permiso de ubicación denegado");
+        // Realiza acciones según el permiso denegado
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        console.log("aqui", status);
+      }
+    } catch (error) {
+      console.error("Error al verificar permiso:", error);
+    }
+  };
+
   useLayoutEffect(() => {
+    openAppSettings();
+    checkLocationPermission();
     fetchFavorites();
     const updateSub = API.graphql({
       query: subscriptions.onUpdateUsers,
