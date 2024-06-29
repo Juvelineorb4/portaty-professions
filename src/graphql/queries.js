@@ -103,6 +103,42 @@ export const AppVersionByDate = /* GraphQL */ `
     }
   }
 `;
+export const getNotifiationHistory = /* GraphQL */ `
+  query GetNotifiationHistory($id: ID!) {
+    getNotifiationHistory(id: $id) {
+      id
+      title
+      message
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listNotifiationHistories = /* GraphQL */ `
+  query ListNotifiationHistories(
+    $filter: ModelNotifiationHistoryFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listNotifiationHistories(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        title
+        message
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const getArea = /* GraphQL */ `
   query GetArea($id: ID!) {
     getArea(id: $id) {

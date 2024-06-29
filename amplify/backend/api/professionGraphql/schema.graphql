@@ -1,4 +1,13 @@
 # schema
+type NotifiationHistory
+  @model
+  @auth(
+    rules: [{ allow: groups, groups: ["sp", "admin"] }, { allow: public }]
+  ) {
+  id: ID!
+  title: String!
+  message: String
+}
 type AppVersionHistory
   @model
   @auth(
@@ -65,6 +74,7 @@ type Users
       rules: [
         { allow: owner, operations: [read, delete] }
         { allow: groups, groups: ["admin"], operations: [read] }
+        { allow: groups, groups: ["admin"], operations: [read] }
       ]
     )
   name: String
@@ -86,7 +96,12 @@ type Users
       ]
     )
   email: String
-    @auth(rules: [{ allow: owner }])
+    @auth(
+      rules: [
+        { allow: owner }
+        { allow: groups, groups: ["admin"], operations: [read] }
+      ]
+    )
     @index(name: "byEmailUser", queryField: "userByEmail")
   identityID: ID
     @auth(

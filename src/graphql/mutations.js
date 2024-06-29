@@ -148,6 +148,51 @@ export const deleteComplaints = /* GraphQL */ `
     }
   }
 `;
+export const createNotifiationHistory = /* GraphQL */ `
+  mutation CreateNotifiationHistory(
+    $input: CreateNotifiationHistoryInput!
+    $condition: ModelNotifiationHistoryConditionInput
+  ) {
+    createNotifiationHistory(input: $input, condition: $condition) {
+      id
+      title
+      message
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateNotifiationHistory = /* GraphQL */ `
+  mutation UpdateNotifiationHistory(
+    $input: UpdateNotifiationHistoryInput!
+    $condition: ModelNotifiationHistoryConditionInput
+  ) {
+    updateNotifiationHistory(input: $input, condition: $condition) {
+      id
+      title
+      message
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteNotifiationHistory = /* GraphQL */ `
+  mutation DeleteNotifiationHistory(
+    $input: DeleteNotifiationHistoryInput!
+    $condition: ModelNotifiationHistoryConditionInput
+  ) {
+    deleteNotifiationHistory(input: $input, condition: $condition) {
+      id
+      title
+      message
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const createArea = /* GraphQL */ `
   mutation CreateArea(
     $input: CreateAreaInput!

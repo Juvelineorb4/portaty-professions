@@ -85,6 +85,48 @@ export const onDeleteReports = /* GraphQL */ `
     }
   }
 `;
+export const onCreateNotifiationHistory = /* GraphQL */ `
+  subscription OnCreateNotifiationHistory(
+    $filter: ModelSubscriptionNotifiationHistoryFilterInput
+  ) {
+    onCreateNotifiationHistory(filter: $filter) {
+      id
+      title
+      message
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateNotifiationHistory = /* GraphQL */ `
+  subscription OnUpdateNotifiationHistory(
+    $filter: ModelSubscriptionNotifiationHistoryFilterInput
+  ) {
+    onUpdateNotifiationHistory(filter: $filter) {
+      id
+      title
+      message
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteNotifiationHistory = /* GraphQL */ `
+  subscription OnDeleteNotifiationHistory(
+    $filter: ModelSubscriptionNotifiationHistoryFilterInput
+  ) {
+    onDeleteNotifiationHistory(filter: $filter) {
+      id
+      title
+      message
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const onCreateArea = /* GraphQL */ `
   subscription OnCreateArea($filter: ModelSubscriptionAreaFilterInput) {
     onCreateArea(filter: $filter) {
