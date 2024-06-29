@@ -1,4 +1,10 @@
-import { View, Text, TouchableOpacity, Linking, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Linking,
+  ScrollView,
+} from "react-native";
 import React from "react";
 import {
   Entypo,
@@ -14,12 +20,12 @@ import styles from "@/utils/styles/Unprofile.module.css";
 const Contact = () => {
   const global = require("@/utils/styles/global.js");
   const openCall = () => {
-    const url = `tel://+573203890732`;
+    const url = `tel://+584123265549`;
     Linking.openURL(url);
   };
   const openWs = () => {
     const url =
-      "https://api.whatsapp.com/send?phone=573203890732&text=Buenas%2C%20me%20gustaria%20realizar%20una%20consulta!";
+      "https://api.whatsapp.com/send?phone=584123265549&text=Buenas%2C%20me%20gustaria%20realizar%20una%20consulta!";
     Linking.openURL(url);
   };
 
@@ -78,7 +84,7 @@ const Contact = () => {
                   Abrir Instagram
                 </Text>
                 <Text style={{ fontFamily: "light", fontSize: 12, width: 150 }}>
-                  @portatyapp
+                  @portaty_app
                 </Text>
               </View>
             </View>
@@ -91,7 +97,7 @@ const Contact = () => {
               source={require("@/utils/images/arrow_right.png")}
             />
           </TouchableOpacity>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={{
               padding: 20,
               flexDirection: "row",
@@ -142,7 +148,7 @@ const Contact = () => {
               }}
               source={require("@/utils/images/arrow_right.png")}
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity
             style={{
               padding: 20,
@@ -232,7 +238,7 @@ const Contact = () => {
             <View style={{ marginLeft: 10 }}>
               <Text style={{ fontFamily: "medium", fontSize: 15 }}>Llamar</Text>
               <Text style={{ fontFamily: "light", fontSize: 12, width: 150 }}>
-                +57 320 3890732
+                +58 412 3265549
               </Text>
             </View>
           </View>
@@ -277,7 +283,7 @@ const Contact = () => {
                 Abrir WhatsApp
               </Text>
               <Text style={{ fontFamily: "light", fontSize: 12, width: 150 }}>
-                +57 320 3890732
+                +58 412 3265549
               </Text>
             </View>
           </View>
@@ -299,14 +305,18 @@ const Contact = () => {
           {`Correos electrónicos`}
         </Text>
         <View style={[styles.line, global.bgMidGray]} />
-        <View style={{
-            flexDirection: 'row',
-            alignItems: 'center',
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
             padding: 20,
-            paddingBottom: 100
-        }}>
+            paddingBottom: 100,
+          }}
+        >
           <Fontisto name="email" size={20} color="#1f1f1f" />
-          <Text style={{ fontSize: 14, fontFamily: "lightItalic", marginLeft: 5 }}>
+          <Text
+            style={{ fontSize: 14, fontFamily: "lightItalic", marginLeft: 5 }}
+          >
             soporte@portaty.com
           </Text>
         </View>
