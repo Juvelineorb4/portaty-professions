@@ -184,7 +184,8 @@ const SearchPost = ({ route, navigation }) => {
       }
 
       let schedule = JSON.parse(business?.data?.getBusiness.schedule);
-      filterSchedule(schedule.shedule, schedule.type);
+      console.log(business?.data?.getBusiness);
+      if (schedule) filterSchedule(schedule.shedule, schedule.type);
       return setPost(business?.data?.getBusiness);
     } catch (error) {
       console.log(error);
@@ -822,7 +823,7 @@ const SearchPost = ({ route, navigation }) => {
                     marginRight: 3,
                   }}
                 >
-                  {listRatings[0].stars} de 5
+                  {listRatings[0]?.stars} de 5
                 </Text>
                 <Ionicons name="star" size={12} color="#ffb703" />
                 <Text
@@ -832,7 +833,7 @@ const SearchPost = ({ route, navigation }) => {
                     marginLeft: 5,
                   }}
                 >
-                  {listRatings[0].user.name} {listRatings[0].user.lastName}
+                  {listRatings[0]?.user?.name} {listRatings[0]?.user?.lastName}
                 </Text>
               </View>
               <Text
@@ -841,7 +842,7 @@ const SearchPost = ({ route, navigation }) => {
                   fontSize: 13,
                 }}
               >
-                {listRatings[0].description}
+                {listRatings[0]?.description}
               </Text>
             </View>
             <View

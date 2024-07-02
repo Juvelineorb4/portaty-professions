@@ -29,6 +29,7 @@ const StepThree = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
   const { control, handleSubmit } = useForm();
   const animation = useRef(null);
+  const { business } = route.params;
   const userLocation = useRecoilValue(mapUser)
   const map = useRecoilValue(mapBusiness);
   const [selectionLocation, setSelectionLocation] =
@@ -137,7 +138,7 @@ const StepThree = ({ navigation, route }) => {
                     },
                   ]}
                   onPress={() =>
-                    navigation.navigate("FormNavigatorTwo")
+                    navigation.navigate("StepTwo", { business: business })
                   }
                 >
                   <Feather name="arrow-left-circle" size={30} color="black" />
@@ -171,7 +172,7 @@ const StepThree = ({ navigation, route }) => {
                       setSelectionLocation(true);
                       return
                     }
-                    navigation.navigate("FormNavigatorFour");
+                    navigation.navigate("StepFour", { business: business });
                   }}
                 >
                   <Text

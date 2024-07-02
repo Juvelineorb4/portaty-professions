@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#1f1f1f',
     backgroundColor: '#ffb703',
-    height: 75
+    height: 45
   },
   modalText: {
     fontFamily: 'bold',

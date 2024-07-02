@@ -205,6 +205,7 @@ const Tabs = () => {
         component={ProfileNavigator}
 
       />
+      
     </Tab.Navigator>
   );
 };

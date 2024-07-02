@@ -220,19 +220,19 @@ const StepFive = ({ navigation, route }) => {
   useEffect(() => {}, []);
   return (
     <View style={[global.bgWhite, styles.container]}>
-      <Modal animationType="none" transparent={active} visible={active}>
-        <View style={[styles.modalMain]}>
-          <ScrollView style={{ flex: 1 }}>
-            <View style={[styles.modalContent]}>
-              <View style={[styles.modalTop]}>
-                <StepClear
-                  navig={() => {
-                    navigation.reset({
-                      routes: [{ name: "Unprofile" }],
-                    });
-                  }}
-                />
-                {/* <Pressable
+      {/* <Modal animationType="none" transparent={active} visible={active}> */}
+      <View style={[styles.modalMain]}>
+        <ScrollView style={{ flex: 1 }}>
+          <View style={[styles.modalContent]}>
+            <View style={[styles.modalTop]}>
+              <StepClear
+                navig={() => {
+                  navigation.reset({
+                    routes: [{ name: "Unprofile" }],
+                  });
+                }}
+              />
+              {/* <Pressable
                   onPress={() => {
                     navigation.reset({
                       routes: [{ name: "Unprofile" }],
@@ -248,199 +248,200 @@ const StepFive = ({ navigation, route }) => {
                     source={require("@/utils/images/arrow_back.png")}
                   />
                 </Pressable> */}
-                <View style={{ marginBottom: 20, marginTop: -15 }}>
-                  <View>
-                    <Text
-                      style={{
-                        fontFamily: "regular",
-                        fontSize: 13,
-                        marginBottom: 5,
-                        marginTop: 20,
-                        textAlign: "justify",
-                      }}
-                    >
-                      Algunos de los siguientes datos son opcionales pero
-                      ayudará a su negocio a mejorar las búsquedas con nuestros
-                      usuarios.
-                    </Text>
-                  </View>
-                </View>
-              </View>
-              <View style={[styles.modalMid]}>
-                <CustomInput
-                  control={control}
-                  name={`description`}
-                  placeholder={`Escribe una descripcion de tu negocio. Hacerla lo mas detallada posible mejorara tu posicionamiento en la busqueda`}
-                  styled={{
-                    text: styles.textInputDescription,
-                    label: [styles.labelInput],
-                    error: styles.errorInputDescription,
-                    input: [styles.inputContainerDescription],
-                    placeholder: styles.placeholderDescription,
-                  }}
-                  lines={10}
-                  area={true}
-                  text={`Descripcion`}
-                  rules={{
-                    required: es.businessForm.register.company.rules,
-                  }}
-                  max={500}
-                />
-
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <CustomInput
-                    control={control}
-                    name={`whatsapp`}
-                    placeholder={`Tu link de whatsapp`}
-                    styled={{
-                      text: styles.textInputBot,
-                      label: [styles.labelInput],
-                      error: styles.errorInput,
-                      input: [styles.inputContainerBot],
-                      placeholder: styles.placeholderBot,
-                    }}
-                    text={`WhatsApp`}
-                  />
-                  <CustomInput
-                    control={control}
-                    name={`instagram`}
-                    placeholder={`@user`}
-                    styled={{
-                      text: styles.textInputBot,
-                      label: [styles.labelInput],
-                      error: styles.errorInput,
-                      input: [styles.inputContainerBot],
-                      placeholder: styles.placeholderBot,
-                    }}
-                    text={`Instagram`}
-                  />
-                </View>
-                <Text
-                  style={{
-                    fontFamily: "light",
-                    fontSize: 12,
-                    marginTop: -10,
-                    marginBottom: 10,
-                  }}
-                >
-                  Si no tienes un link de WhatsApp te generaremos uno
-                  automaticamente con el registro
-                </Text>
-                <CustomInput
-                  control={control}
-                  name={`facebook`}
-                  placeholder={`www.facebook.com/user`}
-                  styled={{
-                    text: styles.textInput,
-                    label: [styles.labelInput],
-                    error: styles.errorInput,
-                    input: [styles.inputContainer],
-                    placeholder: styles.placeholder,
-                  }}
-                  text={`Facebook`}
-                />
-              </View>
-              <View style={[styles.modalBott]}>
-                <Pressable
-                  style={[
-                    {
-                      borderWidth: 1,
-                      width: 120,
-                      height: 60,
-                      borderRadius: 8,
-                      alignSelf: "flex-end",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      flexDirection: "row",
-                      justifyContent: "space-around",
-                      paddingHorizontal: 10,
-                    },
-                  ]}
-                  onPress={() =>
-                    navigation.push("StepFour", { business: dataB.business })
-                  }
-                >
-                  <Feather name="arrow-left-circle" size={30} color="black" />
-                  <Text
-                    style={[
-                      { fontFamily: "bold", fontSize: 18, color: "#1f1f1f" },
-                    ]}
-                  >
-                    Atras
-                  </Text>
-                </Pressable>
-                <Pressable
-                  style={[
-                    global.bgYellow,
-                    {
-                      borderWidth: 1,
-                      width: 150,
-                      height: 60,
-                      borderRadius: 8,
-                      alignSelf: "flex-end",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      flexDirection: "row",
-                      justifyContent: "space-around",
-                      paddingHorizontal: 10,
-                    },
-                  ]}
-                  onPress={handleSubmit(StepRegister)}
-                >
-                  {loading ? (
-                    <ActivityIndicator size={`large`} color={`#1f1f1f`} />
-                  ) : (
-                    <View
-                      style={{
-                        flex: 1,
-                        flexDirection: "row",
-                        justifyContent: "space-around",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Text
-                        style={[
-                          {
-                            fontFamily: "bold",
-                            fontSize: 18,
-                            color: "#1f1f1f",
-                          },
-                        ]}
-                      >
-                        Registrar
-                      </Text>
-                      <FontAwesome5
-                        name="check-circle"
-                        size={28}
-                        color="#1f1f1f"
-                      />
-                    </View>
-                  )}
-                </Pressable>
-              </View>
             </View>
-            <ModalAlert
-              text={error ? error : `Tu negocio ha sido registrado con exito`}
-              close={() => {
-                if (error) {
-                  setVisible(false);
+            <View style={[styles.modalMid]}>
+              <View style={{ marginBottom: 20, marginTop: -15 }}>
+                <View>
+                  <Text
+                    style={{
+                      fontFamily: "regular",
+                      fontSize: 13,
+                      marginBottom: 5,
+                      marginTop: -30,
+                      textAlign: "justify",
+                    }}
+                  >
+                    Algunos de los siguientes datos son opcionales pero ayudará
+                    a su negocio a mejorar las búsquedas con nuestros usuarios.
+                  </Text>
+                </View>
+              </View>
+              <CustomInput
+                control={control}
+                name={`description`}
+                placeholder={`Escribe una descripcion de tu negocio. Hacerla lo mas detallada posible mejorara tu posicionamiento en la busqueda`}
+                styled={{
+                  text: styles.textInputDescription,
+                  label: [styles.labelInput],
+                  error: styles.errorInputDescription,
+                  input: [styles.inputContainerDescription],
+                  placeholder: styles.placeholderDescription,
+                }}
+                lines={10}
+                area={true}
+                text={`Descripcion`}
+                placeholderTextColor={'#1f1f1f'}
+                rules={{
+                  required: es.businessForm.register.company.rules,
+                }}
+                max={500}
+              />
+
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <CustomInput
+                  control={control}
+                  name={`whatsapp`}
+                  placeholder={`Tu link de whatsapp`}
+                  styled={{
+                    text: styles.textInputBot,
+                    label: [styles.labelInput],
+                    input: [styles.inputContainerBot],
+                    placeholder: styles.placeholderBot,
+                  }}
+                  placeholderTextColor={'#1f1f1f'}
+                  text={`WhatsApp`}
+                />
+                <CustomInput
+                  control={control}
+                  name={`instagram`}
+                  placeholder={`@user`}
+                  styled={{
+                    text: styles.textInputBot,
+                    label: [styles.labelInput],
+                    input: [styles.inputContainerBot],
+                    placeholder: styles.placeholderBot,
+                  }}
+                  placeholderTextColor={'#1f1f1f'}
+                  text={`Instagram`}
+                />
+              </View>
+              <Text
+                style={{
+                  fontFamily: "light",
+                  fontSize: 12,
+                  marginTop: -10,
+                  marginBottom: 10,
+                }}
+              >
+                Si no tienes un link de WhatsApp te generaremos uno
+                automaticamente con el registro
+              </Text>
+              <CustomInput
+                control={control}
+                name={`facebook`}
+                placeholder={`www.facebook.com/user`}
+                styled={{
+                  text: styles.textInput,
+                  label: [styles.labelInput],
+                  input: [styles.inputContainer],
+                  placeholder: styles.placeholder,
+                  
+                }}
+                text={`Facebook`}
+                placeholderTextColor={'#1f1f1f'}
+              />
+            </View>
+            <View style={[styles.modalBott]}>
+              <Pressable
+                style={[
+                  {
+                    borderWidth: 1,
+                    width: 120,
+                    height: 60,
+                    borderRadius: 8,
+                    alignSelf: "flex-end",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flexDirection: "row",
+                    justifyContent: "space-around",
+                    paddingHorizontal: 10,
+                  },
+                ]}
+                onPress={() =>
+                  navigation.push("StepFour", { business: dataB.business })
                 }
-              }}
-              icon={
-                error
-                  ? require("@/utils/images/error.png")
-                  : require("@/utils/images/successful.png")
+              >
+                <Feather name="arrow-left-circle" size={30} color="black" />
+                <Text
+                  style={[
+                    { fontFamily: "bold", fontSize: 18, color: "#1f1f1f" },
+                  ]}
+                >
+                  Atras
+                </Text>
+              </Pressable>
+              <Pressable
+                style={[
+                  global.bgYellow,
+                  {
+                    borderWidth: 1,
+                    width: 150,
+                    height: 60,
+                    borderRadius: 8,
+                    alignSelf: "flex-end",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flexDirection: "row",
+                    justifyContent: "space-around",
+                    paddingHorizontal: 10,
+                  },
+                ]}
+                onPress={handleSubmit(StepRegister)}
+              >
+                {loading ? (
+                  <ActivityIndicator size={`large`} color={`#1f1f1f`} />
+                ) : (
+                  <View
+                    style={{
+                      flex: 1,
+                      flexDirection: "row",
+                      justifyContent: "space-around",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text
+                      style={[
+                        {
+                          fontFamily: "bold",
+                          fontSize: 18,
+                          color: "#1f1f1f",
+                        },
+                      ]}
+                    >
+                      Registrar
+                    </Text>
+                    <FontAwesome5
+                      name="check-circle"
+                      size={28}
+                      color="#1f1f1f"
+                    />
+                  </View>
+                )}
+              </Pressable>
+            </View>
+          </View>
+          <ModalAlert
+            text={error ? error : `Tu negocio ha sido registrado con exito`}
+            close={() => {
+              if (error) {
+                setVisible(false);
               }
-              open={visible}
-            />
-          </ScrollView>
-        </View>
-      </Modal>
+            }}
+            icon={
+              error
+                ? require("@/utils/images/error.png")
+                : require("@/utils/images/successful.png")
+            }
+            open={visible}
+          />
+        </ScrollView>
+      </View>
+      {/* </Modal> */}
     </View>
   );
 };

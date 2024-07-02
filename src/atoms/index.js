@@ -117,7 +117,7 @@ export const mapUser = atom({
 });
 export const locationPermission = atom({
   key: "locationPermissionValue",
-  default: '',
+  default: "",
 });
 export const favoriteSelection = atom({
   key: "favoriteSelectionValue",
@@ -174,5 +174,14 @@ export const isUserTracking = atom({
 
 export const connectionStatus = atom({
   key: "connectionStatusValue",
+  default: null,
+});
+
+export const stepOneParams = atom({
+  key: "stepOneParamsValue",
+  default: null,
+});
+export const stepCompleteParams = atom({
+  key: "stepCompleteParamsValue",
   default: null,
 });

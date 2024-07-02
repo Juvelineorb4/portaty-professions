@@ -22,6 +22,7 @@ import FormNavigatorFour from "../FormNavigationFour";
 import FormNavigatorFive from "../FormNavigationFive";
 import FormNavigatorComplete from "../FormNavigationComplete";
 import Report from "@/screens/Profile/Report";
+import StepOne from "@/screens/Profile/Form/StepOne";
 
 const ProfileNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -43,7 +44,7 @@ const ProfileNavigator = () => {
         options={{
           animation: "slide_from_right",
           headerShown: false,
-          presentation: 'transparentModal',
+          presentation: "transparentModal",
         }}
       />
       <Stack.Screen
@@ -52,7 +53,7 @@ const ProfileNavigator = () => {
         options={{
           animation: "slide_from_right",
           headerShown: false,
-          presentation: 'transparentModal',
+          presentation: "transparentModal",
         }}
       />
       <Stack.Screen
@@ -61,7 +62,7 @@ const ProfileNavigator = () => {
         options={{
           animation: "slide_from_right",
           headerShown: false,
-          presentation: 'transparentModal',
+          presentation: "transparentModal",
         }}
       />
       <Stack.Screen
@@ -70,7 +71,7 @@ const ProfileNavigator = () => {
         options={{
           animation: "slide_from_right",
           headerShown: false,
-          presentation: 'transparentModal',
+          presentation: "transparentModal",
         }}
       />
       <Stack.Screen
@@ -79,7 +80,7 @@ const ProfileNavigator = () => {
         options={{
           animation: "slide_from_right",
           headerShown: false,
-          presentation: 'transparentModal',
+          presentation: "transparentModal",
         }}
       />
       <Stack.Screen
@@ -88,7 +89,7 @@ const ProfileNavigator = () => {
         options={{
           animation: "slide_from_right",
           headerShown: false,
-          presentation: 'transparentModal',
+          presentation: "transparentModal",
         }}
       />
 
@@ -170,6 +171,17 @@ const ProfileNavigator = () => {
         options={{
           animation: "slide_from_right",
           header: (props) => <LeftHeader {...props} />,
+        }}
+      />
+
+      {/* Registro de negocios */}
+      <Stack.Screen
+        name="StepOne"
+        component={StepOne}
+        options={{
+          animation: "slide_from_right",
+          headerShown: false,
+          // presentation: "transparentModal",
         }}
       />
     </Stack.Navigator>
