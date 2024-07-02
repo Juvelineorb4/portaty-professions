@@ -50,7 +50,11 @@ const Home = ({ navigation, route }) => {
   const [loading, setLoading] = useState(false);
   const fetchFavorites = async () => {
     setLoading(true);
-
+    if (userAuth === null) {
+      console.log(userAuth)
+      setLoading(false);
+      return;
+    }
     try {
       const fetchAllFavorites = async (nextToken, result = []) => {
         const response = await API.graphql({
@@ -125,9 +129,11 @@ const Home = ({ navigation, route }) => {
     });
     return () => {
       fetchFavorites();
-      updateSub.unsubscribe();
+      if (updateSub) {
+        updateSub.unsubscribe();
+      }
     };
-  }, [route, statusFavorites, inputFavorite, updateFavorite]);
+  }, [route, statusFavorites, inputFavorite, updateFavorite, userAuth]);
 
   if (updateAvailable === true)
     return (
@@ -190,6 +196,34 @@ const Home = ({ navigation, route }) => {
         />
       </View>
     );
+
+    if (!userAuth && !loading)
+      return (
+        <View
+          style={[
+            {
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+              paddingHorizontal: 20,
+              paddingBottom: 80,
+            },
+            global.bgWhite,
+          ]}
+        >
+          <Text style={{ fontSize: 16, fontFamily: "light", textAlign: 'center' }}>
+            Ingresa a tu cuenta para guardar tus negocios favoritos
+          </Text>
+          <CustomButton
+            text={`Iniciar sesion`}
+            handlePress={() => {
+              navigation.navigate('Login_Welcome');
+            }}
+            textStyles={[styles.textSearch, global.black]}
+            buttonStyles={[styles.search, global.bgYellow]}
+          />
+        </View>
+      );
 
   if (favoritesList.length !== 0)
     return (

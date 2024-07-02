@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Alert,
   RefreshControl,
+  ActivityIndicator,
 } from "react-native";
 import React, { useLayoutEffect, useState } from "react";
 import styles from "@/utils/styles/Unprofile.js";
@@ -22,6 +23,7 @@ import { useEffect } from "react";
 import { setStatusBarNetworkActivityIndicatorVisible } from "expo-status-bar";
 import ModalAlert from "@/components/ModalAlert";
 import { useCallback } from "react";
+import CustomButton from "@/components/CustomButton";
 
 const Unprofile = ({ navigation, route }) => {
   const { buttons } = settings;
@@ -34,6 +36,7 @@ const Unprofile = ({ navigation, route }) => {
   const [visible, setVisible] = useState(false);
   const [createBussiness, setCreateBussiness] = useState(true);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const onRefresh = () => {
     setRefreshing(true);
@@ -46,7 +49,11 @@ const Unprofile = ({ navigation, route }) => {
   const status = useRecoilValue(profileState);
 
   const onHandleLogout = async () => {
-    await Auth.signOut();
+    setLoading(true);
+    setTimeout(async () => {
+      await Auth.signOut();
+      setLoading(false);
+    }, 2000);
   };
   const User = async () => {
     try {
@@ -89,7 +96,60 @@ const Unprofile = ({ navigation, route }) => {
     User();
   }, [userAuth, status, refreshing, isFocused]);
 
-  if (!userAuth?.attributes) return <SkeletonUnprofile />;
+  // if (!userAuth?.attributes) return <SkeletonUnprofile />;
+  if (loading)
+    return (
+      <View
+        style={[
+          { flex: 1, alignItems: "center", justifyContent: "center" },
+          global.bgWhite,
+        ]}
+      >
+        <ActivityIndicator size="large" color="#ffb703" />
+      </View>
+    );
+  if (!userAuth)
+    return (
+      <View
+        style={[
+          {
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+            paddingHorizontal: 20,
+            paddingBottom: 80,
+          },
+          global.bgWhite,
+        ]}
+      >
+        <Text
+          style={{ fontSize: 16, fontFamily: "light", textAlign: "center" }}
+        >
+          Ingresa a tu cuenta para acceder a todas las funcionalidades que te
+          ofrecemos, como:
+        </Text>
+        <Text
+          style={{
+            fontSize: 16,
+            fontFamily: "medium",
+            textAlign: "center",
+            marginTop: 10,
+          }}
+        >
+          Registrar un negocio, administrar tu cuenta, acceso a estadisticas y
+          mucho mas
+        </Text>
+        <CustomButton
+          text={`Iniciar sesion`}
+          handlePress={() => {
+            navigation.navigate("Login_Welcome");
+          }}
+          textStyles={[styles.textSearch, global.black]}
+          buttonStyles={[styles.search, global.bgYellow]}
+        />
+      </View>
+    );
+
   return (
     <ScrollView
       style={[styles.container, global.bgWhite]}

@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "@/screens/Auth/Login";
 import RegisterNavigator from "./RegisterNavigator";
 import ForgotNavigator from "./ForgotNavigator";
+import LeftHeader from "@/components/Header/LeftHeader";
 
 
 const Stack = createNativeStackNavigator();
@@ -14,7 +15,8 @@ const LoginNavigator = () => {
         name={"Login"}
         component={Login}
         options={{
-          headerShown: false,
+          header: (props) => <LeftHeader {...props} />,
+          animation: "slide_from_right",
         }}
       />
       <Stack.Screen
