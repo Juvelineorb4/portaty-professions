@@ -284,7 +284,7 @@ const MapMarketBusiness = ({
                     <View style={{ flex: 1 }}>
                       {modalVisible && marketLocation && (
                         <MapView
-                          provider={PROVIDER_GOOGLE}
+                          // provider={PROVIDER_GOOGLE}
                           style={{ flex: 1 }}
                           showsUserLocation={modalVisible}
                           ref={mapRef}

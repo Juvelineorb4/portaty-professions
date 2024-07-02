@@ -9,7 +9,8 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: 40,
+    padding: 20,
+    paddingTop: 50,
   },
   title: {
     fontFamily: 'thinItalic',
@@ -48,7 +49,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fafafa',
+    backgroundColor: 'white',
     borderWidth: 1,
     borderColor: '#404040',
     padding: 11,
@@ -71,7 +72,6 @@ const styles = StyleSheet.create({
   },
   placeholder: {
     flex: 1,
-    marginLeft: 10,
     color: '#1f1f1f',
     fontSize: 12,
     fontFamily: 'regular',
@@ -80,29 +80,30 @@ const styles = StyleSheet.create({
   labelInput: {
     fontFamily: 'bold',
     fontSize: 14,
-    color: '#404040',
+    color: '#1f1f1f',
   },
   textInputBot: {
     flex: 1,
-    marginLeft: 10,
+    // marginLeft: 10,
     color: '#1f1f1f',
     fontFamily: 'regular',
     height: 55,
+    fontSize: 11,
   },
   inputContainerBot: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fafafa',
-    borderWidth: 0,
+    backgroundColor: 'white',
+    borderWidth: 1,
     width: 150,
     padding: 11,
     borderRadius: 8,
     margin: 3,
     height: 55,
+    marginBottom: 15
   },
   placeholderBot: {
     flex: 1,
-    marginLeft: 10,
     color: '#1f1f1f',
     fontSize: 11,
     fontFamily: 'regular',
@@ -111,16 +112,16 @@ const styles = StyleSheet.create({
   inputContainerDescription: {
     flexDirection: 'row',
     justifyContent: 'center',
-    backgroundColor: '#fafafa',
-    borderWidth: 0,
+    backgroundColor: 'white',
+    borderWidth: 1,
     padding: 11,
     borderRadius: 8,
     margin: 3,
     height: 130,
     width: 333,
+    marginBottom: 15
   },
   placeholderDescription: {
-    marginLeft: 10,
     color: '#1f1f1f',
     fontSize: 12,
     fontFamily: 'regular',
@@ -130,7 +131,7 @@ const styles = StyleSheet.create({
   },
   textInputDescription: {
     width: '100%',
-    padding: '0 10px',
+    padding: 10,
     color: '#1f1f1f',
     fontFamily: 'regular',
     textAlign: 'justify',

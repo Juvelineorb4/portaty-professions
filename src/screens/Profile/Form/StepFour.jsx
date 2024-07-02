@@ -22,6 +22,7 @@ import {
 import StepClear from "./StepClear";
 
 const StepFour = ({ navigation, route }) => {
+  const { business } = route.params;
   const global = require("@/utils/styles/global.js");
   const [image, setImage] = useRecoilState(imageBusiness);
   const [blobImage, setBlobImage] = useRecoilState(blobBusiness);
@@ -179,7 +180,9 @@ const StepFour = ({ navigation, route }) => {
                     paddingHorizontal: 10,
                   },
                 ]}
-                onPress={() => navigation.navigate("FormNavigatorThree")}
+                onPress={() =>
+                  navigation.navigate("StepThree", { business: business })
+                }
               >
                 <Feather name="arrow-left-circle" size={30} color="black" />
                 <Text
@@ -211,7 +214,7 @@ const StepFour = ({ navigation, route }) => {
                     setError(true);
                     return;
                   }
-                  navigation.navigate("FormNavigatorFive");
+                  navigation.navigate("StepFive", { business: business });
                 }}
               >
                 <Text

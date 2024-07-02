@@ -91,7 +91,7 @@ const StepTwo = ({ navigation, route }) => {
   }, []);
   return (
     <View style={[global.bgWhite, styles.container]}>
-      <Modal animationType="none" transparent={active} visible={active}>
+      {/* <Modal animationType="none" transparent={active} visible={active}> */}
         <View style={[styles.modalMain]}>
           <ScrollView style={{ flex: 1 }}>
             <View style={[styles.modalContent]}>
@@ -143,7 +143,9 @@ const StepTwo = ({ navigation, route }) => {
                     style={{
                       fontFamily: "medium",
                       fontSize: 20,
-                      marginBottom: 5,
+                      textAlign: 'center',
+                      marginBottom: 15,
+                      marginTop: -5
                     }}
                   >
                     ¿Qué ofrece tu negocio?
@@ -314,7 +316,7 @@ const StepTwo = ({ navigation, route }) => {
             </View>
           </ScrollView>
         </View>
-      </Modal>
+      {/* </Modal> */}
     </View>
   );
 };

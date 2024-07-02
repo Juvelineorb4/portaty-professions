@@ -1,4 +1,13 @@
 # schema
+type NotifiationHistory
+  @model
+  @auth(
+    rules: [{ allow: groups, groups: ["sp", "admin"] }, { allow: public }]
+  ) {
+  id: ID!
+  title: String!
+  message: String
+}
 type AppVersionHistory
   @model
   @auth(
@@ -55,17 +64,27 @@ type Users
   @auth(
     rules: [
       { allow: owner }
+      { allow: public, provider: iam, operations: [read] }
       { allow: private, provider: iam, operations: [read] }
+      { allow: groups, groups: ["admin"], operations: [read] }
     ]
   ) {
   id: ID
-  cognitoID: ID @auth(rules: [{ allow: owner, operations: [read, delete] }])
+  cognitoID: ID
+    @auth(
+      rules: [
+        { allow: owner, operations: [read, delete] }
+        { allow: groups, groups: ["admin"], operations: [read] }
+        { allow: groups, groups: ["admin"], operations: [read] }
+      ]
+    )
   name: String
     @auth(
       rules: [
         { allow: owner }
         { allow: private, provider: iam, operations: [read] }
         { allow: public, provider: iam, operations: [read] }
+        { allow: groups, groups: ["admin"], operations: [read] }
       ]
     )
   lastName: String
@@ -74,26 +93,50 @@ type Users
         { allow: owner }
         { allow: private, provider: iam, operations: [read] }
         { allow: public, provider: iam, operations: [read] }
+        { allow: groups, groups: ["admin"], operations: [read] }
       ]
     )
   email: String
-    @auth(rules: [{ allow: owner }])
+    @auth(
+      rules: [
+        { allow: owner }
+        { allow: groups, groups: ["admin"], operations: [read] }
+      ]
+    )
     @index(name: "byEmailUser", queryField: "userByEmail")
   identityID: ID
     @auth(
       rules: [
         { allow: owner }
         { allow: private, provider: iam, operations: [read] }
+        { allow: groups, groups: ["admin"], operations: [read] }
       ]
     )
-  gender: String @auth(rules: [{ allow: owner, operations: [read, delete] }])
+  gender: String
+    @auth(
+      rules: [
+        { allow: owner, operations: [read, delete] }
+        { allow: groups, groups: ["admin"], operations: [read] }
+      ]
+    )
   notificationToken: [String]
-    @auth(rules: [{ allow: owner, operations: [read, delete] }])
+    @auth(
+      rules: [
+        { allow: owner, operations: [read, delete] }
+        { allow: groups, groups: ["admin"], operations: [read] }
+      ]
+    )
   favorites: [Favorites] @hasMany(indexName: "byUsersFavorites", fields: ["id"])
   business: [Business] @hasMany(indexName: "byUsersBusiness", fields: ["id"])
   comments: [BusinessComment]
     @hasMany(indexName: "byUserComments", fields: ["id"])
-  owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }])
+  owner: String
+    @auth(
+      rules: [
+        { allow: owner, operations: [read, delete] }
+        { allow: groups, groups: ["admin"], operations: [read] }
+      ]
+    )
 }
 
 type Reports
@@ -115,6 +158,8 @@ type Business
   @auth(
     rules: [
       { allow: owner }
+      { allow: public }
+      { allow: public, provider: iam, operations: [read] }
       { allow: private, provider: iam, operations: [read] }
       { allow: private, operations: [read] }
     ]
@@ -144,11 +189,13 @@ type Business
   schedule: String
   comments: [BusinessComment]
     @hasMany(indexName: "byBusinessComments", fields: ["id"])
+  catalogpdf: String @default(value: "")
 }
 enum BusinessStatus {
   ENABLED
   DISABLED
   SUSPENDED
+  DELETED
 }
 
 type BusinessComment
@@ -173,6 +220,7 @@ type Favorites
   @auth(
     rules: [
       { allow: owner }
+      { allow: public, provider: iam, operations: [read] }
       { allow: private, provider: iam, operations: [read] }
       { allow: groups, groups: ["sp"], operations: [read] }
     ]
@@ -181,6 +229,7 @@ type Favorites
     @auth(
       rules: [
         { allow: owner }
+        { allow: public, provider: iam, operations: [read] }
         { allow: private, provider: iam, operations: [read] }
         { allow: groups, groups: ["sp"], operations: [read] }
       ]
@@ -194,6 +243,7 @@ type Favorites
     @auth(
       rules: [
         { allow: owner }
+        { allow: public, provider: iam, operations: [read] }
         { allow: private, provider: iam, operations: [read] }
         { allow: groups, groups: ["sp"], operations: [read] }
       ]

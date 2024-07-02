@@ -31,6 +31,9 @@
       },
       "bundleIdentifier": "com.teamportaty.appdev",
       "versionCode": 28,
+      "config": {
+        "googleMapsApiKey": "AIzaSyBaNnjNEIkGO3wo3HgOXDWFKliZD2Ynb5s"
+      },
       "entitlements": {
         "com.apple.developer.networking.wifi-info": true
       }
