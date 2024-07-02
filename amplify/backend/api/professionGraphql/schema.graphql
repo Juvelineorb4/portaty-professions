@@ -158,6 +158,7 @@ type Business
     rules: [
       { allow: owner }
       { allow: public }
+      { allow: public, provider: iam, operations: [read] }
       { allow: private, provider: iam, operations: [read] }
       { allow: private, operations: [read] }
     ]
@@ -193,6 +194,7 @@ enum BusinessStatus {
   ENABLED
   DISABLED
   SUSPENDED
+  DELETED
 }
 
 type BusinessComment
