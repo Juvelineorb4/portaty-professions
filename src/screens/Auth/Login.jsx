@@ -12,7 +12,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { Auth } from "aws-amplify";
-import styles from "@/utils/styles/Login.module.css";
+import styles from "@/utils/styles/Login.js";
 import { es } from "@/utils/constants/lenguage";
 import CustomInput from "@/components/CustomInput";
 import CustomButton from "@/components/CustomButton";
@@ -27,7 +27,8 @@ const Login = ({ navigation }) => {
   const { control, handleSubmit, watch } = useForm();
   const emailForm = watch("email");
   const global = require("@/utils/styles/global.js");
-  const EMAIL_REGEX = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
+  const EMAIL_REGEX =
+    /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)\s*$/;
   const { updateAvailable, fetchUpdate, updateVersion, updateDate } =
     useCheckAppVersion();
   const [errorActive, setErrorActive] = useState("");
@@ -129,67 +130,55 @@ const Login = ({ navigation }) => {
               }}
               source={require("@/utils/images/welcome.png")}
             />
-            <View
-              style={{
-                flex: 1,
+            <CustomInput
+              control={control}
+              name={`email`}
+              placeholder={es.authentication.register.email.placeholder}
+              styled={{
+                text: styles.textInput,
+                label: styles.labelInput,
+                error: styles.errorInput,
+                placeholder: styles.placeholder,
+                input: [styles.inputContainer, global.bgWhite],
               }}
-            >
-              <CustomInput
-                control={control}
-                name={`email`}
-                placeholder={es.authentication.register.email.placeholder}
-                styled={{
-                  text: styles.textInput,
-                  label: styles.labelInput,
-                  error: styles.errorInput,
-                  placeholder: styles.placeholder,
-                  input: [styles.inputContainer, global.bgWhite],
-                }}
-                text={`Correo electronico`}
-                // icon={require("@/utils/images/email.png")}
-                rules={{
-                  required: `Requerido`,
-                  pattern: {
-                    value: EMAIL_REGEX,
-                    message: "Email no valido.",
-                  },
-                }}
-              />
-            </View>
-            <View
-              style={{
-                flex: 1,
+              text={`Correo electronico`}
+              // icon={require("@/utils/images/email.png")}
+              rules={{
+                required: `Requerido`,
+                pattern: {
+                  value: EMAIL_REGEX,
+                  message: "Email no valido.",
+                },
               }}
-            >
-              <CustomInput
-                control={control}
-                name={`password`}
-                placeholder={`**********`}
-                styled={{
-                  text: styles.textInput,
-                  label: [styles.labelInput, global.topGray],
-                  error: styles.errorInput,
-                  placeholder: styles.placeholder,
-                  input: [styles.inputContainer, global.bgWhite],
-                  security: styles.security,
-                }}
-                text={`Contraseña`}
-                // icon={require("@/utils/images/password.png")}
-                security={true}
-                rules={{
-                  required: "Contraseña requerida",
-                  minLength: {
-                    value: 8,
-                    message: "8 caracteres minimo",
-                  },
-                }}
-              />
-            </View>
+            />
+            <CustomInput
+              control={control}
+              name={`password`}
+              placeholder={`**********`}
+              styled={{
+                text: styles.textInput,
+                label: [styles.labelInput, global.topGray],
+                error: styles.errorInput,
+                placeholder: styles.placeholder,
+                input: [styles.inputContainer, global.bgWhite],
+                security: styles.security,
+              }}
+              text={`Contraseña`}
+              // icon={require("@/utils/images/password.png")}
+              security={true}
+              rules={{
+                required: "Contraseña requerida",
+                minLength: {
+                  value: 8,
+                  message: "8 caracteres minimo",
+                },
+              }}
+            />
           </View>
         </ScrollView>
       </TouchableWithoutFeedback>
       <View style={styles.panel}>
-        <View style={{ height: 65 }}>
+        <View style={{ height: 65, marginBottom: 5 }}>
           <CustomButton
             text={
               isLoading ? (

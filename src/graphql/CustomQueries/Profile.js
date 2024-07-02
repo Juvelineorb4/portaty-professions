@@ -74,6 +74,7 @@ export const userByEmail = /* GraphQL */ `
             email
             phone
             description
+            schedule
             whatsapp
             instagram
             facebook
@@ -115,6 +116,7 @@ export const getBusiness = /* GraphQL */ `
       whatsapp
       instagram
       description
+      schedule
       facebook
       page
       coordinates {
@@ -165,6 +167,70 @@ export const getBusinessCoordinate = /* GraphQL */ `
         lat
         lon
       }
+    }
+  }
+`;
+
+export const listBusinessbyUserID = /* GraphQL */ `
+  query ListBusinessbyUserID(
+    $userID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelBusinessFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listBusinessbyUserID(
+      userID: $userID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userID
+        user {
+          id
+          cognitoID
+          name
+          lastName
+          email
+          identityID
+          gender
+          notificationToken
+          owner
+          createdAt
+          updatedAt
+        }
+        status
+        identityID
+        name
+        image
+        images
+        thumbnail
+        email
+        phone
+        whatsapp
+        instagram
+        facebook
+        page
+        coordinates {
+          lat
+          lon
+        }
+        activity
+        tags
+        favorites {
+          nextToken
+        }
+        description
+        prefer
+        schedule
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
     }
   }
 `;

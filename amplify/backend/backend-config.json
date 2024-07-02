@@ -15,6 +15,14 @@
         "authConfig": {
           "additionalAuthenticationProviders": [
             {
+              "apiKeyConfig": {
+                "apiKeyExpirationDate": "2025-06-04T19:30:19.823Z",
+                "apiKeyExpirationDays": 365,
+                "description": "PARA OTRAS OPErACIONES"
+              },
+              "authenticationType": "API_KEY"
+            },
+            {
               "authenticationType": "AMAZON_COGNITO_USER_POOLS",
               "userPoolConfig": {
                 "userPoolId": "authprofessions"
@@ -48,7 +56,9 @@
           "NAME",
           "BIRTHDATE"
         ],
-        "socialProviders": [],
+        "socialProviders": [
+          "GOOGLE"
+        ],
         "usernameAttributes": [
           "EMAIL"
         ],
@@ -62,6 +72,16 @@
   },
   "function": {},
   "geo": {},
+  "parameters": {
+    "AMPLIFY_auth_professions_googleClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "professions"
+        }
+      ]
+    }
+  },
   "storage": {
     "s3Professions": {
       "dependsOn": [],

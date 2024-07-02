@@ -16,7 +16,7 @@ import {
 import React, { useState, useEffect, useLayoutEffect } from "react";
 import * as customSearch from "@/graphql/CustomQueries/Search";
 import CustomSelect from "@/components/CustomSelect";
-import styles from "@/utils/styles/SharePage.module.css";
+import styles from "@/utils/styles/SharePage.js";
 import {
   FontAwesome5,
   MaterialCommunityIcons,
@@ -43,6 +43,7 @@ import { StorageAccessFramework } from "expo-file-system";
 import { useRef } from "react";
 import ModalAlert from "@/components/ModalAlert";
 import CustomButton from "@/components/CustomButton";
+import ModalReport from "@/components/ModalReport";
 
 const SharePage = ({ route, navigation }) => {
   const userAuth = useRecoilValue(userAuthenticated);
@@ -126,6 +127,7 @@ const SharePage = ({ route, navigation }) => {
   };
 
   const onDeleteFavorite = async () => {
+    // return
     const favorites = await API.graphql({
       query: customFavorites.deleteFavorites,
       variables: {
@@ -136,6 +138,7 @@ const SharePage = ({ route, navigation }) => {
       authMode: "AMAZON_COGNITO_USER_POOLS",
     });
     setSave("");
+    setListUpdate(!listUpdate);
     setNumberFavorite(0);
   };
 
@@ -219,11 +222,10 @@ const SharePage = ({ route, navigation }) => {
     const url = `tel://${post?.phone}`;
     Linking.openURL(url);
   };
-
   useEffect(() => {
     if (!save) fetchFavorite();
     fetchData();
-  }, [params]);
+  }, [save]);
   if (!post && nothing)
     return (
       <View
@@ -387,7 +389,6 @@ const SharePage = ({ route, navigation }) => {
             onViewableItemsChanged={onViewRef.current}
           />
         </View>
-        {console.log(showAgg)}
         {showAgg && (
           <View>
             <View
@@ -473,6 +474,34 @@ const SharePage = ({ route, navigation }) => {
             </TouchableOpacity> */}
           </View>
         )}
+
+        {/* Reporte */}
+        <TouchableOpacity
+          style={{
+            alignSelf: "flex-end",
+            paddingHorizontal: 20,
+            paddingBottom: 5,
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+          onPress={() => setVisible(true)}
+        >
+          <MaterialIcons name="report" size={22} color="black" />
+          <Text
+            style={[
+              global.black,
+              {
+                fontFamily: "bold",
+                fontSize: 12,
+                // marginLeft: 2,
+                // marginBottom: 3
+              },
+            ]}
+          >
+            Reportar negocio
+          </Text>
+        </TouchableOpacity>
+
         <View style={[styles.line, global.bgMidGray]} />
         <TouchableOpacity
           style={{
@@ -1129,11 +1158,10 @@ const SharePage = ({ route, navigation }) => {
         >
           <Text>Modal</Text>
         </TouchableOpacity> */}
-        <ModalAlert
-          text={`Seguro quieres reportar este negocio?`}
+        <ModalReport
+          businessID={post?.id}
           close={() => setVisible(false)}
           open={visible}
-          icon={require("@/utils/images/error.png")}
         />
       </ScrollView>
     </View>

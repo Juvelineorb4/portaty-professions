@@ -8,7 +8,7 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import styles from "@/utils/styles/Activity.module.css";
+import styles from "@/utils/styles/Activity.js";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { es } from "@/utils/constants/lenguage";

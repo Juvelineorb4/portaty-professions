@@ -153,6 +153,64 @@ export const textInputSearch = atom({
   default: "",
 });
 
+export const sheduleType = atom({
+  key: "sheduleTypeValue",
+  default: "Abierto durante un horario especifico",
+});
+export const shedulePush = atom({
+  key: "shedulePushValue",
+  default: [
+    {
+      name: "Lunes",
+      active: false,
+      index: 0,
+      hourStart: "08:00",
+      hourEnd: "16:00",
+    },
+    {
+      name: "Martes",
+      active: false,
+      index: 1,
+      hourStart: "08:00",
+      hourEnd: "16:00",
+    },
+    {
+      name: "Miercoles",
+      active: false,
+      index: 2,
+      hourStart: "08:00",
+      hourEnd: "16:00",
+    },
+    {
+      name: "Jueves",
+      active: false,
+      index: 3,
+      hourStart: "08:00",
+      hourEnd: "16:00",
+    },
+    {
+      name: "Viernes",
+      active: false,
+      index: 4,
+      hourStart: "08:00",
+      hourEnd: "16:00",
+    },
+    {
+      name: "Sabado",
+      active: false,
+      index: 5,
+      hourStart: "08:00",
+      hourEnd: "16:00",
+    },
+    {
+      name: "Domingo",
+      active: false,
+      index: 6,
+      hourStart: "08:00",
+      hourEnd: "16:00",
+    },
+  ],
+});
 export const activeModalScreen = atom({
   key: "activeModalScreenValue",
   default: true,

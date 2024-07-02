@@ -9,7 +9,7 @@ import {
   FlatList,
   TextInput,
 } from "react-native";
-import styles from "@/utils/styles/StepOne.module.css";
+import styles from "@/utils/styles/StepOne.js";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import CustomInput from "@/components/CustomInput";
@@ -18,10 +18,9 @@ import { AntDesign } from "@expo/vector-icons";
 import * as Cellular from "expo-cellular";
 import LottieView from "lottie-react-native";
 import { Feather } from "@expo/vector-icons";
-import { activeModalScreen, mapUser, stepOneParams, userAuthenticated } from "@/atoms";
+import { activeModalScreen, userAuthenticated } from "@/atoms";
 import { useRecoilState, useRecoilValue } from "recoil";
 import StepClear from "./StepClear";
-import * as Location from "expo-location";
 
 const StepOne = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
@@ -32,34 +31,13 @@ const StepOne = ({ navigation, route }) => {
   const [visibleCountries, setVisibleCountries] = useState(false);
   const [searchCountry, setSearchCountry] = useState("");
   const [active, setActive] = useRecoilState(activeModalScreen);
-  const [businessStepOne, setBusinessStepOne] = useRecoilState(stepOneParams);
-  const userLocation = useRecoilValue(mapUser);
+
   const animation = useRef(null);
   let data = route.params;
-
   async function getCountryCode(array) {
-    let geocode = await Location.reverseGeocodeAsync(userLocation);
-    let countryCodes = geocode[0].isoCountryCode;
-    console.log(countryCodes);
+    const countryCode = await Cellular.getIsoCountryCodeAsync();
     array.map((item, index) => {
-      if (item.cca2 === countryCodes.toUpperCase()) {
-        let arrayCountries = [...array];
-        setCountry(item);
-        let country = arrayCountries.filter(
-          (item) => item.cca2 === countryCodes.toUpperCase()
-        );
-
-        if (country.length > 0) {
-          // Eliminar el país del array original
-          arrayCountries = arrayCountries.filter(
-            (item) => item.cca2 !== countryCodes.toUpperCase()
-          );
-
-          // Agregar el país al principio del array
-          arrayCountries.unshift(country[0]);
-        }
-        setCountries(arrayCountries);
-      }
+      if (item.cca2 === countryCode.toUpperCase()) setCountry(item);
     });
   }
 
@@ -67,26 +45,20 @@ const StepOne = ({ navigation, route }) => {
     item?.name?.common.toLowerCase().includes(searchCountry.toLowerCase())
   );
 
-  const StepParams = (data) => {
+  const StepParams = async (data) => {
     const { company, email, phone } = data;
     let code = country?.idd?.root;
-    console.log('1')
     for (let i = 0; i < country?.idd?.suffixes.length; i++) {
       code += country?.idd?.suffixes[i];
     }
-    console.log('2')
-
     let params = {
       name: company,
       email: email,
       phone: `${code}${phone}`,
     };
-    console.log('3')
-    setBusinessStepOne(params)
-    // navigation.goBack()
-    navigation.navigate("FormNavigatorTwo");
-    // console.log('4')
-
+    navigation.push("StepTwo", {
+      business: params,
+    });
   };
 
   useEffect(() => {
@@ -95,12 +67,13 @@ const StepOne = ({ navigation, route }) => {
         return response.json();
       })
       .then((item) => {
+        setCountries(item);
         getCountryCode(item);
       });
   }, [route]);
   return (
     <View style={[global.bgWhite, styles.container]}>
-      {/* <Modal animationType="none" transparent={active} visible={active}> */}
+      <Modal animationType="none" transparent={active} visible={active}>
         <View style={[styles.modalMain]}>
           <ScrollView style={{ flex: 1 }}>
             <View style={[styles.modalContent]}>
@@ -164,7 +137,6 @@ const StepOne = ({ navigation, route }) => {
                   control={control}
                   name={`company`}
                   placeholder={`Portaty C.A.`}
-                  placeholderTextColor={`#1f1f1f80`}
                   styled={{
                     text: styles.textInput,
                     label: [styles.labelInput],
@@ -182,7 +154,6 @@ const StepOne = ({ navigation, route }) => {
                   control={control}
                   name={`email`}
                   placeholder={`soporte@portaty.com`}
-                  placeholderTextColor={`#1f1f1f80`}
                   styled={{
                     text: styles.textInput,
                     label: [styles.labelInput],
@@ -195,30 +166,26 @@ const StepOne = ({ navigation, route }) => {
                   rules={{
                     required: es.businessForm.register.email.rules,
                     pattern: {
-                      value: /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/,
+                      value:
+                        /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)\s*$/,
                       message: "Correo no valido",
                     },
                   }}
                 />
                 <View
                   style={{
-                    flex: 1,
                     flexDirection: "row",
                     justifyContent: "space-between",
                   }}
                 >
-                  <View
-                    style={{
-                      marginRight: 5,
-                    }}
-                  >
+                  <View>
                     <Text style={styles.labelInput}>Telefono (*)</Text>
 
                     <TouchableOpacity
                       style={[
                         styles.inputContainerBot,
                         {
-                          height: 55,
+                          height: 50,
                           width: 100,
                           marginRight: 10,
                           borderColor: "#404040",
@@ -228,7 +195,6 @@ const StepOne = ({ navigation, route }) => {
                       onPress={() => setVisibleCountries(!visibleCountries)}
                     >
                       {/* <View> */}
-                      {console.log(country)}
                       <Image
                         style={{
                           width: 20,
@@ -373,7 +339,6 @@ const StepOne = ({ navigation, route }) => {
                     control={control}
                     name={`phone`}
                     placeholder={`Coloca el numero de telefono`}
-                    placeholderTextColor={`#1f1f1f80`}
                     styled={{
                       text: styles.textInputP,
                       label: [styles.labelInput],
@@ -432,7 +397,7 @@ const StepOne = ({ navigation, route }) => {
             </View>
           </ScrollView>
         </View>
-      {/* </Modal> */}
+      </Modal>
     </View>
   );
 };

@@ -19,16 +19,41 @@ const ItemShareList = ({ data, styled }) => {
   const fetchFavorite = async () => {
     try {
       const { attributes } = await Auth.currentAuthenticatedUser();
-      const favorite = await API.graphql({
-        query: queries.favoritesByBusinessID,
-        authMode: "AMAZON_COGNITO_USER_POOLS",
-        variables: {
-          businessID: data.business.id,
-          userID: { eq: attributes["custom:userTableID"] },
-        },
-      });
-      if (favorite.data.favoritesByBusinessID.items.length !== 0)
-        setSave(favorite.data.favoritesByBusinessID.items[0].id);
+      // const favorite = await API.graphql({
+      //   query: queries.favoritesByBusinessID,
+      //   authMode: "AMAZON_COGNITO_USER_POOLS",
+      //   variables: {
+      //     businessID: data.business.id,
+      //     userID: { eq: attributes["custom:userTableID"] },
+      //   },
+      // });
+
+      const fetchAllFavorites = async (nextToken, result = []) => {
+        const response = await API.graphql({
+          query: queries.favoritesByBusinessID,
+          authMode: "AMAZON_COGNITO_USER_POOLS",
+          variables: {
+            businessID: data.business.id,
+            userID: { eq: attributes["custom:userTableID"] },
+            nextToken,
+          },
+        });
+
+        const items = response.data.favoritesByBusinessID.items;
+        result.push(...items);
+
+        if (response.data.favoritesByBusinessID.nextToken) {
+          return fetchAllFavorites(
+            response.data.favoritesByBusinessID.nextToken,
+            result
+          );
+        }
+
+        return result;
+      };
+
+      const allFavorites = await fetchAllFavorites();
+      if (allFavorites.length !== 0) setSave(allFavorites[0].id);
     } catch (error) {
       console.log(error);
     }

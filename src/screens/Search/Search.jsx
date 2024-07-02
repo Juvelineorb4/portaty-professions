@@ -15,7 +15,7 @@ import React, { useEffect, useState } from "react";
 import GridSearch from "@/components/Search/GridSearch";
 import * as customSearch from "@/graphql/CustomQueries/Search";
 import { Auth, API, Storage } from "aws-amplify";
-import styles from "@/utils/styles/Tags.module.css";
+import styles from "@/utils/styles/Tags.js";
 import {
   mapUser,
   searchStatus,
@@ -258,7 +258,7 @@ const Search = ({ route }) => {
                 >
                   <TouchableOpacity
                     style={[
-                      styles.inputContainerBot,
+                      styles.inputContainer,
                       {
                         height: 50,
                         width: "100%",

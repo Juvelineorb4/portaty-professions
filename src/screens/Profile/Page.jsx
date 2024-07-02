@@ -16,7 +16,7 @@ import {
   Switch,
 } from "react-native";
 import React, { useState, useEffect, useRef } from "react";
-import styles from "@/utils/styles/Unprofile.module.css";
+import styles from "@/utils/styles/Unprofile.js";
 import {
   MaterialCommunityIcons,
   AntDesign,
@@ -49,7 +49,7 @@ import CustomButton from "@/components/CustomButton";
 const Page = ({ route, navigation }) => {
   const mapRef = useRef(null);
   const {
-    data: { item, image },
+    data: { item, image, weeks, schedule, scheduleType },
   } = route.params;
   const { downloadAndOpenFile } = useOpenFile();
   const [selectedImages, setSelectedImages] = useState([]);
@@ -682,6 +682,102 @@ const Page = ({ route, navigation }) => {
         </View>
         <View>
           <View style={[styles.line, global.bgMidGray]} />
+          <View style={{ padding: 20 }}>
+            <Text style={{ fontSize: 18, fontFamily: "regular" }}>
+              Tu horario comercial
+            </Text>
+            {schedule === null ? (
+              <TouchableOpacity
+                style={[
+                  {
+                    borderColor: "#1f1f1f",
+                    borderRadius: 8,
+                    borderWidth: 0.7,
+                    padding: 20,
+                    marginTop: 10,
+                  },
+                  global.mainBgColor,
+                ]}
+                onPress={() => {
+                  navigation.navigate("Shedule", {
+                    data: item,
+                    schedule: schedule,
+                    scheduleType: scheduleType,
+                  });
+                }}
+              >
+                <Text
+                  style={[
+                    { fontSize: 14, fontFamily: "bold", textAlign: "center" },
+                    global.black,
+                  ]}
+                >
+                  Registra un horario
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <View
+                style={{
+                  flex: 1,
+                  position: 'relative'
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: "regular",
+                    fontSize: 14,
+                    marginTop: 5,
+                    lineHeight: 25,
+                    textAlign: 'center'
+                  }}
+                >
+                  {scheduleType}
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: "light",
+                    fontSize: 15,
+                    lineHeight: 25,
+                    textAlign: 'center'
+                  }}
+                >
+                  {weeks}
+                </Text>
+                <TouchableOpacity
+                  style={[
+                    {
+                      borderColor: "#1f1f1f",
+                      borderRadius: 8,
+                      borderWidth: 0.7,
+                      marginTop: 10,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      width: 120,
+                      height: 50,
+                      alignSelf: 'center'
+                    },
+                    global.mainBgColor,
+                  ]}
+                  onPress={() => {
+                    navigation.navigate("Shedule", {
+                      data: item,
+                      schedule: schedule,
+                      scheduleType: scheduleType,
+                    });
+                  }}
+                >
+                  <Text
+                    style={[
+                      { fontSize: 13, fontFamily: "bold", textAlign: "center" },
+                      global.black,
+                    ]}
+                  >
+                    Editar horario
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
           <TouchableOpacity
             style={{
               padding: 20,

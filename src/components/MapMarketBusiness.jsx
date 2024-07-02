@@ -14,7 +14,7 @@ import {
 } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE, Callout } from "react-native-maps";
 import * as Location from "expo-location";
-import styles from "@/utils/styles/MapMarket.module.css";
+import styles from "@/utils/styles/MapMarket.js";
 import {
   directionBusiness,
   directionBusinessOn,

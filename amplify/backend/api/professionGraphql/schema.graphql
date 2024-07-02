@@ -1,4 +1,13 @@
 # schema
+type NotifiationHistory
+  @model
+  @auth(
+    rules: [{ allow: groups, groups: ["sp", "admin"] }, { allow: public }]
+  ) {
+  id: ID!
+  title: String!
+  message: String
+}
 type AppVersionHistory
   @model
   @auth(
@@ -55,42 +64,108 @@ type Users
   @auth(
     rules: [
       { allow: owner }
+      { allow: public, provider: iam, operations: [read] }
       { allow: private, provider: iam, operations: [read] }
+      { allow: groups, groups: ["admin"], operations: [read] }
     ]
   ) {
   id: ID
-  cognitoID: ID @auth(rules: [{ allow: owner, operations: [read, delete] }])
-  name: String @auth(rules: [{ allow: owner }])
-  lastName: String @auth(rules: [{ allow: owner }])
+  cognitoID: ID
+    @auth(
+      rules: [
+        { allow: owner, operations: [read, delete] }
+        { allow: groups, groups: ["admin"], operations: [read] }
+        { allow: groups, groups: ["admin"], operations: [read] }
+      ]
+    )
+  name: String
+    @auth(
+      rules: [
+        { allow: owner }
+        { allow: private, provider: iam, operations: [read] }
+        { allow: public, provider: iam, operations: [read] }
+        { allow: groups, groups: ["admin"], operations: [read] }
+      ]
+    )
+  lastName: String
+    @auth(
+      rules: [
+        { allow: owner }
+        { allow: private, provider: iam, operations: [read] }
+        { allow: public, provider: iam, operations: [read] }
+        { allow: groups, groups: ["admin"], operations: [read] }
+      ]
+    )
   email: String
-    @auth(rules: [{ allow: owner }])
+    @auth(
+      rules: [
+        { allow: owner }
+        { allow: groups, groups: ["admin"], operations: [read] }
+      ]
+    )
     @index(name: "byEmailUser", queryField: "userByEmail")
   identityID: ID
     @auth(
       rules: [
         { allow: owner }
         { allow: private, provider: iam, operations: [read] }
+        { allow: groups, groups: ["admin"], operations: [read] }
       ]
     )
-  gender: String @auth(rules: [{ allow: owner, operations: [read, delete] }])
+  gender: String
+    @auth(
+      rules: [
+        { allow: owner, operations: [read, delete] }
+        { allow: groups, groups: ["admin"], operations: [read] }
+      ]
+    )
   notificationToken: [String]
-    @auth(rules: [{ allow: owner, operations: [read, delete] }])
+    @auth(
+      rules: [
+        { allow: owner, operations: [read, delete] }
+        { allow: groups, groups: ["admin"], operations: [read] }
+      ]
+    )
   favorites: [Favorites] @hasMany(indexName: "byUsersFavorites", fields: ["id"])
   business: [Business] @hasMany(indexName: "byUsersBusiness", fields: ["id"])
-  owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }])
+  comments: [BusinessComment]
+    @hasMany(indexName: "byUserComments", fields: ["id"])
+  owner: String
+    @auth(
+      rules: [
+        { allow: owner, operations: [read, delete] }
+        { allow: groups, groups: ["admin"], operations: [read] }
+      ]
+    )
 }
 
+type Reports
+  @model
+  @auth(rules: [{ allow: private, provider: iam, operations: [create] }]) {
+  id: ID!
+  userID: ID!
+  subject: String!
+  description: String!
+  status: reportStatus @default(value: "PENDING")
+}
+
+enum reportStatus {
+  PENDING
+  RESOLVED
+}
 type Business
   @model
   @auth(
     rules: [
       { allow: owner }
+      { allow: public }
+      { allow: public, provider: iam, operations: [read] }
       { allow: private, provider: iam, operations: [read] }
       { allow: private, operations: [read] }
     ]
   ) {
   id: ID!
-  userID: ID @index(name: "byUsersBusiness")
+  userID: ID @index(name: "byUsersBusiness", queryField: "listBusinessbyUserID")
   user: Users @belongsTo(fields: ["userID"])
   status: BusinessStatus @default(value: "ENABLED")
   identityID: String
@@ -111,16 +186,33 @@ type Business
     @hasMany(indexName: "byBusinessFavorites", fields: ["id"])
   description: String
   prefer: Boolean @default(value: "false")
+  schedule: String
+  comments: [BusinessComment]
+    @hasMany(indexName: "byBusinessComments", fields: ["id"])
+  catalogpdf: String @default(value: "")
 }
 enum BusinessStatus {
   ENABLED
   DISABLED
   SUSPENDED
+  DELETED
 }
 
-type ImageBusiness {
-  key: Int
-  url: String
+type BusinessComment
+  @model
+  @auth(
+    rules: [
+      { allow: owner, operations: [create, read, update] }
+      { allow: private, provider: iam, operations: [read] }
+      { allow: public, provider: iam, operations: [read] }
+    ]
+  ) {
+  id: ID!
+  userID: ID! @index(name: "byUserComments")
+  user: Users @belongsTo(fields: ["userID"])
+  businessID: ID! @index(name: "byBusinessComments")
+  stars: Int!
+  description: String
 }
 
 type Favorites
@@ -128,6 +220,7 @@ type Favorites
   @auth(
     rules: [
       { allow: owner }
+      { allow: public, provider: iam, operations: [read] }
       { allow: private, provider: iam, operations: [read] }
       { allow: groups, groups: ["sp"], operations: [read] }
     ]
@@ -136,6 +229,7 @@ type Favorites
     @auth(
       rules: [
         { allow: owner }
+        { allow: public, provider: iam, operations: [read] }
         { allow: private, provider: iam, operations: [read] }
         { allow: groups, groups: ["sp"], operations: [read] }
       ]
@@ -149,13 +243,14 @@ type Favorites
     @auth(
       rules: [
         { allow: owner }
+        { allow: public, provider: iam, operations: [read] }
         { allow: private, provider: iam, operations: [read] }
         { allow: groups, groups: ["sp"], operations: [read] }
       ]
     )
   business: Business @belongsTo(fields: ["businessID"])
   userID: ID
-    @index(name: "byUsersFavorites")
+    @index(name: "byUsersFavorites", queryField: "listFavoritesbyUserID")
     @auth(
       rules: [
         { allow: owner }
@@ -183,42 +278,10 @@ type Complaints
   ) {
   id: ID!
   userID: ID!
-    @auth(
-      rules: [
-        { allow: owner, operations: [create, read, update] }
-        { allow: groups, groups: ["sp"], operations: [read, update, delete] }
-      ]
-    )
   businessID: ID!
-    @auth(
-      rules: [
-        { allow: owner, operations: [create, read, update] }
-        { allow: groups, groups: ["sp"], operations: [read, update, delete] }
-      ]
-    )
-  status: ComplaintStatus!
-    @auth(
-      rules: [
-        { allow: owner, operations: [create, read, update] }
-        { allow: groups, groups: ["sp"], operations: [read, update, delete] }
-      ]
-    )
-
-  reasonID: ID!
-    @auth(
-      rules: [
-        { allow: owner, operations: [create, read, update] }
-        { allow: groups, groups: ["sp"], operations: [read, update, delete] }
-      ]
-    )
-  reason: ReasonComplaints @hasOne(fields: ["reasonID"])
-  description: String!
-    @auth(
-      rules: [
-        { allow: owner, operations: [create, read, update] }
-        { allow: groups, groups: ["sp"], operations: [read, update, delete] }
-      ]
-    )
+  status: ComplaintStatus! @default(value: "PENDING")
+  reason: String!
+  description: String
   owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }])
 }
 
@@ -263,5 +326,3 @@ type Coordinates {
   lat: Float!
   lon: Float!
 }
-
-

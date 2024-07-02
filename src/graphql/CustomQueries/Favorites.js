@@ -35,6 +35,7 @@ export const userByEmail = /* GraphQL */ `
               phone
               whatsapp
               description
+              schedule
               instagram
               facebook
               page
@@ -104,6 +105,7 @@ export const favoritesByBusinessID = /* GraphQL */ `
           facebook
           page
           description
+          schedule
           activity
           tags
           createdAt
@@ -198,6 +200,7 @@ export const getBusiness = /* GraphQL */ `
       whatsapp
       instagram
       description
+      schedule
       facebook
       page
       coordinates {
@@ -226,6 +229,132 @@ export const getPostBusiness = /* GraphQL */ `
       id
       name
       thumbnail
+    }
+  }
+`;
+
+export const listReasonComplaints = /* GraphQL */ `
+  query ListReasonComplaints(
+    $filter: ModelReasonComplaintsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listReasonComplaints(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        name
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+
+export const listFavoritesbyUserID = /* GraphQL */ `
+  query ListFavoritesbyUserID(
+    $userID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelFavoritesFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listFavoritesbyUserID(
+      userID: $userID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        businessID
+        business {
+          id
+          userID
+          status
+          identityID
+          name
+          image
+          images
+          thumbnail
+          email
+          phone
+          whatsapp
+          coordinates {
+            lat
+            lon
+          }
+          instagram
+          facebook
+          page
+          activity
+          tags
+          description
+          prefer
+          schedule
+          createdAt
+          updatedAt
+          owner
+        }
+        userID
+        user {
+          id
+          cognitoID
+          name
+          lastName
+          email
+          identityID
+          gender
+          notificationToken
+          owner
+          createdAt
+          updatedAt
+        }
+        position
+        owner
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
+export const businessCommentsByBusinessID = /* GraphQL */ `
+  query BusinessCommentsByBusinessID(
+    $businessID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelBusinessCommentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    businessCommentsByBusinessID(
+      businessID: $businessID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userID
+        user {
+          id
+          name
+          lastName
+        }
+        businessID
+        stars
+        description
+        createdAt
+        updatedAt
+      }
+      nextToken
     }
   }
 `;

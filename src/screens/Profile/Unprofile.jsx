@@ -5,9 +5,10 @@ import {
   TouchableOpacity,
   Alert,
   RefreshControl,
+  ActivityIndicator,
 } from "react-native";
 import React, { useLayoutEffect, useState } from "react";
-import styles from "@/utils/styles/Unprofile.module.css";
+import styles from "@/utils/styles/Unprofile.js";
 import CustomSelect from "@/components/CustomSelect";
 import { settings } from "@/utils/constants/settings";
 import { useRecoilValue } from "recoil";
@@ -22,6 +23,7 @@ import { useEffect } from "react";
 import { setStatusBarNetworkActivityIndicatorVisible } from "expo-status-bar";
 import ModalAlert from "@/components/ModalAlert";
 import { useCallback } from "react";
+import CustomButton from "@/components/CustomButton";
 
 const Unprofile = ({ navigation, route }) => {
   const { buttons } = settings;
@@ -34,6 +36,8 @@ const Unprofile = ({ navigation, route }) => {
   const [visible, setVisible] = useState(false);
   const [createBussiness, setCreateBussiness] = useState(true);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [buttonDelete, setButtonDelete] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const onRefresh = () => {
     setRefreshing(true);
@@ -46,29 +50,54 @@ const Unprofile = ({ navigation, route }) => {
   const status = useRecoilValue(profileState);
 
   const onHandleLogout = async () => {
-    await Auth.signOut();
+    setLoading(true);
+    setTimeout(async () => {
+      await Auth.signOut();
+      setLoading(false);
+    }, 2000);
   };
   const User = async () => {
-    const result = await API.graphql({
-      query: customProfile.userByEmail,
-      authMode: "AMAZON_COGNITO_USER_POOLS",
-      variables: {
-        email: userAuth?.attributes?.email,
-      },
-    });
-    if (result?.data?.userByEmail?.items[0]?.business?.items?.length !== 0)
-      setBusiness(result.data.userByEmail.items[0].business.items);
-    setDisabled(false);
+    try {
+      const fetchAllBusiness = async (nextToken, result = []) => {
+        const response = await API.graphql({
+          query: customProfile.listBusinessbyUserID,
+          authMode: "AMAZON_COGNITO_USER_POOLS",
+          variables: {
+            userID: userAuth?.attributes["custom:userTableID"],
+            nextToken,
+          },
+        });
+
+        const items = response.data.listBusinessbyUserID.items;
+        result.push(...items);
+
+        if (response.data.listBusinessbyUserID.nextToken) {
+          return fetchAllBusiness(
+            response.data.listBusinessbyUserID.nextToken,
+            result
+          );
+        }
+
+        return result;
+      };
+
+      const allBusiness = await fetchAllBusiness();
+      if (allBusiness.length !== 0) setBusiness(allBusiness);
+      setDisabled(false);
+    } catch (error) {
+      console.log(error);
+      setDisabled(false);
+    }
   };
   const _handlePressButtonAsync = async (url) => {
     let result = await WebBrowser.openBrowserAsync(url);
   };
   const onHandleAccountDeletion = async () => {
     if (!userAuth?.attributes?.sub) return;
-
+    console.log("SE PRECIONO");
     Alert.alert(
       "Confirmación",
-      "¿Estás seguro de que quieres enviar la solicitud para la eliminación de cuenta?",
+      "¿Estás seguro de que quieres enviar la solicitud para la eliminación de cuenta?, Esto podria tardar de 30 a 90 dias habiles!",
       [
         {
           text: "Cancelar",
@@ -78,6 +107,7 @@ const Unprofile = ({ navigation, route }) => {
         {
           text: "OK",
           onPress: async () => {
+            setButtonDelete(false);
             try {
               const api = "api-portaty";
               const path = "/request_account_deletion";
@@ -103,6 +133,7 @@ const Unprofile = ({ navigation, route }) => {
                 error
               );
             }
+            setButtonDelete(true);
           },
         },
       ]
@@ -112,7 +143,60 @@ const Unprofile = ({ navigation, route }) => {
     User();
   }, [userAuth, status, refreshing, isFocused]);
 
-  if (!userAuth?.attributes) return <SkeletonUnprofile />;
+  // if (!userAuth?.attributes) return <SkeletonUnprofile />;
+  if (loading)
+    return (
+      <View
+        style={[
+          { flex: 1, alignItems: "center", justifyContent: "center" },
+          global.bgWhite,
+        ]}
+      >
+        <ActivityIndicator size="large" color="#ffb703" />
+      </View>
+    );
+  if (!userAuth)
+    return (
+      <View
+        style={[
+          {
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+            paddingHorizontal: 20,
+            paddingBottom: 80,
+          },
+          global.bgWhite,
+        ]}
+      >
+        <Text
+          style={{ fontSize: 16, fontFamily: "light", textAlign: "center" }}
+        >
+          Ingresa a tu cuenta para acceder a todas las funcionalidades que te
+          ofrecemos, como:
+        </Text>
+        <Text
+          style={{
+            fontSize: 16,
+            fontFamily: "medium",
+            textAlign: "center",
+            marginTop: 10,
+          }}
+        >
+          Registrar un negocio, administrar tu cuenta, acceso a estadisticas y
+          mucho mas
+        </Text>
+        <CustomButton
+          text={`Iniciar sesion`}
+          handlePress={() => {
+            navigation.navigate("Login_Welcome");
+          }}
+          textStyles={[styles.textSearch, global.black]}
+          buttonStyles={[styles.search, global.bgYellow]}
+        />
+      </View>
+    );
+
   return (
     <ScrollView
       style={[styles.container, global.bgWhite]}
@@ -259,7 +343,7 @@ const Unprofile = ({ navigation, route }) => {
               <TouchableOpacity
                 onPress={() => navigation.navigate(button.route)}
                 style={{
-                  marginVertical: -25,
+                  marginBottom: -25,
                 }}
               >
                 <CustomSelect
@@ -281,6 +365,9 @@ const Unprofile = ({ navigation, route }) => {
             ) : button.web ? (
               <TouchableOpacity
                 onPress={() => _handlePressButtonAsync(button.web)}
+                style={{
+                  marginBottom: -25,
+                }}
               >
                 {/* <View style={[styles.line, global.bgMidGray]} /> */}
                 <CustomSelect
@@ -301,16 +388,13 @@ const Unprofile = ({ navigation, route }) => {
               </TouchableOpacity>
             ) : button.modal ? (
               <>
-                {console.log(
-                  "QUE HAY: ",
-                  userAuth?.attributes["custom:requestDeleting"]
-                )}
                 {!userAuth?.attributes["custom:requestDeleting"] && (
                   <TouchableOpacity
                     onPress={onHandleAccountDeletion}
                     style={{
                       marginBottom: -25,
                     }}
+                    disabled={!buttonDelete}
                   >
                     <CustomSelect
                       title={button.title}

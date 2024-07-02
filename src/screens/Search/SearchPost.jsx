@@ -14,9 +14,9 @@ import {
   Pressable,
   ActivityIndicator,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import * as customSearch from "@/graphql/CustomQueries/Search";
-import styles from "@/utils/styles/SearchPost.module.css";
+import styles from "@/utils/styles/SearchPost.js";
 import {
   MaterialCommunityIcons,
   AntDesign,
@@ -24,7 +24,9 @@ import {
   Feather,
   Entypo,
   MaterialIcons,
+  Ionicons,
 } from "@expo/vector-icons";
+import * as Device from "expo-device";
 import { Auth, API, Analytics } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Favorites";
 import * as customFavorites from "@/graphql/CustomMutations/Favorites";
@@ -35,17 +37,18 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { updateListFavorites, userAuthenticated, mapUser } from "@/atoms/index";
 import * as FileSystem from "expo-file-system";
 import { StorageAccessFramework } from "expo-file-system";
-import { useRef } from "react";
-import ModalAlert from "@/components/ModalAlert";
 // storage
 import AsyncStorage from "@react-native-async-storage/async-storage";
 // location
 import * as Location from "expo-location";
-import useKinesisFirehose from "@/hooks/useKinesisFirehose";
+// functions
+import { registerEvent } from "@/functions/Analytics";
+import ModalReport from "@/components/ModalReport";
+const DEVICE_TYPE = ["UNKNOWN", "PHONE", "TABLET", "DESKTOP", "TV"];
 const SearchPost = ({ route, navigation }) => {
+  const timerRef = useRef();
   const userAuth = useRecoilValue(userAuthenticated);
   const userLocation = useRecoilValue(mapUser);
-  const [kinesisStreamName] = useKinesisFirehose();
   const [post, setPost] = useState(null);
   const [save, setSave] = useState("");
   const [open, setOpen] = useState(false);
@@ -53,9 +56,14 @@ const SearchPost = ({ route, navigation }) => {
   const [dimensionsImages, setDimensionsImages] = useState(0);
   const [showAgg, setShowAgg] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [visibleReport, setVisibleReport] = useState(false);
   const [imageView, setImageView] = useState(null);
   const [listUpdate, setListUpdate] = useRecoilState(updateListFavorites);
+  const [countryCity, setCountryCity] = useState(null);
   const global = require("@/utils/styles/global.js");
+  const [weekSchedule, setWeekSchedule] = useState("");
+  const [typeSchedule, setTypeSchedule] = useState("");
+  const [listRatings, setListRatings] = useState(null);
 
   const {
     data: { item, images },
@@ -89,9 +97,7 @@ const SearchPost = ({ route, navigation }) => {
             encoding: FileSystem.EncodingType.Base64,
           });
         })
-        .catch((e) => {
-          console.log(e);
-        });
+        .catch((e) => {});
     } catch (error) {
       console.log("Error en pdf: ", error.message);
     }
@@ -105,13 +111,12 @@ const SearchPost = ({ route, navigation }) => {
 
   const onCreateFavorite = async () => {
     try {
-      const { attributes } = await Auth.currentAuthenticatedUser();
       const favorites = await API.graphql({
         query: customFavorites.createFavorites,
         variables: {
           input: {
             businessID: post?.id,
-            userID: attributes["custom:userTableID"],
+            userID: userAuth?.attributes["custom:userTableID"],
             position: 0,
           },
         },
@@ -120,11 +125,23 @@ const SearchPost = ({ route, navigation }) => {
       setSave(favorites?.data?.createFavorites?.id);
       setNumberFavorite(post?.favorites?.items?.length + 1);
       setListUpdate(!listUpdate);
+      // registramos el evento
+
+      const { country, city } = countryCity;
+
+      registerEvent("user_add_business", {
+        userid: userAuth?.attributes["custom:userTableID"],
+        businessid: post?.id,
+        birthdate: userAuth?.attributes?.birthdate,
+        gender: userAuth?.attributes["custom:gender"],
+        country,
+        city,
+      });
     } catch (error) {
       console.log("ERRO AL CARGAR UN FAVORITO: ", error);
     }
   };
-  console.log("HOAAAAAAAAAAAA", kinesisStreamName);
+
   const onDeleteFavorite = async () => {
     const favorites = await API.graphql({
       query: customFavorites.deleteFavorites,
@@ -134,6 +151,15 @@ const SearchPost = ({ route, navigation }) => {
         },
       },
       authMode: "AMAZON_COGNITO_USER_POOLS",
+    });
+    const { country, city } = countryCity;
+    registerEvent("user_remove_business", {
+      userid: userAuth?.attributes["custom:userTableID"],
+      businessid: save,
+      birthdate: userAuth?.attributes?.birthdate,
+      gender: userAuth?.attributes["custom:gender"],
+      country,
+      city,
     });
     setSave("");
     setNumberFavorite(0);
@@ -156,7 +182,9 @@ const SearchPost = ({ route, navigation }) => {
       } else {
         setShowAgg(true);
       }
-      console.log(business?.data?.getBusiness);
+
+      let schedule = JSON.parse(business?.data?.getBusiness.schedule);
+      filterSchedule(schedule.shedule, schedule.type);
       return setPost(business?.data?.getBusiness);
     } catch (error) {
       console.log(error);
@@ -203,10 +231,18 @@ const SearchPost = ({ route, navigation }) => {
     Linking.openURL(url);
   };
 
-  const registerViewBusiness = async (userID, businessID) => {
+  const registerViewBusiness = async (userID = null, businessID) => {
+    const deviceType = Device.deviceType;
+    const osName = Device.osName;
+    const osVersion = Device.osVersion;
+    const brand = Device.brand;
+    const model = Device.modelName;
+    const language = Device.language;
+    // Obtener el identificador único del dispositivo
+    const deviceID = Device.osBuildId || Device.osInternalBuildId;
     try {
-      // Obtener informacuon de la ultima visualizacion del usuario guardada en Async Storage
-      const lastViewString = await AsyncStorage.getItem(`lastView_${userID}`);
+      // Obtener información de la última visualización guardada en AsyncStorage
+      const lastViewString = await AsyncStorage.getItem(`lastView_${deviceID}`);
       const lastViewInfo = JSON.parse(lastViewString);
 
       // Si hay una última visualización registrada y ocurrió hace menos de 24 horas, no registra la nueva visualización
@@ -218,47 +254,166 @@ const SearchPost = ({ route, navigation }) => {
         return;
       }
 
-      // De no haber visualizacion Registrarla en analytics
-      const addressArr = await Location.reverseGeocodeAsync(userLocation);
-      const { country, city } = addressArr[0];
-      const params = {
-        eventname: "user_viewed_business",
-        userid: userID,
-        birthdate: userAuth?.attributes?.birthdate,
-        gender: userAuth?.attributes["custom:gender"],
+      // Registrar la visualización en analytics
+      const { country, city } = countryCity;
+      let params = {
         country,
         city,
         businessid: businessID,
+        deviceType: DEVICE_TYPE[deviceType],
+        osName,
+        osVersion,
+        brand,
+        model,
+        language,
       };
 
-      Analytics.record(
-        {
-          data: params,
-          streamName: kinesisStreamName,
-        },
-        "AWSKinesisFirehose"
-      );
+      if (userID) {
+        params = {
+          userid: userID,
+          birthdate: userAuth?.attributes?.birthdate,
+          gender: userAuth?.attributes["custom:gender"],
+          ...params,
+        };
+      }
 
-      // Almacena la información de la última visualización en AsyncStorage
+      registerEvent(
+        userID ? "user_viewed_business" : "guest_viewed_business",
+        params
+      );
+      // Almacenar la información de la última visualización en AsyncStorage
       const currentViewInfo = {
         businessID: businessID,
         timestamp: new Date().toISOString(),
       };
       await AsyncStorage.setItem(
-        `lastView_${userID}`,
+        `lastView_${deviceID}`,
         JSON.stringify(currentViewInfo)
       );
     } catch (error) {
       console.log("Error al registrar analitica: ", error);
     }
   };
-  useEffect(() => {
-    if (!save) fetchFavorite();
-    fetchData();
-    registerViewBusiness(userAuth?.attributes["custom:userTableID"], item.id);
-  }, []);
 
-  if (!post) return <SkeletonExample />;
+  const filterSchedule = (array, type) => {
+    if (array === null || type === null) return;
+    // return;
+    let scheduleG = [];
+    let activeDays = array.filter((day) => day.active);
+
+    for (let i = 0; i < activeDays.length; i++) {
+      if (
+        i === 0 ||
+        activeDays[i].hourStart !== activeDays[i - 1].hourStart ||
+        activeDays[i].hourEnd !== activeDays[i - 1].hourEnd
+      ) {
+        scheduleG.push({
+          days: [activeDays[i].name],
+          hourStart: activeDays[i].hourStart,
+          hourEnd: activeDays[i].hourEnd,
+        });
+      } else {
+        scheduleG[scheduleG.length - 1].days.push(activeDays[i].name);
+      }
+    }
+
+    let pContent = scheduleG
+      .map((group) => {
+        let days = group.days;
+        if (days.length > 2) {
+          let consecutive = true;
+          for (let i = 1; i < days.length; i++) {
+            if (
+              array.findIndex((day) => day.name === days[i]) !==
+              array.findIndex((day) => day.name === days[i - 1]) + 1
+            ) {
+              consecutive = false;
+              break;
+            }
+          }
+          if (consecutive) {
+            days = [days[0], "a", days[days.length - 1]];
+          } else {
+            days = days.join(" - ");
+          }
+        } else if (days.length === 2) {
+          days = [days[0], "y", days[1]];
+        }
+        return `${Array.isArray(days) ? days.join(" ") : days}: ${
+          group.hourStart
+        } - ${group.hourEnd}`;
+      })
+      .join(" / ");
+
+    setWeekSchedule(pContent);
+    setTypeSchedule(type);
+  };
+
+  const fetchRatings = async () => {
+    let business = item;
+    console.log(business.id);
+    try {
+      const fetchAllRatings = async (nextToken, result = []) => {
+        const response = await API.graphql({
+          query: queries.businessCommentsByBusinessID,
+          authMode: "AWS_IAM",
+          variables: {
+            businessID: business?.id,
+            nextToken,
+          },
+        });
+
+        const items = response.data.businessCommentsByBusinessID.items;
+        result.push(...items);
+
+        if (response.data.businessCommentsByBusinessID.nextToken) {
+          return fetchAllRatings(
+            response.data.businessCommentsByBusinessID.nextToken,
+            result
+          );
+        }
+
+        return result;
+      };
+
+      const allRatings = await fetchAllRatings();
+      console.log(allRatings);
+      setListRatings(allRatings);
+    } catch (error) {
+      console.log("eres tu", error);
+    }
+  };
+
+  // para la carga default
+  useEffect(() => {
+    // if (!save) fetchFavorite();
+    fetchData();
+    fetchRatings();
+  }, []);
+  // para obetener el pais y ciudad
+  useEffect(() => {
+    const registerCountryCity = async () => {
+      const addressArr = await Location.reverseGeocodeAsync(userLocation);
+      setCountryCity(addressArr[0]);
+    };
+    if (userLocation) registerCountryCity();
+  }, [userLocation]);
+  // para cuando este pais y ciudad registrar en el evento de vista
+  useEffect(() => {
+    // Inicia el temporizador cuando el componente se monta y countryCity y userAuth existen
+    if (countryCity) {
+      timerRef.current = setTimeout(() => {
+        registerViewBusiness(
+          userAuth ? userAuth?.attributes["custom:userTableID"] : null,
+          item.id
+        );
+      }, 3000);
+    }
+    // Limpia el temporizador cuando el componente se desmonta
+    return () => clearTimeout(timerRef.current);
+  }, [countryCity]);
+
+  if (!post || !listRatings) return <SkeletonExample />;
   return (
     <View
       style={[
@@ -398,6 +553,65 @@ const SearchPost = ({ route, navigation }) => {
             onViewableItemsChanged={onViewRef.current}
           />
         </View>
+        <View
+          style={{
+            flexDirection: "row",
+            paddingHorizontal: 20,
+            justifyContent: "center",
+            alignItems: "center",
+            paddingTop: 5,
+          }}
+        >
+          <View
+            style={{
+              alignItems: "center",
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: "regular",
+                  fontSize: 16,
+                  marginRight: 3,
+                }}
+              >
+                4.7
+              </Text>
+              <Ionicons name="star" size={16} color="#ffb703" />
+            </View>
+
+            <Text
+              style={{
+                fontFamily: "lightItalic",
+                fontSize: 12,
+              }}
+            >
+              100+ valoraciones
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginLeft: 25,
+            }}
+          >
+            <MaterialCommunityIcons name="medal" size={20} color="#ffb703" />
+            <Text
+              style={{
+                fontFamily: "lightItalic",
+                fontSize: 12,
+              }}
+            >
+              Nº 14 en Turismo
+            </Text>
+          </View>
+        </View>
         {showAgg && (
           <View>
             <View
@@ -425,64 +639,67 @@ const SearchPost = ({ route, navigation }) => {
                   Favoritos
                 </Text>
               </View>
-              <TouchableOpacity
-                onPress={() => {
-                  if (save === "") {
-                    onCreateFavorite();
-                  } else {
-                    onDeleteFavorite();
-                  }
-                }}
-              >
-                {save === "" ? (
-                  <Image
-                    style={{
-                      width: 45,
-                      height: 45,
-                      resizeMode: "cover",
-                    }}
-                    source={require("@/utils/images/nofavorites.png")}
-                  />
-                ) : (
-                  <Image
-                    style={{
-                      width: 45,
-                      height: 45,
-                      resizeMode: "cover",
-                    }}
-                    source={require("@/utils/images/sifavorites.png")}
-                  />
-                )}
-              </TouchableOpacity>
+              {userAuth && (
+                <TouchableOpacity
+                  onPress={() => {
+                    if (save === "") {
+                      onCreateFavorite();
+                    } else {
+                      onDeleteFavorite();
+                    }
+                  }}
+                >
+                  {save === "" ? (
+                    <Image
+                      style={{
+                        width: 45,
+                        height: 45,
+                        resizeMode: "cover",
+                      }}
+                      source={require("@/utils/images/nofavorites.png")}
+                    />
+                  ) : (
+                    <Image
+                      style={{
+                        width: 45,
+                        height: 45,
+                        resizeMode: "cover",
+                      }}
+                      source={require("@/utils/images/sifavorites.png")}
+                    />
+                  )}
+                </TouchableOpacity>
+              )}
             </View>
-            {/* Reporte */}
-            {/* <TouchableOpacity
-              style={{
-                alignSelf: "flex-end",
-                paddingHorizontal: 20,
-                paddingBottom: 5,
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-              onPress={() => setVisible(true)}
-            >
-              <MaterialIcons name="report" size={22} color="black" />
-              <Text
-                style={[
-                  global.black,
-                  {
-                    fontFamily: "bold",
-                    fontSize: 12,
-                    // marginLeft: 2,
-                    // marginBottom: 3
-                  },
-                ]}
-              >
-                Reportar negocio
-              </Text>
-            </TouchableOpacity> */}
           </View>
         )}
+        {/* Reporte */}
+        <TouchableOpacity
+          style={{
+            alignSelf: "flex-end",
+            paddingHorizontal: 20,
+            paddingBottom: 5,
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+          onPress={() => setVisibleReport(true)}
+        >
+          <MaterialIcons name="report" size={16} color="black" />
+          <Text
+            style={[
+              global.black,
+              {
+                fontFamily: "bold",
+                fontSize: 10,
+                // marginLeft: 2,
+                // marginBottom: 3
+              },
+            ]}
+          >
+            Reportar negocio
+          </Text>
+        </TouchableOpacity>
+        {/* Hasta aqui */}
         <View
           style={[
             styles.line,
@@ -495,6 +712,157 @@ const SearchPost = ({ route, navigation }) => {
             },
           ]}
         />
+
+        <View
+          style={{
+            padding: 20,
+          }}
+        >
+          <Text style={{ fontSize: 18, fontFamily: "regular" }}>
+            Horario comercial
+          </Text>
+          {post.schedule !== null ? (
+            <View>
+              <Text
+                style={{
+                  fontFamily: "regular",
+                  fontSize: 14,
+                  marginTop: 5,
+                  lineHeight: 25,
+                  textAlign: "center",
+                }}
+              >
+                {typeSchedule}
+              </Text>
+              <Text
+                style={{
+                  fontFamily: "light",
+                  fontSize: 15,
+                  lineHeight: 25,
+                  textAlign: "center",
+                }}
+              >
+                {weekSchedule}
+              </Text>
+            </View>
+          ) : (
+            <View>
+              <Text
+                style={{
+                  fontFamily: "regular",
+                  fontSize: 18,
+                  marginTop: 8,
+                  textAlign: "center",
+                  marginBottom: -10,
+                }}
+              >
+                {`No definido`}
+              </Text>
+            </View>
+          )}
+        </View>
+
+        {/* Interactions */}
+        <TouchableOpacity
+          style={{
+            paddingHorizontal: 20,
+            paddingTop: 10,
+          }}
+          onPress={() => {
+            navigation.navigate("InteractionsSearch", {
+              business: item,
+              list: listRatings,
+            });
+          }}
+        >
+          <View
+            style={{
+              borderWidth: 0.6,
+              borderColor: "#1f1f1f",
+              height: 130,
+              borderRadius: 8,
+              padding: 10,
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "flex-end",
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: "bold",
+                  fontSize: 13,
+                }}
+              >
+                Este negocio tiene {listRatings.length} reseña(s)
+              </Text>
+            </View>
+            <View
+              style={{
+                marginTop: 10,
+                backgroundColor: "#efeded",
+                padding: 5,
+                borderRadius: 8,
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: "regular",
+                    fontSize: 13,
+                    marginRight: 3,
+                  }}
+                >
+                  {listRatings[0].stars} de 5
+                </Text>
+                <Ionicons name="star" size={12} color="#ffb703" />
+                <Text
+                  style={{
+                    fontFamily: "medium",
+                    fontSize: 12,
+                    marginLeft: 5,
+                  }}
+                >
+                  {listRatings[0].user.name} {listRatings[0].user.lastName}
+                </Text>
+              </View>
+              <Text
+                style={{
+                  fontFamily: "regular",
+                  fontSize: 13,
+                }}
+              >
+                {listRatings[0].description}
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                alignItems: "center",
+                marginTop: 5,
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: "mediumItalic",
+                  fontSize: 12,
+                  marginRight: 3,
+                }}
+              >
+                Ver todas las reseñas
+              </Text>
+              <AntDesign name="arrowright" size={13} color="black" />
+            </View>
+          </View>
+        </TouchableOpacity>
 
         <TouchableOpacity
           style={{
@@ -1184,11 +1552,10 @@ const SearchPost = ({ route, navigation }) => {
             </TouchableWithoutFeedback>
           </Modal>
         </View>
-        <ModalAlert
-          text={`Seguro quieres reportar este negocio?`}
-          close={() => setVisible(false)}
-          open={visible}
-          icon={require("@/utils/images/error.png")}
+        <ModalReport
+          businessID={item.id}
+          close={() => setVisibleReport(false)}
+          open={visibleReport}
         />
       </ScrollView>
     </View>

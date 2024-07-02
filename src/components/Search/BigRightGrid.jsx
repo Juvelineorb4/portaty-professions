@@ -1,6 +1,6 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
-import styles from "@/utils/styles/GridSearch.module.css";
+import styles from "@/utils/styles/GridSearch.js";
 import Post from "./Post";
 
 const BigRightGrid = ({ data, input }) => {

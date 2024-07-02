@@ -1,6 +1,6 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
-import styles from "@/utils/styles/GridProfile.module.css";
+import styles from "@/utils/styles/GridProfile.js";
 import { useNavigation } from "@react-navigation/native";
 
 const GridProfile = ({business}) => {

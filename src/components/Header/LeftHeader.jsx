@@ -1,6 +1,6 @@
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
-import styles from "@/utils/styles/Header.module.css";
+import styles from "@/utils/styles/Header.js";
 
 const LeftHeader = ({navigation}) => {
   const global = require("@/utils/styles/global.js");

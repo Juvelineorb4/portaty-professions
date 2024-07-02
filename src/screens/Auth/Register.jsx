@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import styles from "@/utils/styles/Register.module.css";
+import styles from "@/utils/styles/Register.js";
 import { useForm } from "react-hook-form";
 import CustomInput from "@/components/CustomInput";
 import CustomInputSelect from "@/components/CustomInputSelect";
@@ -26,7 +26,8 @@ import { notificationToken } from "@/atoms/index";
 import { useRecoilValue } from "recoil";
 const Register = ({ navigation }) => {
   const token = useRecoilValue(notificationToken);
-  const EMAIL_REGEX = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
+  const EMAIL_REGEX =
+    /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)\s*$/;
   const [isLoading, setIsLoading] = useState(false);
   const [visible, setVisible] = useState(false);
 
@@ -119,114 +120,100 @@ const Register = ({ navigation }) => {
             {/* <View
                 style={{ flexDirection: "row", justifyContent: "space-between" }}
               > */}
-            <View
-              style={{
-                flex: 1,
+            <CustomInput
+              control={control}
+              name={`name`}
+              placeholder={es.authentication.register.name.placeholder}
+              styled={{
+                text: styles.textInput,
+                label: styles.labelInput,
+                error: styles.errorInput,
+                placeholder: styles.placeholder,
+                input: [styles.inputContainer, global.bgWhite],
               }}
-            >
-              <CustomInput
-                control={control}
-                name={`name`}
-                placeholder={es.authentication.register.name.placeholder}
-                styled={{
-                  text: styles.textInput,
-                  label: styles.labelInput,
-                  error: styles.errorInput,
-                  placeholder: styles.placeholder,
-                  input: [styles.inputContainer, global.bgWhite],
-                }}
-                text={`Nombre`}
-                // icon={require("@/utils/images/profile_default.png")}
-                rules={{
-                  required: es.authentication.register.name.rules,
-                }}
-              />
-            </View>
-
-            <View
-              style={{
-                flex: 1,
+              text={`Nombre`}
+              // icon={require("@/utils/images/profile_default.png")}
+              rules={{
+                required: es.authentication.register.name.rules,
               }}
-            >
-              <CustomInput
-                control={control}
-                name={`lastName`}
-                placeholder={es.authentication.register.lastName.placeholder}
-                styled={{
-                  text: styles.textInput,
-                  label: styles.labelInput,
-                  error: styles.errorInput,
-                  placeholder: styles.placeholder,
-                  input: [styles.inputContainer, global.bgWhite],
-                }}
-                text={`Apellido`}
-                // icon={require("@/utils/images/profile_default.png")}
-                rules={{
-                  required: es.authentication.register.lastName.rules,
-                }}
-              />
-            </View>
-
-            
-
-            <View
-              style={{
-                flex: 1,
+            />
+            <CustomInput
+              control={control}
+              name={`lastName`}
+              placeholder={es.authentication.register.lastName.placeholder}
+              styled={{
+                text: styles.textInput,
+                label: styles.labelInput,
+                error: styles.errorInput,
+                placeholder: styles.placeholder,
+                input: [styles.inputContainer, global.bgWhite],
               }}
-            >
-              <CustomCalendarInput
-                control={control}
-                setValue={setValue}
-                name={`birthdate`}
-                placeholder={es.authentication.register.birthday.placeholder}
-                styled={{
-                  text: styles.textInput,
-                  label: styles.labelInput,
-                  error: styles.errorInput,
-                  placeholder: styles.placeholder,
-                  input: [styles.inputContainer, global.bgWhite],
-                }}
-                text={`Fecha de nacimiento`}
-                // icon={require("@/utils/images/calendar.png")}
-                rules={{
-                  required: es.authentication.register.birthday.rules,
-                }}
-              />
-            </View>
-
-            <View
-              style={{
-                flex: 1,
+              text={`Apellido`}
+              // icon={require("@/utils/images/profile_default.png")}
+              rules={{
+                required: es.authentication.register.lastName.rules,
               }}
-            >
-              <CustomInput
-                control={control}
-                name={`email`}
-                placeholder={es.authentication.register.email.placeholder}
-                styled={{
-                  text: styles.textInput,
-                  label: styles.labelInput,
-                  error: styles.errorInput,
-                  placeholder: styles.placeholder,
-                  input: [styles.inputContainer, global.bgWhite],
-                }}
-                text={`Correo electronico`}
-                // icon={require("@/utils/images/email.png")}
-                rules={{
-                  required: `Requerido`,
-                  pattern: {
-                    value: EMAIL_REGEX,
-                    message: "Email no valido.",
-                  },
-                }}
-              />
-            </View>
-
-            <View
-              style={{
-                flex: 1,
+            />
+            <CustomInputSelect
+              control={control}
+              name={`gender`}
+              placeholderTextColor={`#1f1f1f`}
+              placeholder="Elige tu género"
+              editable={false}
+              styled={{
+                text: styles.textInput,
+                label: styles.labelInput,
+                error: styles.errorInput,
+                placeholder: styles.placeholderGender,
+                input: [styles.inputContainer, global.bgWhite],
+                security: styles.security,
               }}
-            ></View>
+              text={`Género`}
+              rules={{
+                required: es.authentication.register.password.rules,
+              }}
+            />
+            <CustomCalendarInput
+              control={control}
+              setValue={setValue}
+              name={`birthdate`}
+              placeholder={es.authentication.register.birthday.placeholder}
+              styled={{
+                text: styles.textInput,
+                label: styles.labelInput,
+                error: styles.errorInput,
+                placeholder: styles.placeholder,
+                input: [styles.inputContainer, global.bgWhite],
+              }}
+              text={`Fecha de nacimiento`}
+              // icon={require("@/utils/images/calendar.png")}
+              rules={{
+                required: es.authentication.register.birthday.rules,
+              }}
+            />
+
+            <CustomInput
+              control={control}
+              name={`email`}
+              placeholder={es.authentication.register.email.placeholder}
+              styled={{
+                text: styles.textInput,
+                label: styles.labelInput,
+                error: styles.errorInput,
+                placeholder: styles.placeholder,
+                input: [styles.inputContainer, global.bgWhite],
+              }}
+              text={`Correo electronico`}
+              // icon={require("@/utils/images/email.png")}
+              rules={{
+                required: `Requerido`,
+                pattern: {
+                  value: EMAIL_REGEX,
+                  message: "Email no valido.",
+                },
+              }}
+            />
+
             <CustomInput
               control={control}
               name={`password`}
@@ -250,58 +237,26 @@ const Register = ({ navigation }) => {
                 },
               }}
             />
-            <View
-              style={{
-                flex: 1,
+            <CustomInput
+              control={control}
+              name={`password-repeat`}
+              placeholder={es.authentication.register.repeat.placeholder}
+              styled={{
+                text: styles.textInput,
+                label: styles.labelInput,
+                error: styles.errorInput,
+                placeholder: styles.placeholder,
+                input: [styles.inputContainer, global.bgWhite],
+                security: styles.security,
               }}
-            >
-              <CustomInput
-                control={control}
-                name={`password-repeat`}
-                placeholder={es.authentication.register.repeat.placeholder}
-                styled={{
-                  text: styles.textInput,
-                  label: styles.labelInput,
-                  error: styles.errorInput,
-                  placeholder: styles.placeholder,
-                  input: [styles.inputContainer, global.bgWhite],
-                  security: styles.security,
-                }}
-                text={`Repetir contraseña`}
-                // icon={require("@/utils/images/password.png")}
-                security={true}
-                rules={{
-                  required: es.authentication.register.repeat.rules,
-                  validate: (value) => value == pwd || "No coincide",
-                }}
-              />
-            </View>
-
-            <View
-              style={{
-                flex: 1,
+              text={`Repetir contraseña`}
+              // icon={require("@/utils/images/password.png")}
+              security={true}
+              rules={{
+                required: es.authentication.register.repeat.rules,
+                validate: (value) => value == pwd || "No coincide",
               }}
-            >
-              <CustomInputSelect
-                control={control}
-                name={`gender`}
-                placeholderTextColor={`#1f1f1f`}
-                placeholder="Elige tu género"
-                editable={false}
-                styled={{
-                  text: styles.textInput,
-                  label: styles.labelInput,
-                  error: styles.errorInput,
-                  placeholder: styles.placeholderGender,
-                  input: [styles.inputContainer, global.bgWhite],
-                  security: styles.security,
-                }}
-                text={`Género`}
-                rules={{
-                  required: es.authentication.register.password.rules,
-                }}
-              />
-            </View>
+            />
           </View>
           <CustomCheckBox
             control={control}
@@ -310,8 +265,11 @@ const Register = ({ navigation }) => {
             onPressed={_handlePressButtonAsync}
             rules={{ required: "Requerido" }}
           />
+          <View style={{
+            marginBottom: 30
+          }}></View>
         </ScrollView>
-        <View style={{ height: 65 }}>
+        <View style={{ height: 65, marginBottom: 40 }}>
           <CustomButton
             text={
               isLoading ? (

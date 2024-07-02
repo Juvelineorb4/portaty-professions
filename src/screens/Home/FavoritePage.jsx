@@ -15,7 +15,7 @@ import {
 } from "react-native";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import CustomSelect from "@/components/CustomSelect";
-import styles from "@/utils/styles/FavoritePage.module.css";
+import styles from "@/utils/styles/FavoritePage.js";
 import {
   FontAwesome5,
   MaterialCommunityIcons,
@@ -27,6 +27,7 @@ import {
   Entypo,
   MaterialIcons,
   Octicons,
+  Ionicons,
 } from "@expo/vector-icons";
 import { Auth, API, Storage } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Favorites";
@@ -41,6 +42,7 @@ import { updateListFavorites } from "@/atoms";
 import * as FileSystem from "expo-file-system";
 import { StorageAccessFramework } from "expo-file-system";
 import { useRef } from "react";
+import ModalReport from "@/components/ModalReport";
 
 const FavoritePage = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
@@ -51,10 +53,70 @@ const FavoritePage = ({ navigation, route }) => {
   const [imageView, setImageView] = useState(null);
   const [dimensionsImages, setDimensionsImages] = useState(0);
   const [open, setOpen] = useState(false);
+  const [weekSchedule, setWeekSchedule] = useState("");
+  const [listRatings, setListRatings] = useState(null);
 
   const {
     data: { item, image },
   } = route.params;
+  let schedule = JSON.parse(item.business?.schedule);
+  const filterSchedule = (array, type) => {
+    if (array === null || type === null) return;
+    console.log("toy por aqui");
+    console.log(array);
+    console.log(type);
+    // return;
+    let scheduleG = [];
+    let activeDays = array.filter((day) => day.active);
+
+    for (let i = 0; i < activeDays.length; i++) {
+      if (
+        i === 0 ||
+        activeDays[i].hourStart !== activeDays[i - 1].hourStart ||
+        activeDays[i].hourEnd !== activeDays[i - 1].hourEnd
+      ) {
+        scheduleG.push({
+          days: [activeDays[i].name],
+          hourStart: activeDays[i].hourStart,
+          hourEnd: activeDays[i].hourEnd,
+        });
+      } else {
+        scheduleG[scheduleG.length - 1].days.push(activeDays[i].name);
+      }
+    }
+
+    let pContent = scheduleG
+      .map((group) => {
+        let days = group.days;
+        if (days.length > 2) {
+          let consecutive = true;
+          for (let i = 1; i < days.length; i++) {
+            if (
+              array.findIndex((day) => day.name === days[i]) !==
+              array.findIndex((day) => day.name === days[i - 1]) + 1
+            ) {
+              consecutive = false;
+              break;
+            }
+          }
+          if (consecutive) {
+            days = [days[0], "a", days[days.length - 1]];
+          } else {
+            days = days.join(" - ");
+          }
+        } else if (days.length === 2) {
+          days = [days[0], "y", days[1]];
+        }
+        return `${Array.isArray(days) ? days.join(" ") : days}: ${
+          group.hourStart
+        } - ${group.hourEnd}`;
+      })
+      .join(" / ");
+
+    console.log(pContent);
+
+    setWeekSchedule(pContent);
+  };
   const actividad = JSON.parse(item.business.activity);
   const list = item?.business?.images
     .map((image) => JSON.parse(image))
@@ -94,9 +156,7 @@ const FavoritePage = ({ navigation, route }) => {
             encoding: FileSystem.EncodingType.Base64,
           });
         })
-        .catch((e) => {
-          console.log(e);
-        });
+        .catch((e) => {});
     } catch (error) {
       console.log("Error en pdf: ", error.message);
     }
@@ -112,7 +172,50 @@ const FavoritePage = ({ navigation, route }) => {
       });
       setPost(business.data.getBusiness);
     } catch (error) {
-      console.log(error);
+      console.log("eres tu", error);
+    }
+  };
+
+  const fetchRatings = async ({ data }) => {
+    let business = item;
+    console.log(business.businessID);
+    try {
+      const fetchAllRatings = async (nextToken, result = []) => {
+        const response = await API.graphql({
+          query: queries.businessCommentsByBusinessID,
+          authMode: "AMAZON_COGNITO_USER_POOLS",
+          variables: {
+            businessID: business?.businessID,
+            nextToken,
+          },
+        });
+
+        const items = response.data.businessCommentsByBusinessID.items;
+        result.push(...items);
+
+        if (response.data.businessCommentsByBusinessID.nextToken) {
+          return fetchAllRatings(
+            response.data.businessCommentsByBusinessID.nextToken,
+            result
+          );
+        }
+
+        return result;
+      };
+      
+      const allRatings = await fetchAllRatings();
+      console.log(allRatings);
+      setListRatings(allRatings)
+      // const ratings = await API.graphql({
+      //   query: queries.businessCommentsByBusinessID,
+      //   variables: {
+      //     businessID: business?.businessID,
+      //   },
+      //   authMode: "AWS_IAM",
+      // });
+      // console.log(ratings.data.businessCommentsByBusinessID.items)
+    } catch (error) {
+      console.log("eres tu", error);
     }
   };
   const onDeleteFavorite = async () => {
@@ -155,9 +258,11 @@ const FavoritePage = ({ navigation, route }) => {
 
   useLayoutEffect(() => {
     fetchData();
-  }, []);
+    fetchRatings(item);
+    filterSchedule(schedule.shedule, schedule.type);
+  }, [listUpdate]);
 
-  if (!item) return <SkeletonExample />;
+  if (!item || !listRatings) return <SkeletonExample />;
   return (
     <View
       style={[
@@ -299,6 +404,66 @@ const FavoritePage = ({ navigation, route }) => {
         </View>
         <View
           style={{
+            flexDirection: "row",
+            paddingHorizontal: 20,
+            justifyContent: "center",
+            alignItems: "center",
+            paddingTop: 5,
+          }}
+        >
+          <View
+            style={{
+              alignItems: "center",
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: "regular",
+                  fontSize: 16,
+                  marginRight: 3,
+                }}
+              >
+                4.7
+              </Text>
+              <Ionicons name="star" size={16} color="#ffb703" />
+            </View>
+
+            <Text
+              style={{
+                fontFamily: "lightItalic",
+                fontSize: 12,
+              }}
+            >
+              100+ valoraciones
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginLeft: 25,
+            }}
+          >
+            <MaterialCommunityIcons name="medal" size={20} color="#ffb703" />
+            <Text
+              style={{
+                fontFamily: "lightItalic",
+                fontSize: 12,
+              }}
+            >
+              Nº 14 en Turismo
+            </Text>
+          </View>
+        </View>
+
+        <View
+          style={{
             // flex: 1,
             flexDirection: "row",
             alignItems: "center",
@@ -333,28 +498,188 @@ const FavoritePage = ({ navigation, route }) => {
             {/* <MaterialIcons name="favorite" size={45} color="red" /> */}
           </TouchableOpacity>
         </View>
-
         {/* Reporte */}
-        {/* <TouchableOpacity
+        <TouchableOpacity
           style={{
             alignSelf: "flex-end",
             paddingHorizontal: 20,
             paddingBottom: 5,
             flexDirection: "row",
-            alignItems: 'center',
+            alignItems: "center",
           }}
           onPress={() => setVisible(true)}
         >
-          <MaterialIcons name="report" size={22} color="black" />
-          <Text style={[global.black, {
-            fontFamily: 'bold',
-            fontSize: 12
-            // marginLeft: 2,
-            // marginBottom: 3
-          }]}>Reportar negocio</Text>
-        </TouchableOpacity> */}
+          <MaterialIcons name="report" size={16} color="black" />
+          <Text
+            style={[
+              global.black,
+              {
+                fontFamily: "bold",
+                fontSize: 10,
+                // marginLeft: 2,
+                // marginBottom: 3
+              },
+            ]}
+          >
+            Reportar negocio
+          </Text>
+        </TouchableOpacity>
+        {/* Hasta aqui */}
 
         <View style={[styles.line, global.bgMidGray]} />
+
+        <View
+          style={{
+            paddingHorizontal: 20,
+            paddingTop: 20,
+          }}
+        >
+          <Text style={{ fontSize: 18, fontFamily: "regular" }}>
+            Horario comercial
+          </Text>
+          {schedule !== null ? (
+            <View>
+              <Text
+                style={{
+                  fontFamily: "regular",
+                  fontSize: 14,
+                  marginTop: 5,
+                  lineHeight: 25,
+                  textAlign: "center",
+                }}
+              >
+                {schedule.type}
+              </Text>
+              <Text
+                style={{
+                  fontFamily: "light",
+                  fontSize: 15,
+                  lineHeight: 25,
+                  textAlign: "center",
+                }}
+              >
+                {weekSchedule}
+              </Text>
+            </View>
+          ) : (
+            <View>
+              <Text
+                style={{
+                  fontFamily: "regular",
+                  fontSize: 18,
+                  marginTop: 8,
+                  textAlign: "center",
+                  marginBottom: -10,
+                }}
+              >
+                {`No definido`}
+              </Text>
+            </View>
+          )}
+        </View>
+
+        {/* Interactions */}
+        <TouchableOpacity
+          style={{
+            paddingHorizontal: 20,
+            paddingTop: 10,
+          }}
+          onPress={() => {
+            navigation.navigate("InteractionsFavorites", {
+              business: item,
+              list: listRatings
+            });
+          }}
+        >
+          <View
+            style={{
+              borderWidth: 0.6,
+              borderColor: "#1f1f1f",
+              height: 130,
+              borderRadius: 8,
+              padding: 10,
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "flex-end",
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: "bold",
+                  fontSize: 13,
+                }}
+              >
+                Este negocio tiene {listRatings.length} reseña(s)
+              </Text>
+            </View>
+            <View
+              style={{
+                marginTop: 10,
+                backgroundColor: "#efeded",
+                padding: 5,
+                borderRadius: 8,
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: "regular",
+                    fontSize: 13,
+                    marginRight: 3,
+                  }}
+                >
+                  {listRatings[0].stars} de 5
+                </Text>
+                <Ionicons name="star" size={12} color="#ffb703" />
+                <Text
+                  style={{
+                    fontFamily: "medium",
+                    fontSize: 12,
+                    marginLeft: 5,
+                  }}
+                >
+                  {listRatings[0].user.name} {listRatings[0].user.lastName}
+                </Text>
+              </View>
+              <Text
+                style={{
+                  fontFamily: "regular",
+                  fontSize: 13,
+                }}
+              >
+                {listRatings[0].description}
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                alignItems: "center",
+                marginTop: 5,
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: "mediumItalic",
+                  fontSize: 12,
+                  marginRight: 3,
+                }}
+              >
+                Ver todas las reseñas
+              </Text>
+              <AntDesign name="arrowright" size={13} color="black" />
+            </View>
+          </View>
+        </TouchableOpacity>
+
         <TouchableOpacity
           style={{
             padding: 20,
@@ -1035,11 +1360,10 @@ const FavoritePage = ({ navigation, route }) => {
         >
           <Text>Modal</Text>
         </TouchableOpacity> */}
-        <ModalAlert
-          text={`Seguro quieres reportar este negocio?`}
+        <ModalReport
+          businessID={item.businessID}
           close={() => setVisible(false)}
           open={visible}
-          icon={require("@/utils/images/error.png")}
         />
       </ScrollView>
     </View>

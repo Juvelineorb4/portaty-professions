@@ -8,7 +8,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import styles from "@/utils/styles/StepTwo.module.css";
+import styles from "@/utils/styles/StepTwo.js";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import CustomInput from "@/components/CustomInput";
@@ -21,7 +21,6 @@ import {
   areaSelect,
   errorArea,
   optionBussines,
-  stepOneParams,
   userAuthenticated,
 } from "@/atoms";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -36,10 +35,11 @@ const StepTwo = ({ navigation, route }) => {
   const { control, handleSubmit } = useForm();
   const animation = useRef(null);
   const [areasList, setAreasList] = useState([]);
+  const { business } = route.params;
   const [active, setActive] = useRecoilState(activeModalScreen);
   const [selectOption, setSelectOption] = useRecoilState(optionBussines);
   const area = useRecoilValue(areaSelect);
-  const [selectError, setSelectError] = useRecoilState(errorArea)
+  const [selectError, setSelectError] = useRecoilState(errorArea);
 
   const listOptions = [
     {
@@ -70,10 +70,17 @@ const StepTwo = ({ navigation, route }) => {
   ];
 
   const MultipleData = async () => {
-    const activities = await API.graphql({
-      query: customProfile.listAreas,
-    });
-    setAreasList(activities.data.listAreas.items);
+    const api = "api-portaty";
+    const path = "/api/sectorsandactivities";
+    const params = {
+      headers: {},
+    };
+    try {
+      const response = await API.get(api, path, params);
+      setAreasList(response);
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   const handleOption = (item) => {
@@ -84,7 +91,7 @@ const StepTwo = ({ navigation, route }) => {
   }, []);
   return (
     <View style={[global.bgWhite, styles.container]}>
-      {/* <Modal animationType="none" transparent={active} visible={active}> */}
+      <Modal animationType="none" transparent={active} visible={active}>
         <View style={[styles.modalMain]}>
           <ScrollView style={{ flex: 1 }}>
             <View style={[styles.modalContent]}>
@@ -197,7 +204,7 @@ const StepTwo = ({ navigation, route }) => {
                       style={{
                         fontFamily: "medium",
                         fontSize: 14,
-                        color: selectError ? 'red' : '#1f1f1f'
+                        color: selectError ? "red" : "#1f1f1f",
                       }}
                     >
                       {area?.area ? area?.area : "No has seleccionado aun"}
@@ -223,7 +230,7 @@ const StepTwo = ({ navigation, route }) => {
                       style={{
                         fontFamily: "medium",
                         fontSize: 14,
-                        color: selectError ? 'red' : '#1f1f1f'
+                        color: selectError ? "red" : "#1f1f1f",
                       }}
                     >
                       {area?.activity
@@ -251,7 +258,7 @@ const StepTwo = ({ navigation, route }) => {
                     },
                   ]}
                   onPress={() =>
-                    navigation.navigate("FormNavigator")
+                    navigation.push("StepOne", { business: business })
                   }
                 >
                   <Feather name="arrow-left-circle" size={30} color="black" />
@@ -281,11 +288,13 @@ const StepTwo = ({ navigation, route }) => {
                   ]}
                   onPress={() => {
                     if (Object.keys(area).length === 0) {
-                      setSelectError(true)
-                      console.log('No has elegido')
-                      return
+                      setSelectError(true);
+                      console.log("No has elegido");
+                      return;
                     }
-                    navigation.navigate("FormNavigatorThree");
+                    navigation.push("StepThree", {
+                      business: business,
+                    });
                   }}
                 >
                   <Text
@@ -305,7 +314,7 @@ const StepTwo = ({ navigation, route }) => {
             </View>
           </ScrollView>
         </View>
-      {/* </Modal> */}
+      </Modal>
     </View>
   );
 };

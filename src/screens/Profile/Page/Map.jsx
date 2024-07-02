@@ -11,7 +11,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE, Callout } from "react-native-maps";
-import styles from "@/utils/styles/MapMarket.module.css";
+import styles from "@/utils/styles/MapMarket.js";
 import * as mutations from "@/graphql/CustomMutations/Profile";
 import { API } from "aws-amplify";
 

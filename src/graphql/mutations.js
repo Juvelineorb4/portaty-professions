@@ -46,6 +46,89 @@ export const deleteAppVersionHistory = /* GraphQL */ `
     }
   }
 `;
+export const createReports = /* GraphQL */ `
+  mutation CreateReports(
+    $input: CreateReportsInput!
+    $condition: ModelReportsConditionInput
+  ) {
+    createReports(input: $input, condition: $condition) {
+      id
+      userID
+      subject
+      description
+      status
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateReports = /* GraphQL */ `
+  mutation UpdateReports(
+    $input: UpdateReportsInput!
+    $condition: ModelReportsConditionInput
+  ) {
+    updateReports(input: $input, condition: $condition) {
+      id
+      userID
+      subject
+      description
+      status
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteReports = /* GraphQL */ `
+  mutation DeleteReports(
+    $input: DeleteReportsInput!
+    $condition: ModelReportsConditionInput
+  ) {
+    deleteReports(input: $input, condition: $condition) {
+      id
+      userID
+      subject
+      description
+      status
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteBusinessComment = /* GraphQL */ `
+  mutation DeleteBusinessComment(
+    $input: DeleteBusinessCommentInput!
+    $condition: ModelBusinessCommentConditionInput
+  ) {
+    deleteBusinessComment(input: $input, condition: $condition) {
+      id
+      userID
+      user {
+        id
+        cognitoID
+        name
+        lastName
+        email
+        identityID
+        gender
+        notificationToken
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
+      businessID
+      stars
+      description
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
 export const deleteComplaints = /* GraphQL */ `
   mutation DeleteComplaints(
     $input: DeleteComplaintsInput!
@@ -65,6 +148,51 @@ export const deleteComplaints = /* GraphQL */ `
     }
   }
 `;
+export const createNotifiationHistory = /* GraphQL */ `
+  mutation CreateNotifiationHistory(
+    $input: CreateNotifiationHistoryInput!
+    $condition: ModelNotifiationHistoryConditionInput
+  ) {
+    createNotifiationHistory(input: $input, condition: $condition) {
+      id
+      title
+      message
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateNotifiationHistory = /* GraphQL */ `
+  mutation UpdateNotifiationHistory(
+    $input: UpdateNotifiationHistoryInput!
+    $condition: ModelNotifiationHistoryConditionInput
+  ) {
+    updateNotifiationHistory(input: $input, condition: $condition) {
+      id
+      title
+      message
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteNotifiationHistory = /* GraphQL */ `
+  mutation DeleteNotifiationHistory(
+    $input: DeleteNotifiationHistoryInput!
+    $condition: ModelNotifiationHistoryConditionInput
+  ) {
+    deleteNotifiationHistory(input: $input, condition: $condition) {
+      id
+      title
+      message
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const createArea = /* GraphQL */ `
   mutation CreateArea(
     $input: CreateAreaInput!
@@ -74,14 +202,6 @@ export const createArea = /* GraphQL */ `
       id
       name
       activities {
-        items {
-          id
-          name
-          areaID
-          createdAt
-          updatedAt
-          __typename
-        }
         nextToken
         __typename
       }
@@ -100,14 +220,6 @@ export const updateArea = /* GraphQL */ `
       id
       name
       activities {
-        items {
-          id
-          name
-          areaID
-          createdAt
-          updatedAt
-          __typename
-        }
         nextToken
         __typename
       }
@@ -126,14 +238,6 @@ export const deleteArea = /* GraphQL */ `
       id
       name
       activities {
-        items {
-          id
-          name
-          areaID
-          createdAt
-          updatedAt
-          __typename
-        }
         nextToken
         __typename
       }
@@ -155,10 +259,6 @@ export const createActivity = /* GraphQL */ `
       area {
         id
         name
-        activities {
-          nextToken
-          __typename
-        }
         createdAt
         updatedAt
         __typename
@@ -181,10 +281,6 @@ export const updateActivity = /* GraphQL */ `
       area {
         id
         name
-        activities {
-          nextToken
-          __typename
-        }
         createdAt
         updatedAt
         __typename
@@ -207,10 +303,6 @@ export const deleteActivity = /* GraphQL */ `
       area {
         id
         name
-        activities {
-          nextToken
-          __typename
-        }
         createdAt
         updatedAt
         __typename
@@ -236,46 +328,14 @@ export const createUsers = /* GraphQL */ `
       gender
       notificationToken
       favorites {
-        items {
-          id
-          businessID
-          userID
-          position
-          owner
-          createdAt
-          updatedAt
-          __typename
-        }
         nextToken
         __typename
       }
       business {
-        items {
-          id
-          userID
-          status
-          identityID
-          name
-          image
-          images
-          thumbnail
-          email
-          phone
-          whatsapp
-          instagram
-          facebook
-          page
-          activity
-          tags
-          description
-          prefer
-          scheduleType
-          schedule
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
+        nextToken
+        __typename
+      }
+      comments {
         nextToken
         __typename
       }
@@ -301,46 +361,14 @@ export const updateUsers = /* GraphQL */ `
       gender
       notificationToken
       favorites {
-        items {
-          id
-          businessID
-          userID
-          position
-          owner
-          createdAt
-          updatedAt
-          __typename
-        }
         nextToken
         __typename
       }
       business {
-        items {
-          id
-          userID
-          status
-          identityID
-          name
-          image
-          images
-          thumbnail
-          email
-          phone
-          whatsapp
-          instagram
-          facebook
-          page
-          activity
-          tags
-          description
-          prefer
-          scheduleType
-          schedule
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
+        nextToken
+        __typename
+      }
+      comments {
         nextToken
         __typename
       }
@@ -366,46 +394,14 @@ export const deleteUsers = /* GraphQL */ `
       gender
       notificationToken
       favorites {
-        items {
-          id
-          businessID
-          userID
-          position
-          owner
-          createdAt
-          updatedAt
-          __typename
-        }
         nextToken
         __typename
       }
       business {
-        items {
-          id
-          userID
-          status
-          identityID
-          name
-          image
-          images
-          thumbnail
-          email
-          phone
-          whatsapp
-          instagram
-          facebook
-          page
-          activity
-          tags
-          description
-          prefer
-          scheduleType
-          schedule
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
+        nextToken
+        __typename
+      }
+      comments {
         nextToken
         __typename
       }
@@ -433,14 +429,6 @@ export const createBusiness = /* GraphQL */ `
         identityID
         gender
         notificationToken
-        favorites {
-          nextToken
-          __typename
-        }
-        business {
-          nextToken
-          __typename
-        }
         owner
         createdAt
         updatedAt
@@ -466,23 +454,17 @@ export const createBusiness = /* GraphQL */ `
       activity
       tags
       favorites {
-        items {
-          id
-          businessID
-          userID
-          position
-          owner
-          createdAt
-          updatedAt
-          __typename
-        }
         nextToken
         __typename
       }
       description
       prefer
-      scheduleType
       schedule
+      comments {
+        nextToken
+        __typename
+      }
+      catalogpdf
       createdAt
       updatedAt
       owner
@@ -507,14 +489,6 @@ export const updateBusiness = /* GraphQL */ `
         identityID
         gender
         notificationToken
-        favorites {
-          nextToken
-          __typename
-        }
-        business {
-          nextToken
-          __typename
-        }
         owner
         createdAt
         updatedAt
@@ -540,23 +514,17 @@ export const updateBusiness = /* GraphQL */ `
       activity
       tags
       favorites {
-        items {
-          id
-          businessID
-          userID
-          position
-          owner
-          createdAt
-          updatedAt
-          __typename
-        }
         nextToken
         __typename
       }
       description
       prefer
-      scheduleType
       schedule
+      comments {
+        nextToken
+        __typename
+      }
+      catalogpdf
       createdAt
       updatedAt
       owner
@@ -581,14 +549,6 @@ export const deleteBusiness = /* GraphQL */ `
         identityID
         gender
         notificationToken
-        favorites {
-          nextToken
-          __typename
-        }
-        business {
-          nextToken
-          __typename
-        }
         owner
         createdAt
         updatedAt
@@ -614,23 +574,81 @@ export const deleteBusiness = /* GraphQL */ `
       activity
       tags
       favorites {
-        items {
-          id
-          businessID
-          userID
-          position
-          owner
-          createdAt
-          updatedAt
-          __typename
-        }
         nextToken
         __typename
       }
       description
       prefer
-      scheduleType
       schedule
+      comments {
+        nextToken
+        __typename
+      }
+      catalogpdf
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const createBusinessComment = /* GraphQL */ `
+  mutation CreateBusinessComment(
+    $input: CreateBusinessCommentInput!
+    $condition: ModelBusinessCommentConditionInput
+  ) {
+    createBusinessComment(input: $input, condition: $condition) {
+      id
+      userID
+      user {
+        id
+        cognitoID
+        name
+        lastName
+        email
+        identityID
+        gender
+        notificationToken
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
+      businessID
+      stars
+      description
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const updateBusinessComment = /* GraphQL */ `
+  mutation UpdateBusinessComment(
+    $input: UpdateBusinessCommentInput!
+    $condition: ModelBusinessCommentConditionInput
+  ) {
+    updateBusinessComment(input: $input, condition: $condition) {
+      id
+      userID
+      user {
+        id
+        cognitoID
+        name
+        lastName
+        email
+        identityID
+        gender
+        notificationToken
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
+      businessID
+      stars
+      description
       createdAt
       updatedAt
       owner
@@ -649,20 +667,6 @@ export const createFavorites = /* GraphQL */ `
       business {
         id
         userID
-        user {
-          id
-          cognitoID
-          name
-          lastName
-          email
-          identityID
-          gender
-          notificationToken
-          owner
-          createdAt
-          updatedAt
-          __typename
-        }
         status
         identityID
         name
@@ -675,21 +679,12 @@ export const createFavorites = /* GraphQL */ `
         instagram
         facebook
         page
-        coordinates {
-          lat
-          lon
-          __typename
-        }
         activity
         tags
-        favorites {
-          nextToken
-          __typename
-        }
         description
         prefer
-        scheduleType
         schedule
+        catalogpdf
         createdAt
         updatedAt
         owner
@@ -705,14 +700,6 @@ export const createFavorites = /* GraphQL */ `
         identityID
         gender
         notificationToken
-        favorites {
-          nextToken
-          __typename
-        }
-        business {
-          nextToken
-          __typename
-        }
         owner
         createdAt
         updatedAt
@@ -737,20 +724,6 @@ export const updateFavorites = /* GraphQL */ `
       business {
         id
         userID
-        user {
-          id
-          cognitoID
-          name
-          lastName
-          email
-          identityID
-          gender
-          notificationToken
-          owner
-          createdAt
-          updatedAt
-          __typename
-        }
         status
         identityID
         name
@@ -763,21 +736,12 @@ export const updateFavorites = /* GraphQL */ `
         instagram
         facebook
         page
-        coordinates {
-          lat
-          lon
-          __typename
-        }
         activity
         tags
-        favorites {
-          nextToken
-          __typename
-        }
         description
         prefer
-        scheduleType
         schedule
+        catalogpdf
         createdAt
         updatedAt
         owner
@@ -793,14 +757,6 @@ export const updateFavorites = /* GraphQL */ `
         identityID
         gender
         notificationToken
-        favorites {
-          nextToken
-          __typename
-        }
-        business {
-          nextToken
-          __typename
-        }
         owner
         createdAt
         updatedAt
@@ -825,20 +781,6 @@ export const deleteFavorites = /* GraphQL */ `
       business {
         id
         userID
-        user {
-          id
-          cognitoID
-          name
-          lastName
-          email
-          identityID
-          gender
-          notificationToken
-          owner
-          createdAt
-          updatedAt
-          __typename
-        }
         status
         identityID
         name
@@ -851,21 +793,12 @@ export const deleteFavorites = /* GraphQL */ `
         instagram
         facebook
         page
-        coordinates {
-          lat
-          lon
-          __typename
-        }
         activity
         tags
-        favorites {
-          nextToken
-          __typename
-        }
         description
         prefer
-        scheduleType
         schedule
+        catalogpdf
         createdAt
         updatedAt
         owner
@@ -881,14 +814,6 @@ export const deleteFavorites = /* GraphQL */ `
         identityID
         gender
         notificationToken
-        favorites {
-          nextToken
-          __typename
-        }
-        business {
-          nextToken
-          __typename
-        }
         owner
         createdAt
         updatedAt

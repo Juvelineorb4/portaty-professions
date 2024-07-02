@@ -9,7 +9,7 @@ import {
   Animated,
 } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import styles from "@/utils/styles/Tabs.module.css";
+import styles from "@/utils/styles/Tabs.js";
 import HomeNavigator from "./HomeNavigator";
 import SearchNavigator from "./SearchNavigator";
 import ProfileNavigator from "./ProfileNavigator";
@@ -160,7 +160,7 @@ const Tabs = () => {
   return (
     <Tab.Navigator
       tabBar={(props) => <MyTabBar {...props} />}
-      initialRouteName={`Home_Tab`}
+      initialRouteName={`Search_Tab`}
       screenOptions={{
         headerShown: false,
         unmountOnBlur: true

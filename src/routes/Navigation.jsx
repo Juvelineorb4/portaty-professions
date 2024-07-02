@@ -31,7 +31,7 @@ const Navigation = () => {
   const [userState, setUserState] = useState(false);
   const [isFirsTime, setIsFirsTime] = useState(false);
   const userAuth = useRecoilValue(userAuthenticated);
-
+  // NavSettings(checkRender);
   const renderNavigation = () => {
     setCheckRender(true);
 
@@ -58,24 +58,21 @@ const Navigation = () => {
     <NavigationContainer fallback={<Loading />}>
       <NavSettings checkRender={checkRender} />
       {checkRender === false ? (
-        <Stack.Navigator>
-          {userAuth ? (
-            <Stack.Screen
-              name={`Tabs_Navigation`}
-              component={Tabs}
-              options={{
-                headerShown: false,
-              }}
-            />
-          ) : (
-            <Stack.Screen
-              name={`Login_Welcome`}
-              component={LoginNavigator}
-              options={{
-                headerShown: false,
-              }}
-            />
-          )}
+        <Stack.Navigator initialRouteName="Tabs_Navigation">
+          <Stack.Screen
+            name={`Tabs_Navigation`}
+            component={Tabs}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name={`Login_Welcome`}
+            component={LoginNavigator}
+            options={{
+              headerShown: false,
+            }}
+          />
           <Stack.Screen
             name="SharePage"
             component={SharePage}

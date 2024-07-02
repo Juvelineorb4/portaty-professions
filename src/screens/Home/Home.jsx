@@ -20,7 +20,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import * as queries from "@/graphql/CustomQueries/Favorites";
 import * as subscriptions from "@/graphql/CustomSubscriptions/Favorites";
 import CustomButton from "@/components/CustomButton";
-import styles from "@/utils/styles/Home.module.css";
+import styles from "@/utils/styles/Home.js";
 import {
   Ionicons,
   MaterialCommunityIcons,
@@ -50,20 +50,41 @@ const Home = ({ navigation, route }) => {
   const [loading, setLoading] = useState(false);
   const fetchFavorites = async () => {
     setLoading(true);
-    const result = await API.graphql({
-      query: queries.userByEmail,
-      authMode: "AMAZON_COGNITO_USER_POOLS",
-      variables: {
-        email: userAuth?.attributes?.email,
-      },
-    });
-    let temporalList = [];
-    setFavoritesList(result?.data?.userByEmail?.items[0]?.favorites?.items);
-    if (result?.data?.userByEmail?.items[0]?.favorites?.items?.length === 0)
-      setNothing(true);
-    if (inputFavorite !== "") {
-      result?.data?.userByEmail?.items[0]?.favorites?.items?.map(
-        (item, index) => {
+    if (userAuth === null) {
+      console.log(userAuth)
+      setLoading(false);
+      return;
+    }
+    try {
+      const fetchAllFavorites = async (nextToken, result = []) => {
+        const response = await API.graphql({
+          query: queries.listFavoritesbyUserID,
+          authMode: "AMAZON_COGNITO_USER_POOLS",
+          variables: {
+            userID: userAuth?.attributes["custom:userTableID"],
+            nextToken,
+          },
+        });
+
+        const items = response.data.listFavoritesbyUserID.items;
+        result.push(...items);
+
+        if (response.data.listFavoritesbyUserID.nextToken) {
+          return fetchAllFavorites(
+            response.data.listFavoritesbyUserID.nextToken,
+            result
+          );
+        }
+
+        return result;
+      };
+
+      const allFavorites = await fetchAllFavorites();
+      let temporalList = [];
+      setFavoritesList(allFavorites);
+      if (allFavorites.length === 0) setNothing(true);
+      if (inputFavorite !== "") {
+        allFavorites.map((item, index) => {
           let newArray = item?.business?.tags?.map((cadena) =>
             cadena.replace(/\[|\]/g, "")
           );
@@ -76,18 +97,20 @@ const Home = ({ navigation, route }) => {
             )
               temporalList.push(item);
           });
+        });
+        if (temporalList.length !== 0) {
+          setFavoritesList(temporalList);
+        } else {
+          setResultNothing(true);
         }
-      );
-      if (temporalList.length !== 0) {
-        setFavoritesList(temporalList);
       } else {
-        setResultNothing(true);
+        setFavoritesList(allFavorites);
       }
-    } else {
-      setFavoritesList(result.data.userByEmail.items[0].favorites.items);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
     }
-    // setTimeout(() => {}, 2000);
-    setLoading(false);
   };
 
   useLayoutEffect(() => {
@@ -106,9 +129,11 @@ const Home = ({ navigation, route }) => {
     });
     return () => {
       fetchFavorites();
-      updateSub.unsubscribe();
+      if (updateSub) {
+        updateSub.unsubscribe();
+      }
     };
-  }, [route, statusFavorites, inputFavorite, updateFavorite]);
+  }, [route, statusFavorites, inputFavorite, updateFavorite, userAuth]);
 
   if (updateAvailable === true)
     return (
@@ -171,6 +196,34 @@ const Home = ({ navigation, route }) => {
         />
       </View>
     );
+
+    if (!userAuth && !loading)
+      return (
+        <View
+          style={[
+            {
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+              paddingHorizontal: 20,
+              paddingBottom: 80,
+            },
+            global.bgWhite,
+          ]}
+        >
+          <Text style={{ fontSize: 16, fontFamily: "light", textAlign: 'center' }}>
+            Ingresa a tu cuenta para guardar tus negocios favoritos
+          </Text>
+          <CustomButton
+            text={`Iniciar sesion`}
+            handlePress={() => {
+              navigation.navigate('Login_Welcome');
+            }}
+            textStyles={[styles.textSearch, global.black]}
+            buttonStyles={[styles.search, global.bgYellow]}
+          />
+        </View>
+      );
 
   if (favoritesList.length !== 0)
     return (

@@ -4,6 +4,8 @@ import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
 import { useSetRecoilState } from "recoil";
 import { notificationToken } from "@/atoms/index";
+import { Platform } from "react-native";
+
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -78,18 +80,15 @@ const usePushNotification = () => {
     registerForPushNotificationsAsync().then((token) => {
       setExpoPushToken(token);
       setToken(token);
-      console.log(token)
     });
 
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
-        console.log("NOTIFICACION RECIBIDA: ", notification);
         setNotification(notification);
       });
 
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log("NOTIFICACION CLICK: ", response.notification.request);
       });
 
     return () => {

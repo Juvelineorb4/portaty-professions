@@ -21,6 +21,7 @@ const useCheckAppVersion = () => {
             limit: 1,
           },
         });
+
         const data = result?.data?.AppVersionByDate?.items[0];
         const latestVersion = data?.latestVersion;
         const createdAt = data?.createdAt;
@@ -32,7 +33,7 @@ const useCheckAppVersion = () => {
           setUpdateAvailable(false);
         }
       } catch (error) {
-        console.log("ERROR EN BUSCAR ACTUALIZACION: ", error);
+        console.log("ERROR EN BUSCAR ACTUALIZACION: ", error.errors);
       }
     }
 

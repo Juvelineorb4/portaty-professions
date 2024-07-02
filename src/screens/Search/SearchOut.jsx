@@ -15,7 +15,7 @@ import GridSearch from "@/components/Search/GridSearch";
 import * as customSearch from "@/graphql/CustomQueries/Search";
 import { Auth, API, Storage } from "aws-amplify";
 import Slider from "@react-native-community/slider";
-import styles from "@/utils/styles/Tags.module.css";
+import styles from "@/utils/styles/Tags.js";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { mapUser, textInputSearch } from "@/atoms";
 import * as Location from "expo-location";

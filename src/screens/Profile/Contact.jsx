@@ -15,7 +15,7 @@ import {
   MaterialIcons,
 } from "@expo/vector-icons";
 import { Image } from "react-native";
-import styles from "@/utils/styles/Unprofile.module.css";
+import styles from "@/utils/styles/Unprofile.js";
 
 const Contact = () => {
   const global = require("@/utils/styles/global.js");
@@ -41,7 +41,7 @@ const Contact = () => {
 
   const openInstagram = () => {
     const url =
-      "https://www.instagram.com/portatyapp?igsh=MWNwaHU0bHZ1OGswcQ%3D%3D&utm_source=qr";
+      "https://www.instagram.com/portaty_app?igsh=MWNwaHU0bHZ1OGswcQ%3D%3D&utm_source=qr";
     Linking.openURL(url);
   };
   return (
@@ -149,7 +149,7 @@ const Contact = () => {
               source={require("@/utils/images/arrow_right.png")}
             />
           </TouchableOpacity> */}
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={{
               padding: 20,
               flexDirection: "row",
@@ -200,7 +200,7 @@ const Contact = () => {
               }}
               source={require("@/utils/images/arrow_right.png")}
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
       <View>

@@ -39,3 +39,34 @@ export const updateFavorites = /* GraphQL */ `
     }
   }
 `;
+
+export const createComplaints = /* GraphQL */ `
+  mutation CreateComplaints(
+    $input: CreateComplaintsInput!
+    $condition: ModelComplaintsConditionInput
+  ) {
+    createComplaints(input: $input, condition: $condition) {
+      id
+      userID
+      businessID
+      status
+      reason
+      description
+    }
+  }
+`;
+
+export const createBusinessComment = /* GraphQL */ `
+  mutation CreateBusinessComment(
+    $input: CreateBusinessCommentInput!
+    $condition: ModelBusinessCommentConditionInput
+  ) {
+    createBusinessComment(input: $input, condition: $condition) {
+      id
+      userID
+      businessID
+      stars
+      description
+    }
+  }
+`;
