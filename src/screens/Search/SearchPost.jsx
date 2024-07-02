@@ -24,7 +24,7 @@ import {
   Feather,
   Entypo,
   MaterialIcons,
-  Ionicons
+  Ionicons,
 } from "@expo/vector-icons";
 import { Auth, API, Analytics } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Favorites";
@@ -320,7 +320,6 @@ const SearchPost = ({ route, navigation }) => {
       })
       .join(" / ");
 
-
     setWeekSchedule(pContent);
     setTypeSchedule(type);
   };
@@ -351,10 +350,10 @@ const SearchPost = ({ route, navigation }) => {
 
         return result;
       };
-      
+
       const allRatings = await fetchAllRatings();
       console.log(allRatings);
-      setListRatings(allRatings)
+      setListRatings(allRatings);
       // const ratings = await API.graphql({
       //   query: queries.businessCommentsByBusinessID,
       //   variables: {
@@ -372,7 +371,7 @@ const SearchPost = ({ route, navigation }) => {
   useEffect(() => {
     if (!save) fetchFavorite();
     fetchData();
-    fetchRatings()
+    fetchRatings();
   }, []);
   // para obetener el pais y ciudad
   useEffect(() => {
@@ -484,7 +483,7 @@ const SearchPost = ({ route, navigation }) => {
                     style={{
                       width: "100%",
                       height: "100%",
-                      resizeMode: "cover",
+                      resizeMode: "contain",
                       borderRadius: 5,
                       backgroundColor: "#fff",
                       borderColor: "#1f1f1f",
@@ -753,7 +752,7 @@ const SearchPost = ({ route, navigation }) => {
           onPress={() => {
             navigation.navigate("InteractionsSearch", {
               business: item,
-              list: listRatings
+              list: listRatings,
             });
           }}
         >
@@ -1253,9 +1252,19 @@ const SearchPost = ({ route, navigation }) => {
             <Pressable
               style={{ flexDirection: "row", alignItems: "center" }}
               onPress={() => {
-                if (post?.whatsapp === "" || post?.whatsapp === null) return;
-                const url = `https://${post?.whatsapp}`;
-                Linking.openURL(url);
+                let isWhatsAppLink =
+                  item?.business?.phone.startsWith("https://wa.me/") ||
+                  item?.business?.phone.startsWith(
+                    "https://api.whatsapp.com/send?text="
+                  );
+                if (isWhatsAppLink) {
+                  const url = `${item?.business?.phone}`;
+                  Linking.openURL(url);
+                } else {
+                  const phoneRegex = item?.business?.phone.replace("+", "");
+                  const url = `https://wa.me/${phoneRegex}`;
+                  Linking.openURL(url);
+                }
               }}
             >
               <Text
@@ -1264,22 +1273,14 @@ const SearchPost = ({ route, navigation }) => {
                     fontSize: 13,
                     fontFamily: "regular",
                     marginRight: 5,
-                    color:
-                      post?.whatsapp === "" || post?.whatsapp === null
-                        ? "#1f1f1f"
-                        : "blue",
+                    color: "blue",
                   },
                 ]}
               >
-                {post?.whatsapp === "" || post?.whatsapp === null
-                  ? "No"
-                  : post?.whatsapp}
+                {"Ir al WhatsApp"}
               </Text>
-              {post?.whatsapp === "" || post?.whatsapp === null ? (
-                ""
-              ) : (
-                <Feather name="external-link" size={16} color="#1f1f1f" />
-              )}
+
+              <Feather name="external-link" size={16} color="blue" />
             </Pressable>
           </View>
           <View style={[styles.line, global.bgMidGray]} />
@@ -1488,7 +1489,7 @@ const SearchPost = ({ route, navigation }) => {
                         style={{
                           width: "100%",
                           height: "60%",
-                          resizeMode: "cover",
+                          resizeMode: "contain",
                           borderRadius: 5,
                           borderWidth: 0.7,
                           borderColor: "#1f1f1f",
@@ -1510,20 +1511,41 @@ const SearchPost = ({ route, navigation }) => {
                               marginTop: 10,
                             }}
                           >
-                            <TextInput
-                              value={imageView?.description}
-                              editable={false}
-                              style={{
-                                flex: 1,
-                                // width: 100,
-                                fontFamily: "regular",
-                                fontSize: 14,
-                                alignItems: "flex-start",
-                                color: "#000",
-                              }}
-                              multiline={true}
-                              numberOfLines={5}
-                            />
+                            {imageView?.key === 0 ? (
+                              <TextInput
+                                value={
+                                  imageView?.description !== ""
+                                    ? imageView?.description
+                                    : post?.description
+                                }
+                                editable={false}
+                                style={{
+                                  flex: 1,
+                                  // width: 100,
+                                  fontFamily: "regular",
+                                  fontSize: 14,
+                                  alignItems: "flex-start",
+                                  color: "#000",
+                                }}
+                                multiline={true}
+                                numberOfLines={5}
+                              />
+                            ) : (
+                              <TextInput
+                                value={imageView?.description}
+                                editable={false}
+                                style={{
+                                  flex: 1,
+                                  // width: 100,
+                                  fontFamily: "regular",
+                                  fontSize: 14,
+                                  alignItems: "flex-start",
+                                  color: "#000",
+                                }}
+                                multiline={true}
+                                numberOfLines={5}
+                              />
+                            )}
                           </View>
                         </View>
                       )}

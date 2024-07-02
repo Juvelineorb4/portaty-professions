@@ -22,20 +22,22 @@ import {
   searchCache,
   kmRadio,
   totalSearch,
+  connectionStatus,
 } from "@/atoms";
 import { useRecoilState, useRecoilValue } from "recoil";
 import * as Location from "expo-location";
-import useLocation from "@/hooks/useLocation";
+// import useLocation from "@/hooks/useLocation";
 import SkeletonSearch from "@/components/SkeletonSearch";
 import SkeletonMoreItems from "@/components/SkeletonMoreItems";
 import * as Cellular from "expo-cellular";
 import { Entypo } from "@expo/vector-icons";
 import MapFilter from "@/components/MapFilter";
+import NetInfo from "@react-native-community/netinfo";
+import CustomButton from "@/components/CustomButton";
 
 const Search = ({ route }) => {
   const global = require("@/utils/styles/global.js");
   const userLocation = useRecoilValue(mapUser);
-  console.log(userLocation)
   const [moreItems, setMoreItems] = useState(1);
   const [items, setItems] = useState([]);
   const [searchActive, setSearchActive] = useRecoilState(searchStatus);
@@ -45,7 +47,7 @@ const Search = ({ route }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [statusFilter, setStatusFilter] = useState(false);
   const [filterRadio, setFilterRadio] = useRecoilState(kmRadio);
-  // const { location } = useLocation();
+  const [isLoading, setIsLoading] = useState(false);
   const [country, setCountry] = useState(null);
   const [countries, setCountries] = useState([]);
   const [visibleCountries, setVisibleCountries] = useState(false);
@@ -54,6 +56,7 @@ const Search = ({ route }) => {
   const [searchAddress, setSearchAddress] = useState("");
   const [city, setCity] = useState("");
   const [region, setRegion] = useState("");
+  const [isConnected, setIsConnected] = useRecoilState(connectionStatus);
 
   const getAddress = async (coords) => {
     let direcciones = await Location.reverseGeocodeAsync(coords);
@@ -65,7 +68,7 @@ const Search = ({ route }) => {
         direccion.region === null ? "" : direccion.region
       }, ${direccion.postalCode === null ? "" : direccion.postalCode} `;
       setSearchAddress(direccionString);
-      console.log(direccionString)
+      console.log(direccionString);
       setRegion(direccion.region);
       setCity(direccion.city);
     }
@@ -74,6 +77,7 @@ const Search = ({ route }) => {
   const kilometers = [1, 5, 10, 20, 50, 100];
   let number = 26 * moreItems;
   const getData = async () => {
+    setIsLoading(true);
     const api = "api-opense";
     const path = "/search/default";
     const params = {
@@ -99,6 +103,7 @@ const Search = ({ route }) => {
         let cut = response.items.slice(i, i + long);
         newRenderItems.push(cut);
       }
+      setIsLoading(false);
       setSearchActive(true);
       setSearchCacheActive(newRenderItems);
       return setItems(newRenderItems);
@@ -106,9 +111,24 @@ const Search = ({ route }) => {
       return console.log(error);
     }
   };
+
+  /* Validar conexion a internet */
+  const getConnection = async () => {
+    NetInfo.fetch().then((state) => {
+      if (searchActive) return;
+      if (state.isConnected) {
+        if (userLocation) getData();
+        setIsConnected(state.isConnected);
+      } else {
+        setIsConnected(state.isConnected);
+      }
+    });
+  };
+  /* */
+
   const getFilterData = async () => {
     setStatusFilter(true);
-    getData();
+    getConnection();
     // setTimeout(() => {}, 3000);
     setStatusFilter(false);
   };
@@ -118,19 +138,22 @@ const Search = ({ route }) => {
     let countryCodes = geocode[0].isoCountryCode;
     array.map((item, index) => {
       if (item.cca2 === countryCodes.toUpperCase()) {
-        let arrayCountries = [...array]
+        let arrayCountries = [...array];
         setCountry(item);
-        let country = arrayCountries.filter(item => item.cca2 === countryCodes.toUpperCase());
+        let country = arrayCountries.filter(
+          (item) => item.cca2 === countryCodes.toUpperCase()
+        );
 
         if (country.length > 0) {
           // Eliminar el país del array original
-          arrayCountries = arrayCountries.filter(item => item.cca2 !== countryCodes.toUpperCase());
-        
+          arrayCountries = arrayCountries.filter(
+            (item) => item.cca2 !== countryCodes.toUpperCase()
+          );
+
           // Agregar el país al principio del array
           arrayCountries.unshift(country[0]);
         }
         setCountries(arrayCountries);
-
       }
     });
   }
@@ -150,25 +173,63 @@ const Search = ({ route }) => {
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    if (userLocation) getData();
+    getConnection();
     Wait(2000).then(() => setRefreshing(false));
   });
   /* Refresh */
 
   useEffect(() => {
-    getAddress(userLocation)
+    getAddress(userLocation);
     fetch(`https://restcountries.com/v3.1/all?fields=name,flags,idd,cca2`)
       .then((response) => {
         return response.json();
       })
       .then((item) => {
-        console.log(item[0])
+        console.log(item[0]);
         getCountryCode(item);
       });
-    if (userLocation) getData();
+    getConnection();
   }, [userLocation, moreItems, refreshing]);
 
-  if (searchActive) {
+  if (isLoading) {
+    return (
+      <View
+        style={[
+          { flex: 1, alignItems: "center", justifyContent: "center" },
+          global.bgWhite,
+        ]}
+      >
+        <SkeletonSearch />
+      </View>
+    );
+  }
+  if (!isConnected) {
+    return (
+      <View
+        style={[
+          { flex: 1, alignItems: "center", justifyContent: "center" },
+          global.bgWhite,
+        ]}
+      >
+        <Text
+          style={{
+            fontFamily: "regular",
+            fontSize: 15,
+          }}
+        >
+          No tienes conexión. Intenta de nuevo
+        </Text>
+
+        <CustomButton
+          text={`Refrescar`}
+          handlePress={() => onRefresh()}
+          textStyles={[styles.textSearch, global.black]}
+          buttonStyles={[styles.search, global.bgYellow]}
+        />
+      </View>
+    );
+  }
+  if (searchActive && isConnected && !isLoading) {
     return (
       <View style={{ flex: 1, backgroundColor: "#FFFFFF", paddingBottom: 50 }}>
         <View>
@@ -599,17 +660,18 @@ const Search = ({ route }) => {
         )}
       </View>
     );
-  } else {
-    return (
-      <View
-        style={[
-          { flex: 1, alignItems: "center", justifyContent: "center" },
-          global.bgWhite,
-        ]}
-      >
-        <SkeletonSearch />
-      </View>
-    );
+    // } else {
+    //   return (
+    //     <View
+    //       style={[
+    //         { flex: 1, alignItems: "center", justifyContent: "center" },
+    //         global.bgWhite,
+    //       ]}
+    //     >
+    //       <SkeletonSearch />
+    //     </View>
+    //   );
+    // }
   }
 };
 

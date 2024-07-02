@@ -15,7 +15,7 @@ import { useRecoilValue } from "recoil";
 import { Auth, API, Storage } from "aws-amplify";
 import * as customProfile from "@/graphql/CustomQueries/Profile";
 import * as mutations from "@/graphql/mutations";
-import { profileState, userAuthenticated } from "@/atoms";
+import { locationPermission, profileState, userAuthenticated } from "@/atoms";
 import * as WebBrowser from "expo-web-browser";
 import SkeletonUnprofile from "@/components/SkeletonUnprofile";
 import { Skeleton } from "@rneui/themed";
@@ -24,6 +24,7 @@ import { setStatusBarNetworkActivityIndicatorVisible } from "expo-status-bar";
 import ModalAlert from "@/components/ModalAlert";
 import { useCallback } from "react";
 import CustomButton from "@/components/CustomButton";
+import ModalPermission from "@/components/ModalPermission";
 
 const Unprofile = ({ navigation, route }) => {
   const { buttons } = settings;
@@ -34,10 +35,13 @@ const Unprofile = ({ navigation, route }) => {
   const [user, setUser] = useState([]);
   const [business, setBusiness] = useState([]);
   const [visible, setVisible] = useState(false);
+  const [visibleLocation, setVisibleLocation] = useState(false);
   const [createBussiness, setCreateBussiness] = useState(true);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const locationStatus = useRecoilValue(locationPermission);
+
   const onRefresh = () => {
     setRefreshing(true);
     User();
@@ -142,7 +146,8 @@ const Unprofile = ({ navigation, route }) => {
         <CustomButton
           text={`Iniciar sesion`}
           handlePress={() => {
-            navigation.navigate("Login_Welcome");
+            console.log(route);
+            navigation.navigate("Login_Welcome", { item: route.name });
           }}
           textStyles={[styles.textSearch, global.black]}
           buttonStyles={[styles.search, global.bgYellow]}
@@ -209,6 +214,10 @@ const Unprofile = ({ navigation, route }) => {
       <View style={[styles.line, global.bgMidGray]} />
       <TouchableOpacity
         onPress={() => {
+          if (locationStatus !== "granted") {
+            setVisibleLocation(true);
+            return;
+          }
           if (disabled) return;
           if (business.length === 1) {
             setError(
@@ -367,6 +376,11 @@ const Unprofile = ({ navigation, route }) => {
         icon={require("@/utils/images/alert.png")}
         close={() => setVisible(false)}
         open={visible}
+      />
+      <ModalPermission
+        permission={"Ubicacion"}
+        close={() => setVisibleLocation(false)}
+        open={visibleLocation}
       />
     </ScrollView>
   );

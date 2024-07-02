@@ -19,7 +19,6 @@ const NavSettings = ({ checkRender }) => {
       switch (event) {
         case "signIn":
           userSignIn(data);
-          navigation.goBack()
           break;
         case "signOut":
           userSignOut(data);
