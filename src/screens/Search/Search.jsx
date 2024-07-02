@@ -22,6 +22,8 @@ import {
   searchCache,
   kmRadio,
   totalSearch,
+  searchAddressInitial,
+  mapUserChange,
 } from "@/atoms";
 import { useRecoilState, useRecoilValue } from "recoil";
 import * as Location from "expo-location";
@@ -35,6 +37,7 @@ import MapFilter from "@/components/MapFilter";
 const Search = ({ route }) => {
   const global = require("@/utils/styles/global.js");
   const userLocation = useRecoilValue(mapUser);
+  const userChangeLocation = useRecoilValue(mapUserChange);
   const [moreItems, setMoreItems] = useState(1);
   const [items, setItems] = useState([]);
   const [searchActive, setSearchActive] = useRecoilState(searchStatus);
@@ -50,7 +53,8 @@ const Search = ({ route }) => {
   const [visibleCountries, setVisibleCountries] = useState(false);
   const [visibleMap, setVisibleMap] = useState(false);
   const [searchCountry, setSearchCountry] = useState("");
-  const [searchAddress, setSearchAddress] = useState("");
+  const [searchAddress, setSearchAddress] =
+    useRecoilState(searchAddressInitial);
   const [city, setCity] = useState("");
 
   const getAddress = async (coords) => {
@@ -63,6 +67,7 @@ const Search = ({ route }) => {
         direccion.region === null ? "" : direccion.region
       }, ${direccion.postalCode === null ? "" : direccion.postalCode} `;
       setSearchAddress(direccionString);
+      console.log(direccionString);
       setCity(direccion.region);
     }
   };
@@ -86,7 +91,6 @@ const Search = ({ route }) => {
     };
     try {
       const response = await API.get(api, path, params);
-      console.log("RESPUESTA DE BUSQUEDA DEFAULT ", response);
       setTotalData(response.total);
       setTotalLimit(response.limit);
       // let newItems = [];
@@ -176,7 +180,7 @@ const Search = ({ route }) => {
               style={{ flexDirection: "row", alignItems: "center" }}
               onPress={() => {
                 setModalVisible(!modalVisible);
-                getAddress(userLocation);
+                if (searchAddress === "") getAddress(userLocation);
               }}
             >
               <Image
@@ -372,13 +376,23 @@ const Search = ({ route }) => {
                     </View>
                   )}
                 </View>
-                <MapFilter
-                  initialLocation={userLocation}
-                  open={visibleMap}
-                  close={() => setVisibleMap(!visibleMap)}
-                  country={country?.name?.common}
-                  city={city}
-                />
+                {userChangeLocation === null ? (
+                  <MapFilter
+                    initialLocation={userLocation}
+                    open={visibleMap}
+                    close={() => setVisibleMap(!visibleMap)}
+                    country={country?.name?.common}
+                    city={city}
+                  />
+                ) : (
+                  <MapFilter
+                    initialLocation={userChangeLocation}
+                    open={visibleMap}
+                    close={() => setVisibleMap(!visibleMap)}
+                    country={country?.name?.common}
+                    city={city}
+                  />
+                )}
                 <View style={{ flex: 1 }}>
                   <Text
                     style={{
@@ -394,7 +408,10 @@ const Search = ({ route }) => {
                         fontFamily: "regular",
                         fontSize: 14,
                       }}
-                    >{`${searchAddress}`}</Text>
+                    >
+                      {`${searchAddress}`}
+                      {"  "}
+                    </Text>
                     <Text
                       onPress={() => setVisibleMap(true)}
                       style={{

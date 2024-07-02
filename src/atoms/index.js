@@ -97,6 +97,10 @@ export const totalSearch = atom({
   key: "totalSearchValue",
   default: 2,
 });
+export const searchAddressInitial = atom({
+  key: "searchAddressInitialValue",
+  default: '',
+});
 
 export const profileState = atom({
   key: "profileStateValue",
@@ -113,6 +117,10 @@ export const filterState = atom({
 
 export const mapUser = atom({
   key: "mapUserValue",
+  default: null,
+});
+export const mapUserChange = atom({
+  key: "mapUserChangeValue",
   default: null,
 });
 export const favoriteSelection = atom({
