@@ -151,24 +151,30 @@ const SharePage = ({ route, navigation }) => {
         },
         authMode: "AWS_IAM",
       });
-      if (
-        userAuth?.attributes["custom:userTableID"] ===
-        business?.data?.getBusiness?.userID
-      ) {
-        setShowAgg(false);
+
+      if (business?.data?.getBusiness) {
+        if (
+          userAuth?.attributes["custom:userTableID"] ===
+          business?.data?.getBusiness?.userID
+        ) {
+          setShowAgg(false);
+        } else {
+          setShowAgg(true);
+        }
+        const list = business?.data?.getBusiness?.images
+          .map((image) => JSON.parse(image))
+          .sort((a, b) => a.key - b.key);
+
+        setImages(list);
+        const getA = JSON.parse(business?.data?.getBusiness?.activity);
+
+        setActividad(getA);
+
+        return setPost(business?.data?.getBusiness);
       } else {
-        setShowAgg(true);
+        setPost(null);
+        setNothing(true);
       }
-      const list = business?.data?.getBusiness?.images
-        .map((image) => JSON.parse(image))
-        .sort((a, b) => a.key - b.key);
-
-      setImages(list);
-      const getA = JSON.parse(business?.data?.getBusiness?.activity);
-
-      setActividad(getA);
-
-      return setPost(business?.data?.getBusiness);
     } catch (error) {
       setNothing(true);
       console.log("ERROR EN BUSCAR: ", error);
@@ -267,7 +273,7 @@ const SharePage = ({ route, navigation }) => {
             },
           ]}
         >
-          {images.length !== 1 &&
+          {images?.length !== 1 &&
             dimensionsImages + 1 > 1 &&
             dimensionsImages <= 3 && (
               <View
@@ -288,9 +294,9 @@ const SharePage = ({ route, navigation }) => {
                 <Entypo name="triangle-left" size={24} color="#1f1f1f" />
               </View>
             )}
-          {images.length !== 1 &&
+          {images?.length !== 1 &&
             dimensionsImages >= 0 &&
-            dimensionsImages < images.length - 1 && (
+            dimensionsImages < images?.length - 1 && (
               <View
                 style={[
                   global.bgYellow,
@@ -367,7 +373,7 @@ const SharePage = ({ route, navigation }) => {
                       global.black,
                     ]}
                   >
-                    {item.key + 1}/{images.length}
+                    {item.key + 1}/{images?.length}
                   </Text>
                   <MaterialCommunityIcons
                     name="image-search-outline"

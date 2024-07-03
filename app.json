@@ -22,15 +22,20 @@
       "runtimeVersion": "exposdk:51.0.0",
       "supportsTablet": true,
       "infoPlist": {
-        "MinimumOSVersion": "13.4",
-        "NSContactsUsageDescription": "Allow Portaty to access your contacts.",
-        "NSCalendarsUsageDescription": "Portaty needs to access your calendar.",
-        "NSRemindersUsageDescription": "Allow $(PRODUCT_NAME) to access your reminders",
-        "NSPhotoLibraryUsageDescription": "Allow Portasty to access your photos.",
-        "NSPhotoLibraryAddUsageDescription": "Allow Portaty to save photos."
+        "NSMicrophoneUsageDescription": "Portaty necesita acceso a tu micrófono para permitirte grabar mensajes de voz y enviarlos a tus contactos dentro de la aplicación.",
+        "NSContactsUsageDescription": "Portaty accede a tus contactos para ayudarte a encontrar amigos en la plataforma y sugerir conexiones.",
+        "NSCalendarsUsageDescription": "Portaty utiliza tu calendario para programar citas y recordatorios relacionados con los servicios profesionales que encuentres en la app.",
+        "NSCameraUsageDescription": "Portaty requiere acceso a tu cámara para que puedas tomar fotos y compartirlas en tu perfil o con tus contactos.",
+        "NSLocationWhenInUseUsageDescription": "Portaty utiliza tu ubicación cuando la app está en uso para mostrarte profesionales y servicios cercanos a ti.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Portaty puede requerir acceso constante a tu ubicación para enviarte notificaciones de servicios cerca de ti, incluso cuando la app no está en uso.",
+        "NSPhotoLibraryUsageDescription": "Portaty necesita acceder a tu biblioteca de fotos para que puedas seleccionar imágenes al crear o actualizar tu perfil.",
+        "NSDocumentsFolderUsageDescription": "Portaty accede a tus documentos para permitirte compartir archivos importantes con tus contactos dentro de la aplicación.",
+        "NSUserTrackingUsageDescription": "Portaty utiliza este identificador para ofrecerte una experiencia personalizada, mostrando anuncios y recomendaciones relevantes según tus intereses. Tu privacidad es nuestra prioridad, y solo usaremos esta información para mejorar tu experiencia en la aplicación."
       },
+      "associatedDomains": ["applinks:https://www.portaty.com"],
       "bundleIdentifier": "com.teamportaty.appdev",
-      "versionCode": 28,
+      "versionCode": 0,
+      "buildNumber": "17",
       "config": {
         "googleMapsApiKey": "AIzaSyBaNnjNEIkGO3wo3HgOXDWFKliZD2Ynb5s"
       },
@@ -50,11 +55,6 @@
           "action": "VIEW",
           "autoVerify": true,
           "data": [
-            {
-              "scheme": "https",
-              "host": "www.portaty.com",
-              "pathPrefix": "/"
-            },
             {
               "scheme": "https",
               "host": "www.portaty.com",
@@ -83,7 +83,7 @@
         "foregroundImage": "./src/utils/images/portaty.png",
         "backgroundColor": "#FFFFFF"
       },
-      "versionCode": 73,
+      "versionCode": 78,
       "googleServicesFile": "./google-services.json"
     },
     "web": {
@@ -100,7 +100,8 @@
           "android": {
             "compileSdkVersion": 33,
             "targetSdkVersion": 33,
-            "buildToolsVersion": "33.0.0"
+            "buildToolsVersion": "33.0.0",
+            "minSdkVersion": 24
           },
           "ios": {
             "deploymentTarget": "13.4"
@@ -140,7 +141,7 @@
       [
         "expo-media-library",
         {
-          "photosPermission": "Allow Portasty to access your photos.",
+          "photosPermission": "Allow Portaty to access your photos.",
           "savePhotosPermission": "Allow Portaty to save photos.",
           "isAccessMediaLocationEnabled": true
         }
@@ -158,7 +159,12 @@
           "color": "#ffffff"
         }
       ],
-      "expo-asset"
+      [
+        "expo-tracking-transparency",
+        {
+          "userTrackingPermission": "This identifier will be used to deliver personalized ads to you."
+        }
+      ]
     ],
     "extra": {
       "eas": {

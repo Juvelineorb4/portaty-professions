@@ -26,6 +26,7 @@ import {
   MaterialIcons,
   Ionicons,
 } from "@expo/vector-icons";
+import * as Device from "expo-device";
 import { Auth, API, Analytics } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Favorites";
 import * as customFavorites from "@/graphql/CustomMutations/Favorites";
@@ -43,6 +44,7 @@ import * as Location from "expo-location";
 // functions
 import { registerEvent } from "@/functions/Analytics";
 import ModalReport from "@/components/ModalReport";
+const DEVICE_TYPE = ["UNKNOWN", "PHONE", "TABLET", "DESKTOP", "TV"];
 const SearchPost = ({ route, navigation }) => {
   const timerRef = useRef();
   const userAuth = useRecoilValue(userAuthenticated);
@@ -230,10 +232,18 @@ const SearchPost = ({ route, navigation }) => {
     Linking.openURL(url);
   };
 
-  const registerViewBusiness = async (userID, businessID) => {
+  const registerViewBusiness = async (userID = null, businessID) => {
+    const deviceType = Device.deviceType;
+    const osName = Device.osName;
+    const osVersion = Device.osVersion;
+    const brand = Device.brand;
+    const model = Device.modelName;
+    const language = Device.language;
+    // Obtener el identificador único del dispositivo
+    const deviceID = Device.osBuildId || Device.osInternalBuildId;
     try {
-      // Obtener informacuon de la ultima visualizacion del usuario guardada en Async Storage
-      const lastViewString = await AsyncStorage.getItem(`lastView_${userID}`);
+      // Obtener información de la última visualización guardada en AsyncStorage
+      const lastViewString = await AsyncStorage.getItem(`lastView_${deviceID}`);
       const lastViewInfo = JSON.parse(lastViewString);
 
       // Si hay una última visualización registrada y ocurrió hace menos de 24 horas, no registra la nueva visualización
@@ -245,25 +255,40 @@ const SearchPost = ({ route, navigation }) => {
         return;
       }
 
-      // De no haber visualizacion Registrarla en analytics
-
+      // Registrar la visualización en analytics
       const { country, city } = countryCity;
-      const params = {
-        userid: userID,
-        birthdate: userAuth?.attributes?.birthdate,
-        gender: userAuth?.attributes["custom:gender"],
+      let params = {
         country,
         city,
         businessid: businessID,
+        deviceType: DEVICE_TYPE[deviceType],
+        osName,
+        osVersion,
+        brand,
+        model,
+        language,
       };
-      registerEvent("user_viewed_business", params);
-      // Almacena la información de la última visualización en AsyncStorage
+
+      if (userID) {
+        params = {
+          userid: userID,
+          birthdate: userAuth?.attributes?.birthdate,
+          gender: userAuth?.attributes["custom:gender"],
+          ...params,
+        };
+      }
+
+      registerEvent(
+        userID ? "user_viewed_business" : "guest_viewed_business",
+        params
+      );
+      // Almacenar la información de la última visualización en AsyncStorage
       const currentViewInfo = {
         businessID: businessID,
         timestamp: new Date().toISOString(),
       };
       await AsyncStorage.setItem(
-        `lastView_${userID}`,
+        `lastView_${deviceID}`,
         JSON.stringify(currentViewInfo)
       );
     } catch (error) {
@@ -332,7 +357,7 @@ const SearchPost = ({ route, navigation }) => {
       const fetchAllRatings = async (nextToken, result = []) => {
         const response = await API.graphql({
           query: queries.businessCommentsByBusinessID,
-          authMode: "AMAZON_COGNITO_USER_POOLS",
+          authMode: "AWS_IAM",
           variables: {
             businessID: business?.id,
             nextToken,
@@ -355,14 +380,6 @@ const SearchPost = ({ route, navigation }) => {
       const allRatings = await fetchAllRatings();
       console.log(allRatings);
       setListRatings(allRatings);
-      // const ratings = await API.graphql({
-      //   query: queries.businessCommentsByBusinessID,
-      //   variables: {
-      //     businessID: business?.businessID,
-      //   },
-      //   authMode: "AWS_IAM",
-      // });
-      // console.log(ratings.data.businessCommentsByBusinessID.items)
     } catch (error) {
       console.log("eres tu", error);
     }
@@ -370,8 +387,9 @@ const SearchPost = ({ route, navigation }) => {
 
   // para la carga default
   useEffect(() => {
-    if (!save) fetchFavorite();
+    // if (!save) fetchFavorite();
     fetchData();
+    fetchRatings();
     fetchRatings();
   }, []);
   // para obetener el pais y ciudad
@@ -385,17 +403,17 @@ const SearchPost = ({ route, navigation }) => {
   // para cuando este pais y ciudad registrar en el evento de vista
   useEffect(() => {
     // Inicia el temporizador cuando el componente se monta y countryCity y userAuth existen
-    if (countryCity && userAuth) {
+    if (countryCity) {
       timerRef.current = setTimeout(() => {
         registerViewBusiness(
-          userAuth?.attributes["custom:userTableID"],
+          userAuth ? userAuth?.attributes["custom:userTableID"] : null,
           item.id
         );
       }, 3000);
     }
     // Limpia el temporizador cuando el componente se desmonta
     return () => clearTimeout(timerRef.current);
-  }, [countryCity, userAuth]);
+  }, [countryCity]);
 
   if (!post || !listRatings) return <SkeletonExample />;
   return (
@@ -623,35 +641,37 @@ const SearchPost = ({ route, navigation }) => {
                   Favoritos
                 </Text>
               </View>
-              <TouchableOpacity
-                onPress={() => {
-                  if (save === "") {
-                    onCreateFavorite();
-                  } else {
-                    onDeleteFavorite();
-                  }
-                }}
-              >
-                {save === "" ? (
-                  <Image
-                    style={{
-                      width: 45,
-                      height: 45,
-                      resizeMode: "cover",
-                    }}
-                    source={require("@/utils/images/nofavorites.png")}
-                  />
-                ) : (
-                  <Image
-                    style={{
-                      width: 45,
-                      height: 45,
-                      resizeMode: "cover",
-                    }}
-                    source={require("@/utils/images/sifavorites.png")}
-                  />
-                )}
-              </TouchableOpacity>
+              {userAuth && (
+                <TouchableOpacity
+                  onPress={() => {
+                    if (save === "") {
+                      onCreateFavorite();
+                    } else {
+                      onDeleteFavorite();
+                    }
+                  }}
+                >
+                  {save === "" ? (
+                    <Image
+                      style={{
+                        width: 45,
+                        height: 45,
+                        resizeMode: "cover",
+                      }}
+                      source={require("@/utils/images/nofavorites.png")}
+                    />
+                  ) : (
+                    <Image
+                      style={{
+                        width: 45,
+                        height: 45,
+                        resizeMode: "cover",
+                      }}
+                      source={require("@/utils/images/sifavorites.png")}
+                    />
+                  )}
+                </TouchableOpacity>
+              )}
             </View>
           </View>
         )}
@@ -753,6 +773,7 @@ const SearchPost = ({ route, navigation }) => {
           onPress={() => {
             navigation.navigate("InteractionsSearch", {
               business: item,
+              list: listRatings,
               list: listRatings,
             });
           }}

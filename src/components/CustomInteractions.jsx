@@ -4,12 +4,14 @@ import { Ionicons } from "@expo/vector-icons";
 import CustomButton from "./CustomButton";
 import styles from "@/utils/styles/Interactions.js";
 import ModalInteractions from "./ModalInteractions";
-
+import { useRecoilValue } from "recoil";
+import { userAuthenticated } from "@/atoms";
 const CustomInteractions = ({ route }) => {
   const global = require("@/utils/styles/global.js");
   const comments = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
   const [active, setActive] = useState(false);
   const { business, list } = route.params;
+  const userAuth = useRecoilValue(userAuthenticated);
   return (
     <ScrollView
       style={[
@@ -95,12 +97,15 @@ const CustomInteractions = ({ route }) => {
           ))}
         </View>
       </ScrollView>
-      <CustomButton
-        text={`Deja tu valoracion y comentario`}
-        handlePress={() => setActive(true)}
-        textStyles={[styles.textButton, global.black]}
-        buttonStyles={[styles.button, global.bgYellow]}
-      />
+      {userAuth && (
+        <CustomButton
+          text={`Deja tu valoracion y comentario`}
+          handlePress={() => setActive(true)}
+          textStyles={[styles.textButton, global.black]}
+          buttonStyles={[styles.button, global.bgYellow]}
+        />
+      )}
+
       <ModalInteractions
         close={() => setActive(false)}
         open={active}

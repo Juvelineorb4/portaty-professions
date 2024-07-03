@@ -17,11 +17,17 @@
       "channel": "stage",
       "android": {
         "buildType": "apk"
+      },
+      "ios": {
+        "simulator": true
       }
     },
     "production": {
       "android": {
         "buildType": "app-bundle"
+      },
+      "ios": {
+        "image": "latest"
       },
       "channel": "prod",
       "autoIncrement": true

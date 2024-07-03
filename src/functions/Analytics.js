@@ -19,4 +19,5 @@ export const registerEvent = (eventname, params) => {
         },
         "AWSKinesisFirehose"
     );
+    console.log("EVENTO EJECUTADO: ", eventname)
 };

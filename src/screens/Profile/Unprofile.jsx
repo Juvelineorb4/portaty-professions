@@ -39,6 +39,7 @@ const Unprofile = ({ navigation, route }) => {
   const [createBussiness, setCreateBussiness] = useState(true);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [buttonDelete, setButtonDelete] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const locationStatus = useRecoilValue(locationPermission);
   console.log("unprofile mi pana", route);
@@ -95,7 +96,53 @@ const Unprofile = ({ navigation, route }) => {
   const _handlePressButtonAsync = async (url) => {
     let result = await WebBrowser.openBrowserAsync(url);
   };
+  const onHandleAccountDeletion = async () => {
+    if (!userAuth?.attributes?.sub) return;
+    console.log("SE PRECIONO");
+    Alert.alert(
+      "Confirmación",
+      "¿Estás seguro de que quieres enviar la solicitud para la eliminación de cuenta?, Esto podria tardar de 30 a 90 dias habiles!",
+      [
+        {
+          text: "Cancelar",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          onPress: async () => {
+            setButtonDelete(false);
+            try {
+              const api = "api-portaty";
+              const path = "/request_account_deletion";
+              const params = {
+                headers: {},
+                queryStringParameters: {
+                  username: userAuth?.attributes?.sub,
+                },
+              };
 
+              const response = await API.get(api, path, params);
+              console.log("RESPONSE: ", response);
+              if (response?.success) {
+                const data = await Auth.currentAuthenticatedUser();
+                // cambiar atributo para saber si ya solicito o no la eliminacion
+                await Auth.updateUserAttributes(data, {
+                  "custom:requestDeleting": "required",
+                });
+              }
+            } catch (error) {
+              console.error(
+                "ERROR A ENVIAR SOLICITUD DE ELIMINAR CUENTA: ",
+                error
+              );
+            }
+            setButtonDelete(true);
+          },
+        },
+      ]
+    );
+  };
   useLayoutEffect(() => {
     User();
   }, [userAuth, status, refreshing, isFocused]);
@@ -348,6 +395,34 @@ const Unprofile = ({ navigation, route }) => {
                   icon={button.icon}
                 />
               </TouchableOpacity>
+            ) : button.modal ? (
+              <>
+                {!userAuth?.attributes["custom:requestDeleting"] && (
+                  <TouchableOpacity
+                    onPress={onHandleAccountDeletion}
+                    style={{
+                      marginBottom: -25,
+                    }}
+                    disabled={!buttonDelete}
+                  >
+                    <CustomSelect
+                      title={button.title}
+                      subtitle={button.subtitle}
+                      styled={{
+                        text: {
+                          container: styles.textContainerSelect,
+                          title: [styles.textTitleSelect, global.black],
+                          subtitle: [styles.textSubtitleSelect, global.topGray],
+                        },
+                        container: styles.containerSelect,
+                        iconLeft: [styles.iconLeft, global.bgYellow],
+                        iconRight: styles.iconRight,
+                      }}
+                      icon={button.icon}
+                    />
+                  </TouchableOpacity>
+                )}
+              </>
             ) : (
               <TouchableOpacity onPress={onHandleLogout}>
                 {/* <View style={[styles.line, global.bgMidGray]} /> */}
