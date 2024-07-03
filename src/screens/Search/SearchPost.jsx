@@ -64,6 +64,7 @@ const SearchPost = ({ route, navigation }) => {
   const [weekSchedule, setWeekSchedule] = useState("");
   const [typeSchedule, setTypeSchedule] = useState("");
   const [listRatings, setListRatings] = useState(null);
+  const [ratingsDetails, setRatingsDetails] = useState(null);
 
   const {
     data: { item, images },
@@ -124,7 +125,6 @@ const SearchPost = ({ route, navigation }) => {
       });
       setSave(favorites?.data?.createFavorites?.id);
       setNumberFavorite(post?.favorites?.items?.length + 1);
-      setListUpdate(!listUpdate);
       // registramos el evento
 
       const { country, city } = countryCity;
@@ -184,8 +184,10 @@ const SearchPost = ({ route, navigation }) => {
       }
 
       let schedule = JSON.parse(business?.data?.getBusiness.schedule);
-      console.log(business?.data?.getBusiness);
-      if (schedule) filterSchedule(schedule.shedule, schedule.type);
+      if (business?.data?.getBusiness.schedule) {
+        filterSchedule(schedule?.shedule, schedule?.type);
+      }
+      setListUpdate(false)
       return setPost(business?.data?.getBusiness);
     } catch (error) {
       console.log(error);
@@ -196,7 +198,7 @@ const SearchPost = ({ route, navigation }) => {
       const { attributes } = await Auth.currentAuthenticatedUser();
       const favorite = await API.graphql({
         query: queries.favoritesByBusinessID,
-        authMode: "AMAZON_COGNITO_USER_POOLS",
+        authMode: "AWS_IAM",
         variables: {
           businessID: item.id,
           userID: { eq: attributes["custom:userTableID"] },
@@ -385,14 +387,41 @@ const SearchPost = ({ route, navigation }) => {
     }
   };
 
-  // para la carga default
+  const getCatalogPDF = async () => {
+    try {
+      const url = post?.catalogpdf;
+      console.log(post);
+      Linking.openURL(url);
+    } catch (error) {
+      console.log("Error en catalogo: ", error);
+    }
+  };
+
+  const fetchRatings2 = async () => {
+    try {
+      const api = "api-portaty";
+      const path = "/business/ratings";
+      const params = {
+        headers: {},
+        queryStringParameters: {
+          businessID: item?.id,
+        },
+      };
+
+      const response = await API.get(api, path, params);
+      setRatingsDetails(response.data);
+    } catch (error) {
+      console.error(error.response.data);
+    }
+  };
+
   useEffect(() => {
-    // if (!save) fetchFavorite();
+    if (!save) fetchFavorite();
     fetchData();
     fetchRatings();
-    fetchRatings();
-  }, []);
-  // para obetener el pais y ciudad
+    fetchRatings2();
+  }, [listUpdate]);
+
   useEffect(() => {
     const registerCountryCity = async () => {
       const addressArr = await Location.reverseGeocodeAsync(userLocation);
@@ -400,9 +429,8 @@ const SearchPost = ({ route, navigation }) => {
     };
     if (userLocation) registerCountryCity();
   }, [userLocation]);
-  // para cuando este pais y ciudad registrar en el evento de vista
+
   useEffect(() => {
-    // Inicia el temporizador cuando el componente se monta y countryCity y userAuth existen
     if (countryCity) {
       timerRef.current = setTimeout(() => {
         registerViewBusiness(
@@ -411,11 +439,10 @@ const SearchPost = ({ route, navigation }) => {
         );
       }, 3000);
     }
-    // Limpia el temporizador cuando el componente se desmonta
     return () => clearTimeout(timerRef.current);
   }, [countryCity]);
 
-  if (!post || !listRatings) return <SkeletonExample />;
+  if (!post || !listRatings || listUpdate) return <SkeletonExample />;
   return (
     <View
       style={[
@@ -582,7 +609,7 @@ const SearchPost = ({ route, navigation }) => {
                   marginRight: 3,
                 }}
               >
-                4.7
+                {ratingsDetails?.average}
               </Text>
               <Ionicons name="star" size={16} color="#ffb703" />
             </View>
@@ -593,10 +620,11 @@ const SearchPost = ({ route, navigation }) => {
                 fontSize: 12,
               }}
             >
-              100+ valoraciones
+              {ratingsDetails?.ratings_message}
             </Text>
           </View>
-          <View
+          {/* Pa despues */}
+          {/* <View
             style={{
               flexDirection: "row",
               alignItems: "center",
@@ -612,7 +640,7 @@ const SearchPost = ({ route, navigation }) => {
             >
               Nº 14 en Turismo
             </Text>
-          </View>
+          </View> */}
         </View>
         {showAgg && (
           <View>
@@ -782,7 +810,7 @@ const SearchPost = ({ route, navigation }) => {
             style={{
               borderWidth: 0.6,
               borderColor: "#1f1f1f",
-              height: 130,
+              height: listRatings.length !== 0 ? 130 : 60,
               borderRadius: 8,
               padding: 10,
             }}
@@ -802,49 +830,52 @@ const SearchPost = ({ route, navigation }) => {
                 Este negocio tiene {listRatings.length} reseña(s)
               </Text>
             </View>
-            <View
-              style={{
-                marginTop: 10,
-                backgroundColor: "#efeded",
-                padding: 5,
-                borderRadius: 8,
-              }}
-            >
+            {listRatings.length !== 0 && (
               <View
                 style={{
-                  flexDirection: "row",
-                  alignItems: "center",
+                  marginTop: 10,
+                  backgroundColor: "#efeded",
+                  padding: 5,
+                  borderRadius: 8,
                 }}
               >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: "regular",
+                      fontSize: 13,
+                      marginRight: 3,
+                    }}
+                  >
+                    {listRatings[0]?.stars} de 5
+                  </Text>
+                  <Ionicons name="star" size={12} color="#ffb703" />
+                  <Text
+                    style={{
+                      fontFamily: "medium",
+                      fontSize: 12,
+                      marginLeft: 5,
+                    }}
+                  >
+                    {listRatings[0]?.user?.name}{" "}
+                    {listRatings[0]?.user?.lastName}
+                  </Text>
+                </View>
                 <Text
                   style={{
                     fontFamily: "regular",
                     fontSize: 13,
-                    marginRight: 3,
                   }}
                 >
-                  {listRatings[0]?.stars} de 5
-                </Text>
-                <Ionicons name="star" size={12} color="#ffb703" />
-                <Text
-                  style={{
-                    fontFamily: "medium",
-                    fontSize: 12,
-                    marginLeft: 5,
-                  }}
-                >
-                  {listRatings[0]?.user?.name} {listRatings[0]?.user?.lastName}
+                  {listRatings[0]?.description}
                 </Text>
               </View>
-              <Text
-                style={{
-                  fontFamily: "regular",
-                  fontSize: 13,
-                }}
-              >
-                {listRatings[0]?.description}
-              </Text>
-            </View>
+            )}
             <View
               style={{
                 flexDirection: "row",
@@ -860,7 +891,9 @@ const SearchPost = ({ route, navigation }) => {
                   marginRight: 3,
                 }}
               >
-                Ver todas las reseñas
+                {listRatings.length !== 0
+                  ? "Ver todas las reseñas"
+                  : "Publicar una reseña"}
               </Text>
               <AntDesign name="arrowright" size={13} color="black" />
             </View>
@@ -962,51 +995,7 @@ const SearchPost = ({ route, navigation }) => {
             source={require("@/utils/images/arrow_right.png")}
           />
         </TouchableOpacity>
-        {/* <TouchableOpacity
-          style={{
-            padding: 20,
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginTop: -25,
-          }}
-          onPress={getPdf}
-        >
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <View
-              style={[
-                {
-                  width: 58,
-                  height: 58,
-                  borderRadius: 10,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderColor: "#1f1f1f",
-                  borderWidth: 0.7,
-                },
-                global.bgYellow,
-              ]}
-            >
-              <AntDesign name="qrcode" size={24} color="#1f1f1f" />
-            </View>
-            <View style={{ marginLeft: 10 }}>
-              <Text style={{ fontFamily: "medium", fontSize: 15 }}>
-                Descargar QR
-              </Text>
-              <Text style={{ fontFamily: "light", fontSize: 12, width: 150 }}>
-                Descarga el QR del negocio para pegarlo en donde quieras
-              </Text>
-            </View>
-          </View>
-          <Image
-            style={{
-              width: 40,
-              height: 40,
-              resizeMode: "cover",
-            }}
-            source={require("@/utils/images/arrow_right.png")}
-          />
-        </TouchableOpacity> */}
+
         <TouchableOpacity
           style={{
             padding: 20,
@@ -1050,6 +1039,57 @@ const SearchPost = ({ route, navigation }) => {
             source={require("@/utils/images/arrow_right.png")}
           />
         </TouchableOpacity>
+        {/* Catalogo */}
+        {post?.catalogpdf !== "" ||
+          (post?.catalogpdf && (
+            <TouchableOpacity
+              style={{
+                padding: 20,
+                marginTop: -25,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+              onPress={getCatalogPDF}
+            >
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <View
+                  style={[
+                    {
+                      width: 58,
+                      height: 58,
+                      borderRadius: 10,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderColor: "#1f1f1f",
+                      borderWidth: 0.7,
+                    },
+                    global.bgYellow,
+                  ]}
+                >
+                  <Octicons name="checklist" size={21} color="#1f1f1f" />
+                </View>
+                <View style={{ marginLeft: 10 }}>
+                  <Text style={{ fontFamily: "medium", fontSize: 15 }}>
+                    Catalogo
+                  </Text>
+                  <Text
+                    style={{ fontFamily: "regular", fontSize: 12, width: 150 }}
+                  >
+                    Mira la lista de productos y servicios del negocio
+                  </Text>
+                </View>
+              </View>
+              <Image
+                style={{
+                  width: 40,
+                  height: 40,
+                  resizeMode: "cover",
+                }}
+                source={require("@/utils/images/arrow_right.png")}
+              />
+            </TouchableOpacity>
+          ))}
         <View style={{ marginBottom: 80 }}>
           <Text style={{ fontSize: 22, fontFamily: "regular", padding: 10 }}>
             Datos

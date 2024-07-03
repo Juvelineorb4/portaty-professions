@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   errorInputP: {
     position: "absolute",
     left: 2,
-    bottom: 0,
+    bottom: -13,
     fontFamily: "medium",
     color: "red",
     fontSize: 12,
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   },
   textInputDescription: {
     width: "100%",
-    padding: "0 10px",
+    paddingHorizontal: 10,
     color: "#fb8500",
     fontFamily: "light",
     textAlign: "justify",

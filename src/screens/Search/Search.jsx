@@ -23,6 +23,8 @@ import {
   kmRadio,
   totalSearch,
   connectionStatus,
+  searchAddressInitial,
+  mapUserChange,
 } from "@/atoms";
 import { useRecoilState, useRecoilValue } from "recoil";
 import * as Location from "expo-location";
@@ -38,6 +40,7 @@ import CustomButton from "@/components/CustomButton";
 const Search = ({ route }) => {
   const global = require("@/utils/styles/global.js");
   const userLocation = useRecoilValue(mapUser);
+  const userChangeLocation = useRecoilValue(mapUserChange);
   const [moreItems, setMoreItems] = useState(1);
   const [items, setItems] = useState([]);
   const [searchActive, setSearchActive] = useRecoilState(searchStatus);
@@ -53,7 +56,8 @@ const Search = ({ route }) => {
   const [visibleCountries, setVisibleCountries] = useState(false);
   const [visibleMap, setVisibleMap] = useState(false);
   const [searchCountry, setSearchCountry] = useState("");
-  const [searchAddress, setSearchAddress] = useState("");
+  const [searchAddress, setSearchAddress] =
+    useRecoilState(searchAddressInitial);
   const [city, setCity] = useState("");
   const [region, setRegion] = useState("");
   const [isConnected, setIsConnected] = useRecoilState(connectionStatus);
@@ -254,6 +258,7 @@ const Search = ({ route }) => {
               style={{ flexDirection: "row", alignItems: "center" }}
               onPress={() => {
                 setModalVisible(!modalVisible);
+                // if (searchAddress === "") getAddress(userLocation);
               }}
             >
               <Image
@@ -451,14 +456,23 @@ const Search = ({ route }) => {
                     </View>
                   )}
                 </View>
-                <MapFilter
-                  initialLocation={userLocation}
-                  open={visibleMap}
-                  close={() => setVisibleMap(!visibleMap)}
-                  country={country?.name?.common}
-                  city={city}
-                  regionState={region}
-                />
+                {userChangeLocation === null ? (
+                  <MapFilter
+                    initialLocation={userLocation}
+                    open={visibleMap}
+                    close={() => setVisibleMap(!visibleMap)}
+                    country={country?.name?.common}
+                    city={city}
+                  />
+                ) : (
+                  <MapFilter
+                    initialLocation={userChangeLocation}
+                    open={visibleMap}
+                    close={() => setVisibleMap(!visibleMap)}
+                    country={country?.name?.common}
+                    city={city}
+                  />
+                )}
                 {!visibleCountries && (
                   <View style={{ flex: 1 }}>
                     <Text
@@ -475,7 +489,10 @@ const Search = ({ route }) => {
                           fontFamily: "regular",
                           fontSize: 14,
                         }}
-                      >{`${searchAddress}`}</Text>
+                      >
+                        {`${searchAddress}`}
+                        {"  "}
+                      </Text>
                       <Text
                         onPress={() => setVisibleMap(true)}
                         style={{

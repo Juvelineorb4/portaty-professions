@@ -1,4 +1,11 @@
-import { Text, View, TextInput, TouchableOpacity, Image, Pressable } from "react-native";
+import {
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  Pressable,
+} from "react-native";
 import React, { useState } from "react";
 import { Controller } from "react-hook-form";
 
@@ -30,11 +37,11 @@ const CustomInput = ({
       }) => (
         <TouchableOpacity
           onPress={() => {
-            console.log('hue')
-            setActiveGender(!activeGender)
+            console.log("hue");
+            setActiveGender(!activeGender);
           }}
           activeOpacity={0}
-          style={{ position: "relative", }}
+          // style={{ height: 85, width: 375, borderColor: "red", borderWidth: 1 }}
         >
           <View>
             {text && <Text style={styled.label}>{text}</Text>}
@@ -61,14 +68,13 @@ const CustomInput = ({
                 <TextInput
                   value={
                     gender === 0
-                      ? "Male"
+                      ? "Hombre"
                       : gender === 1
-                      ? "Female"
+                      ? "Mujer"
                       : gender === 2
-                      ? "Others"
+                      ? "Otro"
                       : `Elige tu género`
                   }
-                  onBlur={onBlur}
                   placeholder={placeholder}
                   placeholderTextColor={placeholderTextColor}
                   style={defaultValue ? styled.text : styled.placeholder}

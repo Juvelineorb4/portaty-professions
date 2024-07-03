@@ -21,6 +21,7 @@ import { Feather } from "@expo/vector-icons";
 import { activeModalScreen, userAuthenticated } from "@/atoms";
 import { useRecoilState, useRecoilValue } from "recoil";
 import StepClear from "./StepClear";
+import { API } from "aws-amplify";
 
 const StepOne = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
@@ -31,10 +32,11 @@ const StepOne = ({ navigation, route }) => {
   const [visibleCountries, setVisibleCountries] = useState(false);
   const [searchCountry, setSearchCountry] = useState("");
   const [active, setActive] = useRecoilState(activeModalScreen);
+  const [errorName, setErrorName] = useState(false);
 
   const animation = useRef(null);
   let data = route.params;
-  console.log(data)
+  console.log(data);
   async function getCountryCode(array) {
     const countryCode = await Cellular.getIsoCountryCodeAsync();
     array.map((item, index) => {
@@ -52,6 +54,21 @@ const StepOne = ({ navigation, route }) => {
 
   const StepParams = async (data) => {
     const { company, email, phone } = data;
+    const apiName = "api-portaty";
+    const path = "/business/checkName";
+    const myInit = {
+      queryStringParameters: {
+        name: company,
+      },
+      headers: {},
+    };
+    const result = await API.get(apiName, path, myInit);
+    if (result?.existing) {
+      setErrorName(true);
+      return;
+    }
+    setErrorName(false);
+
     let code = country?.idd?.root;
     for (let i = 0; i < country?.idd?.suffixes.length; i++) {
       code += country?.idd?.suffixes[i];
@@ -154,6 +171,20 @@ const StepOne = ({ navigation, route }) => {
                 }}
                 placeholderTextColor={"#404040"}
               />
+              {errorName && (
+                <Text
+                  style={{
+                    fontFamily: "light",
+                    color: "red",
+                    fontSize: 12,
+                    marginLeft: 5,
+                    marginTop: -5,
+                    marginBottom: 5,
+                  }}
+                >
+                  Ya existe un negocio con este nombre
+                </Text>
+              )}
               <CustomInput
                 control={control}
                 name={`email`}
@@ -350,7 +381,11 @@ const StepOne = ({ navigation, route }) => {
                     input: [styles.inputContainerP],
                     placeholder: styles.placeholder,
                   }}
-                  defValue={data === undefined ? "" : `${data?.business?.phone.slice(1)}`}
+                  defValue={
+                    data === undefined
+                      ? ""
+                      : `${data?.business?.phone.slice(1)}`
+                  }
                   text={` `}
                   rules={{
                     required: es.businessForm.register.email.rules,

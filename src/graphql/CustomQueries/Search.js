@@ -87,6 +87,7 @@ export const getBusiness = /* GraphQL */ `
       schedule
       facebook
       page
+      catalogpdf
       coordinates {
         lat
         lon

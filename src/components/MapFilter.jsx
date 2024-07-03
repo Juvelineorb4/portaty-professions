@@ -7,28 +7,48 @@ import {
   TextInput,
   TouchableOpacity,
   ActivityIndicator,
+  FlatList,
 } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import MapView, { Marker, PROVIDER_GOOGLE, Circle } from "react-native-maps";
 import * as Location from "expo-location";
 import styles from "@/utils/styles/MapMarket.js";
 import { useRecoilState } from "recoil";
-import { kmRadio } from "@/atoms";
+import { kmRadio, mapUserChange, searchAddressInitial } from "@/atoms";
 import Slider from "@react-native-community/slider";
+import { API } from "aws-amplify";
+import { debounce } from "lodash";
 
 const MapFilter = ({ open, close, initialLocation, country, city }) => {
   const global = require("@/utils/styles/global.js");
   const [description, setDescription] = useState("");
   const [selectedPlace, setSelectedPlace] = useState(null);
+  const [labelSelected, setLabelSelected] = useState(null);
   const [filterRadio, setFilterRadio] = useRecoilState(kmRadio);
   const [changeTag, setChangeTag] = useState(filterRadio);
+  const [searchActive, setSearchActive] = useState(false);
+  const [suggestions, setSuggestions] = useState(null);
+  const [searchAddress, setSearchAddress] =
+    useRecoilState(searchAddressInitial);
+  const [mapChange, setMapChange] = useRecoilState(mapUserChange);
   const [region, setRegion] = useState({
-    latitude: initialLocation.latitude,
-    longitude: initialLocation.longitude,
+    latitude: initialLocation?.latitude,
+    longitude: initialLocation?.longitude,
     latitudeDelta: 0.018,
     longitudeDelta: 0.018,
   });
+  const [searchTerm, setSearchTerm] = useState("");
   let mapRef = useRef(null);
+  const timerIdRef = useRef(null);
+
+  const getAddress = async (obj) => {
+    setSearchAddress(obj?.label);
+    setMapChange({
+      latitude: obj?.latitude,
+      longitude: obj?.longitude,
+    });
+    console.log(obj?.label);
+  };
 
   const onHandlePress = (e) => {
     const {
@@ -37,7 +57,6 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
 
     if (mapRef.current) {
       const newRegion = mapRef.current.__lastRegion;
-
     }
     setRegion({
       latitude: coordinate.latitude,
@@ -45,15 +64,30 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
       latitudeDelta: 0.018,
       longitudeDelta: 0.018,
     });
-    // mapRef.current.animateToRegion(
-    //   {
-    //     latitude: coordinate.latitude,
-    //     longitude: coordinate.longitude,
-    //     // latitudeDelta: 0.018,
-    //     // longitudeDelta: 0.018,
-    //   },
-    //   7000
-    // );
+  };
+
+  const autocompleteCoords = (label, latitude, longitude) => {
+    setLabelSelected({
+      label: label,
+      latitude: latitude,
+      longitude: longitude,
+    });
+    setRegion({
+      latitude: latitude,
+      longitude: longitude,
+      latitudeDelta: 0.018,
+      longitudeDelta: 0.018,
+    });
+    mapRef.current.animateToRegion(
+      {
+        latitude: latitude,
+        longitude: longitude,
+        latitudeDelta: 0.018,
+        longitudeDelta: 0.018,
+      },
+      7000
+    );
+    setSuggestions(null);
   };
 
   const obtenerCoordenadas = async (address) => {
@@ -61,7 +95,6 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
     let coordenadas = await Location.geocodeAsync(direccionComplete);
 
     let direcciones = await Location.reverseGeocodeAsync(coordenadas[0]);
-
 
     if (direcciones[0].country !== country || direcciones[0].city === null) {
       return;
@@ -83,7 +116,49 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
       7000
     );
   };
-  useEffect(() => {}, []);
+
+  const search = async () => {
+    console.log("desde search", searchActive);
+    setSuggestions(null);
+    if (description === "") return;
+
+    const api = "api-opense";
+    const path = "/location/_search";
+    const params = {
+      headers: {},
+      queryStringParameters: {
+        text: description,
+        location: JSON.stringify({
+          latitude: initialLocation?.latitude,
+          longitude: initialLocation?.longitude,
+        }),
+      },
+    };
+
+    try {
+      const response = await API.get(api, path, params);
+      setSuggestions(response.data);
+      console.log(suggestions);
+    } catch (error) {
+      console.log("Error buscando algo", error);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    setDescription(e);
+  };
+
+  useEffect(() => {
+    const debouncedSetSearch = debounce((e) => {
+      console.log(e);
+      search(e);
+    }, 1000);
+
+    if (description !== "") {
+      debouncedSetSearch(description);
+    }
+  }, [description]);
+
   return (
     <Modal animationType="none" transparent={true} visible={open}>
       <View style={styles.modalContainer}>
@@ -136,9 +211,9 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
               style={{
                 position: "absolute",
                 flex: 1,
-                marginHorizontal: 5,
+                marginHorizontal: 15,
                 marginVertical: 13,
-                padding: 5,
+                paddingLeft: 10,
                 borderRadius: 5,
                 borderColor: "#1f1f1f",
                 borderWidth: 0.7,
@@ -149,26 +224,72 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
             >
               <TextInput
                 value={description}
-                onChangeText={(e) => {
-                  setDescription(e);
-                }}
+                onChangeText={handleInputChange}
                 placeholder={`Introduce una direccion`}
                 style={{
                   fontFamily: "regular",
-                  fontSize: 14,
+                  fontSize: 15,
+                  height: 50
                 }}
               />
+              {suggestions && (
+                <FlatList
+                  data={suggestions}
+                  showsVerticalScrollIndicator={true}
+                  keyExtractor={(item) => item?.Label}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      style={{
+                        paddingVertical: 8,
+                        borderBottomColor: "#1f1f1f",
+                        borderBottomWidth: 1,
+                      }}
+                      onPress={() =>
+                        autocompleteCoords(
+                          item?.Label,
+                          item?.Point[1],
+                          item?.Point[0]
+                        )
+                      }
+                    >
+                      <Text
+                        style={{
+                          fontFamily: "light",
+                          fontSize: 12,
+                        }}
+                      >
+                        {item?.Label}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                  style={{
+                    flex: 1,
+                    position: "absolute",
+                    backgroundColor: "white",
+                    padding: 10,
+                    paddingTop: 0,
+                    borderColor: "#1f1f1f",
+                    borderWidth: 1,
+                    top: 50,
+                    width: 295,
+                    borderBottomRightRadius: 8,
+                    borderBottomLeftRadius: 8,
+                    // height: 200,
+                    zIndex: 100,
+                  }}
+                />
+              )}
               <TouchableOpacity
                 style={[
                   {
                     position: "absolute",
                     bottom: -1,
-                    right: -65,
+                    right: -90,
                     justifyContent: "center",
                     alignContent: "center",
                     borderRadius: 5,
                     height: 50,
-                    width: 60,
+                    width: 85,
                     alignItems: "center",
                     borderColor: "#1f1f1f",
                     borderWidth: 0.7,
@@ -178,7 +299,7 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
                 onPress={() => obtenerCoordenadas(description)}
               >
                 <Text
-                  style={[global.black, { fontFamily: "bold", fontSize: 12 }]}
+                  style={[global.black, { fontFamily: "bold", fontSize: 14 }]}
                 >{`Buscar`}</Text>
               </TouchableOpacity>
             </View>
@@ -286,13 +407,14 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
                   borderRadius: 5,
                   width: 100,
                   alignItems: "center",
-                  justifyContent: 'center',
+                  justifyContent: "center",
                   borderColor: "#1f1f1f",
                   borderWidth: 1,
                 },
                 global.bgYellow,
               ]}
               onPress={() => {
+                getAddress(labelSelected);
                 close();
               }}
             >

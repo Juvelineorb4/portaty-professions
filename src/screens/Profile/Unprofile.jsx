@@ -96,12 +96,13 @@ const Unprofile = ({ navigation, route }) => {
   const _handlePressButtonAsync = async (url) => {
     let result = await WebBrowser.openBrowserAsync(url);
   };
-  const onHandleAccountDeletion = async () => {
+
+ const onHandleAccountDeletion = async () => {
     if (!userAuth?.attributes?.sub) return;
-    console.log("SE PRECIONO");
+
     Alert.alert(
       "Confirmación",
-      "¿Estás seguro de que quieres enviar la solicitud para la eliminación de cuenta?, Esto podria tardar de 30 a 90 dias habiles!",
+      "¿Estás seguro de que quieres enviar la solicitud para la eliminación de cuenta?",
       [
         {
           text: "Cancelar",
@@ -111,7 +112,6 @@ const Unprofile = ({ navigation, route }) => {
         {
           text: "OK",
           onPress: async () => {
-            setButtonDelete(false);
             try {
               const api = "api-portaty";
               const path = "/request_account_deletion";
@@ -137,12 +137,12 @@ const Unprofile = ({ navigation, route }) => {
                 error
               );
             }
-            setButtonDelete(true);
           },
         },
       ]
     );
   };
+  
   useLayoutEffect(() => {
     User();
   }, [userAuth, status, refreshing, isFocused]);
@@ -266,7 +266,7 @@ const Unprofile = ({ navigation, route }) => {
             return;
           }
           if (disabled) return;
-          if (business.length === 2) {
+          if (business.length === 1) {
             setError(
               "Ya has conseguido el maximo de negocios registrados permitidos"
             );

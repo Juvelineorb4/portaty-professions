@@ -200,15 +200,17 @@ const StepFive = ({ navigation, route }) => {
         headers: {},
       };
       const result = await API.post(apiName, path, myInit);
+      console.log(result)
       setLoading(false);
       Finished();
     } catch (error) {
-      console.log(`Error al cargar negocio`, error?.message);
+      console.log(`Error al cargar negocio`, error?.response.data);
       switch (error?.message) {
         case "Request failed with status code 401":
           setError(`Usuario no Autorizado para cargar Negocio`);
           break;
         default:
+          console.log(error?.message)
           setError(`Error al cargar negocio`);
           break;
       }

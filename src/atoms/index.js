@@ -97,7 +97,10 @@ export const totalSearch = atom({
   key: "totalSearchValue",
   default: 2,
 });
-
+export const searchAddressInitial = atom({
+  key: "searchAddressInitialValue",
+  default: "",
+});
 export const profileState = atom({
   key: "profileStateValue",
   default: false,
@@ -113,6 +116,10 @@ export const filterState = atom({
 
 export const mapUser = atom({
   key: "mapUserValue",
+  default: null,
+});
+export const mapUserChange = atom({
+  key: "mapUserChangeValue",
   default: null,
 });
 export const locationPermission = atom({
@@ -135,6 +142,14 @@ export const urlInitalShare = atom({
 export const codeFields = atom({
   key: "codeFieldsValue",
   default: "",
+});
+export const codeProfile = atom({
+  key: "codeProfileValue",
+  default: "",
+});
+export const confirmCodeProfile = atom({
+  key: "confirmCodeProfileValue",
+  default: false,
 });
 
 export const updateListFavorites = atom({

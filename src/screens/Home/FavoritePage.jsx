@@ -55,6 +55,7 @@ const FavoritePage = ({ navigation, route }) => {
   const [open, setOpen] = useState(false);
   const [weekSchedule, setWeekSchedule] = useState("");
   const [listRatings, setListRatings] = useState(null);
+  const [ratingsDetails, setRatingsDetails] = useState(null);
 
   const {
     data: { item, image },
@@ -170,6 +171,7 @@ const FavoritePage = ({ navigation, route }) => {
         },
         authMode: "AWS_IAM",
       });
+      setListUpdate(false)
       setPost(business.data.getBusiness);
     } catch (error) {
       console.log("eres tu", error);
@@ -183,7 +185,7 @@ const FavoritePage = ({ navigation, route }) => {
       const fetchAllRatings = async (nextToken, result = []) => {
         const response = await API.graphql({
           query: queries.businessCommentsByBusinessID,
-          authMode: "AMAZON_COGNITO_USER_POOLS",
+          authMode: "AWS_IAM",
           variables: {
             businessID: business?.businessID,
             nextToken,
@@ -206,18 +208,30 @@ const FavoritePage = ({ navigation, route }) => {
       const allRatings = await fetchAllRatings();
       console.log(allRatings);
       setListRatings(allRatings);
-      // const ratings = await API.graphql({
-      //   query: queries.businessCommentsByBusinessID,
-      //   variables: {
-      //     businessID: business?.businessID,
-      //   },
-      //   authMode: "AWS_IAM",
-      // });
-      // console.log(ratings.data.businessCommentsByBusinessID.items)
     } catch (error) {
       console.log("eres tu", error);
     }
   };
+
+  const fetchRatings2 = async () => {
+    let business = item;
+    try {
+      const api = "api-portaty";
+      const path = "/business/ratings";
+      const params = {
+        headers: {},
+        queryStringParameters: {
+          businessID: business.businessID,
+        },
+      };
+
+      const response = await API.get(api, path, params);
+      setRatingsDetails(response.data);
+    } catch (error) {
+      console.error(error.response.data);
+    }
+  };
+
   const onDeleteFavorite = async () => {
     const favorites = await API.graphql({
       query: customFavorites.deleteFavorites,
@@ -256,13 +270,23 @@ const FavoritePage = ({ navigation, route }) => {
     Linking.openURL(url);
   };
 
+  const getCatalogPDF = async () => {
+    try {
+      const url = item?.catalogpdf;
+      Linking.openURL(url);
+    } catch (error) {
+      console.log("Error en catalogo: ", error);
+    }
+  };
+
   useLayoutEffect(() => {
     fetchData();
     fetchRatings(item);
-    filterSchedule(schedule.shedule, schedule.type);
+    fetchRatings2();
+    if (schedule !== null) filterSchedule(schedule?.shedule, schedule?.type);
   }, [listUpdate]);
 
-  if (!item || !listRatings) return <SkeletonExample />;
+  if (!item || !listRatings || listUpdate) return <SkeletonExample />;
   return (
     <View
       style={[
@@ -429,7 +453,7 @@ const FavoritePage = ({ navigation, route }) => {
                   marginRight: 3,
                 }}
               >
-                4.7
+                {ratingsDetails?.average}
               </Text>
               <Ionicons name="star" size={16} color="#ffb703" />
             </View>
@@ -440,10 +464,11 @@ const FavoritePage = ({ navigation, route }) => {
                 fontSize: 12,
               }}
             >
-              100+ valoraciones
+              {ratingsDetails?.ratings_message}
             </Text>
           </View>
-          <View
+          {/* Pa despues */}
+          {/* <View
             style={{
               flexDirection: "row",
               alignItems: "center",
@@ -459,7 +484,7 @@ const FavoritePage = ({ navigation, route }) => {
             >
               Nº 14 en Turismo
             </Text>
-          </View>
+          </View> */}
         </View>
 
         <View
@@ -532,6 +557,7 @@ const FavoritePage = ({ navigation, route }) => {
           style={{
             paddingHorizontal: 20,
             paddingTop: 20,
+            marginBottom: 15
           }}
         >
           <Text style={{ fontSize: 18, fontFamily: "regular" }}>
@@ -595,7 +621,7 @@ const FavoritePage = ({ navigation, route }) => {
             style={{
               borderWidth: 0.6,
               borderColor: "#1f1f1f",
-              height: 130,
+              height: listRatings.length !== 0 ? 130 : 60,
               borderRadius: 8,
               padding: 10,
             }}
@@ -615,49 +641,52 @@ const FavoritePage = ({ navigation, route }) => {
                 Este negocio tiene {listRatings.length} reseña(s)
               </Text>
             </View>
-            <View
-              style={{
-                marginTop: 10,
-                backgroundColor: "#efeded",
-                padding: 5,
-                borderRadius: 8,
-              }}
-            >
+            {listRatings.length !== 0 && (
               <View
                 style={{
-                  flexDirection: "row",
-                  alignItems: "center",
+                  marginTop: 10,
+                  backgroundColor: "#efeded",
+                  padding: 5,
+                  borderRadius: 8,
                 }}
               >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: "regular",
+                      fontSize: 13,
+                      marginRight: 3,
+                    }}
+                  >
+                    {listRatings[0]?.stars} de 5
+                  </Text>
+                  <Ionicons name="star" size={12} color="#ffb703" />
+                  <Text
+                    style={{
+                      fontFamily: "medium",
+                      fontSize: 12,
+                      marginLeft: 5,
+                    }}
+                  >
+                    {listRatings[0]?.user?.name}{" "}
+                    {listRatings[0]?.user?.lastName}
+                  </Text>
+                </View>
                 <Text
                   style={{
                     fontFamily: "regular",
                     fontSize: 13,
-                    marginRight: 3,
                   }}
                 >
-                  {listRatings[0].stars} de 5
-                </Text>
-                <Ionicons name="star" size={12} color="#ffb703" />
-                <Text
-                  style={{
-                    fontFamily: "medium",
-                    fontSize: 12,
-                    marginLeft: 5,
-                  }}
-                >
-                  {listRatings[0].user.name} {listRatings[0].user.lastName}
+                  {listRatings[0]?.description}
                 </Text>
               </View>
-              <Text
-                style={{
-                  fontFamily: "regular",
-                  fontSize: 13,
-                }}
-              >
-                {listRatings[0].description}
-              </Text>
-            </View>
+            )}
             <View
               style={{
                 flexDirection: "row",
@@ -673,7 +702,9 @@ const FavoritePage = ({ navigation, route }) => {
                   marginRight: 3,
                 }}
               >
-                Ver todas las reseñas
+                {listRatings.length !== 0
+                  ? "Ver todas las reseñas"
+                  : "Publicar una reseña"}
               </Text>
               <AntDesign name="arrowright" size={13} color="black" />
             </View>
@@ -776,51 +807,6 @@ const FavoritePage = ({ navigation, route }) => {
             source={require("@/utils/images/arrow_right.png")}
           />
         </TouchableOpacity>
-        {/* <TouchableOpacity
-          style={{
-            padding: 20,
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginTop: -27,
-          }}
-          onPress={getPdf}
-        >
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <View
-              style={[
-                {
-                  width: 58,
-                  height: 58,
-                  borderRadius: 10,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderWidth: 0.7,
-                  borderColor: "#1f1f1f",
-                },
-                global.bgYellow,
-              ]}
-            >
-              <AntDesign name="qrcode" size={24} color="#1f1f1f" />
-            </View>
-            <View style={{ marginLeft: 10 }}>
-              <Text style={{ fontFamily: "medium", fontSize: 15 }}>
-                Descargar QR
-              </Text>
-              <Text style={{ fontFamily: "light", fontSize: 12, width: 150 }}>
-                Descarga el QR del negocio para pegarlo en donde quieras
-              </Text>
-            </View>
-          </View>
-          <Image
-            style={{
-              width: 40,
-              height: 40,
-              resizeMode: "cover",
-            }}
-            source={require("@/utils/images/arrow_right.png")}
-          />
-        </TouchableOpacity> */}
         <TouchableOpacity
           style={{
             padding: 20,
@@ -864,6 +850,57 @@ const FavoritePage = ({ navigation, route }) => {
             source={require("@/utils/images/arrow_right.png")}
           />
         </TouchableOpacity>
+        {/* Catalogo */}
+        {item?.catalogpdf !== "" ||
+          (item?.catalogpdf && (
+            <TouchableOpacity
+              style={{
+                padding: 20,
+                marginTop: -25,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+              onPress={getCatalogPDF}
+            >
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <View
+                  style={[
+                    {
+                      width: 58,
+                      height: 58,
+                      borderRadius: 10,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderColor: "#1f1f1f",
+                      borderWidth: 0.7,
+                    },
+                    global.bgYellow,
+                  ]}
+                >
+                  <Octicons name="checklist" size={21} color="#1f1f1f" />
+                </View>
+                <View style={{ marginLeft: 10 }}>
+                  <Text style={{ fontFamily: "medium", fontSize: 15 }}>
+                    Catalogo
+                  </Text>
+                  <Text
+                    style={{ fontFamily: "regular", fontSize: 12, width: 150 }}
+                  >
+                    Mira la lista de productos y servicios del negocio
+                  </Text>
+                </View>
+              </View>
+              <Image
+                style={{
+                  width: 40,
+                  height: 40,
+                  resizeMode: "cover",
+                }}
+                source={require("@/utils/images/arrow_right.png")}
+              />
+            </TouchableOpacity>
+          ))}
         <View style={{ marginBottom: 80 }}>
           <Text style={{ fontSize: 22, fontFamily: "regular", padding: 10 }}>
             Datos
@@ -1113,37 +1150,6 @@ const FavoritePage = ({ navigation, route }) => {
               </Text>
             </View>
           </View>
-          {/* <View style={[styles.line, global.bgMidGray]} />
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              padding: 20,
-            }}
-          >
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <MaterialCommunityIcons name="web" size={24} color="#1f1f1f" />
-              <Text
-                style={[
-                  { fontFamily: "lightItalic", fontSize: 13 },
-                  global.black,
-                ]}
-              >
-                Web
-              </Text>
-            </View>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text
-                style={[
-                  { fontSize: 13, fontFamily: "regular", marginRight: 5 },
-                ]}
-              >
-                Link
-              </Text>
-              <AntDesign name="link" size={16} color="#1f1f1f" />
-            </View>
-          </View> */}
           <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{

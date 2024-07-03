@@ -161,12 +161,11 @@ const Register = ({ navigation }) => {
               placeholder="Elige tu género"
               editable={false}
               styled={{
-                text: styles.textInput,
+                text: styles.textInputGender,
                 label: styles.labelInput,
                 error: styles.errorInput,
                 placeholder: styles.placeholderGender,
-                input: [styles.inputContainer, global.bgWhite],
-                security: styles.security,
+                input: [styles.inputContainerGender, global.bgWhite],
               }}
               text={`Género`}
               rules={{
