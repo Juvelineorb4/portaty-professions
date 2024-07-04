@@ -23,7 +23,7 @@ const CustomInteractions = ({ route, navigation }) => {
   };
 
   useEffect(() => {
-    checkList();
+    if (userAuth) checkList();
   }, []);
 
   // console.log(list)
@@ -112,25 +112,27 @@ const CustomInteractions = ({ route, navigation }) => {
           ))}
         </View>
       </ScrollView>
-      <CustomButton
-        text={
-          errorRating
-            ? `Ya has dejado una valoracion`
-            : `Deja tu valoracion y comentario`
-        }
-        handlePress={() => {
-          if (!errorRating) setActive(true);
-        }}
-        textStyles={[styles.textButton, global.black]}
-        buttonStyles={[
-          styles.button,
-          errorRating ? global.bgWhite : global.bgYellow,
-        ]}
-      />
+      {userAuth && (
+        <CustomButton
+          text={
+            errorRating
+              ? `Ya has dejado una valoracion`
+              : `Deja tu valoracion y comentario`
+          }
+          handlePress={() => {
+            if (!errorRating) setActive(true);
+          }}
+          textStyles={[styles.textButton, global.black]}
+          buttonStyles={[
+            styles.button,
+            errorRating ? global.bgWhite : global.bgYellow,
+          ]}
+        />
+      )}
       <ModalInteractions
         close={() => {
-          setActive(false)
-          navigation.goBack()
+          setActive(false);
+          navigation.goBack();
         }}
         open={active}
         businessID={business.businessID ? business.businessID : business.id}

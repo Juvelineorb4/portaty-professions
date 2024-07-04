@@ -860,7 +860,7 @@ const FavoritePage = ({ navigation, route }) => {
         </TouchableOpacity>
 
         {/* Catalogo */}
-        {item?.catalogpdf !== "" && (
+        {item?.catalogpdf !== "" || item?.catalogpdf && (
           <TouchableOpacity
             style={{
               padding: 20,
