@@ -103,9 +103,9 @@ export const AppVersionByDate = /* GraphQL */ `
     }
   }
 `;
-export const getNotifiationHistory = /* GraphQL */ `
-  query GetNotifiationHistory($id: ID!) {
-    getNotifiationHistory(id: $id) {
+export const getNotificationHistory = /* GraphQL */ `
+  query GetNotificationHistory($id: ID!) {
+    getNotificationHistory(id: $id) {
       id
       title
       message
@@ -115,13 +115,13 @@ export const getNotifiationHistory = /* GraphQL */ `
     }
   }
 `;
-export const listNotifiationHistories = /* GraphQL */ `
-  query ListNotifiationHistories(
-    $filter: ModelNotifiationHistoryFilterInput
+export const listNotificationHistories = /* GraphQL */ `
+  query ListNotificationHistories(
+    $filter: ModelNotificationHistoryFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listNotifiationHistories(
+    listNotificationHistories(
       filter: $filter
       limit: $limit
       nextToken: $nextToken

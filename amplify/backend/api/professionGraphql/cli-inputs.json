@@ -10,8 +10,8 @@
       {
         "mode": "API_KEY",
         "expirationTime": 365,
-        "apiKeyExpirationDate": "2025-06-04T19:30:19.823Z",
-        "keyDescription": "PARA OTRAS OPErACIONES"
+        "apiKeyExpirationDate": "2025-06-28T13:49:07.887Z",
+        "keyDescription": "PARA USAR EN BACKEND SERVERLESS"
       },
       {
         "mode": "AMAZON_COGNITO_USER_POOLS",

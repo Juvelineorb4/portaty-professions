@@ -85,11 +85,11 @@ export const onDeleteReports = /* GraphQL */ `
     }
   }
 `;
-export const onCreateNotifiationHistory = /* GraphQL */ `
-  subscription OnCreateNotifiationHistory(
-    $filter: ModelSubscriptionNotifiationHistoryFilterInput
+export const onCreateNotificationHistory = /* GraphQL */ `
+  subscription OnCreateNotificationHistory(
+    $filter: ModelSubscriptionNotificationHistoryFilterInput
   ) {
-    onCreateNotifiationHistory(filter: $filter) {
+    onCreateNotificationHistory(filter: $filter) {
       id
       title
       message
@@ -99,11 +99,11 @@ export const onCreateNotifiationHistory = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateNotifiationHistory = /* GraphQL */ `
-  subscription OnUpdateNotifiationHistory(
-    $filter: ModelSubscriptionNotifiationHistoryFilterInput
+export const onUpdateNotificationHistory = /* GraphQL */ `
+  subscription OnUpdateNotificationHistory(
+    $filter: ModelSubscriptionNotificationHistoryFilterInput
   ) {
-    onUpdateNotifiationHistory(filter: $filter) {
+    onUpdateNotificationHistory(filter: $filter) {
       id
       title
       message
@@ -113,11 +113,11 @@ export const onUpdateNotifiationHistory = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteNotifiationHistory = /* GraphQL */ `
-  subscription OnDeleteNotifiationHistory(
-    $filter: ModelSubscriptionNotifiationHistoryFilterInput
+export const onDeleteNotificationHistory = /* GraphQL */ `
+  subscription OnDeleteNotificationHistory(
+    $filter: ModelSubscriptionNotificationHistoryFilterInput
   ) {
-    onDeleteNotifiationHistory(filter: $filter) {
+    onDeleteNotificationHistory(filter: $filter) {
       id
       title
       message

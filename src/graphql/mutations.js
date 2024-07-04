@@ -148,12 +148,12 @@ export const deleteComplaints = /* GraphQL */ `
     }
   }
 `;
-export const createNotifiationHistory = /* GraphQL */ `
-  mutation CreateNotifiationHistory(
-    $input: CreateNotifiationHistoryInput!
-    $condition: ModelNotifiationHistoryConditionInput
+export const createNotificationHistory = /* GraphQL */ `
+  mutation CreateNotificationHistory(
+    $input: CreateNotificationHistoryInput!
+    $condition: ModelNotificationHistoryConditionInput
   ) {
-    createNotifiationHistory(input: $input, condition: $condition) {
+    createNotificationHistory(input: $input, condition: $condition) {
       id
       title
       message
@@ -163,12 +163,12 @@ export const createNotifiationHistory = /* GraphQL */ `
     }
   }
 `;
-export const updateNotifiationHistory = /* GraphQL */ `
-  mutation UpdateNotifiationHistory(
-    $input: UpdateNotifiationHistoryInput!
-    $condition: ModelNotifiationHistoryConditionInput
+export const updateNotificationHistory = /* GraphQL */ `
+  mutation UpdateNotificationHistory(
+    $input: UpdateNotificationHistoryInput!
+    $condition: ModelNotificationHistoryConditionInput
   ) {
-    updateNotifiationHistory(input: $input, condition: $condition) {
+    updateNotificationHistory(input: $input, condition: $condition) {
       id
       title
       message
@@ -178,12 +178,12 @@ export const updateNotifiationHistory = /* GraphQL */ `
     }
   }
 `;
-export const deleteNotifiationHistory = /* GraphQL */ `
-  mutation DeleteNotifiationHistory(
-    $input: DeleteNotifiationHistoryInput!
-    $condition: ModelNotifiationHistoryConditionInput
+export const deleteNotificationHistory = /* GraphQL */ `
+  mutation DeleteNotificationHistory(
+    $input: DeleteNotificationHistoryInput!
+    $condition: ModelNotificationHistoryConditionInput
   ) {
-    deleteNotifiationHistory(input: $input, condition: $condition) {
+    deleteNotificationHistory(input: $input, condition: $condition) {
       id
       title
       message
