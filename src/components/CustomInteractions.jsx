@@ -23,7 +23,7 @@ const CustomInteractions = ({ route, navigation }) => {
   };
 
   useEffect(() => {
-    checkList();
+    if (userAuth) checkList();
   }, []);
   return (
     <ScrollView
