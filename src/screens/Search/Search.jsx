@@ -24,15 +24,18 @@ import {
   totalSearch,
   searchAddressInitial,
   mapUserChange,
+  connectionStatus,
 } from "@/atoms";
 import { useRecoilState, useRecoilValue } from "recoil";
 import * as Location from "expo-location";
-import useLocation from "@/hooks/useLocation";
+// import useLocation from "@/hooks/useLocation";
 import SkeletonSearch from "@/components/SkeletonSearch";
 import SkeletonMoreItems from "@/components/SkeletonMoreItems";
 import * as Cellular from "expo-cellular";
 import { Entypo } from "@expo/vector-icons";
 import MapFilter from "@/components/MapFilter";
+import NetInfo from "@react-native-community/netinfo";
+import CustomButton from "@/components/CustomButton";
 
 const Search = ({ route }) => {
   const global = require("@/utils/styles/global.js");
@@ -56,6 +59,8 @@ const Search = ({ route }) => {
   const [searchAddress, setSearchAddress] =
     useRecoilState(searchAddressInitial);
   const [city, setCity] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isConnected, setIsConnected] = useRecoilState(connectionStatus);
 
   const getAddress = async (coords) => {
     let direcciones = await Location.reverseGeocodeAsync(coords);
@@ -75,6 +80,7 @@ const Search = ({ route }) => {
   const kilometers = [1, 5, 10, 20, 50, 100];
   let number = 26 * moreItems;
   const getData = async () => {
+    setIsLoading(true);
     const api = "api-opense";
     const path = "/search/default";
     const params = {
@@ -100,6 +106,7 @@ const Search = ({ route }) => {
         let cut = response.items.slice(i, i + long);
         newRenderItems.push(cut);
       }
+      setIsLoading(false);
       setSearchActive(true);
       setSearchCacheActive(newRenderItems);
       return setItems(newRenderItems);
@@ -107,9 +114,24 @@ const Search = ({ route }) => {
       return console.log("ERROR EN BSUQUEDA DEFAULT:  ", error);
     }
   };
+
+  /* Validar conexion a internet */
+  const getConnection = async () => {
+    NetInfo.fetch().then((state) => {
+      if (searchActive) return;
+      if (state.isConnected) {
+        if (userLocation) getData();
+        setIsConnected(state.isConnected);
+      } else {
+        setIsConnected(state.isConnected);
+      }
+    });
+  };
+  /* */
+
   const getFilterData = async () => {
     setStatusFilter(true);
-    getData();
+    getConnection();
     // setTimeout(() => {}, 3000);
     setStatusFilter(false);
   };
@@ -138,7 +160,7 @@ const Search = ({ route }) => {
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    if (userLocation) getData();
+    getConnection();
     Wait(2000).then(() => setRefreshing(false));
   });
   /* Refresh */
@@ -152,10 +174,48 @@ const Search = ({ route }) => {
         setCountries(item);
         getCountryCode(item);
       });
-    if (userLocation) getData();
+    getConnection();
   }, [userLocation, moreItems, refreshing]);
 
-  if (searchActive) {
+  if (isLoading) {
+    return (
+      <View
+        style={[
+          { flex: 1, alignItems: "center", justifyContent: "center" },
+          global.bgWhite,
+        ]}
+      >
+        <SkeletonSearch />
+      </View>
+    );
+  }
+  if (!isConnected) {
+    return (
+      <View
+        style={[
+          { flex: 1, alignItems: "center", justifyContent: "center" },
+          global.bgWhite,
+        ]}
+      >
+        <Text
+          style={{
+            fontFamily: "regular",
+            fontSize: 15,
+          }}
+        >
+          No tienes conexión. Intenta de nuevo
+        </Text>
+
+        <CustomButton
+          text={`Refrescar`}
+          handlePress={() => onRefresh()}
+          textStyles={[styles.textSearch, global.black]}
+          buttonStyles={[styles.search, global.bgYellow]}
+        />
+      </View>
+    );
+  }
+  if (searchActive && isConnected && !isLoading) {
     return (
       <View style={{ flex: 1, backgroundColor: "#FFFFFF", paddingBottom: 50 }}>
         <View>
@@ -423,54 +483,6 @@ const Search = ({ route }) => {
                       Cambiar
                     </Text>
                   </Text>
-
-                  {/* <View>
-                    <Text
-                      style={{ fontFamily: "regular", fontSize: 13 }}
-                    >{`La distancia de tu radio son: ${filterRadio} km`}</Text>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        flexWrap: "wrap",
-                        marginVertical: 15,
-                      }}
-                    >
-                      {kilometers.map((item, index) => (
-                        <TouchableOpacity
-                          key={index}
-                          onPress={() => setFilterRadio(item)}
-                          style={[
-                            filterRadio === item
-                              ? global.bgYellow
-                              : global.bgWhite,
-                            {
-                              padding: 7,
-                              borderRadius: 4,
-                              marginBottom: 7,
-                              borderWidth: 0.7,
-                              borderColor:
-                                filterRadio === item ? "#1f1f1f" : "#1f1f1f",
-                            },
-                          ]}
-                        >
-                          <Text
-                            style={[
-                              { fontFamily: "medium", fontSize: 12 },
-                              filterRadio === item
-                                ? global.black
-                                : global.black,
-                            ]}
-                          >
-                            {item}km
-                          </Text>
-                        </TouchableOpacity>
-                      ))}
-                    </View>
-                    <Text
-                      style={{ fontFamily: "regular", fontSize: 13 }}
-                    >{`La distancia esta reflejada en un radio de kilometros`}</Text>
-                  </View> */}
                 </View>
                 <View style={{}}>
                   <TouchableOpacity
@@ -591,17 +603,6 @@ const Search = ({ route }) => {
             />
           )
         )}
-      </View>
-    );
-  } else {
-    return (
-      <View
-        style={[
-          { flex: 1, alignItems: "center", justifyContent: "center" },
-          global.bgWhite,
-        ]}
-      >
-        <SkeletonSearch />
       </View>
     );
   }

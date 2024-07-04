@@ -23,7 +23,7 @@ import Constants from "expo-constants";
 import useCheckAppVersion from "@/hooks/useCheckAppVersion";
 import ModalUpdate from "@/components/ModalUpdate";
 
-const Login = ({ navigation }) => {
+const Login = ({ navigation, route }) => {
   const { control, handleSubmit, watch } = useForm();
   const emailForm = watch("email");
   const global = require("@/utils/styles/global.js");
@@ -42,6 +42,9 @@ const Login = ({ navigation }) => {
     setIsLoading(true);
     try {
       const result = await Auth.signIn(email.trim(), password.trim());
+      setTimeout(() => {
+        if (result) navigation.goBack();
+      }, 2500);
     } catch (error) {
       console.log("ERROR AL LOGEARTE", error.message);
       switch (error.message) {
