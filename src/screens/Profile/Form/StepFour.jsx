@@ -43,8 +43,8 @@ const StepFour = ({ navigation, route }) => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [6, 4],
-      quality: 0.1,
+      // aspect: [6, 4],
+      quality: 0.8,
       base64: true,
     });
     if (!result.canceled) {

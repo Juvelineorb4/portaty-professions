@@ -94,6 +94,10 @@ const StepFive = ({ navigation, route }) => {
   };
 
   const StepRegister = async (data) => {
+    if (loading) {
+      console.log("no podeis mas de uno");
+      return;
+    }
     const today = new Date().toISOString();
     setLoading(true);
     const { identityId } = await Auth.currentUserCredentials();
@@ -159,6 +163,9 @@ const StepFive = ({ navigation, route }) => {
         })
       );
     }
+
+    const phoneRegex = dataB.business.phone.replace("+", "");
+
     try {
       const input = {
         owner: userAuth?.attributes?.sub,
@@ -167,7 +174,7 @@ const StepFive = ({ navigation, route }) => {
         email: dataB.business.email,
         phone: dataB.business.phone,
         description: description,
-        whatsapp: whatsapp ? whatsapp : "",
+        whatsapp: whatsapp ? whatsapp : `https://wa.me/${phoneRegex}`,
         instagram: instagram ? instagram : "",
         facebook: facebook ? facebook : "",
         image: "",
@@ -246,7 +253,7 @@ const StepFive = ({ navigation, route }) => {
                     <Text
                       style={{
                         fontFamily: "regular",
-                        fontSize: 16,
+                        fontSize: 13,
                         marginBottom: 5,
                         marginTop: 20,
                         textAlign: "justify",
@@ -313,7 +320,17 @@ const StepFive = ({ navigation, route }) => {
                     text={`Instagram`}
                   />
                 </View>
-
+                <Text
+                  style={{
+                    fontFamily: "light",
+                    fontSize: 12,
+                    marginTop: -10,
+                    marginBottom: 10,
+                  }}
+                >
+                  Si no tienes un link de WhatsApp te generaremos uno
+                  automaticamente con el registro
+                </Text>
                 <CustomInput
                   control={control}
                   name={`facebook`}

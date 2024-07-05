@@ -32,18 +32,15 @@ import * as queries from "@/graphql/CustomQueries/Favorites";
 import * as customFavorites from "@/graphql/CustomMutations/Favorites";
 import MapView, { Marker } from "react-native-maps";
 import SkeletonExample from "@/components/SkeletonExample";
-// recoil
 import { useRecoilState, useRecoilValue } from "recoil";
 import { updateListFavorites, userAuthenticated, mapUser } from "@/atoms/index";
 import * as FileSystem from "expo-file-system";
 import { StorageAccessFramework } from "expo-file-system";
-// storage
 import AsyncStorage from "@react-native-async-storage/async-storage";
-// location
 import * as Location from "expo-location";
-// functions
 import { registerEvent } from "@/functions/Analytics";
 import ModalReport from "@/components/ModalReport";
+
 const SearchPost = ({ route, navigation }) => {
   const timerRef = useRef();
   const userAuth = useRecoilValue(userAuthenticated);
@@ -187,7 +184,7 @@ const SearchPost = ({ route, navigation }) => {
       if (business?.data?.getBusiness.schedule) {
         filterSchedule(schedule?.shedule, schedule?.type);
       }
-      setListUpdate(false)
+      setListUpdate(false);
       return setPost(business?.data?.getBusiness);
     } catch (error) {
       console.log(error);
@@ -357,17 +354,9 @@ const SearchPost = ({ route, navigation }) => {
       };
 
       const allRatings = await fetchAllRatings();
-      // console.log(allRatings);
+
       console.log("Resenas", allRatings);
       setListRatings(allRatings);
-      // const ratings = await API.graphql({
-      //   query: queries.businessCommentsByBusinessID,
-      //   variables: {
-      //     businessID: business?.businessID,
-      //   },
-      //   authMode: "AWS_IAM",
-      // });
-      // console.log(ratings.data.businessCommentsByBusinessID.items)
     } catch (error) {
       console.log("eres tu", error);
     }
@@ -393,10 +382,9 @@ const SearchPost = ({ route, navigation }) => {
       };
 
       const response = await API.get(api, path, params);
-      console.log("RESPONSEEEEEEEEEEEEEEEEEEEEEEEEEE: ", response);
       setRatingsDetails(response.data);
     } catch (error) {
-      console.error("ERROR A BUSCAR RATINGS: ", error.response.data);
+      console.error("Error rating: ", error.response.data);
     }
   };
   // para la carga default
@@ -516,7 +504,7 @@ const SearchPost = ({ route, navigation }) => {
                     style={{
                       width: "100%",
                       height: "100%",
-                      resizeMode: "cover",
+                      resizeMode: "contain",
                       borderRadius: 5,
                       backgroundColor: "#fff",
                       borderColor: "#1f1f1f",
@@ -636,7 +624,7 @@ const SearchPost = ({ route, navigation }) => {
                 // flex: 1,
                 flexDirection: "row",
                 alignItems: "center",
-                justifyContent: "space-between",
+                justifyContent: userAuth ? "space-between" : 'center',
                 padding: 20,
                 paddingHorizontal: 100,
               }}
@@ -656,35 +644,37 @@ const SearchPost = ({ route, navigation }) => {
                   Favoritos
                 </Text>
               </View>
-              <TouchableOpacity
-                onPress={() => {
-                  if (save === "") {
-                    onCreateFavorite();
-                  } else {
-                    onDeleteFavorite();
-                  }
-                }}
-              >
-                {save === "" ? (
-                  <Image
-                    style={{
-                      width: 45,
-                      height: 45,
-                      resizeMode: "cover",
-                    }}
-                    source={require("@/utils/images/nofavorites.png")}
-                  />
-                ) : (
-                  <Image
-                    style={{
-                      width: 45,
-                      height: 45,
-                      resizeMode: "cover",
-                    }}
-                    source={require("@/utils/images/sifavorites.png")}
-                  />
-                )}
-              </TouchableOpacity>
+              {userAuth && (
+                <TouchableOpacity
+                  onPress={() => {
+                    if (save === "") {
+                      onCreateFavorite();
+                    } else {
+                      onDeleteFavorite();
+                    }
+                  }}
+                >
+                  {save === "" ? (
+                    <Image
+                      style={{
+                        width: 45,
+                        height: 45,
+                        resizeMode: "cover",
+                      }}
+                      source={require("@/utils/images/nofavorites.png")}
+                    />
+                  ) : (
+                    <Image
+                      style={{
+                        width: 45,
+                        height: 45,
+                        resizeMode: "cover",
+                      }}
+                      source={require("@/utils/images/sifavorites.png")}
+                    />
+                  )}
+                </TouchableOpacity>
+              )}
             </View>
           </View>
         )}
@@ -1023,55 +1013,56 @@ const SearchPost = ({ route, navigation }) => {
           />
         </TouchableOpacity>
         {/* Catalogo */}
-        {post?.catalogpdf !== "" && post?.catalogpdf && (
-          <TouchableOpacity
-            style={{
-              padding: 20,
-              marginTop: -25,
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-            onPress={getCatalogPDF}
-          >
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <View
-                style={[
-                  {
-                    width: 58,
-                    height: 58,
-                    borderRadius: 10,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderColor: "#1f1f1f",
-                    borderWidth: 0.7,
-                  },
-                  global.bgYellow,
-                ]}
-              >
-                <Octicons name="checklist" size={21} color="#1f1f1f" />
-              </View>
-              <View style={{ marginLeft: 10 }}>
-                <Text style={{ fontFamily: "medium", fontSize: 15 }}>
-                  Catalogo
-                </Text>
-                <Text
-                  style={{ fontFamily: "regular", fontSize: 12, width: 150 }}
-                >
-                  Mira la lista de productos y servicios del negocio
-                </Text>
-              </View>
-            </View>
-            <Image
+        {post?.catalogpdf !== "" ||
+          (post?.catalogpdf && (
+            <TouchableOpacity
               style={{
-                width: 40,
-                height: 40,
-                resizeMode: "cover",
+                padding: 20,
+                marginTop: -25,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
               }}
-              source={require("@/utils/images/arrow_right.png")}
-            />
-          </TouchableOpacity>
-        )}
+              onPress={getCatalogPDF}
+            >
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <View
+                  style={[
+                    {
+                      width: 58,
+                      height: 58,
+                      borderRadius: 10,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderColor: "#1f1f1f",
+                      borderWidth: 0.7,
+                    },
+                    global.bgYellow,
+                  ]}
+                >
+                  <Octicons name="checklist" size={21} color="#1f1f1f" />
+                </View>
+                <View style={{ marginLeft: 10 }}>
+                  <Text style={{ fontFamily: "medium", fontSize: 15 }}>
+                    Catalogo
+                  </Text>
+                  <Text
+                    style={{ fontFamily: "regular", fontSize: 12, width: 150 }}
+                  >
+                    Mira la lista de productos y servicios del negocio
+                  </Text>
+                </View>
+              </View>
+              <Image
+                style={{
+                  width: 40,
+                  height: 40,
+                  resizeMode: "cover",
+                }}
+                source={require("@/utils/images/arrow_right.png")}
+              />
+            </TouchableOpacity>
+          ))}
         <View style={{ marginBottom: 80 }}>
           <Text style={{ fontSize: 22, fontFamily: "regular", padding: 10 }}>
             Datos
@@ -1296,9 +1287,19 @@ const SearchPost = ({ route, navigation }) => {
             <Pressable
               style={{ flexDirection: "row", alignItems: "center" }}
               onPress={() => {
-                if (post?.whatsapp === "" || post?.whatsapp === null) return;
-                const url = `https://${post?.whatsapp}`;
-                Linking.openURL(url);
+                let isWhatsAppLink =
+                  item?.business?.phone.startsWith("https://wa.me/") ||
+                  item?.business?.phone.startsWith(
+                    "https://api.whatsapp.com/send?text="
+                  );
+                if (isWhatsAppLink) {
+                  const url = `${item?.business?.phone}`;
+                  Linking.openURL(url);
+                } else {
+                  const phoneRegex = item?.business?.phone.replace("+", "");
+                  const url = `https://wa.me/${phoneRegex}`;
+                  Linking.openURL(url);
+                }
               }}
             >
               <Text
@@ -1307,22 +1308,13 @@ const SearchPost = ({ route, navigation }) => {
                     fontSize: 13,
                     fontFamily: "regular",
                     marginRight: 5,
-                    color:
-                      post?.whatsapp === "" || post?.whatsapp === null
-                        ? "#1f1f1f"
-                        : "blue",
+                    color: "blue",
                   },
                 ]}
               >
-                {post?.whatsapp === "" || post?.whatsapp === null
-                  ? "No"
-                  : post?.whatsapp}
+                {"Ir al WhatsApp"}
               </Text>
-              {post?.whatsapp === "" || post?.whatsapp === null ? (
-                ""
-              ) : (
-                <Feather name="external-link" size={16} color="#1f1f1f" />
-              )}
+              <Feather name="external-link" size={16} color="blue" />
             </Pressable>
           </View>
           <View style={[styles.line, global.bgMidGray]} />
@@ -1355,37 +1347,7 @@ const SearchPost = ({ route, navigation }) => {
               </Text>
             </View>
           </View>
-          {/* <View style={[styles.line, global.bgMidGray]} />
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              padding: 20,
-            }}
-          >
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <MaterialCommunityIcons name="web" size={24} color="#1f1f1f" />
-              <Text
-                style={[
-                  { fontFamily: "lightItalic", fontSize: 13 },
-                  global.black,
-                ]}
-              >
-                Web
-              </Text>
-            </View>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text
-                style={[
-                  { fontSize: 13, fontFamily: "regular", marginRight: 5 },
-                ]}
-              >
-                Link
-              </Text>
-              <AntDesign name="link" size={16} color="#1f1f1f" />
-            </View>
-          </View> */}
+
           <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
@@ -1531,7 +1493,7 @@ const SearchPost = ({ route, navigation }) => {
                         style={{
                           width: "100%",
                           height: "60%",
-                          resizeMode: "cover",
+                          resizeMode: "contain",
                           borderRadius: 5,
                           borderWidth: 0.7,
                           borderColor: "#1f1f1f",
@@ -1553,20 +1515,41 @@ const SearchPost = ({ route, navigation }) => {
                               marginTop: 10,
                             }}
                           >
-                            <TextInput
-                              value={imageView?.description}
-                              editable={false}
-                              style={{
-                                flex: 1,
-                                // width: 100,
-                                fontFamily: "regular",
-                                fontSize: 14,
-                                alignItems: "flex-start",
-                                color: "#000",
-                              }}
-                              multiline={true}
-                              numberOfLines={5}
-                            />
+                            {imageView?.key === 0 ? (
+                              <TextInput
+                                value={
+                                  imageView?.description !== ""
+                                    ? imageView?.description
+                                    : post?.description
+                                }
+                                editable={false}
+                                style={{
+                                  flex: 1,
+                                  // width: 100,
+                                  fontFamily: "regular",
+                                  fontSize: 14,
+                                  alignItems: "flex-start",
+                                  color: "#000",
+                                }}
+                                multiline={true}
+                                numberOfLines={5}
+                              />
+                            ) : (
+                              <TextInput
+                                value={imageView?.description}
+                                editable={false}
+                                style={{
+                                  flex: 1,
+                                  // width: 100,
+                                  fontFamily: "regular",
+                                  fontSize: 14,
+                                  alignItems: "flex-start",
+                                  color: "#000",
+                                }}
+                                multiline={true}
+                                numberOfLines={5}
+                              />
+                            )}
                           </View>
                         </View>
                       )}

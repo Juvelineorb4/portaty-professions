@@ -209,9 +209,9 @@ const Page = ({ route, navigation }) => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       // allowsMultipleSelection: true,
-      aspect: [6, 4],
+      // aspect: [6, 4],
       allowsEditing: true,
-      quality: 0.1,
+      quality: 0.8,
       base64: true,
     });
 
@@ -293,8 +293,8 @@ const Page = ({ route, navigation }) => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [6, 4],
-      quality: 0.1,
+      // aspect: [6, 4],
+      quality: 0.8,
       base64: true,
     });
     if (!result.canceled) {
@@ -571,7 +571,7 @@ const Page = ({ route, navigation }) => {
                       style={{
                         width: "100%",
                         height: "100%",
-                        resizeMode: "cover",
+                        resizeMode: "contain",
                         borderRadius: 5,
                         backgroundColor: "#fff",
                         borderColor: "#1f1f1f",
@@ -1749,7 +1749,7 @@ const Page = ({ route, navigation }) => {
                         style={{
                           width: "100%",
                           height: 230,
-                          resizeMode: "cover",
+                          resizeMode: "contain",
                           borderRadius: 5,
                           borderWidth: 0.7,
                           borderColor: "#1f1f1f",

@@ -173,7 +173,7 @@ const FavoritePage = ({ navigation, route }) => {
         },
         authMode: "AWS_IAM",
       });
-      setListUpdate(false)
+      setListUpdate(false);
       setPost(business.data.getBusiness);
     } catch (error) {
       console.log("eres tu", error);
@@ -382,7 +382,7 @@ const FavoritePage = ({ navigation, route }) => {
                     style={{
                       width: "100%",
                       height: "100%",
-                      resizeMode: "cover",
+                      resizeMode: "contain",
                       borderRadius: 5,
                       backgroundColor: "#fff",
                       borderWidth: 0.7,
@@ -566,7 +566,7 @@ const FavoritePage = ({ navigation, route }) => {
           style={{
             paddingHorizontal: 20,
             paddingTop: 20,
-            marginBottom: 15
+            marginBottom: 15,
           }}
         >
           <Text style={{ fontSize: 18, fontFamily: "regular" }}>
@@ -860,7 +860,7 @@ const FavoritePage = ({ navigation, route }) => {
         </TouchableOpacity>
 
         {/* Catalogo */}
-        {item?.catalogpdf !== "" && (
+        {item?.catalogpdf !== "" || item?.catalogpdf && (
           <TouchableOpacity
             style={{
               padding: 20,
@@ -1098,13 +1098,19 @@ const FavoritePage = ({ navigation, route }) => {
             <Pressable
               style={{ flexDirection: "row", alignItems: "center" }}
               onPress={() => {
-                if (
-                  item.business?.whatsapp === "" ||
-                  item.business?.whatsapp === null
-                )
-                  return;
-                const url = `https://${item.business?.whatsapp}`;
-                Linking.openURL(url);
+                let isWhatsAppLink =
+                  item?.business?.phone.startsWith("https://wa.me/") ||
+                  item?.business?.phone.startsWith(
+                    "https://api.whatsapp.com/send?text="
+                  );
+                if (isWhatsAppLink) {
+                  const url = `${item?.business?.phone}`;
+                  Linking.openURL(url);
+                } else {
+                  const phoneRegex = item?.business?.phone.replace("+", "");
+                  const url = `https://wa.me/${phoneRegex}`;
+                  Linking.openURL(url);
+                }
               }}
             >
               <Text
@@ -1113,25 +1119,13 @@ const FavoritePage = ({ navigation, route }) => {
                     fontSize: 13,
                     fontFamily: "regular",
                     marginRight: 5,
-                    color:
-                      item.business?.whatsapp === "" ||
-                      item.business?.whatsapp === null
-                        ? "#1f1f1f"
-                        : "blue",
+                    color: "blue",
                   },
                 ]}
               >
-                {item.business?.whatsapp === "" ||
-                item.business?.whatsapp === null
-                  ? "No"
-                  : item.business?.whatsapp}
+                {"Ir al WhatsApp"}
               </Text>
-              {item.business?.whatsapp === "" ||
-              item.business?.whatsapp === null ? (
-                ""
-              ) : (
-                <Feather name="external-link" size={16} color="#1f1f1f" />
-              )}
+              <Feather name="external-link" size={16} color="blue" />
             </Pressable>
           </View>
           <View style={[styles.line, global.bgMidGray]} />
@@ -1355,7 +1349,7 @@ const FavoritePage = ({ navigation, route }) => {
                       style={{
                         width: "100%",
                         height: "60%",
-                        resizeMode: "cover",
+                        resizeMode: "contain",
                         borderRadius: 5,
                         borderWidth: 0.7,
                         borderColor: "#1f1f1f",
@@ -1377,20 +1371,41 @@ const FavoritePage = ({ navigation, route }) => {
                             marginTop: 10,
                           }}
                         >
-                          <TextInput
-                            value={imageView?.description}
-                            editable={false}
-                            style={{
-                              flex: 1,
-                              // width: 100,
-                              fontFamily: "regular",
-                              fontSize: 14,
-                              alignItems: "flex-start",
-                              color: "#000",
-                            }}
-                            multiline={true}
-                            numberOfLines={5}
-                          />
+                          {imageView?.key === 0 ? (
+                            <TextInput
+                              value={
+                                imageView?.description !== ""
+                                  ? imageView?.description
+                                  : item.business.description
+                              }
+                              editable={false}
+                              style={{
+                                flex: 1,
+                                // width: 100,
+                                fontFamily: "regular",
+                                fontSize: 14,
+                                alignItems: "flex-start",
+                                color: "#000",
+                              }}
+                              multiline={true}
+                              numberOfLines={5}
+                            />
+                          ) : (
+                            <TextInput
+                              value={imageView?.description}
+                              editable={false}
+                              style={{
+                                flex: 1,
+                                // width: 100,
+                                fontFamily: "regular",
+                                fontSize: 14,
+                                alignItems: "flex-start",
+                                color: "#000",
+                              }}
+                              multiline={true}
+                              numberOfLines={5}
+                            />
+                          )}
                         </View>
                       </View>
                     )}

@@ -160,7 +160,7 @@ const Tabs = () => {
   return (
     <Tab.Navigator
       tabBar={(props) => <MyTabBar {...props} />}
-      initialRouteName={`Home_Tab`}
+      initialRouteName={`Search_Tab`}
       screenOptions={{
         headerShown: false,
         unmountOnBlur: true

@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Alert,
   RefreshControl,
+  ActivityIndicator,
 } from "react-native";
 import React, { useLayoutEffect, useState } from "react";
 import styles from "@/utils/styles/Unprofile.js";
@@ -14,7 +15,7 @@ import { useRecoilValue } from "recoil";
 import { Auth, API, Storage } from "aws-amplify";
 import * as customProfile from "@/graphql/CustomQueries/Profile";
 import * as mutations from "@/graphql/mutations";
-import { profileState, userAuthenticated } from "@/atoms";
+import { locationPermission, profileState, userAuthenticated } from "@/atoms";
 import * as WebBrowser from "expo-web-browser";
 import SkeletonUnprofile from "@/components/SkeletonUnprofile";
 import { Skeleton } from "@rneui/themed";
@@ -22,6 +23,8 @@ import { useEffect } from "react";
 import { setStatusBarNetworkActivityIndicatorVisible } from "expo-status-bar";
 import ModalAlert from "@/components/ModalAlert";
 import { useCallback } from "react";
+import CustomButton from "@/components/CustomButton";
+import ModalPermission from "@/components/ModalPermission";
 
 const Unprofile = ({ navigation, route }) => {
   const { buttons } = settings;
@@ -32,9 +35,13 @@ const Unprofile = ({ navigation, route }) => {
   const [user, setUser] = useState([]);
   const [business, setBusiness] = useState([]);
   const [visible, setVisible] = useState(false);
+  const [visibleLocation, setVisibleLocation] = useState(false);
   const [createBussiness, setCreateBussiness] = useState(true);
   const [error, setError] = useState("");
   const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const locationStatus = useRecoilValue(locationPermission);
+
   const onRefresh = () => {
     setRefreshing(true);
     User();
@@ -44,19 +51,13 @@ const Unprofile = ({ navigation, route }) => {
   };
   const isFocused = navigation.isFocused();
   const status = useRecoilValue(profileState);
-  const fetchOtro = async () => {
-    const result = await API.graphql({
-      query: customProfile.getBusiness2,
-      authMode: "AWS_IAM",
-      variables: {
-        id: "9eec6b66-f536-41a9-9bdd-e4d963cfc6a0",
-      },
-    });
-    console.log("QUE SUELTA", result);
-  };
 
   const onHandleLogout = async () => {
-    await Auth.signOut();
+    setLoading(true);
+    setTimeout(async () => {
+      await Auth.signOut();
+      setLoading(false);
+    }, 2000);
   };
   const User = async () => {
     try {
@@ -142,10 +143,60 @@ const Unprofile = ({ navigation, route }) => {
   };
   useLayoutEffect(() => {
     User();
-    fetchOtro();
   }, [userAuth, status, refreshing, isFocused]);
 
-  if (!userAuth?.attributes) return <SkeletonUnprofile />;
+  if (loading)
+    return (
+      <View
+        style={[
+          { flex: 1, alignItems: "center", justifyContent: "center" },
+          global.bgWhite,
+        ]}
+      >
+        <ActivityIndicator size="large" color="#ffb703" />
+      </View>
+    );
+  if (!userAuth)
+    return (
+      <View
+        style={[
+          {
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+            paddingHorizontal: 20,
+            paddingBottom: 80,
+          },
+          global.bgWhite,
+        ]}
+      >
+        <Text
+          style={{ fontSize: 16, fontFamily: "light", textAlign: "center" }}
+        >
+          Ingresa a tu cuenta para acceder a todas las funcionalidades que te
+          ofrecemos, como:
+        </Text>
+        <Text
+          style={{
+            fontSize: 16,
+            fontFamily: "medium",
+            textAlign: "center",
+            marginTop: 10,
+          }}
+        >
+          Registrar un negocio, administrar tu cuenta, acceso a estadisticas y
+          mucho mas
+        </Text>
+        <CustomButton
+          text={`Iniciar sesion`}
+          handlePress={() => {
+            navigation.navigate("Login_Welcome", { item: route.name });
+          }}
+          textStyles={[styles.textSearch, global.black]}
+          buttonStyles={[styles.search, global.bgYellow]}
+        />
+      </View>
+    );
   return (
     <ScrollView
       style={[styles.container, global.bgWhite]}
@@ -205,6 +256,10 @@ const Unprofile = ({ navigation, route }) => {
       <View style={[styles.line, global.bgMidGray]} />
       <TouchableOpacity
         onPress={() => {
+          if (locationStatus !== "granted") {
+            setVisibleLocation(true);
+            return;
+          }
           if (disabled) return;
           if (business.length === 1) {
             setError(
@@ -337,10 +392,6 @@ const Unprofile = ({ navigation, route }) => {
               </TouchableOpacity>
             ) : button.modal ? (
               <>
-                {console.log(
-                  "QUE HAY: ",
-                  userAuth?.attributes["custom:requestDeleting"]
-                )}
                 {!userAuth?.attributes["custom:requestDeleting"] && (
                   <TouchableOpacity
                     onPress={onHandleAccountDeletion}
@@ -394,6 +445,11 @@ const Unprofile = ({ navigation, route }) => {
         icon={require("@/utils/images/alert.png")}
         close={() => setVisible(false)}
         open={visible}
+      />
+      <ModalPermission
+        permission={"Ubicacion"}
+        close={() => setVisibleLocation(false)}
+        open={visibleLocation}
       />
     </ScrollView>
   );

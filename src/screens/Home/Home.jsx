@@ -5,7 +5,10 @@ import {
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
+  Linking,
+  PermissionsAndroid,
 } from "react-native";
+import * as Location from "expo-location";
 import { Auth, API } from "aws-amplify";
 import Grid from "@/components/Home/Grid";
 import List from "@/components/Home/List";
@@ -15,6 +18,7 @@ import {
   mapUser,
   userAuthenticated,
   updateListFavorites,
+  connectionStatus,
 } from "@/atoms";
 import { useRecoilState, useRecoilValue } from "recoil";
 import * as queries from "@/graphql/CustomQueries/Favorites";
@@ -31,6 +35,7 @@ import News from "@/components/Home/News";
 import ModalUpdate from "@/components/ModalUpdate";
 // Hooks
 import useCheckAppVersion from "@/hooks/useCheckAppVersion";
+import NetInfo from "@react-native-community/netinfo";
 
 const Home = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
@@ -48,9 +53,15 @@ const Home = ({ navigation, route }) => {
   const userAuth = useRecoilValue(userAuthenticated);
   const [resultNothing, setResultNothing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isConnected, setIsConnected] = useRecoilState(connectionStatus);
+
   const fetchFavorites = async () => {
     setLoading(true);
-
+    if (userAuth === null) {
+      console.log(userAuth);
+      setLoading(false);
+      return;
+    }
     try {
       const fetchAllFavorites = async (nextToken, result = []) => {
         const response = await API.graphql({
@@ -109,8 +120,68 @@ const Home = ({ navigation, route }) => {
     }
   };
 
+  /* Permiso Ubicacion */
+
+  const openAppSettings = async () => {
+    try {
+      // await Linking.openSettings();
+    } catch (error) {
+      console.log("Error al abrir la configuración:", error);
+    }
+  };
+
+  const checkLocationPermission = async () => {
+    try {
+      const granted = await Location.getForegroundPermissionsAsync();
+      if (granted) {
+        console.log("Permiso de ubicación concedido");
+
+        // Realiza acciones según el permiso concedido
+      } else {
+        console.log("Permiso de ubicación denegado");
+        // Realiza acciones según el permiso denegado
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        console.log("aqui", status);
+      }
+    } catch (error) {
+      console.error("Error al verificar permiso:", error);
+    }
+  };
+  /*  */
+
+  /* Validar conexion a internet */
+  const getConnection = async () => {
+    NetInfo.fetch().then((state) => {
+      if (state.isConnected) {
+        if (userLocation) fetchFavorites();
+        setIsConnected(state.isConnected);
+      } else {
+        setIsConnected(state.isConnected);
+      }
+    });
+  };
+  /* */
+
+  /* Refresh */
+  const [refreshing, setRefreshing] = useState(false);
+
+  const Wait = (timeout) => {
+    return new Promise((resolve) => {
+      setTimeout(resolve, timeout);
+    });
+  };
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getConnection();
+    Wait(2000).then(() => setRefreshing(false));
+  });
+  /* Refresh */
+
   useLayoutEffect(() => {
-    fetchFavorites();
+    openAppSettings();
+    checkLocationPermission();
+    getConnection();
     const updateSub = API.graphql({
       query: subscriptions.onUpdateUsers,
       authMode: "AMAZON_COGNITO_USER_POOLS",
@@ -124,10 +195,12 @@ const Home = ({ navigation, route }) => {
       error: (error) => console.warn(error),
     });
     return () => {
-      fetchFavorites();
-      updateSub.unsubscribe();
+      getConnection();
+      if (updateSub) {
+        updateSub.unsubscribe();
+      }
     };
-  }, [route, statusFavorites, inputFavorite, updateFavorite]);
+  }, [route, statusFavorites, inputFavorite, updateFavorite, userAuth]);
 
   if (updateAvailable === true)
     return (
@@ -184,6 +257,7 @@ const Home = ({ navigation, route }) => {
           text={`Refrescar`}
           handlePress={() => {
             setResultNothing(false);
+            onRefresh();
           }}
           textStyles={[styles.textSearch, global.black]}
           buttonStyles={[styles.search, global.bgYellow]}
@@ -191,6 +265,64 @@ const Home = ({ navigation, route }) => {
       </View>
     );
 
+  if (!isConnected) 
+    return (
+      <View
+        style={[
+          { flex: 1, alignItems: "center", justifyContent: "center" },
+          global.bgWhite,
+        ]}
+      >
+         <Text
+            style={{
+              fontFamily: "regular",
+              fontSize: 15,
+            }}
+          >
+            No tienes conexión. Intenta de nuevo
+          </Text>
+        <CustomButton
+          text={`Refrescar`}
+          handlePress={() => {
+            setResultNothing(false);
+            onRefresh();
+          }}
+          textStyles={[styles.textSearch, global.black]}
+          buttonStyles={[styles.search, global.bgYellow]}
+        />
+      </View>
+    );
+
+    if (!userAuth && !loading)
+      return (
+        <View
+          style={[
+            {
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+              paddingHorizontal: 20,
+              paddingBottom: 80,
+            },
+            global.bgWhite,
+          ]}
+        >
+          <Text
+            style={{ fontSize: 16, fontFamily: "light", textAlign: "center" }}
+          >
+            Ingresa a tu cuenta para guardar tus negocios favoritos
+          </Text>
+          <CustomButton
+            text={`Iniciar sesion`}
+            handlePress={() => {
+              navigation.navigate("Login_Welcome");
+            }}
+            textStyles={[styles.textSearch, global.black]}
+            buttonStyles={[styles.search, global.bgYellow]}
+          />
+        </View>
+      );
+      
   if (favoritesList.length !== 0)
     return (
       <ScrollView style={{ flex: 1, backgroundColor: "#fff" }}>
