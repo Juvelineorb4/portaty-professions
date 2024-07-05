@@ -65,9 +65,11 @@ const Register = ({ navigation }) => {
     setIsLoading(true);
     const { name, lastName, email, password, birthdate, gender } = data;
     const fullName = `${name.trim()} ${lastName.trim()}`;
-    const fechaISO8601 = convertirFechaADateISO8601(birthdate);
+
+    const fechaISO8601 =
+      birthdate === "" ? "0000-00-00" : convertirFechaADateISO8601(birthdate);
     try {
-      const result = await Auth.signUp({
+      const params = {
         username: email.trim(),
         password: password.trim(),
         attributes: {
@@ -78,7 +80,9 @@ const Register = ({ navigation }) => {
           "custom:gender": gender.trim(),
           "custom:notificationToken": token,
         },
-      });
+      };
+
+      const result = await Auth.signUp(params);
       navigation.navigate("ConfirmRegister", {
         email: email.trim(),
       });
@@ -117,6 +121,16 @@ const Register = ({ navigation }) => {
         >
           <View style={[styles.content]}>
             <Text style={styles.title}>{es.authentication.register.title}</Text>
+            <Text
+              style={{
+                textAlign: "right",
+                marginTop: 10,
+                marginBottom: 10,
+                fontFamily: "bold",
+              }}
+            >
+              (*) campos obligatorios
+            </Text>
             {/* <View
                 style={{ flexDirection: "row", justifyContent: "space-between" }}
               > */}
@@ -131,7 +145,7 @@ const Register = ({ navigation }) => {
                 placeholder: styles.placeholder,
                 input: [styles.inputContainer, global.bgWhite],
               }}
-              text={`Nombre`}
+              text={`Nombre *`}
               // icon={require("@/utils/images/profile_default.png")}
               rules={{
                 required: es.authentication.register.name.rules,
@@ -148,7 +162,7 @@ const Register = ({ navigation }) => {
                 placeholder: styles.placeholder,
                 input: [styles.inputContainer, global.bgWhite],
               }}
-              text={`Apellido`}
+              text={`Apellido *`}
               // icon={require("@/utils/images/profile_default.png")}
               rules={{
                 required: es.authentication.register.lastName.rules,
@@ -168,9 +182,9 @@ const Register = ({ navigation }) => {
                 input: [styles.inputContainerGender, global.bgWhite],
               }}
               text={`Género`}
-              rules={{
-                required: es.authentication.register.password.rules,
-              }}
+              // rules={{
+              //   required: es.authentication.register.password.rules,
+              // }}
             />
             <CustomCalendarInput
               control={control}
@@ -186,11 +200,10 @@ const Register = ({ navigation }) => {
               }}
               text={`Fecha de nacimiento`}
               // icon={require("@/utils/images/calendar.png")}
-              rules={{
-                required: es.authentication.register.birthday.rules,
-              }}
+              // rules={{
+              //   required: es.authentication.register.birthday.rules,
+              // }}
             />
-
             <CustomInput
               control={control}
               name={`email`}
@@ -202,7 +215,7 @@ const Register = ({ navigation }) => {
                 placeholder: styles.placeholder,
                 input: [styles.inputContainer, global.bgWhite],
               }}
-              text={`Correo electronico`}
+              text={`Correo electronico *`}
               // icon={require("@/utils/images/email.png")}
               rules={{
                 required: `Requerido`,
@@ -212,7 +225,6 @@ const Register = ({ navigation }) => {
                 },
               }}
             />
-
             <CustomInput
               control={control}
               name={`password`}
@@ -225,7 +237,7 @@ const Register = ({ navigation }) => {
                 input: [styles.inputContainer, global.bgWhite],
                 security: styles.security,
               }}
-              text={`Contraseña`}
+              text={`Contraseña *`}
               // icon={require("@/utils/images/password.png")}
               security={true}
               rules={{
@@ -248,7 +260,7 @@ const Register = ({ navigation }) => {
                 input: [styles.inputContainer, global.bgWhite],
                 security: styles.security,
               }}
-              text={`Repetir contraseña`}
+              text={`Repetir contraseña *`}
               // icon={require("@/utils/images/password.png")}
               security={true}
               rules={{
@@ -264,9 +276,11 @@ const Register = ({ navigation }) => {
             onPressed={_handlePressButtonAsync}
             rules={{ required: "Requerido" }}
           />
-          <View style={{
-            marginBottom: 30
-          }}></View>
+          <View
+            style={{
+              marginBottom: 30,
+            }}
+          ></View>
         </ScrollView>
         <View style={{ height: 65, marginBottom: 40 }}>
           <CustomButton

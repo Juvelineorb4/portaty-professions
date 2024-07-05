@@ -16,6 +16,8 @@ const CustomCalendarInput = ({
   errorPost = false,
 }) => {
   const validarFechaNacimiento = (fecha) => {
+    if (fecha === "") return true;
+
     const today = new Date();
     if (!fecha) return false; // Si no se proporciona una fecha, no es válida
     const [day, month, year] = fecha.split("/");
@@ -71,7 +73,6 @@ const CustomCalendarInput = ({
       control={control}
       name={name}
       rules={{
-        required: rules.required,
         validate: validarFechaNacimiento,
       }}
       render={({

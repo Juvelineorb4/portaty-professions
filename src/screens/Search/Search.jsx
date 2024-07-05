@@ -72,7 +72,7 @@ const Search = ({ route }) => {
         direccion.region === null ? "" : direccion.region
       }, ${direccion.postalCode === null ? "" : direccion.postalCode} `;
       setSearchAddress(direccionString);
-      console.log(direccionString);
+      // console.log(direccionString);
       setRegion(direccion.region);
       setCity(direccion.city);
     }
@@ -99,6 +99,7 @@ const Search = ({ route }) => {
     try {
       const response = await API.get(api, path, params);
       setTotalData(response.total);
+      // console.log("TOTAL: ", response.total);
       setTotalLimit(response.limit);
       // let newItems = [];
       let newRenderItems = [];
@@ -112,15 +113,19 @@ const Search = ({ route }) => {
       setSearchCacheActive(newRenderItems);
       return setItems(newRenderItems);
     } catch (error) {
-      return console.log(error);
+      return console.log("ERROR EN BSUQUEDA DEFAULT:  ", error);
     }
   };
 
   /* Validar conexion a internet */
   const getConnection = async () => {
+    console.log("GETCONECTION");
     NetInfo.fetch().then((state) => {
+      console.log("SEARCHACTIVE: ", searchActive);
       if (searchActive) return;
+      console.log("ESTADO DE CONEXION", state);
       if (state.isConnected) {
+        console.log("LLAMAR A DATA");
         if (userLocation) getData();
         setIsConnected(state.isConnected);
       } else {
@@ -189,7 +194,7 @@ const Search = ({ route }) => {
         return response.json();
       })
       .then((item) => {
-        console.log(item[0]);
+        // console.log(item[0]);
         getCountryCode(item);
       });
     getConnection();

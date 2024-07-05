@@ -39,7 +39,7 @@ const Unprofile = ({ navigation, route }) => {
   const [createBussiness, setCreateBussiness] = useState(true);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [buttonDelete, setButtonDelete] = useState(true);
+  const [buttonDelete, setButtonDelete] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const locationStatus = useRecoilValue(locationPermission);
   console.log("unprofile mi pana", route);
@@ -97,12 +97,18 @@ const Unprofile = ({ navigation, route }) => {
     let result = await WebBrowser.openBrowserAsync(url);
   };
 
- const onHandleAccountDeletion = async () => {
+  const onHandleAccountDeletion = async (ready = false) => {
     if (!userAuth?.attributes?.sub) return;
-
+    if (ready) {
+      Alert.alert(
+        "Solicitud de eliminación de cuenta ya enviada",
+        "El proceso de eliminación de cuenta puede tardar entre 30 a 90 días. Si desea cancelar esta solicitud, por favor contacte a soporte@portaty.com."
+      );
+      return;
+    }
     Alert.alert(
       "Confirmación",
-      "¿Estás seguro de que quieres enviar la solicitud para la eliminación de cuenta?",
+      "¿Está seguro de que desea enviar la solicitud para la eliminación de su cuenta?",
       [
         {
           text: "Cancelar",
@@ -112,6 +118,7 @@ const Unprofile = ({ navigation, route }) => {
         {
           text: "OK",
           onPress: async () => {
+            setButtonDelete(true);
             try {
               const api = "api-portaty";
               const path = "/request_account_deletion";
@@ -137,12 +144,13 @@ const Unprofile = ({ navigation, route }) => {
                 error
               );
             }
+            setButtonDelete(false);
           },
         },
       ]
     );
   };
-  
+
   useLayoutEffect(() => {
     User();
   }, [userAuth, status, refreshing, isFocused]);
@@ -396,33 +404,33 @@ const Unprofile = ({ navigation, route }) => {
                 />
               </TouchableOpacity>
             ) : button.modal ? (
-              <>
-                {!userAuth?.attributes["custom:requestDeleting"] && (
-                  <TouchableOpacity
-                    onPress={onHandleAccountDeletion}
-                    style={{
-                      marginBottom: -25,
-                    }}
-                    disabled={!buttonDelete}
-                  >
-                    <CustomSelect
-                      title={button.title}
-                      subtitle={button.subtitle}
-                      styled={{
-                        text: {
-                          container: styles.textContainerSelect,
-                          title: [styles.textTitleSelect, global.black],
-                          subtitle: [styles.textSubtitleSelect, global.topGray],
-                        },
-                        container: styles.containerSelect,
-                        iconLeft: [styles.iconLeft, global.bgYellow],
-                        iconRight: styles.iconRight,
-                      }}
-                      icon={button.icon}
-                    />
-                  </TouchableOpacity>
-                )}
-              </>
+              <TouchableOpacity
+                onPress={() => {
+                  userAuth?.attributes["custom:requestDeleting"]
+                    ? onHandleAccountDeletion(true)
+                    : onHandleAccountDeletion();
+                }}
+                style={{
+                  marginBottom: -25,
+                }}
+                disabled={buttonDelete}
+              >
+                <CustomSelect
+                  title={button.title}
+                  subtitle={button.subtitle}
+                  styled={{
+                    text: {
+                      container: styles.textContainerSelect,
+                      title: [styles.textTitleSelect, global.black],
+                      subtitle: [styles.textSubtitleSelect, global.topGray],
+                    },
+                    container: styles.containerSelect,
+                    iconLeft: [styles.iconLeft, global.bgYellow],
+                    iconRight: styles.iconRight,
+                  }}
+                  icon={button.icon}
+                />
+              </TouchableOpacity>
             ) : (
               <TouchableOpacity onPress={onHandleLogout}>
                 {/* <View style={[styles.line, global.bgMidGray]} /> */}
