@@ -1,5 +1,5 @@
 # schema
-type NotifiationHistory
+type NotificationHistory
   @model
   @auth(
     rules: [{ allow: groups, groups: ["sp", "admin"] }, { allow: public }]
@@ -64,6 +64,7 @@ type Users
   @auth(
     rules: [
       { allow: owner }
+      { allow: public, provider: iam, operations: [read] }
       { allow: private, provider: iam, operations: [read] }
       { allow: groups, groups: ["admin"], operations: [read] }
     ]
@@ -219,6 +220,7 @@ type Favorites
   @auth(
     rules: [
       { allow: owner }
+      { allow: public, provider: iam, operations: [read] }
       { allow: private, provider: iam, operations: [read] }
       { allow: groups, groups: ["sp"], operations: [read] }
     ]
@@ -227,6 +229,7 @@ type Favorites
     @auth(
       rules: [
         { allow: owner }
+        { allow: public, provider: iam, operations: [read] }
         { allow: private, provider: iam, operations: [read] }
         { allow: groups, groups: ["sp"], operations: [read] }
       ]
@@ -240,6 +243,7 @@ type Favorites
     @auth(
       rules: [
         { allow: owner }
+        { allow: public, provider: iam, operations: [read] }
         { allow: private, provider: iam, operations: [read] }
         { allow: groups, groups: ["sp"], operations: [read] }
       ]
