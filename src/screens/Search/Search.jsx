@@ -79,8 +79,9 @@ const Search = ({ route }) => {
 
   const kilometers = [1, 5, 10, 20, 50, 100];
   let number = 26 * moreItems;
+
   const getData = async () => {
-    setIsLoading(true);
+    if (!searchActive) setIsLoading(true);
     const api = "api-opense";
     const path = "/search/default";
     const params = {
@@ -99,7 +100,7 @@ const Search = ({ route }) => {
       const response = await API.get(api, path, params);
       setTotalData(response.total);
       setTotalLimit(response.limit);
-      // let newItems = [];
+      console.log("data:", totalData, "limit:", totalLimit);
       let newRenderItems = [];
       const long = 26;
       for (let i = 0; i < response.items.length; i += long) {
@@ -118,12 +119,12 @@ const Search = ({ route }) => {
   /* Validar conexion a internet */
   const getConnection = async () => {
     NetInfo.fetch().then((state) => {
-      if (searchActive) return;
       if (state.isConnected) {
         if (userLocation) getData();
         setIsConnected(state.isConnected);
       } else {
         setIsConnected(state.isConnected);
+        setSearchActive(false);
       }
     });
   };
@@ -543,9 +544,6 @@ const Search = ({ route }) => {
                   paddingBottom: 20,
                 }}
               >
-                {/* {totalData > totalLimit && (
-                <ActivityIndicator size="large" color="#5E2129" />
-              )} */}
                 {totalData === totalLimit ? (
                   <Text style={{ fontFamily: "regular", fontSize: 14 }}>
                     No hay mas negocios por mostrar
