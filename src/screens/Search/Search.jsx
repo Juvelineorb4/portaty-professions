@@ -72,7 +72,7 @@ const Search = ({ route }) => {
         direccion.region === null ? "" : direccion.region
       }, ${direccion.postalCode === null ? "" : direccion.postalCode} `;
       setSearchAddress(direccionString);
-      // console.log(direccionString);
+      console.log(direccionString);
       setRegion(direccion.region);
       setCity(direccion.city);
     }
@@ -81,7 +81,7 @@ const Search = ({ route }) => {
   const kilometers = [1, 5, 10, 20, 50, 100];
   let number = 26 * moreItems;
   const getData = async () => {
-    setIsLoading(true);
+    if (!searchActive) setIsLoading(true);
     const api = "api-opense";
     const path = "/search/default";
     const params = {
@@ -99,9 +99,8 @@ const Search = ({ route }) => {
     try {
       const response = await API.get(api, path, params);
       setTotalData(response.total);
-      // console.log("TOTAL: ", response.total);
       setTotalLimit(response.limit);
-      // let newItems = [];
+      console.log("data:", response.total, "limit:", response.limit);
       let newRenderItems = [];
       const long = 26;
       for (let i = 0; i < response.items.length; i += long) {
@@ -113,23 +112,19 @@ const Search = ({ route }) => {
       setSearchCacheActive(newRenderItems);
       return setItems(newRenderItems);
     } catch (error) {
-      return console.log("ERROR EN BSUQUEDA DEFAULT:  ", error);
+      return console.log(error);
     }
   };
 
   /* Validar conexion a internet */
   const getConnection = async () => {
-    console.log("GETCONECTION");
     NetInfo.fetch().then((state) => {
-      console.log("SEARCHACTIVE: ", searchActive);
-      if (searchActive) return;
-      console.log("ESTADO DE CONEXION", state);
       if (state.isConnected) {
-        console.log("LLAMAR A DATA");
         if (userLocation) getData();
         setIsConnected(state.isConnected);
       } else {
         setIsConnected(state.isConnected);
+        searchActive(false);
       }
     });
   };
@@ -194,7 +189,7 @@ const Search = ({ route }) => {
         return response.json();
       })
       .then((item) => {
-        // console.log(item[0]);
+        console.log(item[0]);
         getCountryCode(item);
       });
     getConnection();
