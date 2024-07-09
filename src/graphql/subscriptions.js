@@ -1,6 +1,48 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const onCreateDeviceNotificationToken = /* GraphQL */ `
+  subscription OnCreateDeviceNotificationToken(
+    $filter: ModelSubscriptionDeviceNotificationTokenFilterInput
+  ) {
+    onCreateDeviceNotificationToken(filter: $filter) {
+      id
+      deviceID
+      notificationToken
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateDeviceNotificationToken = /* GraphQL */ `
+  subscription OnUpdateDeviceNotificationToken(
+    $filter: ModelSubscriptionDeviceNotificationTokenFilterInput
+  ) {
+    onUpdateDeviceNotificationToken(filter: $filter) {
+      id
+      deviceID
+      notificationToken
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteDeviceNotificationToken = /* GraphQL */ `
+  subscription OnDeleteDeviceNotificationToken(
+    $filter: ModelSubscriptionDeviceNotificationTokenFilterInput
+  ) {
+    onDeleteDeviceNotificationToken(filter: $filter) {
+      id
+      deviceID
+      notificationToken
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const onCreateAppVersionHistory = /* GraphQL */ `
   subscription OnCreateAppVersionHistory(
     $filter: ModelSubscriptionAppVersionHistoryFilterInput

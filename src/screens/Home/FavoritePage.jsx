@@ -13,7 +13,7 @@ import {
   TouchableWithoutFeedback,
   Pressable,
 } from "react-native";
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState, useRef } from "react";
 import CustomSelect from "@/components/CustomSelect";
 import styles from "@/utils/styles/FavoritePage.js";
 import {
@@ -29,6 +29,9 @@ import {
   Octicons,
   Ionicons,
 } from "@expo/vector-icons";
+import * as Device from "expo-device";
+// location
+import * as Location from "expo-location";
 import { Auth, API, Storage } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Favorites";
 import * as customFavorites from "@/graphql/CustomMutations/Favorites";
@@ -41,11 +44,19 @@ import { useRecoilState } from "recoil";
 import { updateListFavorites } from "@/atoms";
 import * as FileSystem from "expo-file-system";
 import { StorageAccessFramework } from "expo-file-system";
-import { useRef } from "react";
 import ModalReport from "@/components/ModalReport";
-
+import { registerEvent } from "@/functions/Analytics";
+// recoil
+import { useRecoilValue } from "recoil";
+import { userAuthenticated, mapUser } from "@/atoms/index";
+// storage
+import AsyncStorage from "@react-native-async-storage/async-storage";
+const DEVICE_TYPE = ["UNKNOWN", "PHONE", "TABLET", "DESKTOP", "TV"];
 const FavoritePage = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
+  const userAuth = useRecoilValue(userAuthenticated);
+  const userLocation = useRecoilValue(mapUser);
+  const timerRef = useRef();
   const [post, setPost] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visible, setVisible] = useState(false);
@@ -56,6 +67,7 @@ const FavoritePage = ({ navigation, route }) => {
   const [weekSchedule, setWeekSchedule] = useState("");
   const [listRatings, setListRatings] = useState(null);
   const [ratingsDetails, setRatingsDetails] = useState(null);
+  const [countryCity, setCountryCity] = useState(null);
 
   const {
     data: { item, image },
@@ -171,7 +183,7 @@ const FavoritePage = ({ navigation, route }) => {
         },
         authMode: "AWS_IAM",
       });
-      setListUpdate(false)
+      setListUpdate(false);
       setPost(business.data.getBusiness);
     } catch (error) {
       console.log("eres tu", error);
@@ -242,6 +254,15 @@ const FavoritePage = ({ navigation, route }) => {
       },
       authMode: "AMAZON_COGNITO_USER_POOLS",
     });
+    const { country, city } = countryCity;
+    registerEvent("user_remove_business", {
+      userid: userAuth?.attributes["custom:userTableID"],
+      businessid: item.id,
+      birthdate: userAuth?.attributes?.birthdate,
+      gender: userAuth?.attributes["custom:gender"],
+      country,
+      city,
+    });
     setListUpdate(!listUpdate);
     navigation.goBack();
   };
@@ -279,12 +300,95 @@ const FavoritePage = ({ navigation, route }) => {
     }
   };
 
+  const registerViewBusiness = async (userID = null, businessID) => {
+    const deviceType = Device.deviceType;
+    const osName = Device.osName;
+    const osVersion = Device.osVersion;
+    const brand = Device.brand;
+    const model = Device.modelName;
+    const language = Device.language;
+    // Obtener el identificador único del dispositivo
+    const deviceID = Device.osBuildId || Device.osInternalBuildId;
+    try {
+      // Obtener información de la última visualización guardada en AsyncStorage
+      const lastViewString = await AsyncStorage.getItem(`lastView_${deviceID}`);
+      const lastViewInfo = JSON.parse(lastViewString);
+
+      // Si hay una última visualización registrada y ocurrió hace menos de 24 horas, no registra la nueva visualización
+      if (
+        lastViewInfo &&
+        new Date() - new Date(lastViewInfo.timestamp) < 24 * 60 * 60 * 1000 &&
+        lastViewInfo.businessID === businessID
+      ) {
+        return;
+      }
+
+      // Registrar la visualización en analytics
+      const { country, city } = countryCity;
+      let params = {
+        country,
+        city,
+        businessid: businessID,
+        deviceType: DEVICE_TYPE[deviceType],
+        osName,
+        osVersion,
+        brand,
+        model,
+        language,
+      };
+      console.log("PARAMS: ", params);
+      if (userID) {
+        params = {
+          userid: userID,
+          birthdate: userAuth?.attributes?.birthdate,
+          gender: userAuth?.attributes["custom:gender"],
+          ...params,
+        };
+      }
+
+      registerEvent(
+        userID ? "user_viewed_business" : "guest_viewed_business",
+        params
+      );
+      // Almacenar la información de la última visualización en AsyncStorage
+      const currentViewInfo = {
+        businessID: businessID,
+        timestamp: new Date().toISOString(),
+      };
+      await AsyncStorage.setItem(
+        `lastView_${deviceID}`,
+        JSON.stringify(currentViewInfo)
+      );
+    } catch (error) {
+      console.log("Error al registrar analitica: ", error);
+    }
+  };
+
   useLayoutEffect(() => {
     fetchData();
     fetchRatings(item);
     fetchRatings2();
     if (schedule !== null) filterSchedule(schedule?.shedule, schedule?.type);
   }, [listUpdate]);
+  useEffect(() => {
+    const registerCountryCity = async () => {
+      const addressArr = await Location.reverseGeocodeAsync(userLocation);
+      setCountryCity(addressArr[0]);
+    };
+    if (userLocation) registerCountryCity();
+  }, [userLocation]);
+
+  useEffect(() => {
+    if (countryCity) {
+      timerRef.current = setTimeout(() => {
+        registerViewBusiness(
+          userAuth ? userAuth?.attributes["custom:userTableID"] : null,
+          item.id
+        );
+      }, 3000);
+    }
+    return () => clearTimeout(timerRef.current);
+  }, [countryCity]);
 
   if (!item || !listRatings || listUpdate) return <SkeletonExample />;
   return (
@@ -557,7 +661,7 @@ const FavoritePage = ({ navigation, route }) => {
           style={{
             paddingHorizontal: 20,
             paddingTop: 20,
-            marginBottom: 15
+            marginBottom: 15,
           }}
         >
           <Text style={{ fontSize: 18, fontFamily: "regular" }}>

@@ -22,7 +22,9 @@ import ModalAlert from "@/components/ModalAlert";
 import Constants from "expo-constants";
 import useCheckAppVersion from "@/hooks/useCheckAppVersion";
 import ModalUpdate from "@/components/ModalUpdate";
-
+// recoil
+import { notificationToken } from "@/atoms/index";
+import { useRecoilValue } from "recoil";
 const Login = ({ navigation, route }) => {
   const { control, handleSubmit, watch } = useForm();
   const emailForm = watch("email");
@@ -36,6 +38,7 @@ const Login = ({ navigation, route }) => {
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState("");
   const [numberError, setNumberError] = useState(0);
+  const token = useRecoilValue(notificationToken);
   console.log(route);
 
   const onHandleLogin = async (data) => {
@@ -43,10 +46,11 @@ const Login = ({ navigation, route }) => {
     setErrorActive("");
     setIsLoading(true);
     try {
-      const result = await Auth.signIn(email.trim(), password.trim());
+      const result = await Auth.signIn(email.trim(), password.trim(), {
+        notificationToken: token,
+      });
       setTimeout(() => {
-        if (result)
-          navigation.goBack()
+        if (result) navigation.goBack();
       }, 2500);
     } catch (error) {
       console.log("ERROR AL LOGEARTE", error.message);

@@ -1,4 +1,16 @@
 # schema
+type DeviceNotificationToken
+  @model
+  @auth(
+    rules: [
+      { allow: public, provider: iam, operations: [read, create] }
+      { allow: private, provider: iam, operations: [read, create] }
+    ]
+  ) {
+  id: ID!
+  deviceID: String
+  notificationToken: String
+}
 type NotificationHistory
   @model
   @auth(

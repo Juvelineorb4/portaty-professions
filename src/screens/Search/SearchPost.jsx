@@ -187,10 +187,10 @@ const SearchPost = ({ route, navigation }) => {
       if (business?.data?.getBusiness.schedule) {
         filterSchedule(schedule?.shedule, schedule?.type);
       }
-      setListUpdate(false)
+      setListUpdate(false);
       return setPost(business?.data?.getBusiness);
     } catch (error) {
-      console.log(error);
+      console.log("ERROR fetchData: ", error);
     }
   };
   const fetchFavorite = async () => {
@@ -207,7 +207,7 @@ const SearchPost = ({ route, navigation }) => {
       if (favorite?.data?.favoritesByBusinessID?.items?.length !== 0)
         setSave(favorite?.data?.favoritesByBusinessID?.items[0]?.id);
     } catch (error) {
-      console.log(error);
+      console.log("ERROR fetchFavorite: ", error);
     }
   };
   const onOpenMap = (lat, lng, name) => {
@@ -270,7 +270,7 @@ const SearchPost = ({ route, navigation }) => {
         model,
         language,
       };
-
+      console.log("PARAMS: ", params);
       if (userID) {
         params = {
           userid: userID,
@@ -354,7 +354,7 @@ const SearchPost = ({ route, navigation }) => {
 
   const fetchRatings = async () => {
     let business = item;
-    console.log(business.id);
+    console.log("SI TENGO EL BUSINESS: ", business.id);
     try {
       const fetchAllRatings = async (nextToken, result = []) => {
         const response = await API.graphql({
@@ -365,7 +365,10 @@ const SearchPost = ({ route, navigation }) => {
             nextToken,
           },
         });
-
+        console.log(
+          "RESULT FETCH ALL: ",
+          response.data.businessCommentsByBusinessID
+        );
         const items = response.data.businessCommentsByBusinessID.items;
         result.push(...items);
 
@@ -380,7 +383,7 @@ const SearchPost = ({ route, navigation }) => {
       };
 
       const allRatings = await fetchAllRatings();
-      console.log(allRatings);
+      console.log("TODOS LOS RATING: ", allRatings);
       setListRatings(allRatings);
     } catch (error) {
       console.log("eres tu", error);
@@ -390,7 +393,7 @@ const SearchPost = ({ route, navigation }) => {
   const getCatalogPDF = async () => {
     try {
       const url = post?.catalogpdf;
-      console.log(post);
+      console.log("POST: ", post);
       Linking.openURL(url);
     } catch (error) {
       console.log("Error en catalogo: ", error);
@@ -411,7 +414,7 @@ const SearchPost = ({ route, navigation }) => {
       const response = await API.get(api, path, params);
       setRatingsDetails(response.data);
     } catch (error) {
-      console.error(error.response.data);
+      console.error("OCURRIO UN ERROR EN RATING: ", error.response.data);
     }
   };
 
@@ -647,7 +650,7 @@ const SearchPost = ({ route, navigation }) => {
             <View
               style={{
                 // flex: 1,
-                flexDirection: "row",
+                flexDirection: userAuth ? "row" : "column",
                 alignItems: "center",
                 justifyContent: "space-between",
                 padding: 20,
@@ -665,7 +668,12 @@ const SearchPost = ({ route, navigation }) => {
                     ? numberFavorite
                     : post?.favorites?.items?.length}
                 </Text>
-                <Text style={{ fontSize: 20, fontFamily: "light" }}>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontFamily: "light",
+                  }}
+                >
                   Favoritos
                 </Text>
               </View>
@@ -704,31 +712,34 @@ const SearchPost = ({ route, navigation }) => {
           </View>
         )}
         {/* Reporte */}
-        <TouchableOpacity
-          style={{
-            alignSelf: "flex-end",
-            paddingHorizontal: 20,
-            paddingBottom: 5,
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-          onPress={() => setVisibleReport(true)}
-        >
-          <MaterialIcons name="report" size={16} color="black" />
-          <Text
-            style={[
-              global.black,
-              {
-                fontFamily: "bold",
-                fontSize: 10,
-                // marginLeft: 2,
-                // marginBottom: 3
-              },
-            ]}
+        {userAuth && (
+          <TouchableOpacity
+            style={{
+              alignSelf: "flex-end",
+              paddingHorizontal: 20,
+              paddingBottom: 5,
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+            onPress={() => setVisibleReport(true)}
           >
-            Reportar negocio
-          </Text>
-        </TouchableOpacity>
+            <MaterialIcons name="report" size={16} color="black" />
+            <Text
+              style={[
+                global.black,
+                {
+                  fontFamily: "bold",
+                  fontSize: 10,
+                  // marginLeft: 2,
+                  // marginBottom: 3
+                },
+              ]}
+            >
+              Reportar negocio
+            </Text>
+          </TouchableOpacity>
+        )}
+
         {/* Hasta aqui */}
         <View
           style={[

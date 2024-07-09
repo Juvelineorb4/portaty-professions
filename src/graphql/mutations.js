@@ -1,6 +1,51 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const createDeviceNotificationToken = /* GraphQL */ `
+  mutation CreateDeviceNotificationToken(
+    $input: CreateDeviceNotificationTokenInput!
+    $condition: ModelDeviceNotificationTokenConditionInput
+  ) {
+    createDeviceNotificationToken(input: $input, condition: $condition) {
+      id
+      deviceID
+      notificationToken
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateDeviceNotificationToken = /* GraphQL */ `
+  mutation UpdateDeviceNotificationToken(
+    $input: UpdateDeviceNotificationTokenInput!
+    $condition: ModelDeviceNotificationTokenConditionInput
+  ) {
+    updateDeviceNotificationToken(input: $input, condition: $condition) {
+      id
+      deviceID
+      notificationToken
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteDeviceNotificationToken = /* GraphQL */ `
+  mutation DeleteDeviceNotificationToken(
+    $input: DeleteDeviceNotificationTokenInput!
+    $condition: ModelDeviceNotificationTokenConditionInput
+  ) {
+    deleteDeviceNotificationToken(input: $input, condition: $condition) {
+      id
+      deviceID
+      notificationToken
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const createAppVersionHistory = /* GraphQL */ `
   mutation CreateAppVersionHistory(
     $input: CreateAppVersionHistoryInput!

@@ -17,6 +17,7 @@ import LeftHeaderShare from "@/components/Header/LeftHeaderShare";
 import useLocation from "@/hooks/useLocation";
 import useUserTracking from "@/hooks/useUserTracking";
 import usePushNotification from "@/hooks/usePushNotification";
+import useSaveTokenDevice from "@/hooks/useSaveTokenDevice";
 import ShareNavigator from "./ShareNavigator";
 import SplashScreen from "@/components/SplashScreen";
 import { Text, View, Image } from "react-native";
@@ -25,6 +26,7 @@ const Navigation = () => {
   useLocation();
   usePushNotification();
   useUserTracking();
+  useSaveTokenDevice();
   const Stack = createNativeStackNavigator();
   const global = require("@/utils/styles/global.js");
   const [checkRender, setCheckRender] = useState(true);

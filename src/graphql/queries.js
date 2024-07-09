@@ -1,6 +1,42 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const getDeviceNotificationToken = /* GraphQL */ `
+  query GetDeviceNotificationToken($id: ID!) {
+    getDeviceNotificationToken(id: $id) {
+      id
+      deviceID
+      notificationToken
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listDeviceNotificationTokens = /* GraphQL */ `
+  query ListDeviceNotificationTokens(
+    $filter: ModelDeviceNotificationTokenFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listDeviceNotificationTokens(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        deviceID
+        notificationToken
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const getAppVersionHistory = /* GraphQL */ `
   query GetAppVersionHistory($id: ID!) {
     getAppVersionHistory(id: $id) {
