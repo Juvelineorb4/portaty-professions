@@ -62,8 +62,6 @@ const FavoritePage = ({ navigation, route }) => {
   } = route.params;
   let schedule = JSON.parse(item.business?.schedule);
   const filterSchedule = (array, type) => {
-    console.log(schedule);
-    return;
     if (array === null || type === null) return;
     console.log("toy por aqui");
     console.log(array);

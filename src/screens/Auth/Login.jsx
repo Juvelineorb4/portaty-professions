@@ -126,12 +126,12 @@ const Login = ({ navigation, route }) => {
             )}
             <Image
               style={{
-                width: 300,
-                height: 100,
+                width: 335,
+                height: 150,
                 marginBottom: 25,
                 resizeMode: "contain",
               }}
-              source={require("@/utils/images/welcome.png")}
+              source={require("@/utils/images/welcome.jpg")}
             />
             <CustomInput
               control={control}
