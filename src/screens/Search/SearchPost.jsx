@@ -235,17 +235,11 @@ const SearchPost = ({ route, navigation }) => {
   };
 
   const registerViewBusiness = async (userID = null, businessID) => {
-    const deviceType = Device.deviceType;
-    const osName = Device.osName;
-    const osVersion = Device.osVersion;
-    const brand = Device.brand;
-    const model = Device.modelName;
-    const language = Device.language;
-    // Obtener el identificador único del dispositivo
-    const deviceID = Device.osBuildId || Device.osInternalBuildId;
     try {
       // Obtener información de la última visualización guardada en AsyncStorage
-      const lastViewString = await AsyncStorage.getItem(`lastView_${deviceID}`);
+      const lastViewString = await AsyncStorage.getItem(
+        `lastView_${businessID}`
+      );
       const lastViewInfo = JSON.parse(lastViewString);
 
       // Si hay una última visualización registrada y ocurrió hace menos de 24 horas, no registra la nueva visualización
@@ -263,14 +257,7 @@ const SearchPost = ({ route, navigation }) => {
         country,
         city,
         businessid: businessID,
-        deviceType: DEVICE_TYPE[deviceType],
-        osName,
-        osVersion,
-        brand,
-        model,
-        language,
       };
-      console.log("PARAMS: ", params);
       if (userID) {
         params = {
           userid: userID,
@@ -290,9 +277,10 @@ const SearchPost = ({ route, navigation }) => {
         timestamp: new Date().toISOString(),
       };
       await AsyncStorage.setItem(
-        `lastView_${deviceID}`,
+        `lastView_${businessID}`,
         JSON.stringify(currentViewInfo)
       );
+      console.log("ITEMGUARDADO: ", `lastView_${businessID}`);
     } catch (error) {
       console.log("Error al registrar analitica: ", error);
     }

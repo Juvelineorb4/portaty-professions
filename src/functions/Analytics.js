@@ -3,7 +3,7 @@ import * as Constants from "expo-constants";
 import { Analytics } from "aws-amplify";
 import * as Device from "expo-device";
 const kinesisStreamName =
-    Constants?.AppOwnership?.Expo === "expo"
+    Constants?.AppOwnership?.Expo === ""
         ? api.kinesis_firehose.dev
         : api.kinesis_firehose.prod;
 const DEVICE_TYPE = ["UNKNOWN", "PHONE", "TABLET", "DESKTOP", "TV"];

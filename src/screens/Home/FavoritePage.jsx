@@ -257,7 +257,7 @@ const FavoritePage = ({ navigation, route }) => {
     const { country, city } = countryCity;
     registerEvent("user_remove_business", {
       userid: userAuth?.attributes["custom:userTableID"],
-      businessid: item.id,
+      businessid: item?.businessID,
       birthdate: userAuth?.attributes?.birthdate,
       gender: userAuth?.attributes["custom:gender"],
       country,
@@ -301,17 +301,12 @@ const FavoritePage = ({ navigation, route }) => {
   };
 
   const registerViewBusiness = async (userID = null, businessID) => {
-    const deviceType = Device.deviceType;
-    const osName = Device.osName;
-    const osVersion = Device.osVersion;
-    const brand = Device.brand;
-    const model = Device.modelName;
-    const language = Device.language;
     // Obtener el identificador único del dispositivo
-    const deviceID = Device.osBuildId || Device.osInternalBuildId;
     try {
       // Obtener información de la última visualización guardada en AsyncStorage
-      const lastViewString = await AsyncStorage.getItem(`lastView_${deviceID}`);
+      const lastViewString = await AsyncStorage.getItem(
+        `lastView_${businessID}`
+      );
       const lastViewInfo = JSON.parse(lastViewString);
 
       // Si hay una última visualización registrada y ocurrió hace menos de 24 horas, no registra la nueva visualización
@@ -329,14 +324,8 @@ const FavoritePage = ({ navigation, route }) => {
         country,
         city,
         businessid: businessID,
-        deviceType: DEVICE_TYPE[deviceType],
-        osName,
-        osVersion,
-        brand,
-        model,
-        language,
       };
-      console.log("PARAMS: ", params);
+
       if (userID) {
         params = {
           userid: userID,
@@ -356,14 +345,14 @@ const FavoritePage = ({ navigation, route }) => {
         timestamp: new Date().toISOString(),
       };
       await AsyncStorage.setItem(
-        `lastView_${deviceID}`,
+        `lastView_${businessID}`,
         JSON.stringify(currentViewInfo)
       );
+      console.log("ITEMGUARDADO: ", `lastView_${businessID}`);
     } catch (error) {
       console.log("Error al registrar analitica: ", error);
     }
   };
-
   useLayoutEffect(() => {
     fetchData();
     fetchRatings(item);
@@ -383,7 +372,7 @@ const FavoritePage = ({ navigation, route }) => {
       timerRef.current = setTimeout(() => {
         registerViewBusiness(
           userAuth ? userAuth?.attributes["custom:userTableID"] : null,
-          item.id
+          item.businessID
         );
       }, 3000);
     }

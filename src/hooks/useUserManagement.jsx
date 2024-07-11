@@ -24,7 +24,6 @@ const useUserManagement = () => {
         userid: attributes["custom:userTableID"],
         birthdate: attributes?.birthdate,
         gender: attributes["custom:gender"],
-        platform: Platform.OS.toUpperCase(),
       };
       registerEvent("user_auth", params);
     } catch (error) {
@@ -39,7 +38,6 @@ const useUserManagement = () => {
       userid: attributes["custom:userTableID"],
       birthdate: attributes?.birthdate,
       gender: attributes["custom:gender"],
-      platform: Platform.OS.toUpperCase(),
     };
     registerEvent("user_auth", params);
     setUserAuth(null);
