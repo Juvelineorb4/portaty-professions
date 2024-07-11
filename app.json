@@ -92,7 +92,7 @@
         "foregroundImage": "./src/utils/images/portaty.png",
         "backgroundColor": "#FFFFFF"
       },
-      "versionCode": 79,
+      "versionCode": 80,
       "googleServicesFile": "./google-services.json"
     },
     "web": {
