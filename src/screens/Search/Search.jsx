@@ -72,7 +72,6 @@ const Search = ({ route }) => {
         direccion.region === null ? "" : direccion.region
       }, ${direccion.postalCode === null ? "" : direccion.postalCode} `;
       setSearchAddress(direccionString);
-      console.log(direccionString);
       setCity(direccion.region);
     }
   };
@@ -100,7 +99,6 @@ const Search = ({ route }) => {
       const response = await API.get(api, path, params);
       setTotalData(response.total);
       setTotalLimit(response.limit);
-      console.log("data:", totalData, "limit:", totalLimit);
       let newRenderItems = [];
       const long = 26;
       for (let i = 0; i < response.items.length; i += long) {

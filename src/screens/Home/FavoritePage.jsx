@@ -29,6 +29,7 @@ import {
   Octicons,
   Ionicons,
 } from "@expo/vector-icons";
+import * as Location from "expo-location";
 import { Auth, API, Storage } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Favorites";
 import * as customFavorites from "@/graphql/CustomMutations/Favorites";
@@ -43,9 +44,17 @@ import * as FileSystem from "expo-file-system";
 import { StorageAccessFramework } from "expo-file-system";
 import { useRef } from "react";
 import ModalReport from "@/components/ModalReport";
-
+import { registerEvent } from "@/functions/Analytics";
+// recoil
+import { useRecoilValue } from "recoil";
+import { userAuthenticated, mapUser } from "@/atoms/index";
+// storage
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const FavoritePage = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
+  const userAuth = useRecoilValue(userAuthenticated);
+  const userLocation = useRecoilValue(mapUser);
+  const timerRef = useRef();
   const [post, setPost] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visible, setVisible] = useState(false);
@@ -56,18 +65,14 @@ const FavoritePage = ({ navigation, route }) => {
   const [weekSchedule, setWeekSchedule] = useState("");
   const [listRatings, setListRatings] = useState(null);
   const [ratingsDetails, setRatingsDetails] = useState(null);
+  const [countryCity, setCountryCity] = useState(null);
 
   const {
     data: { item, image },
   } = route.params;
   let schedule = JSON.parse(item.business?.schedule);
   const filterSchedule = (array, type) => {
-    console.log(schedule);
-    return;
     if (array === null || type === null) return;
-    console.log("toy por aqui");
-    console.log(array);
-    console.log(type);
     // return;
     let scheduleG = [];
     let activeDays = array.filter((day) => day.active);
@@ -115,8 +120,6 @@ const FavoritePage = ({ navigation, route }) => {
         } - ${group.hourEnd}`;
       })
       .join(" / ");
-
-    console.log(pContent);
 
     setWeekSchedule(pContent);
   };
@@ -182,7 +185,6 @@ const FavoritePage = ({ navigation, route }) => {
 
   const fetchRatings = async ({ data }) => {
     let business = item;
-    console.log(business.businessID);
     try {
       const fetchAllRatings = async (nextToken, result = []) => {
         const response = await API.graphql({
@@ -208,7 +210,6 @@ const FavoritePage = ({ navigation, route }) => {
       };
 
       const allRatings = await fetchAllRatings();
-      console.log(allRatings);
       setListRatings(allRatings);
       // const ratings = await API.graphql({
       //   query: queries.businessCommentsByBusinessID,
@@ -235,13 +236,13 @@ const FavoritePage = ({ navigation, route }) => {
       };
 
       const response = await API.get(api, path, params);
-      console.log("RESPONSEEEEEEEEEEEEEEEEEEEEEEEEEE: ", response);
       setRatingsDetails(response.data);
     } catch (error) {
-      console.error("ERROR A BUSCAR RATINGS: ", error.response.data);
+      console.log("ERROR A BUSCAR RATINGS: ", error.response.data);
     }
   };
   const onDeleteFavorite = async () => {
+    console.log("LO QUE SE BORRARAÑ ", item.id);
     const favorites = await API.graphql({
       query: customFavorites.deleteFavorites,
       variables: {
@@ -250,6 +251,15 @@ const FavoritePage = ({ navigation, route }) => {
         },
       },
       authMode: "AMAZON_COGNITO_USER_POOLS",
+    });
+    const { country, city } = countryCity;
+    registerEvent("user_remove_business", {
+      userid: userAuth?.attributes["custom:userTableID"],
+      businessid: item.businessID,
+      birthdate: userAuth?.attributes?.birthdate,
+      gender: userAuth?.attributes["custom:gender"],
+      country,
+      city,
     });
     setListUpdate(!listUpdate);
     navigation.goBack();
@@ -271,7 +281,7 @@ const FavoritePage = ({ navigation, route }) => {
         message: `Han compartido contigo un negocio, da click para mirarlo https://www.portaty.com/share/business?id=${item.businessID}`,
       });
     } catch (error) {
-      console.error("Error sharing:", error);
+      console.log("Error sharing:", error);
     }
   };
   const openCall = () => {
@@ -287,6 +297,59 @@ const FavoritePage = ({ navigation, route }) => {
       console.log("Error en catalogo: ", error);
     }
   };
+  const registerViewBusiness = async (userID = null, businessID) => {
+    // Obtener el identificador único del dispositivo
+    try {
+      // Obtener información de la última visualización guardada en AsyncStorage
+      const lastViewString = await AsyncStorage.getItem(
+        `lastView_${businessID}`
+      );
+      const lastViewInfo = JSON.parse(lastViewString);
+
+      // Si hay una última visualización registrada y ocurrió hace menos de 24 horas, no registra la nueva visualización
+      if (
+        lastViewInfo &&
+        new Date() - new Date(lastViewInfo.timestamp) < 24 * 60 * 60 * 1000 &&
+        lastViewInfo.businessID === businessID
+      ) {
+        return;
+      }
+
+      // Registrar la visualización en analytics
+      const { country, city } = countryCity;
+      let params = {
+        country,
+        city,
+        businessid: businessID,
+      };
+
+      if (userID) {
+        params = {
+          userid: userID,
+          birthdate: userAuth?.attributes?.birthdate,
+          gender: userAuth?.attributes["custom:gender"],
+          ...params,
+        };
+      }
+
+      registerEvent(
+        userID ? "user_viewed_business" : "guest_viewed_business",
+        params
+      );
+      // Almacenar la información de la última visualización en AsyncStorage
+      const currentViewInfo = {
+        businessID: businessID,
+        timestamp: new Date().toISOString(),
+      };
+      await AsyncStorage.setItem(
+        `lastView_${businessID}`,
+        JSON.stringify(currentViewInfo)
+      );
+      console.log("ITEMGUARDADO: ", `lastView_${businessID}`);
+    } catch (error) {
+      console.log("Error al registrar analitica: ", error);
+    }
+  };
 
   useLayoutEffect(() => {
     fetchData();
@@ -294,7 +357,25 @@ const FavoritePage = ({ navigation, route }) => {
     fetchRatings2();
     if (schedule !== null) filterSchedule(schedule?.shedule, schedule?.type);
   }, [listUpdate]);
+  useEffect(() => {
+    const registerCountryCity = async () => {
+      const addressArr = await Location.reverseGeocodeAsync(userLocation);
+      setCountryCity(addressArr[0]);
+    };
+    if (userLocation) registerCountryCity();
+  }, [userLocation]);
 
+  useEffect(() => {
+    if (countryCity) {
+      timerRef.current = setTimeout(() => {
+        registerViewBusiness(
+          userAuth ? userAuth?.attributes["custom:userTableID"] : null,
+          item.businessID
+        );
+      }, 3000);
+    }
+    return () => clearTimeout(timerRef.current);
+  }, [countryCity]);
   if (!item || !listRatings || listUpdate) return <SkeletonExample />;
   return (
     <View
@@ -860,55 +941,56 @@ const FavoritePage = ({ navigation, route }) => {
         </TouchableOpacity>
 
         {/* Catalogo */}
-        {item?.catalogpdf !== "" || item?.catalogpdf && (
-          <TouchableOpacity
-            style={{
-              padding: 20,
-              marginTop: -25,
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-            onPress={getCatalogPDF}
-          >
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <View
-                style={[
-                  {
-                    width: 58,
-                    height: 58,
-                    borderRadius: 10,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderColor: "#1f1f1f",
-                    borderWidth: 0.7,
-                  },
-                  global.bgYellow,
-                ]}
-              >
-                <Octicons name="checklist" size={21} color="#1f1f1f" />
-              </View>
-              <View style={{ marginLeft: 10 }}>
-                <Text style={{ fontFamily: "medium", fontSize: 15 }}>
-                  Catalogo
-                </Text>
-                <Text
-                  style={{ fontFamily: "regular", fontSize: 12, width: 150 }}
-                >
-                  Mira la lista de productos y servicios del negocio
-                </Text>
-              </View>
-            </View>
-            <Image
+        {item?.catalogpdf !== "" ||
+          (item?.catalogpdf && (
+            <TouchableOpacity
               style={{
-                width: 40,
-                height: 40,
-                resizeMode: "cover",
+                padding: 20,
+                marginTop: -25,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
               }}
-              source={require("@/utils/images/arrow_right.png")}
-            />
-          </TouchableOpacity>
-        )}
+              onPress={getCatalogPDF}
+            >
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <View
+                  style={[
+                    {
+                      width: 58,
+                      height: 58,
+                      borderRadius: 10,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderColor: "#1f1f1f",
+                      borderWidth: 0.7,
+                    },
+                    global.bgYellow,
+                  ]}
+                >
+                  <Octicons name="checklist" size={21} color="#1f1f1f" />
+                </View>
+                <View style={{ marginLeft: 10 }}>
+                  <Text style={{ fontFamily: "medium", fontSize: 15 }}>
+                    Catalogo
+                  </Text>
+                  <Text
+                    style={{ fontFamily: "regular", fontSize: 12, width: 150 }}
+                  >
+                    Mira la lista de productos y servicios del negocio
+                  </Text>
+                </View>
+              </View>
+              <Image
+                style={{
+                  width: 40,
+                  height: 40,
+                  resizeMode: "cover",
+                }}
+                source={require("@/utils/images/arrow_right.png")}
+              />
+            </TouchableOpacity>
+          ))}
 
         <View style={{ marginBottom: 80 }}>
           <Text style={{ fontSize: 22, fontFamily: "regular", padding: 10 }}>
