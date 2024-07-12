@@ -1024,6 +1024,56 @@ const Page = ({ route, navigation }) => {
           />
         </TouchableOpacity>
 
+        {/* Promociones */}
+        <TouchableOpacity
+          style={{
+            padding: 20,
+            marginTop: -25,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+          onPress={() =>
+            navigation.navigate("Promotions", {
+              data: item,
+            })
+          }
+        >
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View
+              style={[
+                {
+                  width: 58,
+                  height: 58,
+                  borderRadius: 10,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderColor: "#1f1f1f",
+                  borderWidth: 0.7,
+                },
+                global.bgYellow,
+              ]}
+            >
+              <AntDesign name="tago" size={24} color="#1f1f1f" />
+            </View>
+            <View style={{ marginLeft: 10 }}>
+              <Text style={{ fontFamily: "medium", fontSize: 15 }}>
+                Promociones
+              </Text>
+              <Text style={{ fontFamily: "regular", fontSize: 12, width: 150 }}>
+                Gestiona todas tus promociones
+              </Text>
+            </View>
+          </View>
+          <Image
+            style={{
+              width: 40,
+              height: 40,
+              resizeMode: "cover",
+            }}
+            source={require("@/utils/images/arrow_right.png")}
+          />
+        </TouchableOpacity>
         {/* Catalogo */}
         <View>
           {console.log(item?.catalogpdf)}
