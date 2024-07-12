@@ -129,10 +129,10 @@ const CustomInteractions = ({ route, navigation }) => {
       )}
 
       <ModalInteractions
-        buttonStyles={[
-          styles.button,
-          errorRating ? global.bgWhite : global.bgYellow,
-        ]}
+        close={() => {
+          setActive(false);
+          navigation.goBack();
+        }}
         open={active}
         businessID={business.businessID ? business.businessID : business.id}
       />

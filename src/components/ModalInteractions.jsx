@@ -24,7 +24,7 @@ import { es } from "@/utils/constants/lenguage";
 
 const ModalInteractions = ({ businessID, close, open }) => {
   const global = require("@/utils/styles/global.js");
-  const [starRating, setStarRating] = useState(null);
+  const [starRating, setStarRating] = useState(1);
   const [loading, setLoading] = useState(false);
   const { control, handleSubmit } = useForm();
   const userAuth = useRecoilValue(userAuthenticated);
@@ -49,7 +49,7 @@ const ModalInteractions = ({ businessID, close, open }) => {
       });
       console.log(rating);
       setLoading(false);
-      setListUpdate(true)
+      setListUpdate(true);
       close();
     } catch (error) {
       console.log(error);
@@ -98,7 +98,10 @@ const ModalInteractions = ({ businessID, close, open }) => {
                     {[1, 2, 3, 4, 5].map((rating) => (
                       <TouchableWithoutFeedback
                         key={rating}
-                        onPress={() => setStarRating(rating)}
+                        onPress={() => {
+                          console.log(rating);
+                          setStarRating(rating);
+                        }}
                       >
                         <MaterialIcons
                           name={rating <= starRating ? "star" : "star-border"}
