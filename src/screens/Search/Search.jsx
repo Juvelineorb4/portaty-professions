@@ -223,20 +223,19 @@ const Search = ({ route }) => {
     );
   }
 
-  if (searchActive && isConnected && !isLoading) {
-    return (
-      <View style={{
-        flex: 1
-      }}>
-        <MapSearch
-          markers={searchCacheActive}
-          initialLocation={userLocation}
-          open={true}
-        />
-      </View>
-    );
-  }
-  return;
+  // if (searchActive && isConnected && !isLoading) {
+  //   return (
+  //     <View style={{
+  //       flex: 1
+  //     }}>
+  //       <MapSearch
+  //         markers={searchCacheActive}
+  //         initialLocation={userLocation}
+  //         open={true}
+  //       />
+  //     </View>
+  //   );
+  // }
   if (searchActive && isConnected && !isLoading) {
     return (
       <View style={{ flex: 1, backgroundColor: "#FFFFFF", paddingBottom: 50 }}>
