@@ -1267,12 +1267,6 @@ const Page = ({ route, navigation }) => {
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <TextInput
-                onChangeText={(e) =>
-                  setEditParams((prevState) => ({
-                    ...prevState,
-                    activity: { ...prevState, main: e },
-                  }))
-                }
                 value={editParams?.activity?.main}
                 style={[
                   {
@@ -1284,10 +1278,10 @@ const Page = ({ route, navigation }) => {
                     borderRadius: 4,
                     // textTransform: "capitalize",
                   },
-                  editActive ? global.bgWhite : global.bgWhiteSoft,
+                  global.bgWhiteSoft,
                 ]}
                 // defaultValue={item.name}
-                editable={editActive ? true : false}
+                editable={false}
               />
               {/* <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
                 {item.activity}
@@ -1316,12 +1310,6 @@ const Page = ({ route, navigation }) => {
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <TextInput
-                onChangeText={(e) =>
-                  setEditParams((prevState) => ({
-                    ...prevState,
-                    activity: { ...prevState, sub: e },
-                  }))
-                }
                 value={editParams?.activity?.sub}
                 style={[
                   {
@@ -1333,10 +1321,10 @@ const Page = ({ route, navigation }) => {
                     borderRadius: 4,
                     // textTransform: "capitalize",
                   },
-                  editActive ? global.bgWhite : global.bgWhiteSoft,
+                  global.bgWhiteSoft,
                 ]}
                 // defaultValue={item.name}
-                editable={editActive ? true : false}
+                editable={false}
               />
               {/* <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
                 {item.activity}
