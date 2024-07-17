@@ -167,6 +167,7 @@ const Page = ({ route, navigation }) => {
     } catch (error) {
       console.log("Error en pdf: ", error.message);
     }
+    return fileUri;
   };
 
   const onOpenMap = (lat, lng, name) => {
@@ -436,8 +437,9 @@ const Page = ({ route, navigation }) => {
   };
 
   const uploadCatalogPDF = async () => {
-    console.log("QUERIEDNO SUBIRF");
     try {
+      console.log("COMENZO");
+      // Seleccionar el archivo PDF
       let result = await DocumentPicker.getDocumentAsync({
         copyToCacheDirectory: true,
         type: "application/pdf",
@@ -446,6 +448,7 @@ const Page = ({ route, navigation }) => {
       if (result?.assets !== null && result?.canceled !== true) {
         console.log(result);
         const response = await fetch(result?.assets[0]?.uri);
+
         const blob = await response.blob();
         const pdf = await Storage.put(
           `business/${item?.id}/catalog.pdf`,
@@ -461,7 +464,7 @@ const Page = ({ route, navigation }) => {
         console.log(pdf);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -1023,10 +1026,8 @@ const Page = ({ route, navigation }) => {
             source={require("@/utils/images/arrow_right.png")}
           />
         </TouchableOpacity>
-
         {/* Catalogo */}
         <View>
-          {console.log(item?.catalogpdf)}
           {item?.catalogpdf === "" || !item?.catalogpdf ? (
             <TouchableOpacity
               style={[
@@ -1043,7 +1044,7 @@ const Page = ({ route, navigation }) => {
                 },
                 global.mainBgColor,
               ]}
-              onPress={uploadCatalogPDF}
+              onPress={() => uploadCatalogPDF}
             >
               <Text
                 style={[
@@ -1104,12 +1105,6 @@ const Page = ({ route, navigation }) => {
             </TouchableOpacity>
           )}
         </View>
-
-        {/* <TouchableOpacity onPress={uploadCatalogPDF}>
-          <View>
-            <Text>CARGAR PDF</Text>
-          </View>
-        </TouchableOpacity> */}
         <View style={{ marginBottom: 80 }}>
           <View
             style={{
@@ -1217,12 +1212,6 @@ const Page = ({ route, navigation }) => {
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <TextInput
-                onChangeText={(e) =>
-                  setEditParams((prevState) => ({
-                    ...prevState,
-                    activity: { ...prevState, main: e },
-                  }))
-                }
                 value={editParams?.activity?.main}
                 style={[
                   {
@@ -1234,10 +1223,10 @@ const Page = ({ route, navigation }) => {
                     borderRadius: 4,
                     // textTransform: "capitalize",
                   },
-                  editActive ? global.bgWhite : global.bgWhiteSoft,
+                  global.bgWhiteSoft,
                 ]}
                 // defaultValue={item.name}
-                editable={editActive ? true : false}
+                editable={false}
               />
               {/* <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
                 {item.activity}
@@ -1266,12 +1255,6 @@ const Page = ({ route, navigation }) => {
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <TextInput
-                onChangeText={(e) =>
-                  setEditParams((prevState) => ({
-                    ...prevState,
-                    activity: { ...prevState, sub: e },
-                  }))
-                }
                 value={editParams?.activity?.sub}
                 style={[
                   {
@@ -1283,10 +1266,10 @@ const Page = ({ route, navigation }) => {
                     borderRadius: 4,
                     // textTransform: "capitalize",
                   },
-                  editActive ? global.bgWhite : global.bgWhiteSoft,
+                  global.bgWhiteSoft,
                 ]}
                 // defaultValue={item.name}
-                editable={editActive ? true : false}
+                editable={false}
               />
               {/* <Text style={[{ fontSize: 13, fontFamily: "regular" }]}>
                 {item.activity}
