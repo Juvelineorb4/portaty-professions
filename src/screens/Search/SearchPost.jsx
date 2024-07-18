@@ -1288,15 +1288,15 @@ const SearchPost = ({ route, navigation }) => {
               style={{ flexDirection: "row", alignItems: "center" }}
               onPress={() => {
                 let isWhatsAppLink =
-                  item?.business?.phone.startsWith("https://wa.me/") ||
-                  item?.business?.phone.startsWith(
+                  post?.phone.startsWith("https://wa.me/") ||
+                  post?.phone.startsWith(
                     "https://api.whatsapp.com/send?text="
                   );
                 if (isWhatsAppLink) {
-                  const url = `${item?.business?.phone}`;
+                  const url = `${post?.phone}`;
                   Linking.openURL(url);
                 } else {
-                  const phoneRegex = item?.business?.phone.replace("+", "");
+                  const phoneRegex =  post?.phone.replace("+", "");
                   const url = `https://wa.me/${phoneRegex}`;
                   Linking.openURL(url);
                 }
