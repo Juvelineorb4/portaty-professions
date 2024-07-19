@@ -1,4 +1,11 @@
-import { ActivityIndicator, Image, Pressable, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Image,
+  Pressable,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 import { ScrollView } from "react-native";
 import * as ImagePicker from "expo-image-picker";
@@ -10,6 +17,7 @@ import {
   onCreateBusinessPromotion,
   onUpdateBusinessPromotion,
 } from "@/graphql/CustomSubscriptions/Promotion";
+import CustomCalendarInput from "./CustomCalendarInput";
 const CustomPromotions = ({ route, navigation }) => {
   const { data: formData } = route.params;
   const global = require("@/utils/styles/global.js");
@@ -18,6 +26,10 @@ const CustomPromotions = ({ route, navigation }) => {
   const [blobImage, setBlobImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const { control, handleSubmit, watch } = useForm();
+  const [errorDate, setErrorDate] = useState({
+    status: false,
+    message: "",
+  });
 
   useEffect(() => {
     const subscription = API.graphql({
@@ -68,34 +80,85 @@ const CustomPromotions = ({ route, navigation }) => {
       const blobData = await urlToBlob(uri);
       setBlobImage(blobData);
       setImage(uri);
-      setError(false);
+      setErrorDate({
+        status: false,
+        message: "",
+      });
     }
   };
 
   const onHandleSendPromotion = async (data) => {
-    console.log("DATA:", data);
-    const userAuth = await Auth.currentAuthenticatedUser();
+    const [dayFinal, monthFinal, yearFinal] = data.dateFinal.split("/");
+    const [dayInitial, monthInitial, yearInitial] = data.dateInitial.split("/");
+    const today = new Date();
 
-    const apiName = "api-portaty"; // replace this with your api name.
-    const path = "/business/createPromotion"; //replace this with the path you have configured on your API
-    const { dateInitial, dateFinal } = data;
+    const dateFinalISO = new Date(
+      `${yearFinal}-${monthFinal}-${dayFinal}`
+    ).toISOString();
+    const dateInitialISO = new Date(
+      `${yearInitial}-${monthInitial}-${dayInitial}`
+    ).toISOString();
+    const dateFinal = new Date(`${yearFinal}-${monthFinal}-${dayFinal}`);
+    const dateInitial = new Date(
+      `${yearInitial}-${monthInitial}-${dayInitial}`
+    );
+    dateInitial.setHours(0, 0, 0, 0);
+    dateFinal.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+
+    if (dateInitialISO < today) {
+      console.log("1", dateInitialISO < today);
+      setErrorDate({
+        status: true,
+        message: "La fecha inicial no puede ser una fecha pasada",
+      });
+      return;
+    }
+    if (dateFinal <= dateInitial) {
+      console.log("2");
+
+      setErrorDate({
+        status: true,
+        message: "Tu fecha final no puede ser menor que la fecha inicial",
+      });
+    } else {
+      console.log("3");
+
+      setErrorDate({
+        status: false,
+        message: "",
+      });
+    }
+
+    if (!imageB64) {
+      setErrorDate({
+        status: true,
+        message: "Tienes que seleccionar una imagen",
+      });
+      return;
+    }
+    setErrorDate({
+      status: false,
+      message: "",
+    });
+    const userAuth = await Auth.currentAuthenticatedUser();
+    const apiName = "api-portaty";
+    const path = "/business/createPromotion";
 
     try {
-      console.log(new Date().toISOString());
       const myInit = {
         body: {
           data: {
-            ...data,
-            dateInitial: new Date().toISOString(),
-            dateFinal: new Date().toISOString(),
-            title: "Prueba Promotion",
+            dateInitial: dateInitialISO,
+            dateFinal: dateFinalISO,
+            title: data.title,
             businessID: formData?.id,
             image: imageB64,
-            identityID: userAuth["attributes"]["custom:identityID"],
-            userID: userAuth["attributes"]["custom:userTableID"],
+            identityID: userAuth?.attributes["custom:identityID"],
+            userID: userAuth?.attributes["custom:userTableID"],
           },
-        }, // replace this with attributes you need
-        headers: {}, // OPTIONAL
+        },
+        headers: {},
       };
       const result = await API.post(apiName, path, myInit);
       console.log("RESULT: ", result);
@@ -173,7 +236,7 @@ const CustomPromotions = ({ route, navigation }) => {
           </Pressable>
 
           <View>
-            <CustomInput
+            <CustomCalendarInput
               control={control}
               name={`dateInitial`}
               placeholder={`01/01/2000`}
@@ -184,9 +247,10 @@ const CustomPromotions = ({ route, navigation }) => {
                 input: [styles.inputContainer],
                 placeholder: styles.placeholder,
               }}
+              picker={true}
               text={`Fecha inicial`}
             />
-            <CustomInput
+            <CustomCalendarInput
               control={control}
               name={`dateFinal`}
               placeholder={`02/01/2000`}
@@ -197,6 +261,7 @@ const CustomPromotions = ({ route, navigation }) => {
                 input: [styles.inputContainer],
                 placeholder: styles.placeholder,
               }}
+              picker={true}
               text={`Fecha final`}
             />
             <CustomInput
@@ -210,8 +275,24 @@ const CustomPromotions = ({ route, navigation }) => {
                 input: [styles.inputContainer],
                 placeholder: styles.placeholder,
               }}
+              rules={{
+                required: `Requerido`,
+              }}
               text={`Titulo`}
             />
+            {errorDate.status && (
+              <Text
+                style={{
+                  color: "red",
+                  fontFamily: "regular",
+                  fontSize: 11,
+                  width: 120,
+                  marginVertical: 5,
+                }}
+              >
+                {errorDate.message}
+              </Text>
+            )}
             <Pressable
               style={[
                 global.bgYellow,
@@ -234,26 +315,17 @@ const CustomPromotions = ({ route, navigation }) => {
               {loading ? (
                 <ActivityIndicator size={`large`} color={`#1f1f1f`} />
               ) : (
-                <View
-                  style={{
-                    flex: 1,
-                    flexDirection: "row",
-                    justifyContent: "space-around",
-                    alignItems: "center",
-                  }}
+                <Text
+                  style={[
+                    {
+                      fontFamily: "bold",
+                      fontSize: 12,
+                      color: "#1f1f1f",
+                    },
+                  ]}
                 >
-                  <Text
-                    style={[
-                      {
-                        fontFamily: "bold",
-                        fontSize: 12,
-                        color: "#1f1f1f",
-                      },
-                    ]}
-                  >
-                    Publicar
-                  </Text>
-                </View>
+                  Publicar
+                </Text>
               )}
             </Pressable>
           </View>

@@ -58,13 +58,18 @@ const StepOne = ({ navigation, route }) => {
       headers: {},
     };
 
-    const result = await API.get(apiName, path, myInit);
-    console.log("QUE TARE: ", result);
-    if (result?.existing) {
-      setErrorName(true);
+    try {
+      const result = await API.get(apiName, path, myInit);
+      if (result?.existing) {
+        setErrorName(true);
+        return;
+      }
+      setErrorName(false);
+    } catch (error) {
+      console.log("Error aqui", error);
       return;
     }
-    setErrorName(false);
+
     let code = country?.idd?.root;
     for (let i = 0; i < country?.idd?.suffixes.length; i++) {
       code += country?.idd?.suffixes[i];

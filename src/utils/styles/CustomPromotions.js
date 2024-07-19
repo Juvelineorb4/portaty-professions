@@ -31,6 +31,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#404040",
   },
+  errorInput: {
+    fontFamily: "regular",
+    fontSize: 12,
+    color: "red",
+  },
 });
 
 export default styles;

@@ -79,7 +79,7 @@ const StepTwo = ({ navigation, route }) => {
       const response = await API.get(api, path, params);
       setAreasList(response);
     } catch (error) {
-      console.log(error)
+      console.log('Error en Paso 2', error)
     }
   };
 
