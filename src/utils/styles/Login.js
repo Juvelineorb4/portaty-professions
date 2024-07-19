@@ -8,7 +8,10 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
-  content: {},
+  content: {
+
+
+  },
   panel: {
     marginTop: 10,
   },

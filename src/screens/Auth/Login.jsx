@@ -22,7 +22,9 @@ import ModalAlert from "@/components/ModalAlert";
 import Constants from "expo-constants";
 import useCheckAppVersion from "@/hooks/useCheckAppVersion";
 import ModalUpdate from "@/components/ModalUpdate";
-
+// recoil
+import { notificationToken } from "@/atoms/index";
+import { useRecoilValue } from "recoil";
 const Login = ({ navigation, route }) => {
   const { control, handleSubmit, watch } = useForm();
   const emailForm = watch("email");
@@ -36,12 +38,16 @@ const Login = ({ navigation, route }) => {
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState("");
   const [numberError, setNumberError] = useState(0);
+  const token = useRecoilValue(notificationToken);
+
   const onHandleLogin = async (data) => {
     const { email, password } = data;
     setErrorActive("");
     setIsLoading(true);
     try {
-      const result = await Auth.signIn(email.trim(), password.trim());
+      const result = await Auth.signIn(email.trim(), password.trim(), {
+        notificationToken: token,
+      });
       setTimeout(() => {
         if (result) navigation.goBack();
       }, 2500);
@@ -124,15 +130,22 @@ const Login = ({ navigation, route }) => {
             {errorActive && (
               <Text style={styles.errorInputMain}>{errorActive}</Text>
             )}
-            <Image
+            <View
               style={{
-                width: 335,
-                height: 150,
-                marginBottom: 25,
-                resizeMode: "contain",
+                alignItems: "center",
               }}
-              source={require("@/utils/images/welcome.jpg")}
-            />
+            >
+              <Image
+                style={{
+                  width: 300,
+                  height: 150,
+                  marginVertical: 15,
+                  resizeMode: "contain",
+                }}
+                source={require("@/utils/images/welcome2.png")}
+              />
+            </View>
+
             <CustomInput
               control={control}
               name={`email`}

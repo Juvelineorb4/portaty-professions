@@ -1,6 +1,42 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const getDeviceNotificationToken = /* GraphQL */ `
+  query GetDeviceNotificationToken($id: ID!) {
+    getDeviceNotificationToken(id: $id) {
+      id
+      deviceID
+      notificationToken
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listDeviceNotificationTokens = /* GraphQL */ `
+  query ListDeviceNotificationTokens(
+    $filter: ModelDeviceNotificationTokenFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listDeviceNotificationTokens(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        deviceID
+        notificationToken
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const getAppVersionHistory = /* GraphQL */ `
   query GetAppVersionHistory($id: ID!) {
     getAppVersionHistory(id: $id) {
@@ -94,6 +130,42 @@ export const AppVersionByDate = /* GraphQL */ `
         id
         platform
         latestVersion
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getNotificationHistory = /* GraphQL */ `
+  query GetNotificationHistory($id: ID!) {
+    getNotificationHistory(id: $id) {
+      id
+      title
+      message
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listNotificationHistories = /* GraphQL */ `
+  query ListNotificationHistories(
+    $filter: ModelNotificationHistoryFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listNotificationHistories(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        title
+        message
         createdAt
         updatedAt
         __typename
@@ -227,6 +299,10 @@ export const getUsers = /* GraphQL */ `
         nextToken
         __typename
       }
+      promotions {
+        nextToken
+        __typename
+      }
       owner
       createdAt
       updatedAt
@@ -340,6 +416,10 @@ export const getBusiness = /* GraphQL */ `
       prefer
       schedule
       comments {
+        nextToken
+        __typename
+      }
+      promotions {
         nextToken
         __typename
       }
@@ -546,6 +626,166 @@ export const businessCommentsByBusinessID = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getBusinessPromotion = /* GraphQL */ `
+  query GetBusinessPromotion($id: ID!) {
+    getBusinessPromotion(id: $id) {
+      id
+      userID
+      user {
+        id
+        cognitoID
+        name
+        lastName
+        email
+        identityID
+        gender
+        notificationToken
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
+      businessID
+      business {
+        id
+        userID
+        status
+        identityID
+        name
+        image
+        images
+        thumbnail
+        email
+        phone
+        whatsapp
+        instagram
+        facebook
+        page
+        activity
+        tags
+        description
+        prefer
+        schedule
+        catalogpdf
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      title
+      dateInitial
+      dateFinal
+      status
+      isView
+      image
+      owner
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listBusinessPromotions = /* GraphQL */ `
+  query ListBusinessPromotions(
+    $filter: ModelBusinessPromotionFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listBusinessPromotions(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userID
+        businessID
+        title
+        dateInitial
+        dateFinal
+        status
+        isView
+        image
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const businessPromotionsByUserID = /* GraphQL */ `
+  query BusinessPromotionsByUserID(
+    $userID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelBusinessPromotionFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    businessPromotionsByUserID(
+      userID: $userID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userID
+        businessID
+        title
+        dateInitial
+        dateFinal
+        status
+        isView
+        image
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const businessPromotionsByBusinessID = /* GraphQL */ `
+  query BusinessPromotionsByBusinessID(
+    $businessID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelBusinessPromotionFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    businessPromotionsByBusinessID(
+      businessID: $businessID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userID
+        businessID
+        title
+        dateInitial
+        dateFinal
+        status
+        isView
+        image
+        owner
+        createdAt
+        updatedAt
         __typename
       }
       nextToken
