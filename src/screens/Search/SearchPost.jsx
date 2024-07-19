@@ -187,7 +187,7 @@ const SearchPost = ({ route, navigation }) => {
       setListUpdate(false);
       return setPost(business?.data?.getBusiness);
     } catch (error) {
-      console.log(error);
+      console.log("ERROR EN fetchData:", error);
     }
   };
   const fetchFavorite = async () => {
@@ -223,7 +223,7 @@ const SearchPost = ({ route, navigation }) => {
         message: `Han compartido contigo un negocio, da click para mirarlo https://www.portaty.com/share/business?id=${item.id}`,
       });
     } catch (error) {
-      console.error("Error sharing:", error);
+      console.log("Error sharing:", error);
     }
   };
   const openCall = () => {
@@ -231,10 +231,12 @@ const SearchPost = ({ route, navigation }) => {
     Linking.openURL(url);
   };
 
-  const registerViewBusiness = async (userID, businessID) => {
+  const registerViewBusiness = async (userID = null, businessID) => {
     try {
-      // Obtener informacuon de la ultima visualizacion del usuario guardada en Async Storage
-      const lastViewString = await AsyncStorage.getItem(`lastView_${userID}`);
+      // Obtener información de la última visualización guardada en AsyncStorage
+      const lastViewString = await AsyncStorage.getItem(
+        `lastView_${businessID}`
+      );
       const lastViewInfo = JSON.parse(lastViewString);
 
       // Si hay una última visualización registrada y ocurrió hace menos de 24 horas, no registra la nueva visualización
@@ -246,27 +248,36 @@ const SearchPost = ({ route, navigation }) => {
         return;
       }
 
-      // De no haber visualizacion Registrarla en analytics
-
+      // Registrar la visualización en analytics
       const { country, city } = countryCity;
-      const params = {
-        userid: userID,
-        birthdate: userAuth?.attributes?.birthdate,
-        gender: userAuth?.attributes["custom:gender"],
+      let params = {
         country,
         city,
         businessid: businessID,
       };
-      registerEvent("user_viewed_business", params);
-      // Almacena la información de la última visualización en AsyncStorage
+      if (userID) {
+        params = {
+          userid: userID,
+          birthdate: userAuth?.attributes?.birthdate,
+          gender: userAuth?.attributes["custom:gender"],
+          ...params,
+        };
+      }
+
+      registerEvent(
+        userID ? "user_viewed_business" : "guest_viewed_business",
+        params
+      );
+      // Almacenar la información de la última visualización en AsyncStorage
       const currentViewInfo = {
         businessID: businessID,
         timestamp: new Date().toISOString(),
       };
       await AsyncStorage.setItem(
-        `lastView_${userID}`,
+        `lastView_${businessID}`,
         JSON.stringify(currentViewInfo)
       );
+      console.log("ITEMGUARDADO: ", `lastView_${businessID}`);
     } catch (error) {
       console.log("Error al registrar analitica: ", error);
     }
@@ -328,7 +339,6 @@ const SearchPost = ({ route, navigation }) => {
 
   const fetchRatings = async () => {
     let business = item;
-    console.log(business.id);
     try {
       const fetchAllRatings = async (nextToken, result = []) => {
         const response = await API.graphql({
@@ -355,7 +365,6 @@ const SearchPost = ({ route, navigation }) => {
 
       const allRatings = await fetchAllRatings();
 
-      console.log("Resenas", allRatings);
       setListRatings(allRatings);
     } catch (error) {
       console.log("eres tu", error);
@@ -364,7 +373,6 @@ const SearchPost = ({ route, navigation }) => {
   const getCatalogPDF = async () => {
     try {
       const url = post?.catalogpdf;
-      console.log(post);
       Linking.openURL(url);
     } catch (error) {
       console.log("Error en catalogo: ", error);
@@ -405,7 +413,7 @@ const SearchPost = ({ route, navigation }) => {
   // para cuando este pais y ciudad registrar en el evento de vista
   useEffect(() => {
     // Inicia el temporizador cuando el componente se monta y countryCity y userAuth existen
-    if (countryCity && userAuth) {
+    if (countryCity) {
       timerRef.current = setTimeout(() => {
         registerViewBusiness(
           userAuth?.attributes["custom:userTableID"],
@@ -624,7 +632,7 @@ const SearchPost = ({ route, navigation }) => {
                 // flex: 1,
                 flexDirection: "row",
                 alignItems: "center",
-                justifyContent: userAuth ? "space-between" : 'center',
+                justifyContent: userAuth ? "space-between" : "center",
                 padding: 20,
                 paddingHorizontal: 100,
               }}
@@ -679,31 +687,34 @@ const SearchPost = ({ route, navigation }) => {
           </View>
         )}
         {/* Reporte */}
-        <TouchableOpacity
-          style={{
-            alignSelf: "flex-end",
-            paddingHorizontal: 20,
-            paddingBottom: 5,
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-          onPress={() => setVisibleReport(true)}
-        >
-          <MaterialIcons name="report" size={16} color="black" />
-          <Text
-            style={[
-              global.black,
-              {
-                fontFamily: "bold",
-                fontSize: 10,
-                // marginLeft: 2,
-                // marginBottom: 3
-              },
-            ]}
+        {userAuth && (
+          <TouchableOpacity
+            style={{
+              alignSelf: "flex-end",
+              paddingHorizontal: 20,
+              paddingBottom: 5,
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+            onPress={() => setVisibleReport(true)}
           >
-            Reportar negocio
-          </Text>
-        </TouchableOpacity>
+            <MaterialIcons name="report" size={16} color="black" />
+            <Text
+              style={[
+                global.black,
+                {
+                  fontFamily: "bold",
+                  fontSize: 10,
+                  // marginLeft: 2,
+                  // marginBottom: 3
+                },
+              ]}
+            >
+              Reportar negocio
+            </Text>
+          </TouchableOpacity>
+        )}
+
         {/* Hasta aqui */}
         <View
           style={[

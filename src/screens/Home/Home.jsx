@@ -202,7 +202,28 @@ const Home = ({ navigation, route }) => {
       }
     };
   }, [route, statusFavorites, inputFavorite, updateFavorite, userAuth]);
+  useEffect(() => {
+    if (userAuth) {
+      fetchPromotions();
+    }
+  }, [userAuth]);
+  const fetchPromotions = async () => {
+    const api = "api-portaty";
+    const path = "/getUserFavoritesPromotions";
+    const params = {
+      headers: {},
+      queryStringParameters: {
+        userID: userAuth["attributes"]["custom:userTableID"],
+      },
+    };
 
+    try {
+      const response = await API.get(api, path, params);
+      console.log(response);
+    } catch (error) {
+      console.log("ERROR AL CONSULTAR PROMOCIONES: ", error.response.data);
+    }
+  };
   if (updateAvailable === true)
     return (
       <View

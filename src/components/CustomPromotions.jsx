@@ -1,19 +1,45 @@
 import { ActivityIndicator, Image, Pressable, Text, View } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ScrollView } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import CustomInput from "./CustomInput";
 import { useForm } from "react-hook-form";
 import styles from "@/utils/styles/CustomPromotions.js";
-
+import { API, Auth, graphqlOperation } from "aws-amplify";
+import {
+  onCreateBusinessPromotion,
+  onUpdateBusinessPromotion,
+} from "@/graphql/CustomSubscriptions/Promotion";
 const CustomPromotions = ({ route, navigation }) => {
-  const { data } = route.params;
+  const { data: formData } = route.params;
   const global = require("@/utils/styles/global.js");
   const [image, setImage] = useState(null);
   const [imageB64, setImageB64] = useState(null);
   const [blobImage, setBlobImage] = useState(null);
   const [loading, setLoading] = useState(false);
-  const { control, handleSubmit } = useForm();
+  const { control, handleSubmit, watch } = useForm();
+
+  useEffect(() => {
+    const subscription = API.graphql({
+      query: onCreateBusinessPromotion,
+      authMode: "AMAZON_COGNITO_USER_POOLS",
+    }).subscribe({
+      next: ({ value }) => {
+        console.log(
+          "Nuevo post creado:",
+          value?.data?.onCreateBusinessPromotion
+        );
+        // Actualiza tu estado o realiza otras acciones aquí
+      },
+      error: (error) => {
+        console.error("Error en la suscripción:", error);
+      },
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   function urlToBlob(url) {
     return new Promise((resolve, reject) => {
@@ -46,6 +72,37 @@ const CustomPromotions = ({ route, navigation }) => {
     }
   };
 
+  const onHandleSendPromotion = async (data) => {
+    console.log("DATA:", data);
+    const userAuth = await Auth.currentAuthenticatedUser();
+
+    const apiName = "api-portaty"; // replace this with your api name.
+    const path = "/business/createPromotion"; //replace this with the path you have configured on your API
+    const { dateInitial, dateFinal } = data;
+
+    try {
+      console.log(new Date().toISOString());
+      const myInit = {
+        body: {
+          data: {
+            ...data,
+            dateInitial: new Date().toISOString(),
+            dateFinal: new Date().toISOString(),
+            title: "Prueba Promotion",
+            businessID: formData?.id,
+            image: imageB64,
+            identityID: userAuth["attributes"]["custom:identityID"],
+            userID: userAuth["attributes"]["custom:userTableID"],
+          },
+        }, // replace this with attributes you need
+        headers: {}, // OPTIONAL
+      };
+      const result = await API.post(apiName, path, myInit);
+      console.log("RESULT: ", result);
+    } catch (error) {
+      console.log("ERROR: ", error.response.data);
+    }
+  };
   return (
     <ScrollView
       style={[
@@ -172,7 +229,7 @@ const CustomPromotions = ({ route, navigation }) => {
                   marginTop: 15,
                 },
               ]}
-              onPress={() => console.log("buenas")}
+              onPress={handleSubmit(onHandleSendPromotion)}
             >
               {loading ? (
                 <ActivityIndicator size={`large`} color={`#1f1f1f`} />

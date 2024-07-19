@@ -1,6 +1,48 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const onCreateDeviceNotificationToken = /* GraphQL */ `
+  subscription OnCreateDeviceNotificationToken(
+    $filter: ModelSubscriptionDeviceNotificationTokenFilterInput
+  ) {
+    onCreateDeviceNotificationToken(filter: $filter) {
+      id
+      deviceID
+      notificationToken
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateDeviceNotificationToken = /* GraphQL */ `
+  subscription OnUpdateDeviceNotificationToken(
+    $filter: ModelSubscriptionDeviceNotificationTokenFilterInput
+  ) {
+    onUpdateDeviceNotificationToken(filter: $filter) {
+      id
+      deviceID
+      notificationToken
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteDeviceNotificationToken = /* GraphQL */ `
+  subscription OnDeleteDeviceNotificationToken(
+    $filter: ModelSubscriptionDeviceNotificationTokenFilterInput
+  ) {
+    onDeleteDeviceNotificationToken(filter: $filter) {
+      id
+      deviceID
+      notificationToken
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const onCreateAppVersionHistory = /* GraphQL */ `
   subscription OnCreateAppVersionHistory(
     $filter: ModelSubscriptionAppVersionHistoryFilterInput
@@ -79,6 +121,48 @@ export const onDeleteReports = /* GraphQL */ `
       subject
       description
       status
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateNotificationHistory = /* GraphQL */ `
+  subscription OnCreateNotificationHistory(
+    $filter: ModelSubscriptionNotificationHistoryFilterInput
+  ) {
+    onCreateNotificationHistory(filter: $filter) {
+      id
+      title
+      message
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateNotificationHistory = /* GraphQL */ `
+  subscription OnUpdateNotificationHistory(
+    $filter: ModelSubscriptionNotificationHistoryFilterInput
+  ) {
+    onUpdateNotificationHistory(filter: $filter) {
+      id
+      title
+      message
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteNotificationHistory = /* GraphQL */ `
+  subscription OnDeleteNotificationHistory(
+    $filter: ModelSubscriptionNotificationHistoryFilterInput
+  ) {
+    onDeleteNotificationHistory(filter: $filter) {
+      id
+      title
+      message
       createdAt
       updatedAt
       __typename
@@ -213,6 +297,10 @@ export const onCreateUsers = /* GraphQL */ `
         nextToken
         __typename
       }
+      promotions {
+        nextToken
+        __typename
+      }
       owner
       createdAt
       updatedAt
@@ -246,6 +334,10 @@ export const onUpdateUsers = /* GraphQL */ `
         nextToken
         __typename
       }
+      promotions {
+        nextToken
+        __typename
+      }
       owner
       createdAt
       updatedAt
@@ -276,6 +368,10 @@ export const onDeleteUsers = /* GraphQL */ `
         __typename
       }
       comments {
+        nextToken
+        __typename
+      }
+      promotions {
         nextToken
         __typename
       }
@@ -335,6 +431,10 @@ export const onCreateBusiness = /* GraphQL */ `
       prefer
       schedule
       comments {
+        nextToken
+        __typename
+      }
+      promotions {
         nextToken
         __typename
       }
@@ -398,6 +498,10 @@ export const onUpdateBusiness = /* GraphQL */ `
         nextToken
         __typename
       }
+      promotions {
+        nextToken
+        __typename
+      }
       catalogpdf
       createdAt
       updatedAt
@@ -455,6 +559,10 @@ export const onDeleteBusiness = /* GraphQL */ `
       prefer
       schedule
       comments {
+        nextToken
+        __typename
+      }
+      promotions {
         nextToken
         __typename
       }
@@ -558,6 +666,192 @@ export const onDeleteBusinessComment = /* GraphQL */ `
       createdAt
       updatedAt
       owner
+      __typename
+    }
+  }
+`;
+export const onCreateBusinessPromotion = /* GraphQL */ `
+  subscription OnCreateBusinessPromotion(
+    $filter: ModelSubscriptionBusinessPromotionFilterInput
+    $owner: String
+  ) {
+    onCreateBusinessPromotion(filter: $filter, owner: $owner) {
+      id
+      userID
+      user {
+        id
+        cognitoID
+        name
+        lastName
+        email
+        identityID
+        gender
+        notificationToken
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
+      businessID
+      business {
+        id
+        userID
+        status
+        identityID
+        name
+        image
+        images
+        thumbnail
+        email
+        phone
+        whatsapp
+        instagram
+        facebook
+        page
+        activity
+        tags
+        description
+        prefer
+        schedule
+        catalogpdf
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      title
+      dateInitial
+      dateFinal
+      status
+      isView
+      image
+      owner
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateBusinessPromotion = /* GraphQL */ `
+  subscription OnUpdateBusinessPromotion(
+    $filter: ModelSubscriptionBusinessPromotionFilterInput
+    $owner: String
+  ) {
+    onUpdateBusinessPromotion(filter: $filter, owner: $owner) {
+      id
+      userID
+      user {
+        id
+        cognitoID
+        name
+        lastName
+        email
+        identityID
+        gender
+        notificationToken
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
+      businessID
+      business {
+        id
+        userID
+        status
+        identityID
+        name
+        image
+        images
+        thumbnail
+        email
+        phone
+        whatsapp
+        instagram
+        facebook
+        page
+        activity
+        tags
+        description
+        prefer
+        schedule
+        catalogpdf
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      title
+      dateInitial
+      dateFinal
+      status
+      isView
+      image
+      owner
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteBusinessPromotion = /* GraphQL */ `
+  subscription OnDeleteBusinessPromotion(
+    $filter: ModelSubscriptionBusinessPromotionFilterInput
+    $owner: String
+  ) {
+    onDeleteBusinessPromotion(filter: $filter, owner: $owner) {
+      id
+      userID
+      user {
+        id
+        cognitoID
+        name
+        lastName
+        email
+        identityID
+        gender
+        notificationToken
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
+      businessID
+      business {
+        id
+        userID
+        status
+        identityID
+        name
+        image
+        images
+        thumbnail
+        email
+        phone
+        whatsapp
+        instagram
+        facebook
+        page
+        activity
+        tags
+        description
+        prefer
+        schedule
+        catalogpdf
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      title
+      dateInitial
+      dateFinal
+      status
+      isView
+      image
+      owner
+      createdAt
+      updatedAt
       __typename
     }
   }
