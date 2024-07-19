@@ -17,16 +17,16 @@ import * as SplashScreen from "expo-splash-screen";
 import { api } from "@/utils/constants/api.jsx";
 import * as WebBrowser from 'expo-web-browser';
 const ENDPOINT =
-  Constants?.AppOwnership?.Expo === ""
+  Constants?.AppOwnership?.Expo === "expo"
     ? api?.stage_endpoint?.dev
     : api?.stage_endpoint?.prod;
 
 const REDIRECT_SIGNIN =
-  Constants?.AppOwnership?.Expo === ""
+  Constants?.AppOwnership?.Expo === "expo"
     ? api?.rediret_signin?.dev
     : api?.rediret_signin?.prod;
 const REDIRECT_SIGNOUT =
-  Constants?.AppOwnership?.Expo === ""
+  Constants?.AppOwnership?.Expo === "expo"
     ? api?.rediret_signout?.dev
     : api?.rediret_signout?.prod;
 console.log("ENDPOINT: ", ENDPOINT);

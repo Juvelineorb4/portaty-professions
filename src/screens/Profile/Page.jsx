@@ -167,7 +167,6 @@ const Page = ({ route, navigation }) => {
     } catch (error) {
       console.log("Error en pdf: ", error.message);
     }
-    return fileUri;
   };
 
   const onOpenMap = (lat, lng, name) => {
@@ -437,9 +436,8 @@ const Page = ({ route, navigation }) => {
   };
 
   const uploadCatalogPDF = async () => {
+    console.log("QUERIEDNO SUBIRF");
     try {
-      console.log("COMENZO");
-      // Seleccionar el archivo PDF
       let result = await DocumentPicker.getDocumentAsync({
         copyToCacheDirectory: true,
         type: "application/pdf",
@@ -448,7 +446,6 @@ const Page = ({ route, navigation }) => {
       if (result?.assets !== null && result?.canceled !== true) {
         console.log(result);
         const response = await fetch(result?.assets[0]?.uri);
-
         const blob = await response.blob();
         const pdf = await Storage.put(
           `business/${item?.id}/catalog.pdf`,
@@ -464,7 +461,7 @@ const Page = ({ route, navigation }) => {
         console.log(pdf);
       }
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   };
 
@@ -1026,8 +1023,60 @@ const Page = ({ route, navigation }) => {
             source={require("@/utils/images/arrow_right.png")}
           />
         </TouchableOpacity>
+
+        {/* Promociones */}
+        <TouchableOpacity
+          style={{
+            padding: 20,
+            marginTop: -25,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+          onPress={() =>
+            navigation.navigate("Promotions", {
+              data: item,
+            })
+          }
+        >
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View
+              style={[
+                {
+                  width: 58,
+                  height: 58,
+                  borderRadius: 10,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderColor: "#1f1f1f",
+                  borderWidth: 0.7,
+                },
+                global.bgYellow,
+              ]}
+            >
+              <AntDesign name="tago" size={24} color="#1f1f1f" />
+            </View>
+            <View style={{ marginLeft: 10 }}>
+              <Text style={{ fontFamily: "medium", fontSize: 15 }}>
+                Promociones
+              </Text>
+              <Text style={{ fontFamily: "regular", fontSize: 12, width: 150 }}>
+                Gestiona todas tus promociones
+              </Text>
+            </View>
+          </View>
+          <Image
+            style={{
+              width: 40,
+              height: 40,
+              resizeMode: "cover",
+            }}
+            source={require("@/utils/images/arrow_right.png")}
+          />
+        </TouchableOpacity>
         {/* Catalogo */}
         <View>
+          {console.log(item?.catalogpdf)}
           {item?.catalogpdf === "" || !item?.catalogpdf ? (
             <TouchableOpacity
               style={[
@@ -1044,7 +1093,7 @@ const Page = ({ route, navigation }) => {
                 },
                 global.mainBgColor,
               ]}
-              onPress={() => uploadCatalogPDF}
+              onPress={uploadCatalogPDF}
             >
               <Text
                 style={[
@@ -1105,6 +1154,12 @@ const Page = ({ route, navigation }) => {
             </TouchableOpacity>
           )}
         </View>
+
+        {/* <TouchableOpacity onPress={uploadCatalogPDF}>
+          <View>
+            <Text>CARGAR PDF</Text>
+          </View>
+        </TouchableOpacity> */}
         <View style={{ marginBottom: 80 }}>
           <View
             style={{

@@ -1,6 +1,51 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const createDeviceNotificationToken = /* GraphQL */ `
+  mutation CreateDeviceNotificationToken(
+    $input: CreateDeviceNotificationTokenInput!
+    $condition: ModelDeviceNotificationTokenConditionInput
+  ) {
+    createDeviceNotificationToken(input: $input, condition: $condition) {
+      id
+      deviceID
+      notificationToken
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateDeviceNotificationToken = /* GraphQL */ `
+  mutation UpdateDeviceNotificationToken(
+    $input: UpdateDeviceNotificationTokenInput!
+    $condition: ModelDeviceNotificationTokenConditionInput
+  ) {
+    updateDeviceNotificationToken(input: $input, condition: $condition) {
+      id
+      deviceID
+      notificationToken
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteDeviceNotificationToken = /* GraphQL */ `
+  mutation DeleteDeviceNotificationToken(
+    $input: DeleteDeviceNotificationTokenInput!
+    $condition: ModelDeviceNotificationTokenConditionInput
+  ) {
+    deleteDeviceNotificationToken(input: $input, condition: $condition) {
+      id
+      deviceID
+      notificationToken
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const createAppVersionHistory = /* GraphQL */ `
   mutation CreateAppVersionHistory(
     $input: CreateAppVersionHistoryInput!
@@ -148,12 +193,12 @@ export const deleteComplaints = /* GraphQL */ `
     }
   }
 `;
-export const createNotifiationHistory = /* GraphQL */ `
-  mutation CreateNotifiationHistory(
-    $input: CreateNotifiationHistoryInput!
-    $condition: ModelNotifiationHistoryConditionInput
+export const createNotificationHistory = /* GraphQL */ `
+  mutation CreateNotificationHistory(
+    $input: CreateNotificationHistoryInput!
+    $condition: ModelNotificationHistoryConditionInput
   ) {
-    createNotifiationHistory(input: $input, condition: $condition) {
+    createNotificationHistory(input: $input, condition: $condition) {
       id
       title
       message
@@ -163,12 +208,12 @@ export const createNotifiationHistory = /* GraphQL */ `
     }
   }
 `;
-export const updateNotifiationHistory = /* GraphQL */ `
-  mutation UpdateNotifiationHistory(
-    $input: UpdateNotifiationHistoryInput!
-    $condition: ModelNotifiationHistoryConditionInput
+export const updateNotificationHistory = /* GraphQL */ `
+  mutation UpdateNotificationHistory(
+    $input: UpdateNotificationHistoryInput!
+    $condition: ModelNotificationHistoryConditionInput
   ) {
-    updateNotifiationHistory(input: $input, condition: $condition) {
+    updateNotificationHistory(input: $input, condition: $condition) {
       id
       title
       message
@@ -178,12 +223,12 @@ export const updateNotifiationHistory = /* GraphQL */ `
     }
   }
 `;
-export const deleteNotifiationHistory = /* GraphQL */ `
-  mutation DeleteNotifiationHistory(
-    $input: DeleteNotifiationHistoryInput!
-    $condition: ModelNotifiationHistoryConditionInput
+export const deleteNotificationHistory = /* GraphQL */ `
+  mutation DeleteNotificationHistory(
+    $input: DeleteNotificationHistoryInput!
+    $condition: ModelNotificationHistoryConditionInput
   ) {
-    deleteNotifiationHistory(input: $input, condition: $condition) {
+    deleteNotificationHistory(input: $input, condition: $condition) {
       id
       title
       message
@@ -339,6 +384,10 @@ export const createUsers = /* GraphQL */ `
         nextToken
         __typename
       }
+      promotions {
+        nextToken
+        __typename
+      }
       owner
       createdAt
       updatedAt
@@ -372,6 +421,10 @@ export const updateUsers = /* GraphQL */ `
         nextToken
         __typename
       }
+      promotions {
+        nextToken
+        __typename
+      }
       owner
       createdAt
       updatedAt
@@ -402,6 +455,10 @@ export const deleteUsers = /* GraphQL */ `
         __typename
       }
       comments {
+        nextToken
+        __typename
+      }
+      promotions {
         nextToken
         __typename
       }
@@ -461,6 +518,10 @@ export const createBusiness = /* GraphQL */ `
       prefer
       schedule
       comments {
+        nextToken
+        __typename
+      }
+      promotions {
         nextToken
         __typename
       }
@@ -524,6 +585,10 @@ export const updateBusiness = /* GraphQL */ `
         nextToken
         __typename
       }
+      promotions {
+        nextToken
+        __typename
+      }
       catalogpdf
       createdAt
       updatedAt
@@ -581,6 +646,10 @@ export const deleteBusiness = /* GraphQL */ `
       prefer
       schedule
       comments {
+        nextToken
+        __typename
+      }
+      promotions {
         nextToken
         __typename
       }
@@ -652,6 +721,192 @@ export const updateBusinessComment = /* GraphQL */ `
       createdAt
       updatedAt
       owner
+      __typename
+    }
+  }
+`;
+export const createBusinessPromotion = /* GraphQL */ `
+  mutation CreateBusinessPromotion(
+    $input: CreateBusinessPromotionInput!
+    $condition: ModelBusinessPromotionConditionInput
+  ) {
+    createBusinessPromotion(input: $input, condition: $condition) {
+      id
+      userID
+      user {
+        id
+        cognitoID
+        name
+        lastName
+        email
+        identityID
+        gender
+        notificationToken
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
+      businessID
+      business {
+        id
+        userID
+        status
+        identityID
+        name
+        image
+        images
+        thumbnail
+        email
+        phone
+        whatsapp
+        instagram
+        facebook
+        page
+        activity
+        tags
+        description
+        prefer
+        schedule
+        catalogpdf
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      title
+      dateInitial
+      dateFinal
+      status
+      isView
+      image
+      owner
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateBusinessPromotion = /* GraphQL */ `
+  mutation UpdateBusinessPromotion(
+    $input: UpdateBusinessPromotionInput!
+    $condition: ModelBusinessPromotionConditionInput
+  ) {
+    updateBusinessPromotion(input: $input, condition: $condition) {
+      id
+      userID
+      user {
+        id
+        cognitoID
+        name
+        lastName
+        email
+        identityID
+        gender
+        notificationToken
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
+      businessID
+      business {
+        id
+        userID
+        status
+        identityID
+        name
+        image
+        images
+        thumbnail
+        email
+        phone
+        whatsapp
+        instagram
+        facebook
+        page
+        activity
+        tags
+        description
+        prefer
+        schedule
+        catalogpdf
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      title
+      dateInitial
+      dateFinal
+      status
+      isView
+      image
+      owner
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteBusinessPromotion = /* GraphQL */ `
+  mutation DeleteBusinessPromotion(
+    $input: DeleteBusinessPromotionInput!
+    $condition: ModelBusinessPromotionConditionInput
+  ) {
+    deleteBusinessPromotion(input: $input, condition: $condition) {
+      id
+      userID
+      user {
+        id
+        cognitoID
+        name
+        lastName
+        email
+        identityID
+        gender
+        notificationToken
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
+      businessID
+      business {
+        id
+        userID
+        status
+        identityID
+        name
+        image
+        images
+        thumbnail
+        email
+        phone
+        whatsapp
+        instagram
+        facebook
+        page
+        activity
+        tags
+        description
+        prefer
+        schedule
+        catalogpdf
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      title
+      dateInitial
+      dateFinal
+      status
+      isView
+      image
+      owner
+      createdAt
+      updatedAt
       __typename
     }
   }

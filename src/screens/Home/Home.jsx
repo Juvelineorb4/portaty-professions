@@ -36,6 +36,7 @@ import ModalUpdate from "@/components/ModalUpdate";
 // Hooks
 import useCheckAppVersion from "@/hooks/useCheckAppVersion";
 import NetInfo from "@react-native-community/netinfo";
+import Promotions from "@/components/Home/Promotions";
 
 const Home = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
@@ -201,7 +202,28 @@ const Home = ({ navigation, route }) => {
       }
     };
   }, [route, statusFavorites, inputFavorite, updateFavorite, userAuth]);
+  useEffect(() => {
+    if (userAuth) {
+      fetchPromotions();
+    }
+  }, [userAuth]);
+  const fetchPromotions = async () => {
+    const api = "api-portaty";
+    const path = "/getUserFavoritesPromotions";
+    const params = {
+      headers: {},
+      queryStringParameters: {
+        userID: userAuth["attributes"]["custom:userTableID"],
+      },
+    };
 
+    try {
+      const response = await API.get(api, path, params);
+      console.log(response);
+    } catch (error) {
+      console.log("ERROR AL CONSULTAR PROMOCIONES: ", error.response.data);
+    }
+  };
   if (updateAvailable === true)
     return (
       <View
@@ -265,7 +287,7 @@ const Home = ({ navigation, route }) => {
       </View>
     );
 
-  if (!isConnected) 
+  if (!isConnected)
     return (
       <View
         style={[
@@ -273,14 +295,14 @@ const Home = ({ navigation, route }) => {
           global.bgWhite,
         ]}
       >
-         <Text
-            style={{
-              fontFamily: "regular",
-              fontSize: 15,
-            }}
-          >
-            No tienes conexión. Intenta de nuevo
-          </Text>
+        <Text
+          style={{
+            fontFamily: "regular",
+            fontSize: 15,
+          }}
+        >
+          No tienes conexión. Intenta de nuevo
+        </Text>
         <CustomButton
           text={`Refrescar`}
           handlePress={() => {
@@ -293,71 +315,50 @@ const Home = ({ navigation, route }) => {
       </View>
     );
 
-    if (!userAuth && !loading)
-      return (
-        <View
-          style={[
-            {
-              flex: 1,
-              alignItems: "center",
-              justifyContent: "center",
-              paddingHorizontal: 20,
-              paddingBottom: 80,
-            },
-            global.bgWhite,
-          ]}
+  if (!userAuth && !loading)
+    return (
+      <View
+        style={[
+          {
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+            paddingHorizontal: 20,
+            paddingBottom: 80,
+          },
+          global.bgWhite,
+        ]}
+      >
+        <Text
+          style={{ fontSize: 16, fontFamily: "light", textAlign: "center" }}
         >
-          <Text
-            style={{ fontSize: 16, fontFamily: "light", textAlign: "center" }}
-          >
-            Ingresa a tu cuenta para guardar tus negocios favoritos
-          </Text>
-          <CustomButton
-            text={`Iniciar sesion`}
-            handlePress={() => {
-              navigation.navigate("Login_Welcome");
-            }}
-            textStyles={[styles.textSearch, global.black]}
-            buttonStyles={[styles.search, global.bgYellow]}
-          />
-        </View>
-      );
-      
+          Ingresa a tu cuenta para guardar tus negocios favoritos
+        </Text>
+        <CustomButton
+          text={`Iniciar sesion`}
+          handlePress={() => {
+            navigation.navigate("Login_Welcome");
+          }}
+          textStyles={[styles.textSearch, global.black]}
+          buttonStyles={[styles.search, global.bgYellow]}
+        />
+      </View>
+    );
+
   if (favoritesList.length !== 0)
     return (
       <ScrollView style={{ flex: 1, backgroundColor: "#fff" }}>
         <View
           style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginRight: 10,
             marginLeft: 20,
+            marginRight: 10,
           }}
         >
-          <TouchableOpacity
-            style={[
-              {
-                borderColor: "#1f1f1f",
-                borderWidth: 0.7,
-                paddingHorizontal: 15,
-                paddingVertical: 8,
-                borderRadius: 8,
-              },
-              mode === 1 ? global.bgYellow : global.bgWhite,
-            ]}
-            onPress={() => setMode(1)}
-          >
-            <SimpleLineIcons
-              name="bell"
-              size={16}
-              color={mode === 1 ? "#1f1f1f" : "#1f1f1f"}
-            />
-          </TouchableOpacity>
+          <Promotions />
           <View
             style={{
               flexDirection: "row",
-              justifyContent: "flex-end",
-              marginRight: 10,
+              justifyContent: "space-between",
             }}
           >
             <TouchableOpacity
@@ -367,41 +368,68 @@ const Home = ({ navigation, route }) => {
                   borderWidth: 0.7,
                   paddingHorizontal: 15,
                   paddingVertical: 8,
-                  borderTopLeftRadius: 8,
-                  borderBottomLeftRadius: 8,
+                  borderRadius: 8,
                 },
-                mode === 2 ? global.bgYellow : global.bgWhite,
+                mode === 1 ? global.bgYellow : global.bgWhite,
               ]}
-              onPress={() => setMode(2)}
+              onPress={() => setMode(1)}
             >
-              <Ionicons
-                name="grid-outline"
-                size={17}
-                color={mode === 2 ? "#1f1f1f" : "#1f1f1f"}
+              <SimpleLineIcons
+                name="bell"
+                size={16}
+                color={mode === 1 ? "#1f1f1f" : "#1f1f1f"}
               />
             </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                {
-                  marginLeft: 2,
-                  borderColor: "#1f1f1f",
-                  borderWidth: 0.7,
-                  padding: 10,
-                  borderTopRightRadius: 8,
-                  borderBottomRightRadius: 8,
-                  paddingHorizontal: 15,
-                  paddingVertical: 8,
-                },
-                mode === 3 ? global.bgYellow : global.bgWhite,
-              ]}
-              onPress={() => setMode(3)}
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                marginRight: 10,
+              }}
             >
-              <Ionicons
-                name="list-outline"
-                size={18}
-                color={mode === 3 ? "#1f1f1f" : "#1f1f1f"}
-              />
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  {
+                    borderColor: "#1f1f1f",
+                    borderWidth: 0.7,
+                    paddingHorizontal: 15,
+                    paddingVertical: 8,
+                    borderTopLeftRadius: 8,
+                    borderBottomLeftRadius: 8,
+                  },
+                  mode === 2 ? global.bgYellow : global.bgWhite,
+                ]}
+                onPress={() => setMode(2)}
+              >
+                <Ionicons
+                  name="grid-outline"
+                  size={17}
+                  color={mode === 2 ? "#1f1f1f" : "#1f1f1f"}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  {
+                    marginLeft: 2,
+                    borderColor: "#1f1f1f",
+                    borderWidth: 0.7,
+                    padding: 10,
+                    borderTopRightRadius: 8,
+                    borderBottomRightRadius: 8,
+                    paddingHorizontal: 15,
+                    paddingVertical: 8,
+                  },
+                  mode === 3 ? global.bgYellow : global.bgWhite,
+                ]}
+                onPress={() => setMode(3)}
+              >
+                <Ionicons
+                  name="list-outline"
+                  size={18}
+                  color={mode === 3 ? "#1f1f1f" : "#1f1f1f"}
+                />
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
 

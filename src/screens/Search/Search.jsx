@@ -25,6 +25,7 @@ import {
   searchAddressInitial,
   mapUserChange,
   connectionStatus,
+  searchMap,
 } from "@/atoms";
 import { useRecoilState, useRecoilValue } from "recoil";
 import * as Location from "expo-location";
@@ -36,6 +37,7 @@ import { Entypo } from "@expo/vector-icons";
 import MapFilter from "@/components/MapFilter";
 import NetInfo from "@react-native-community/netinfo";
 import CustomButton from "@/components/CustomButton";
+import MapSearch from "@/components/Search/MapSearch";
 
 const Search = ({ route }) => {
   const global = require("@/utils/styles/global.js");
@@ -62,6 +64,9 @@ const Search = ({ route }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isConnected, setIsConnected] = useRecoilState(connectionStatus);
 
+  /* Mapa */
+  const [searchLocal, setSearchLocal] = useRecoilState(searchMap);
+
   const getAddress = async (coords) => {
     let direcciones = await Location.reverseGeocodeAsync(coords);
     if (direcciones && direcciones.length > 0) {
@@ -72,6 +77,7 @@ const Search = ({ route }) => {
         direccion.region === null ? "" : direccion.region
       }, ${direccion.postalCode === null ? "" : direccion.postalCode} `;
       setSearchAddress(direccionString);
+      // console.log(direccionString);
       setCity(direccion.region);
     }
   };
@@ -99,12 +105,14 @@ const Search = ({ route }) => {
       const response = await API.get(api, path, params);
       setTotalData(response.total);
       setTotalLimit(response.limit);
+      // console.log("data:", response.items[0]);
       let newRenderItems = [];
       const long = 26;
       for (let i = 0; i < response.items.length; i += long) {
         let cut = response.items.slice(i, i + long);
         newRenderItems.push(cut);
       }
+
       setIsLoading(false);
       setSearchActive(true);
       setSearchCacheActive(newRenderItems);
@@ -214,6 +222,20 @@ const Search = ({ route }) => {
       </View>
     );
   }
+
+  // if (searchActive && isConnected && !isLoading) {
+  //   return (
+  //     <View style={{
+  //       flex: 1
+  //     }}>
+  //       <MapSearch
+  //         markers={searchCacheActive}
+  //         initialLocation={userLocation}
+  //         open={true}
+  //       />
+  //     </View>
+  //   );
+  // }
   if (searchActive && isConnected && !isLoading) {
     return (
       <View style={{ flex: 1, backgroundColor: "#FFFFFF", paddingBottom: 50 }}>

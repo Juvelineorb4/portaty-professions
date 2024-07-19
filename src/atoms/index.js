@@ -89,6 +89,10 @@ export const searchCache = atom({
   key: "searchCacheValue",
   default: [],
 });
+export const searchMap = atom({
+  key: "searchMapValue",
+  default: [],
+});
 export const kmRadio = atom({
   key: "kmRadioValue",
   default: 1,

@@ -16,9 +16,9 @@
           "additionalAuthenticationProviders": [
             {
               "apiKeyConfig": {
-                "apiKeyExpirationDate": "2025-06-28T13:49:07.887Z",
+                "apiKeyExpirationDate": "2025-06-04T19:30:19.823Z",
                 "apiKeyExpirationDays": 365,
-                "description": "PARA USAR EN BACKEND SERVERLESS"
+                "description": "PARA OTRAS OPErACIONES"
               },
               "authenticationType": "API_KEY"
             },
@@ -56,7 +56,9 @@
           "NAME",
           "BIRTHDATE"
         ],
-        "socialProviders": [],
+        "socialProviders": [
+          "GOOGLE"
+        ],
         "usernameAttributes": [
           "EMAIL"
         ],
@@ -66,26 +68,20 @@
       },
       "providerPlugin": "awscloudformation",
       "service": "Cognito"
-    },
-    "userPoolGroups": {
-      "dependsOn": [
-        {
-          "attributes": [
-            "UserPoolId",
-            "AppClientIDWeb",
-            "AppClientID",
-            "IdentityPoolId"
-          ],
-          "category": "auth",
-          "resourceName": "professions"
-        }
-      ],
-      "providerPlugin": "awscloudformation",
-      "service": "Cognito-UserPool-Groups"
     }
   },
   "function": {},
   "geo": {},
+  "parameters": {
+    "AMPLIFY_auth_professions_googleClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "professions"
+        }
+      ]
+    }
+  },
   "storage": {
     "s3Professions": {
       "dependsOn": [],

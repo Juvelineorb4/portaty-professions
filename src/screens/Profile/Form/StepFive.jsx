@@ -248,14 +248,14 @@ const StepFive = ({ navigation, route }) => {
                     source={require("@/utils/images/arrow_back.png")}
                   />
                 </Pressable> */}
-                <View style={{ marginBottom: 20, marginTop: -15 }}>
+                <View style={{ marginBottom: 0, marginTop: 25 }}>
                   <View>
                     <Text
                       style={{
                         fontFamily: "regular",
                         fontSize: 13,
                         marginBottom: 5,
-                        marginTop: 20,
+                        marginTop: 0,
                         textAlign: "justify",
                       }}
                     >
@@ -291,6 +291,7 @@ const StepFive = ({ navigation, route }) => {
                   style={{
                     flexDirection: "row",
                     justifyContent: "space-between",
+                    marginVertical: 5,
                   }}
                 >
                   <CustomInput
@@ -324,7 +325,7 @@ const StepFive = ({ navigation, route }) => {
                   style={{
                     fontFamily: "light",
                     fontSize: 12,
-                    marginTop: -10,
+                    marginTop: 0,
                     marginBottom: 10,
                   }}
                 >
