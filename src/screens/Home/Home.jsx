@@ -55,7 +55,7 @@ const Home = ({ navigation, route }) => {
   const [resultNothing, setResultNothing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isConnected, setIsConnected] = useRecoilState(connectionStatus);
-
+  const [stories, setStories] = useState([]);
   const fetchFavorites = async () => {
     setLoading(true);
     if (userAuth === null) {
@@ -213,13 +213,13 @@ const Home = ({ navigation, route }) => {
     const params = {
       headers: {},
       queryStringParameters: {
-        userID: userAuth["attributes"]["custom:userTableID"],
+        userID: userAuth?.attributes["custom:userTableID"],
       },
     };
 
     try {
       const response = await API.get(api, path, params);
-      console.log(response);
+      setStories(response.data);
     } catch (error) {
       console.log("ERROR AL CONSULTAR PROMOCIONES: ", error.response.data);
     }
@@ -354,7 +354,7 @@ const Home = ({ navigation, route }) => {
             marginRight: 10,
           }}
         >
-          <Promotions />
+          <Promotions data={stories}/>
           <View
             style={{
               flexDirection: "row",

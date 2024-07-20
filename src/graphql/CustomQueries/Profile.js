@@ -247,3 +247,35 @@ export const listBusinessbyUserID = /* GraphQL */ `
     }
   }
 `;
+
+export const listBusinessPromotions = /* GraphQL */ `
+  query ListBusinessPromotions(
+    $filter: ModelBusinessPromotionFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listBusinessPromotions(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userID
+        businessID
+        title
+        dateInitial
+        dateFinal
+        status
+        isView
+        image
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;

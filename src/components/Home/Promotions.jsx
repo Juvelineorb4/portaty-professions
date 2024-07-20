@@ -2,7 +2,8 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import InstagramStories from "@birdwingo/react-native-instagram-stories";
 
-const Promotions = () => {
+const Promotions = ({ data }) => {
+  console.log(data)
   const stories = [
     {
       id: "user1",
@@ -90,34 +91,35 @@ const Promotions = () => {
     },
   ];
 
-  return (
-    <View
-      style={{
-        marginBottom: 15,
-      }}
-    >
-      <InstagramStories
-        stories={stories}
-        animationDuration={3500}
-        backgroundColor={"#1f1f1fe9"}
-        avatarBorderColors={["#ffb703"]}
-        avatarSeenBorderColors={["#9d9d9d"]}
-        saveProgress
-        onShow={(e) => console.log("show", e)}
-        avatarListContainerStyle={{
-          gap: 5,
+  if (data)
+    return (
+      <View
+        style={{
+          marginBottom: 15,
         }}
-        avatarListContainerProps={{
+      >
+        <InstagramStories
+          stories={data}
+          animationDuration={3500}
+          backgroundColor={"#1f1f1fe9"}
+          avatarBorderColors={["#ffb703"]}
+          avatarSeenBorderColors={["#9d9d9d"]}
+          saveProgress
+          onShow={(e) => console.log("show", e)}
+          avatarListContainerStyle={{
+            gap: 5,
+          }}
+          avatarListContainerProps={{
             showsHorizontalScrollIndicator: false,
-            marginRight: 10
-        }}
-        storyAnimationDuration={500}
-        modalAnimationDuration={500}
-        closeIconColor={"#ffffff"}
-        storyAvatarSize={45}
-      />
-    </View>
-  );
+            marginRight: 10,
+          }}
+          storyAnimationDuration={500}
+          modalAnimationDuration={500}
+          closeIconColor={"#ffffff"}
+          storyAvatarSize={45}
+        />
+      </View>
+    );
 };
 
 export default Promotions;
