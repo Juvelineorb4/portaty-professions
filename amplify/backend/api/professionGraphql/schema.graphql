@@ -272,6 +272,7 @@ type Favorites
   @auth(
     rules: [
       { allow: owner }
+      { allow: public, operations: [read] }
       { allow: public, provider: iam, operations: [read] }
       { allow: private, provider: iam, operations: [read] }
       { allow: groups, groups: ["sp"], operations: [read] }
@@ -281,6 +282,7 @@ type Favorites
     @auth(
       rules: [
         { allow: owner }
+        { allow: public, operations: [read] }
         { allow: public, provider: iam, operations: [read] }
         { allow: private, provider: iam, operations: [read] }
         { allow: groups, groups: ["sp"], operations: [read] }
@@ -295,6 +297,7 @@ type Favorites
     @auth(
       rules: [
         { allow: owner }
+        { allow: public, operations: [read] }
         { allow: public, provider: iam, operations: [read] }
         { allow: private, provider: iam, operations: [read] }
         { allow: groups, groups: ["sp"], operations: [read] }
@@ -306,6 +309,7 @@ type Favorites
     @auth(
       rules: [
         { allow: owner }
+        { allow: public, operations: [read] }
         { allow: groups, groups: ["sp"], operations: [read] }
       ]
     )

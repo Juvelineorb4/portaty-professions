@@ -392,7 +392,7 @@ const SearchPost = ({ route, navigation }) => {
       const response = await API.get(api, path, params);
       setRatingsDetails(response.data);
     } catch (error) {
-      console.error("Error rating: ", error.response.data);
+      console.log("Error rating: ", error.response.data);
     }
   };
   // para la carga default
