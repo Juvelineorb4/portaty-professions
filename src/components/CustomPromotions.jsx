@@ -168,7 +168,7 @@ const CustomPromotions = ({ route, navigation }) => {
           data: {
             dateInitial: dateInitialISO,
             dateFinal: dateFinalISO,
-            title: data.title,
+            title: data.description,
             businessID: formData?.id,
             image: imageB64,
             identityID: userAuth?.attributes["custom:identityID"],
@@ -285,8 +285,8 @@ const CustomPromotions = ({ route, navigation }) => {
               />
               <CustomInput
                 control={control}
-                name={`title`}
-                placeholder={`Coloca tu titulo`}
+                name={`description`}
+                placeholder={`Coloca una descripcion`}
                 styled={{
                   text: styles.textInput,
                   label: [styles.labelInput],
@@ -297,7 +297,7 @@ const CustomPromotions = ({ route, navigation }) => {
                 rules={{
                   required: `Requerido`,
                 }}
-                text={`Titulo`}
+                text={`Descripcion`}
               />
               {errorDate.status && (
                 <Text
@@ -356,7 +356,7 @@ const CustomPromotions = ({ route, navigation }) => {
                 fontFamily: "light",
                 fontSize: 20,
                 textAlign: "center",
-                marginVertical: 40
+                marginVertical: 40,
               }}
             >
               Ya tienes una promocion activa

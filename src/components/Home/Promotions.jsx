@@ -3,94 +3,6 @@ import React from "react";
 import InstagramStories from "@birdwingo/react-native-instagram-stories";
 
 const Promotions = ({ data }) => {
-  console.log(data)
-  const stories = [
-    {
-      id: "user1",
-      name: "User 1",
-      imgUrl:
-        "https://s3professions202858-dev.s3.amazonaws.com/assets/avatar.png",
-      stories: [
-        {
-          id: `story1`,
-          source: {
-            uri: "https://s3professions202858-dev.s3.amazonaws.com/assets/story.png",
-          },
-        },
-      ],
-    },
-    {
-      id: "user2",
-      name: "User 1",
-      imgUrl:
-        "https://s3professions202858-dev.s3.amazonaws.com/assets/avatar.png",
-      stories: [
-        {
-          id: `story1`,
-          source: {
-            uri: "https://s3professions202858-dev.s3.amazonaws.com/assets/story.png",
-          },
-        },
-      ],
-    },
-    {
-      id: "user3",
-      name: "User 1",
-      imgUrl:
-        "https://s3professions202858-dev.s3.amazonaws.com/assets/avatar.png",
-      stories: [
-        {
-          id: `story1`,
-          source: {
-            uri: "https://s3professions202858-dev.s3.amazonaws.com/assets/story.png",
-          },
-        },
-      ],
-    },
-    {
-      id: "user4",
-      name: "User 1",
-      imgUrl:
-        "https://s3professions202858-dev.s3.amazonaws.com/assets/avatar.png",
-      stories: [
-        {
-          id: `story1`,
-          source: {
-            uri: "https://s3professions202858-dev.s3.amazonaws.com/assets/story.png",
-          },
-        },
-      ],
-    },
-    {
-      id: "user5",
-      name: "User 1",
-      imgUrl:
-        "https://s3professions202858-dev.s3.amazonaws.com/assets/avatar.png",
-      stories: [
-        {
-          id: `story1`,
-          source: {
-            uri: "https://s3professions202858-dev.s3.amazonaws.com/assets/story.png",
-          },
-        },
-      ],
-    },
-    {
-      id: "user6",
-      name: "User 1",
-      imgUrl:
-        "https://s3professions202858-dev.s3.amazonaws.com/assets/avatar.png",
-      stories: [
-        {
-          id: `story1`,
-          source: {
-            uri: "https://s3professions202858-dev.s3.amazonaws.com/assets/story.png",
-          },
-        },
-      ],
-    },
-  ];
-
   if (data)
     return (
       <View
@@ -109,15 +21,37 @@ const Promotions = ({ data }) => {
           avatarListContainerStyle={{
             gap: 5,
           }}
+          textStyle={{
+            color: "white",
+            fontFamily: "medium",
+            fontSize: 16,
+          }}
           avatarListContainerProps={{
             showsHorizontalScrollIndicator: false,
             marginRight: 10,
           }}
+          showName={true}
+          nameTextStyle={{
+            fontFamily: "medium",
+            textAlign: "center",
+            marginTop: 4,
+          }}
+          footerComponent={() => (
+            <View
+              style={{
+                backgroundColor: "red",
+              }}
+            >
+              <Text>Heyeeeeeeeeeee</Text>
+            </View>
+          )}
           storyAnimationDuration={500}
           modalAnimationDuration={500}
           closeIconColor={"#ffffff"}
           storyAvatarSize={45}
-        />
+        >
+          <Text>hey</Text>
+        </InstagramStories>
       </View>
     );
 };

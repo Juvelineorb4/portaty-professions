@@ -139,6 +139,10 @@ export const inputFavoritesSearch = atom({
   key: "inputFavoritesSearchValue",
   default: "",
 });
+export const eyelashSelection = atom({
+  key: "eyelashSelectionValue",
+  default: 0,
+});
 export const urlInitalShare = atom({
   key: "urlInitalShareValue",
   default: {},

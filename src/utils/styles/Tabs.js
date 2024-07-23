@@ -3,8 +3,8 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
   tabBarContainer: {
     flexDirection: 'row',
-    height: 60,
-    paddingTop: 3,
+    height: 50,
+    paddingTop: 15,
     alignSelf: 'center',
     borderWidth: 0.7,
     borderColor: '#1f1f1f',

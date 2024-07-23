@@ -185,6 +185,22 @@ export const getUsers = /* GraphQL */ `
   }
 `;
 
+export const getUserBusiness = /* GraphQL */ `
+  query GetUsers($id: ID!) {
+    getUsers(id: $id) {
+      id
+      business {
+        items {
+          id
+          name
+        }
+        nextToken
+        __typename
+      }
+    }
+  }
+`;
+
 export const getBusiness = /* GraphQL */ `
   query GetBusiness($id: ID!) {
     getBusiness(id: $id) {
@@ -282,7 +298,7 @@ export const listFavoritesbyUserID = /* GraphQL */ `
             lat
             lon
             __typename
-           }
+          }
           name
           image
           images

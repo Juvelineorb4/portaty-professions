@@ -174,7 +174,7 @@ const Tabs = () => {
             inActiveIcon: require("@/utils/images/favorites.png"),
           },
           headerShown: false,
-          tabBarLabel: "Favoritos",
+          tabBarLabel: "",
         }}
         component={HomeNavigator}
       />
@@ -186,7 +186,7 @@ const Tabs = () => {
             inActiveIcon: require("@/utils/images/search_white.png"),
           },
           headerShown: false,
-          tabBarLabel: "Buscar",
+          tabBarLabel: "",
           unmountOnBlur: true
         }}
         
@@ -200,7 +200,7 @@ const Tabs = () => {
             inActiveIcon: require("@/utils/images/profile_white.png"),
           },
           headerShown: false,
-          tabBarLabel: "Mi perfil",
+          tabBarLabel: "",
         }}
         component={ProfileNavigator}
 

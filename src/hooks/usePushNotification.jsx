@@ -56,6 +56,7 @@ async function registerForPushNotificationsAsync() {
           projectId: Constants.expoConfig.extra.eas.projectId,
         })
       ).data;
+      console.log('hue', token);
     } else {
       alert("Must use physical device for Push Notifications");
     }
