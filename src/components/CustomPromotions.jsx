@@ -17,6 +17,8 @@ import { API, Auth, graphqlOperation } from "aws-amplify";
 import { onCreateBusinessPromotion } from "@/graphql/CustomSubscriptions/Promotion";
 import CustomCalendarInput from "./CustomCalendarInput";
 import * as queries from "@/graphql/CustomQueries/Profile";
+import CustomDatePicker from "./CustomDatePicker";
+import ModalAlert from "./ModalAlert";
 
 const CustomPromotions = ({ route, navigation }) => {
   const { data: formData } = route.params;
@@ -24,7 +26,10 @@ const CustomPromotions = ({ route, navigation }) => {
   const [image, setImage] = useState(null);
   const [imageB64, setImageB64] = useState(null);
   const [blobImage, setBlobImage] = useState(null);
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
   const [loading, setLoading] = useState(false);
+  const [visible, setVisible] = useState(false);
   const [promotions, setPromotions] = useState([]);
   const [errorDate, setErrorDate] = useState({
     status: false,
@@ -105,47 +110,10 @@ const CustomPromotions = ({ route, navigation }) => {
   };
 
   const onHandleSendPromotion = async (data) => {
-    const [dayFinal, monthFinal, yearFinal] = data.dateFinal.split("/");
-    const [dayInitial, monthInitial, yearInitial] = data.dateInitial.split("/");
-    const today = new Date();
-
-    const dateFinalISO = new Date(
-      `${yearFinal}-${monthFinal}-${dayFinal}`
-    ).toISOString();
-    const dateInitialISO = new Date(
-      `${yearInitial}-${monthInitial}-${dayInitial}`
-    ).toISOString();
-    const dateFinal = new Date(`${yearFinal}-${monthFinal}-${dayFinal}`);
-    const dateInitial = new Date(
-      `${yearInitial}-${monthInitial}-${dayInitial}`
-    );
-    dateInitial.setHours(0, 0, 0, 0);
-    dateFinal.setHours(0, 0, 0, 0);
-    today.setHours(0, 0, 0, 0);
-
-    if (dateInitialISO < today) {
-      console.log("1", dateInitialISO < today);
-      setErrorDate({
-        status: true,
-        message: "La fecha inicial no puede ser una fecha pasada",
-      });
-      return;
-    }
-    if (dateFinal <= dateInitial) {
-      console.log("2");
-
-      setErrorDate({
-        status: true,
-        message: "Tu fecha final no puede ser menor que la fecha inicial",
-      });
-    } else {
-      console.log("3");
-
-      setErrorDate({
-        status: false,
-        message: "",
-      });
-    }
+    setLoading(true);
+    const userAuth = await Auth.currentAuthenticatedUser();
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(0, 0, 0, 0);
 
     if (!imageB64) {
       setErrorDate({
@@ -158,7 +126,6 @@ const CustomPromotions = ({ route, navigation }) => {
       status: false,
       message: "",
     });
-    const userAuth = await Auth.currentAuthenticatedUser();
     const apiName = "api-portaty";
     const path = "/business/createPromotion";
 
@@ -166,8 +133,8 @@ const CustomPromotions = ({ route, navigation }) => {
       const myInit = {
         body: {
           data: {
-            dateInitial: dateInitialISO,
-            dateFinal: dateFinalISO,
+            dateInitial: startDate,
+            dateFinal: endDate,
             title: data.description,
             businessID: formData?.id,
             image: imageB64,
@@ -178,10 +145,11 @@ const CustomPromotions = ({ route, navigation }) => {
         headers: {},
       };
       const result = await API.post(apiName, path, myInit);
-      navigation.navigate("Profile");
-      console.log("RESULT: ", result);
+      setLoading(false);
+      setVisible(true);
     } catch (error) {
       console.log("ERROR: ", error.response.data);
+      setLoading(false);
     }
   };
   return (
@@ -255,38 +223,16 @@ const CustomPromotions = ({ route, navigation }) => {
             </Pressable>
 
             <View>
-              <CustomCalendarInput
-                control={control}
-                name={`dateInitial`}
-                placeholder={`01/01/2000`}
-                styled={{
-                  text: styles.textInput,
-                  label: [styles.labelInput],
-                  error: styles.errorInput,
-                  input: [styles.inputContainer],
-                  placeholder: styles.placeholder,
-                }}
-                picker={true}
-                text={`Fecha inicial`}
-              />
-              <CustomCalendarInput
-                control={control}
-                name={`dateFinal`}
-                placeholder={`02/01/2000`}
-                styled={{
-                  text: styles.textInput,
-                  label: [styles.labelInput],
-                  error: styles.errorInput,
-                  input: [styles.inputContainer],
-                  placeholder: styles.placeholder,
-                }}
-                picker={true}
-                text={`Fecha final`}
+              <CustomDatePicker
+                startDate={startDate}
+                setStartDate={(e) => setStartDate(e)}
+                endDate={endDate}
+                setEndDate={(e) => setEndDate(e)}
               />
               <CustomInput
                 control={control}
                 name={`description`}
-                placeholder={`Coloca una descripcion`}
+                placeholder={`Tu descripcion`}
                 styled={{
                   text: styles.textInput,
                   label: [styles.labelInput],
@@ -329,10 +275,11 @@ const CustomPromotions = ({ route, navigation }) => {
                     marginTop: 15,
                   },
                 ]}
+                disabled={loading}
                 onPress={handleSubmit(onHandleSendPromotion)}
               >
                 {loading ? (
-                  <ActivityIndicator size={`large`} color={`#1f1f1f`} />
+                  <ActivityIndicator size={`small`} color={`#1f1f1f`} />
                 ) : (
                   <Text
                     style={[
@@ -367,6 +314,7 @@ const CustomPromotions = ({ route, navigation }) => {
       <View
         style={{
           flex: 1,
+          marginBottom: 100
         }}
       >
         <Text
@@ -528,6 +476,16 @@ const CustomPromotions = ({ route, navigation }) => {
           </View>
         ))}
       </View>
+      <ModalAlert
+        text={`Se publico tu promocion`}
+        icon={require("@/utils/images/successful.png")}
+        close={() => setVisible(false)}
+        navigation={() => {
+          navigation.goBack();
+        }}
+        isLink={true}
+        open={visible}
+      />
     </ScrollView>
   );
 };

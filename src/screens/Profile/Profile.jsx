@@ -54,7 +54,7 @@ const Profile = ({ route, navigation }) => {
   const onShare = async () => {
     try {
       await Share.share({
-        message: `Han compartido contigo un negocio, da click para mirarlo https://www.portaty.com/share/list?id=${user.id}`,
+        message: `Han compartido contigo un negocio, da click para mirarlo https://www.portaty.com/share/list?id=${user["custom:identityID"]}`,
       });
     } catch (error) {
       console.error("Error sharing:", error);
@@ -367,11 +367,17 @@ const Profile = ({ route, navigation }) => {
                 />
               </View>
             </View>
-            {errorEmail && <Text style={{
-              textAlign: 'center',
-              color: 'red',
-              fontFamily: 'medium'
-            }}>{errorMessage}</Text>}
+            {errorEmail && (
+              <Text
+                style={{
+                  textAlign: "center",
+                  color: "red",
+                  fontFamily: "medium",
+                }}
+              >
+                {errorMessage}
+              </Text>
+            )}
 
             {confirmEmail && (
               <>
