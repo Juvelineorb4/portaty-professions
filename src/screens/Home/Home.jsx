@@ -209,19 +209,17 @@ const Home = ({ navigation, route }) => {
   }, [userAuth]);
   const fetchPromotions = async () => {
     const api = "api-portaty";
-    const path = "/getUserFavoritesPromotions";
+    const path = "/listPromotions";
     const params = {
       headers: {},
-      queryStringParameters: {
-        userID: userAuth["attributes"]["custom:userTableID"],
-      },
     };
 
     try {
       const response = await API.get(api, path, params);
-      console.log(response);
+      console.log("EL PEPE: ", response.data);
+      response.data?.map((item) => console.log(item));
     } catch (error) {
-      console.log("ERROR AL CONSULTAR PROMOCIONES: ", error.response.data);
+      console.log("ERROR AL CONSULTAR PROMOCIONES: ", error.response.datar);
     }
   };
   if (updateAvailable === true)

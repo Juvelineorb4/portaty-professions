@@ -108,8 +108,8 @@ const Promotions = () => {
           gap: 5,
         }}
         avatarListContainerProps={{
-            showsHorizontalScrollIndicator: false,
-            marginRight: 10
+          showsHorizontalScrollIndicator: false,
+          marginRight: 10,
         }}
         storyAnimationDuration={500}
         modalAnimationDuration={500}
