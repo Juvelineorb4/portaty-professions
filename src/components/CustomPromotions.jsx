@@ -19,6 +19,7 @@ import CustomCalendarInput from "./CustomCalendarInput";
 import * as queries from "@/graphql/CustomQueries/Profile";
 import CustomDatePicker from "./CustomDatePicker";
 import ModalAlert from "./ModalAlert";
+import ModalPromotion from "./ModalPromotion";
 
 const CustomPromotions = ({ route, navigation }) => {
   const { data: formData } = route.params;
@@ -29,7 +30,10 @@ const CustomPromotions = ({ route, navigation }) => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [loading, setLoading] = useState(false);
+  const [loadingPage, setLoadingPage] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [visibleAgain, setVisibleAgain] = useState(false);
+  const [dataPromotionAgain, setDataPromotionAgain] = useState(null);
   const [promotions, setPromotions] = useState([]);
   const [errorDate, setErrorDate] = useState({
     status: false,
@@ -47,6 +51,8 @@ const CustomPromotions = ({ route, navigation }) => {
         },
       });
       setPromotions(response.data.listBusinessPromotions.items);
+      console.log(response.data.listBusinessPromotions.items);
+      setLoadingPage(true);
     } catch (error) {
       console.log(error);
     }
@@ -63,7 +69,6 @@ const CustomPromotions = ({ route, navigation }) => {
           "Nuevo post creado:",
           value?.data?.onCreateBusinessPromotion
         );
-        // Actualiza tu estado o realiza otras acciones aquí
       },
       error: (error) => {
         console.error("Error en la suscripción:", error);
@@ -152,342 +157,401 @@ const CustomPromotions = ({ route, navigation }) => {
       setLoading(false);
     }
   };
-  return (
-    <ScrollView
-      style={[
-        {
-          flex: 1,
-          padding: 20,
-        },
-        global.bgWhite,
-      ]}
-    >
+
+  if (!loadingPage)
+    return (
       <View
-        style={{
-          flex: 1,
-          marginBottom: 20,
-        }}
+        style={[
+          global.bgWhite,
+          {
+            flex: 1,
+            padding: 20,
+            justifyContent: "center",
+            alignItems: "center",
+          },
+        ]}
       >
-        <Text
-          style={{
-            fontFamily: "regular",
-            marginVertical: 25,
-            borderBottomColor: "#1f1f1f",
-            borderBottomWidth: 1,
-            paddingBottom: 5,
-          }}
-        >
-          Crea una promocion nueva
-        </Text>
-
-        {promotions.length === 0 ? (
-          <View
-            style={{
-              flexDirection: "row",
-              columnGap: 20,
-            }}
-          >
-            <Pressable onPress={() => pickImage()}>
-              <View
-                style={{
-                  borderColor: "#1f1f1f",
-                  borderStyle: "dashed",
-                  borderWidth: 1.3,
-                  height: 245,
-                  width: 150,
-                  borderRadius: 5,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                {image ? (
-                  <Image
-                    style={{
-                      width: 148,
-                      height: 243,
-                      borderRadius: 5,
-                    }}
-                    source={{ uri: image }}
-                  />
-                ) : (
-                  <Image
-                    style={{
-                      width: 50,
-                      height: 50,
-                      resizeMode: "contain",
-                    }}
-                    source={require("@/utils/images/cameraadd.png")}
-                  />
-                )}
-              </View>
-            </Pressable>
-
-            <View>
-              <CustomDatePicker
-                startDate={startDate}
-                setStartDate={(e) => setStartDate(e)}
-                endDate={endDate}
-                setEndDate={(e) => setEndDate(e)}
-              />
-              <CustomInput
-                control={control}
-                name={`description`}
-                placeholder={`Tu descripcion`}
-                styled={{
-                  text: styles.textInput,
-                  label: [styles.labelInput],
-                  error: styles.errorInput,
-                  input: [styles.inputContainer],
-                  placeholder: styles.placeholder,
-                }}
-                rules={{
-                  required: `Requerido`,
-                }}
-                text={`Descripcion`}
-              />
-              {errorDate.status && (
-                <Text
-                  style={{
-                    color: "red",
-                    fontFamily: "regular",
-                    fontSize: 11,
-                    width: 120,
-                    marginVertical: 5,
-                  }}
-                >
-                  {errorDate.message}
-                </Text>
-              )}
-              <Pressable
-                style={[
-                  global.bgYellow,
-                  {
-                    borderWidth: 1,
-                    width: 100,
-                    height: 40,
-                    borderRadius: 8,
-                    alignSelf: "center",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    flexDirection: "row",
-                    justifyContent: "space-around",
-                    paddingHorizontal: 10,
-                    marginTop: 15,
-                  },
-                ]}
-                disabled={loading}
-                onPress={handleSubmit(onHandleSendPromotion)}
-              >
-                {loading ? (
-                  <ActivityIndicator size={`small`} color={`#1f1f1f`} />
-                ) : (
-                  <Text
-                    style={[
-                      {
-                        fontFamily: "bold",
-                        fontSize: 12,
-                        color: "#1f1f1f",
-                      },
-                    ]}
-                  >
-                    Publicar
-                  </Text>
-                )}
-              </Pressable>
-            </View>
-          </View>
-        ) : (
-          <View>
-            <Text
-              style={{
-                fontFamily: "light",
-                fontSize: 20,
-                textAlign: "center",
-                marginVertical: 40,
-              }}
-            >
-              Ya tienes una promocion activa
-            </Text>
-          </View>
-        )}
+        <ActivityIndicator size={"large"} color={"#1f1f1f"}></ActivityIndicator>
       </View>
-      <View
-        style={{
-          flex: 1,
-          marginBottom: 100
-        }}
+    );
+  if (loadingPage)
+    return (
+      <ScrollView
+        style={[
+          {
+            flex: 1,
+            padding: 20,
+          },
+          global.bgWhite,
+        ]}
       >
-        <Text
-          style={{
-            fontFamily: "regular",
-            marginBottom: 25,
-            borderBottomColor: "#1f1f1f",
-            borderBottomWidth: 1,
-            paddingBottom: 5,
-          }}
-        >
-          Historial de tus promociones
-        </Text>
         <View
           style={{
             flex: 1,
-            flexDirection: "row",
-            justifyContent: "center",
-            width: 320,
+            marginBottom: 20,
           }}
         >
-          <View>
-            <Text
-              style={{
-                borderColor: "#1f1f1f",
-                borderWidth: 0.8,
-                padding: 5,
-                borderTopLeftRadius: 5,
-                width: 80,
-                textAlign: "center",
-                fontFamily: "bold",
-                fontSize: 12,
-              }}
-            >
-              Fecha Ini.
-            </Text>
-          </View>
-          <View>
-            <Text
-              style={{
-                borderColor: "#1f1f1f",
-                borderWidth: 0.8,
-                padding: 5,
-                borderLeftWidth: 0,
-                width: 80,
-                textAlign: "center",
-                fontFamily: "bold",
-                fontSize: 12,
-              }}
-            >
-              Fecha Fin.
-            </Text>
-          </View>
-          <View>
-            <Text
-              style={{
-                borderColor: "#1f1f1f",
-                borderWidth: 0.8,
-                padding: 5,
-                borderLeftWidth: 0,
-                borderRightWidth: 0,
-                width: 80,
-                textAlign: "center",
-                fontFamily: "bold",
-                fontSize: 12,
-              }}
-            >
-              Estatus
-            </Text>
-          </View>
-          <View>
-            <Text
-              style={{
-                borderColor: "#1f1f1f",
-                borderWidth: 0.8,
-                padding: 5,
-                borderTopRightRadius: 5,
-                width: 80,
-                textAlign: "center",
-                fontFamily: "bold",
-                fontSize: 12,
-              }}
-            >
-              Imagen
-            </Text>
-          </View>
-        </View>
+          <Text
+            style={{
+              fontFamily: "regular",
+              marginVertical: 25,
+              borderBottomColor: "#1f1f1f",
+              borderBottomWidth: 1,
+              paddingBottom: 5,
+            }}
+          >
+            Crea una promocion nueva
+          </Text>
 
-        {promotions.map((item, index) => (
+          {promotions.length === 0 ? (
+            <View
+              style={{
+                flexDirection: "row",
+                columnGap: 20,
+              }}
+            >
+              <Pressable onPress={() => pickImage()}>
+                <View
+                  style={{
+                    borderColor: "#1f1f1f",
+                    borderStyle: "dashed",
+                    borderWidth: 1.3,
+                    height: 245,
+                    width: 150,
+                    borderRadius: 5,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  {image ? (
+                    <Image
+                      style={{
+                        width: 148,
+                        height: 243,
+                        borderRadius: 5,
+                      }}
+                      source={{ uri: image }}
+                    />
+                  ) : (
+                    <Image
+                      style={{
+                        width: 50,
+                        height: 50,
+                        resizeMode: "contain",
+                      }}
+                      source={require("@/utils/images/cameraadd.png")}
+                    />
+                  )}
+                </View>
+              </Pressable>
+
+              <View>
+                <CustomDatePicker
+                  startDate={startDate}
+                  setStartDate={(e) => setStartDate(e)}
+                  endDate={endDate}
+                  setEndDate={(e) => setEndDate(e)}
+                />
+                <CustomInput
+                  control={control}
+                  name={`description`}
+                  placeholder={`Tu descripcion`}
+                  styled={{
+                    text: styles.textInput,
+                    label: [styles.labelInput],
+                    error: styles.errorInput,
+                    input: [styles.inputContainer],
+                    placeholder: styles.placeholder,
+                  }}
+                  rules={{
+                    required: `Requerido`,
+                  }}
+                  text={`Descripcion`}
+                />
+                {errorDate.status && (
+                  <Text
+                    style={{
+                      color: "red",
+                      fontFamily: "regular",
+                      fontSize: 11,
+                      width: 120,
+                      marginVertical: 5,
+                    }}
+                  >
+                    {errorDate.message}
+                  </Text>
+                )}
+                <Pressable
+                  style={[
+                    global.bgYellow,
+                    {
+                      borderWidth: 1,
+                      width: 100,
+                      height: 40,
+                      borderRadius: 8,
+                      alignSelf: "center",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      flexDirection: "row",
+                      justifyContent: "space-around",
+                      paddingHorizontal: 10,
+                      marginTop: 15,
+                    },
+                  ]}
+                  disabled={loading}
+                  onPress={handleSubmit(onHandleSendPromotion)}
+                >
+                  {loading ? (
+                    <ActivityIndicator size={`small`} color={`#1f1f1f`} />
+                  ) : (
+                    <Text
+                      style={[
+                        {
+                          fontFamily: "bold",
+                          fontSize: 12,
+                          color: "#1f1f1f",
+                        },
+                      ]}
+                    >
+                      Publicar
+                    </Text>
+                  )}
+                </Pressable>
+              </View>
+            </View>
+          ) : (
+            <View>
+              <Text
+                style={{
+                  fontFamily: "light",
+                  fontSize: 20,
+                  textAlign: "center",
+                  marginVertical: 40,
+                }}
+              >
+                Ya tienes una promocion activa
+              </Text>
+            </View>
+          )}
+        </View>
+        <View
+          style={{
+            flex: 1,
+            marginBottom: 100,
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: "regular",
+              marginBottom: 25,
+              borderBottomColor: "#1f1f1f",
+              borderBottomWidth: 1,
+              paddingBottom: 5,
+            }}
+          >
+            Historial de tus promociones
+          </Text>
           <View
-            key={index}
             style={{
               flex: 1,
               flexDirection: "row",
               justifyContent: "center",
               width: 320,
+              marginBottom: 10,
             }}
           >
             <View>
               <Text
                 style={{
+                  borderColor: "#1f1f1f",
+                  borderWidth: 0.8,
                   padding: 5,
                   borderTopLeftRadius: 5,
-                  width: 80,
+                  width: 160,
                   textAlign: "center",
-                  fontFamily: "light",
+                  fontFamily: "bold",
                   fontSize: 12,
                 }}
               >
-                {String(item.dateInitial.split("T")[0])}
+                Periodo de publicacion
               </Text>
             </View>
             <View>
               <Text
                 style={{
-                  padding: 5,
-                  borderLeftWidth: 0,
-                  width: 80,
-                  textAlign: "center",
-                  fontFamily: "light",
-                  fontSize: 12,
-                }}
-              >
-                {String(item.dateFinal.split("T")[0])}
-              </Text>
-            </View>
-            <View>
-              <Text
-                style={{
+                  borderColor: "#1f1f1f",
+                  borderWidth: 0.8,
                   padding: 5,
                   borderLeftWidth: 0,
                   borderRightWidth: 0,
                   width: 80,
                   textAlign: "center",
-                  fontFamily: "light",
+                  fontFamily: "bold",
                   fontSize: 12,
                 }}
               >
-                {item.status === "PUBLISHED" ? "Activo" : "Acabo"}
+                Estado
               </Text>
             </View>
             <View>
-              <TouchableOpacity onPress={() => Linking.openURL(item.image)}>
+              <Text
+                style={{
+                  borderColor: "#1f1f1f",
+                  borderWidth: 0.8,
+                  padding: 5,
+                  borderTopRightRadius: 5,
+                  width: 80,
+                  textAlign: "center",
+                  fontFamily: "bold",
+                  fontSize: 12,
+                }}
+              >
+                Imagen
+              </Text>
+            </View>
+          </View>
+
+          {promotions.map((item, index) => (
+            <View
+              key={index}
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                justifyContent: "center",
+                width: 320,
+              }}
+            >
+              <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexDirection: "row",
+                }}
+              >
                 <Text
                   style={{
                     padding: 5,
-                    borderTopRightRadius: 5,
+                    borderTopLeftRadius: 5,
                     width: 80,
                     textAlign: "center",
-                    fontFamily: "medium",
+                    fontFamily: "light",
                     fontSize: 12,
-                    color: "blue",
                   }}
                 >
-                  Ver foto
+                  Inicio {String(item.dateInitial.split("T")[0])}
                 </Text>
-              </TouchableOpacity>
+                <Text
+                  style={{
+                    padding: 5,
+                    borderLeftWidth: 0,
+                    width: 80,
+                    textAlign: "center",
+                    fontFamily: "light",
+                    fontSize: 12,
+                  }}
+                >
+                  Fin {String(item.dateFinal.split("T")[0])}
+                </Text>
+              </View>
+              <View></View>
+              <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: 80,
+                }}
+              >
+                <TouchableOpacity
+                  style={{
+                    borderColor: "#1f1f1f",
+                    borderWidth: 1,
+                    width: 70,
+                    borderRadius: 8,
+                    backgroundColor:
+                      item.status !== "PUBLISHED" && item.status !== "INREVIEW"
+                        ? "#ffb703"
+                        : "#ffffff",
+                  }}
+                  onPress={() => {
+                    if (
+                      item.status !== "PUBLISHED" &&
+                      item.status !== "INREVIEW"
+                    ) {
+                      setDataPromotionAgain(item);
+                      setVisibleAgain(true);
+                    }
+                  }}
+                >
+                  <Text
+                    style={{
+                      padding: 5,
+                      borderLeftWidth: 0,
+                      borderRightWidth: 0,
+                      textAlign: "center",
+                      fontFamily:
+                        item.status !== "PUBLISHED" &&
+                        item.status !== "INREVIEW"
+                          ? "medium"
+                          : "regular",
+                      fontSize: 10,
+                    }}
+                  >
+                    {item.status === "PUBLISHED"
+                      ? "Activo"
+                      : item.status === "INREVIEW"
+                      ? "En revision"
+                      : "Volver a publicar"}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <TouchableOpacity onPress={() => Linking.openURL(item.image)}>
+                  <Text
+                    style={{
+                      padding: 5,
+                      borderTopRightRadius: 5,
+                      width: 80,
+                      textAlign: "center",
+                      fontFamily: "medium",
+                      fontSize: 12,
+                      color: "blue",
+                    }}
+                  >
+                    Ver foto
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        ))}
-      </View>
-      <ModalAlert
-        text={`Se publico tu promocion`}
-        icon={require("@/utils/images/successful.png")}
-        close={() => setVisible(false)}
-        navigation={() => {
-          navigation.goBack();
-        }}
-        isLink={true}
-        open={visible}
-      />
-    </ScrollView>
-  );
+          ))}
+        </View>
+        <ModalAlert
+          text={`Se publico tu promocion`}
+          icon={require("@/utils/images/successful.png")}
+          close={() => setVisible(false)}
+          navigation={() => {
+            navigation.goBack();
+          }}
+          isLink={true}
+          open={visible}
+        />
+        <ModalPromotion
+          data={dataPromotionAgain}
+          close={() => {
+            setLoadingPage(false);
+            setVisibleAgain(false);
+            setTimeout(() => {
+              setLoadingPage(true);
+            }, 2000);
+          }}
+          open={visibleAgain}
+        />
+      </ScrollView>
+    );
 };
 
 export default CustomPromotions;
