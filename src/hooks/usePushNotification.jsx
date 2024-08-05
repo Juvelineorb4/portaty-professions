@@ -3,9 +3,10 @@ import * as Device from "expo-device";
 import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
 import { useSetRecoilState } from "recoil";
-import { notificationToken } from "@/atoms/index";
+import { notificationToken, notificationResponse } from "@/atoms/index";
 import { Platform } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -13,26 +14,6 @@ Notifications.setNotificationHandler({
     shouldSetBadge: false,
   }),
 });
-
-// async function sendPushNotification(expoPushToken) {
-//   const message = {
-//     to: expoPushToken,
-//     sound: "default",
-//     title: "Esto es pa divertirnos",
-//     body: "PA DIVERTIRNOS PA DIVERTIRNOS",
-//     data: { someData: "goes here" },
-//   };
-
-//   await fetch("https://exp.host/--/api/v2/push/send", {
-//     method: "POST",
-//     headers: {
-//       Accept: "application/json",
-//       "Accept-encoding": "gzip, deflate",
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify(message),
-//   });
-// }
 
 async function registerForPushNotificationsAsync() {
   // Obtener el identificador único del dispositivo
@@ -56,7 +37,7 @@ async function registerForPushNotificationsAsync() {
           projectId: Constants.expoConfig.extra.eas.projectId,
         })
       ).data;
-      console.log('hue', token);
+      console.log("hue", token);
     } else {
       alert("Must use physical device for Push Notifications");
     }
@@ -71,7 +52,6 @@ async function registerForPushNotificationsAsync() {
     }
     // Verificar si ya se realizó la operación previamente
     const hasRegistered = await AsyncStorage.getItem("hasRegistered");
-    console.log("hasRegistered", hasRegistered);
     if (hasRegistered !== "registered") {
       await API.graphql({
         query: mutationsNavigation.createDeviceNotificationToken,
@@ -97,6 +77,7 @@ const usePushNotification = () => {
   const [expoPushToken, setExpoPushToken] = useState(null);
   const [notification, setNotification] = useState(false);
   const setToken = useSetRecoilState(notificationToken);
+  const setNotificationResponse = useSetRecoilState(notificationResponse);
   const notificationListener = useRef();
   const responseListener = useRef();
 
@@ -106,13 +87,17 @@ const usePushNotification = () => {
       setToken(token);
     });
 
+    // esto es si llega una notificacion y la app esta en primer plano
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
         setNotification(notification);
       });
 
+    // Capturar la notificacion que el usuario le da click
     responseListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {});
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        setNotificationResponse(response.notification.request.content);
+      });
 
     return () => {
       Notifications.removeNotificationSubscription(

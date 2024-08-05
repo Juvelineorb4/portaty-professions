@@ -9,13 +9,13 @@ import CustomButton from "@/components/CustomButton";
 import * as queries from "@/graphql/CustomQueries/Favorites";
 import { AntDesign } from "@expo/vector-icons";
 
-const PromotionsHome = ({ login, promotion }) => {
+const PromotionsHome = ({ login, promotion, promotionID }) => {
+  console.log("PROMOTION: ", promotionID);
   const global = require("@/utils/styles/global.js");
   const userAuth = useRecoilValue(userAuthenticated);
   const [stories, setStories] = useState([]);
   const [business, setBusiness] = useState(false);
   const [businessId, setBusinessId] = useState(null);
-
   const fetchBusiness = async () => {
     try {
       const result = await API.graphql({
@@ -130,7 +130,10 @@ const PromotionsHome = ({ login, promotion }) => {
               <AntDesign name="plus" size={36} color="#ffb703" />
             </TouchableOpacity>
           )}
-          <Promotions data={stories} />
+          <Promotions
+            data={stories}
+            showPromotion={promotionID ? promotionID : ""}
+          />
         </View>
       </View>
     );

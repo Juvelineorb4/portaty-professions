@@ -152,6 +152,32 @@ const CustomPromotions = ({ route, navigation }) => {
       setLoading(false);
     }
   };
+
+  const onHandleResendPromotion = async (item) => {
+    const apiName = "api-portaty";
+    const path = "/business/createPromotion";
+    const params = {
+      promotionID: item?.id,
+      dateInitial: item.dateInitial,
+      dateFinal: item?.dateFinal,
+    };
+
+    console.log("RESEND: ", params);
+    const myInit = {
+      body: {
+        data: {
+          ...params,
+        },
+      },
+      headers: {},
+    };
+    try {
+      const result = await API.post(apiName, path, myInit);
+      console.log(result);
+    } catch (error) {
+      console.log("ERROR: ", error.response.data);
+    }
+  };
   return (
     <ScrollView
       style={[
@@ -314,7 +340,7 @@ const CustomPromotions = ({ route, navigation }) => {
       <View
         style={{
           flex: 1,
-          marginBottom: 100
+          marginBottom: 100,
         }}
       >
         <Text
@@ -457,7 +483,7 @@ const CustomPromotions = ({ route, navigation }) => {
               </Text>
             </View>
             <View>
-              <TouchableOpacity onPress={() => Linking.openURL(item.image)}>
+              <TouchableOpacity onPress={() => onHandleResendPromotion(item)}>
                 <Text
                   style={{
                     padding: 5,

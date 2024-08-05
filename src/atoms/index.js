@@ -259,3 +259,8 @@ export const connectionStatus = atom({
   key: "connectionStatusValue",
   default: null,
 });
+
+export const notificationResponse = atom({
+  key: "notificationResponseValue",
+  default: null,
+});
