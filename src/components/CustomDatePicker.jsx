@@ -14,6 +14,12 @@ const CustomDatePicker = ({startDate, setStartDate, endDate, setEndDate}) => {
   const [endDateString, setEndDateString] = useState("Elige fecha final");
   const [showStartPicker, setShowStartPicker] = useState(false);
   const [showEndPicker, setShowEndPicker] = useState(false);
+
+
+  const maxDate = new Date();
+  maxDate.setDate(maxDate.getDate() + 30);
+
+
   const onStartDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || startDate;
     setShowStartPicker(Platform.OS === "ios");
@@ -104,6 +110,7 @@ const CustomDatePicker = ({startDate, setStartDate, endDate, setEndDate}) => {
           mode="date"
           display="default"
           minimumDate={new Date()}
+          maximumDate={maxDate}
           onChange={onStartDateChange}
         />
       )}
@@ -148,6 +155,7 @@ const CustomDatePicker = ({startDate, setStartDate, endDate, setEndDate}) => {
           mode="date"
           display="default"
           minimumDate={startDate}
+          maximumDate={startDate}
           onChange={onEndDateChange}
         />
       )}
