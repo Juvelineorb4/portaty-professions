@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, View } from "react-native";
+import { Pressable, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import Promotions from "@/components/Home/Promotions";
 import { userAuthenticated } from "@/atoms";
@@ -8,14 +8,16 @@ import styles from "@/utils/styles/Promotions.js";
 import CustomButton from "@/components/CustomButton";
 import * as queries from "@/graphql/CustomQueries/Favorites";
 import { AntDesign } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 const PromotionsHome = ({ login, promotion, promotionID }) => {
-  console.log("PROMOTION: ", promotionID);
+  const navigation = useNavigation();
   const global = require("@/utils/styles/global.js");
   const userAuth = useRecoilValue(userAuthenticated);
   const [stories, setStories] = useState([]);
   const [business, setBusiness] = useState(false);
   const [businessId, setBusinessId] = useState(null);
+
   const fetchBusiness = async () => {
     try {
       const result = await API.graphql({
@@ -56,18 +58,55 @@ const PromotionsHome = ({ login, promotion, promotionID }) => {
                     style={{
                       justifyContent: "center",
                       alignItems: "center",
+                      width: 250,
+                      alignSelf: "center",
+                      bottom: 75,
                     }}
                   >
-                    <Text
+                    <View
                       style={{
-                        fontFamily: "medium",
-                        color: "white",
-                        bottom: 75,
-                        fontSize: 16,
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        width: 150,
+                        alignSelf: "center",
+                        backgroundColor: "#1f1f1f7D",
+                        bottom: 15,
+                        padding: 10,
+                        borderRadius: 5,
                       }}
                     >
-                      {story?.text}
-                    </Text>
+                      <Text
+                        style={{
+                          fontFamily: "medium",
+                          color: "white",
+                          fontSize: 16,
+                          textAlign: "center",
+                        }}
+                      >
+                        {story?.text}
+                      </Text>
+                    </View>
+                    <TouchableOpacity
+                      style={[
+                        global.mainBgColor,
+                        {
+                          padding: 10,
+                          borderRadius: 5,
+                        },
+                      ]}
+                    >
+                      <Text
+                        style={{
+                          fontFamily: "bold",
+                          color: "#1f1f1f",
+                          fontSize: 12,
+                          textAlign: "center",
+                        }}
+                      >
+                        Visitar negocio
+                      </Text>
+                    </TouchableOpacity>
                   </View>
                 ),
               };

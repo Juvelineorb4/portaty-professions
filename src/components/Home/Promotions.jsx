@@ -4,7 +4,6 @@ import InstagramStories from "@birdwingo/react-native-instagram-stories";
 import { useEffect } from "react";
 
 const Promotions = ({ data, showPromotion }) => {
-  console.log(data);
   const ref = useRef(null);
   const onShowPromotion = (id) => {
     ref.current?.show(id);
@@ -25,7 +24,7 @@ const Promotions = ({ data, showPromotion }) => {
       <InstagramStories
         ref={ref}
         stories={data}
-        animationDuration={3500}
+        animationDuration={30500}
         backgroundColor={"#1f1f1fe9"}
         avatarBorderColors={["#ffb703"]}
         avatarSeenBorderColors={["#9d9d9d"]}
@@ -47,22 +46,11 @@ const Promotions = ({ data, showPromotion }) => {
           textAlign: "center",
           marginTop: 4,
         }}
-        footerComponent={() => (
-          <View
-            style={{
-              backgroundColor: "red",
-            }}
-          >
-            <Text>Heyeeeeeeeeeee</Text>
-          </View>
-        )}
         storyAnimationDuration={500}
         modalAnimationDuration={500}
         closeIconColor={"#ffffff"}
         storyAvatarSize={45}
-      >
-        <Text>hey</Text>
-      </InstagramStories>
+      ></InstagramStories>
     </View>
   );
 };

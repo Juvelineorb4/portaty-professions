@@ -12,8 +12,10 @@ import CustomDatePicker from "./CustomDatePicker";
 import { useForm } from "react-hook-form";
 import styles from "@/utils/styles/CustomPromotions.js";
 import { API } from "aws-amplify";
+import * as customProfile from "@/graphql/CustomMutations/Profile";
 
-const ModalPromotion = ({ data, close, open }) => {
+const ModalPromotion = ({ data, close, open, deletePromotion }) => {
+  console.log(deletePromotion);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const { control } = useForm();
@@ -44,6 +46,28 @@ const ModalPromotion = ({ data, close, open }) => {
       close();
     }
   };
+
+  const onHandleDeletePromotion = async () => {
+    console.log(data?.id);
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(0, 0, 0, 0);
+    try {
+      const result = await API.graphql({
+        query: customProfile.deleteBusinessPromotion,
+        variables: {
+          input: {
+            id: data?.id,
+          },
+        },
+        authMode: "AMAZON_COGNITO_USER_POOLS",
+      });
+      console.log(result);
+      close();
+    } catch (error) {
+      console.log(error);
+      close();
+    }
+  };
   return (
     <Modal visible={open} onRequestClose={close} transparent>
       <TouchableWithoutFeedback onPress={close}>
@@ -71,7 +95,9 @@ const ModalPromotion = ({ data, close, open }) => {
                 fontSize: 16,
               }}
             >
-              Volver a publicar promocion
+              {!deletePromotion
+                ? "Volver a publicar promocion"
+                : "Eliminar promocion"}
             </Text>
 
             <View
@@ -104,17 +130,19 @@ const ModalPromotion = ({ data, close, open }) => {
                   editable={false}
                   text={`Descripcion`}
                 />
-                <Text
-                  style={{
-                    fontFamily: "medium",
-                    color: "red",
-                    marginVertical: 5,
-                    fontSize: 12,
-                    width: 120,
-                  }}
-                >
-                  Solo puedes cambiar las fechas
-                </Text>
+                {!deletePromotion && (
+                  <Text
+                    style={{
+                      fontFamily: "medium",
+                      color: "red",
+                      marginVertical: 5,
+                      fontSize: 12,
+                      width: 120,
+                    }}
+                  >
+                    Solo puedes cambiar las fechas
+                  </Text>
+                )}
                 <CustomDatePicker
                   startDate={startDate}
                   setStartDate={(e) => setStartDate(e)}
@@ -125,9 +153,16 @@ const ModalPromotion = ({ data, close, open }) => {
             </View>
 
             <TouchableOpacity
-              onPress={() => onHandleAgainPromotion()}
+              onPress={() => {
+                if (!deletePromotion) {
+                  onHandleAgainPromotion();
+                } else {
+                  onHandleDeletePromotion();
+                }
+                console.log("elimando");
+              }}
               style={{
-                backgroundColor: "#ffb703",
+                backgroundColor: !deletePromotion ? "#ffb703" : "red",
                 padding: 15,
                 borderRadius: 5,
                 justifyContent: "center",
@@ -136,8 +171,13 @@ const ModalPromotion = ({ data, close, open }) => {
                 borderWidth: 1,
               }}
             >
-              <Text style={{ color: "black", fontFamily: "bold" }}>
-                Volver a publicar
+              <Text
+                style={{
+                  color: !deletePromotion ? "black" : "white",
+                  fontFamily: "bold",
+                }}
+              >
+                {!deletePromotion ? "Volver a publicar" : "Eliminar promocion"}
               </Text>
             </TouchableOpacity>
           </View>

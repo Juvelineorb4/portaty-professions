@@ -35,6 +35,7 @@ const CustomPromotions = ({ route, navigation }) => {
   const [visibleAgain, setVisibleAgain] = useState(false);
   const [dataPromotionAgain, setDataPromotionAgain] = useState(null);
   const [promotions, setPromotions] = useState([]);
+  const [deletePromotionActive, setDeletePromotionActive] = useState(false);
   const [errorDate, setErrorDate] = useState({
     status: false,
     message: "",
@@ -115,7 +116,6 @@ const CustomPromotions = ({ route, navigation }) => {
   };
 
   const onHandleSendPromotion = async (data) => {
-    setLoading(true);
     const userAuth = await Auth.currentAuthenticatedUser();
     startDate.setHours(0, 0, 0, 0);
     endDate.setHours(0, 0, 0, 0);
@@ -131,6 +131,8 @@ const CustomPromotions = ({ route, navigation }) => {
       status: false,
       message: "",
     });
+    setLoading(true);
+
     const apiName = "api-portaty";
     const path = "/business/createPromotion";
 
@@ -320,7 +322,12 @@ const CustomPromotions = ({ route, navigation }) => {
               </View>
             </View>
           ) : (
-            <View>
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <Text
                 style={{
                   fontFamily: "light",
@@ -331,6 +338,39 @@ const CustomPromotions = ({ route, navigation }) => {
               >
                 Ya tienes una promocion activa
               </Text>
+              <TouchableOpacity
+                style={[
+                  {
+                    borderRadius: 5,
+                    borderColor: "#1f1f1f",
+                    borderWidth: 1,
+                    backgroundColor: "red",
+                    padding: 10,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  },
+                ]}
+                onPress={() => {
+                  promotions.map((item) => {
+                    if (item.status == "PUBLISHED") {
+                      setDataPromotionAgain(item);
+                      setDeletePromotionActive(true);
+                      setVisibleAgain(true);
+                    }
+                  });
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: "bold",
+                    fontSize: 12,
+                    textAlign: "center",
+                    color: "white",
+                  }}
+                >
+                  Elimina tu promocion activa
+                </Text>
+              </TouchableOpacity>
             </View>
           )}
         </View>
@@ -356,6 +396,7 @@ const CustomPromotions = ({ route, navigation }) => {
               flex: 1,
               flexDirection: "row",
               justifyContent: "center",
+              alignItems: "center",
               width: 320,
               marginBottom: 10,
             }}
@@ -411,123 +452,127 @@ const CustomPromotions = ({ route, navigation }) => {
             </View>
           </View>
 
-          {promotions.map((item, index) => (
-            <View
-              key={index}
-              style={{
-                flex: 1,
-                flexDirection: "row",
-                justifyContent: "center",
-                width: 320,
-              }}
-            >
+          {promotions.map((item, index) => {
+            return (
               <View
+                key={index}
                 style={{
-                  justifyContent: "center",
-                  alignItems: "center",
+                  flex: 1,
                   flexDirection: "row",
-                }}
-              >
-                <Text
-                  style={{
-                    padding: 5,
-                    borderTopLeftRadius: 5,
-                    width: 80,
-                    textAlign: "center",
-                    fontFamily: "light",
-                    fontSize: 12,
-                  }}
-                >
-                  Inicio {String(item.dateInitial.split("T")[0])}
-                </Text>
-                <Text
-                  style={{
-                    padding: 5,
-                    borderLeftWidth: 0,
-                    width: 80,
-                    textAlign: "center",
-                    fontFamily: "light",
-                    fontSize: 12,
-                  }}
-                >
-                  Fin {String(item.dateFinal.split("T")[0])}
-                </Text>
-              </View>
-              <View></View>
-              <View
-                style={{
                   justifyContent: "center",
                   alignItems: "center",
-                  width: 80,
+                  width: 320,
                 }}
               >
-                <TouchableOpacity
+                <View
                   style={{
-                    borderColor: "#1f1f1f",
-                    borderWidth: 1,
-                    width: 70,
-                    borderRadius: 8,
-                    backgroundColor:
-                      item.status !== "PUBLISHED" && item.status !== "INREVIEW"
-                        ? "#ffb703"
-                        : "#ffffff",
-                  }}
-                  onPress={() => {
-                    if (
-                      item.status !== "PUBLISHED" &&
-                      item.status !== "INREVIEW"
-                    ) {
-                      setDataPromotionAgain(item);
-                      setVisibleAgain(true);
-                    }
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flexDirection: "row",
                   }}
                 >
+                  <Text
+                    style={{
+                      padding: 5,
+                      borderTopLeftRadius: 5,
+                      width: 80,
+                      textAlign: "center",
+                      fontFamily: "light",
+                      fontSize: 12,
+                    }}
+                  >
+                    Inicio {String(item.dateInitial.split("T")[0])}
+                  </Text>
                   <Text
                     style={{
                       padding: 5,
                       borderLeftWidth: 0,
-                      borderRightWidth: 0,
-                      textAlign: "center",
-                      fontFamily:
-                        item.status !== "PUBLISHED" &&
-                        item.status !== "INREVIEW"
-                          ? "medium"
-                          : "regular",
-                      fontSize: 10,
-                    }}
-                  >
-                    {item.status === "PUBLISHED"
-                      ? "Activo"
-                      : item.status === "INREVIEW"
-                      ? "En revision"
-                      : "Volver a publicar"}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-              <View
-                style={{
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <TouchableOpacity onPress={() => Linking.openURL(item.image)}>
-                  <Text
-                    style={{
-                      padding: 5,
-                      borderTopRightRadius: 5,
                       width: 80,
                       textAlign: "center",
-                      fontFamily: "medium",
+                      fontFamily: "light",
                       fontSize: 12,
-                      color: "blue",
                     }}
                   >
-                    Ver foto
+                    Fin {String(item.dateFinal.split("T")[0])}
                   </Text>
-                </TouchableOpacity>
+                </View>
+                <View></View>
+                <View
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: 80,
+                  }}
+                >
+                  <TouchableOpacity
+                    style={{
+                      borderColor: "#1f1f1f",
+                      borderWidth: 1,
+                      width: 70,
+                      borderRadius: 8,
+                      backgroundColor:
+                        item.status !== "PUBLISHED" &&
+                        item.status !== "INREVIEW"
+                          ? "#ffb703"
+                          : "#ffffff",
+                    }}
+                    onPress={() => {
+                      if (
+                        item.status !== "PUBLISHED" &&
+                        item.status !== "INREVIEW"
+                      ) {
+                        setDataPromotionAgain(item);
+                        setVisibleAgain(true);
+                      }
+                    }}
+                  >
+                    <Text
+                      style={{
+                        padding: 5,
+                        borderLeftWidth: 0,
+                        borderRightWidth: 0,
+                        textAlign: "center",
+                        fontFamily:
+                          item.status !== "PUBLISHED" &&
+                          item.status !== "INREVIEW"
+                            ? "medium"
+                            : "regular",
+                        fontSize: 10,
+                      }}
+                    >
+                      {item.status === "PUBLISHED"
+                        ? "Activo"
+                        : item.status === "INREVIEW"
+                        ? "En revision"
+                        : "Volver a publicar"}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <View
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <TouchableOpacity onPress={() => Linking.openURL(item.image)}>
+                    <Text
+                      style={{
+                        padding: 5,
+                        borderTopRightRadius: 5,
+                        width: 80,
+                        textAlign: "center",
+                        fontFamily: "medium",
+                        fontSize: 12,
+                        color: "blue",
+                      }}
+                    >
+                      Ver foto
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
-          ))}
+            );
+          })}
         </View>
         <ModalAlert
           text={`Se publico tu promocion`}
@@ -544,11 +589,14 @@ const CustomPromotions = ({ route, navigation }) => {
           close={() => {
             setLoadingPage(false);
             setVisibleAgain(false);
+            setDataPromotionAgain(null);
+            setDeletePromotionActive(false);
             setTimeout(() => {
               setLoadingPage(true);
             }, 2000);
           }}
           open={visibleAgain}
+          deletePromotion={deletePromotionActive}
         />
       </ScrollView>
     );

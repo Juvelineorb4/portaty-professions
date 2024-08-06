@@ -65,7 +65,7 @@ const SearchPost = ({ route, navigation }) => {
   const {
     data: { item, images },
   } = route.params;
-
+  console.log(images)
   const actividad = JSON.parse(item.activity);
   const getPdf = async () => {
     const permissions =
