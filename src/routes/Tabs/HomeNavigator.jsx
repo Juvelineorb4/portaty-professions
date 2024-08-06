@@ -19,6 +19,7 @@ const HomeNavigator = ({ route, navigation }) => {
     <Stack.Navigator id="Home_Stack" initialRouteName={`FavoritesHome`}>
       <Stack.Screen
         name="FavoritesHome"
+        initialParams={route?.params}
         options={{
           animation: "slide_from_right",
           header: (props) =>

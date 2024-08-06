@@ -214,6 +214,7 @@ const FavoritesHome = ({ navigation, route }) => {
             data: item,
           })
         }
+        promotionID={route?.params?.promotion ? route?.params?.promotionID : ""}
       />
     );
 
