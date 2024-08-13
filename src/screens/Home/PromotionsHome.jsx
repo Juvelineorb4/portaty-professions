@@ -18,7 +18,6 @@ const PromotionsHome = ({ login, promotion, promotionID }) => {
   const [stories, setStories] = useState([]);
   const [business, setBusiness] = useState(false);
   const [businessId, setBusinessId] = useState(null);
-
   const fetchBusiness = async () => {
     try {
       const result = await API.graphql({
@@ -56,6 +55,9 @@ const PromotionsHome = ({ login, promotion, promotionID }) => {
       const response = await API.get(api, path, params);
       const updateStories = () => {
         const result = response?.data?.map((item, index) => {
+          const list = item?.data?.images
+            ?.map((image) => JSON.parse(image))
+            .sort((a, b) => a.key - b.key);
           const stories = item?.stories?.map((story, index) => {
             if (story?.text) {
               return {
@@ -102,6 +104,19 @@ const PromotionsHome = ({ login, promotion, promotionID }) => {
                           borderRadius: 5,
                         },
                       ]}
+                      onPress={() => {
+                        console.log("Story");
+                        navigation.navigate("Search_Tab", {
+                          screen: "SearchPost",
+                          params: {
+                            data: {
+                              item: item?.data,
+                              images: list,
+                            },
+                          },
+                        });
+                        console.log("Story 2");
+                      }}
                     >
                       <Text
                         style={{

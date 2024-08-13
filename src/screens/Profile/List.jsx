@@ -6,7 +6,6 @@ import CustomButton from "@/components/CustomButton";
 
 const List = ({ route, navigation }) => {
   const { data, user } = route.params;
-  console.log(data[0])
   const global = require("@/utils/styles/global.js");
   if (data.length !== 0)
     return (

@@ -442,8 +442,6 @@ const Page = ({ route, navigation }) => {
 
   const fetchRatings = async ({ data }) => {
     let business = item;
-    console.log(business);
-    return;
     try {
       const fetchAllRatings = async (nextToken, result = []) => {
         const response = await API.graphql({
@@ -470,14 +468,6 @@ const Page = ({ route, navigation }) => {
 
       const allRatings = await fetchAllRatings();
       setListRatings(allRatings);
-      // const ratings = await API.graphql({
-      //   query: queries.businessCommentsByBusinessID,
-      //   variables: {
-      //     businessID: business?.businessID,
-      //   },
-      //   authMode: "AWS_IAM",
-      // });
-      // console.log(ratings.data.businessCommentsByBusinessID.items)
     } catch (error) {
       console.log("eres tu", error);
     }
@@ -1251,7 +1241,6 @@ const Page = ({ route, navigation }) => {
         </TouchableOpacity>
         {/* Catalogo */}
         <View>
-          {console.log(item?.catalogpdf)}
           <TouchableOpacity
             style={[
               {

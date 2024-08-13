@@ -61,7 +61,6 @@ const FavoritesHome = ({ navigation, route }) => {
   const fetchFavorites = async () => {
     setLoading(true);
     if (userAuth === null) {
-      console.log(userAuth);
       setLoading(false);
       return;
     }
@@ -144,7 +143,6 @@ const FavoritesHome = ({ navigation, route }) => {
         console.log("Permiso de ubicación denegado");
         // Realiza acciones según el permiso denegado
         const { status } = await Location.requestForegroundPermissionsAsync();
-        console.log("aqui", status);
       }
     } catch (error) {
       console.error("Error al verificar permiso:", error);

@@ -211,14 +211,6 @@ const FavoritePage = ({ navigation, route }) => {
 
       const allRatings = await fetchAllRatings();
       setListRatings(allRatings);
-      // const ratings = await API.graphql({
-      //   query: queries.businessCommentsByBusinessID,
-      //   variables: {
-      //     businessID: business?.businessID,
-      //   },
-      //   authMode: "AWS_IAM",
-      // });
-      // console.log(ratings.data.businessCommentsByBusinessID.items)
     } catch (error) {
       console.log("eres tu", error);
     }
@@ -238,11 +230,9 @@ const FavoritePage = ({ navigation, route }) => {
       const response = await API.get(api, path, params);
       setRatingsDetails(response.data);
     } catch (error) {
-      console.log("ERROR A BUSCAR RATINGS: ", error.response.data);
     }
   };
   const onDeleteFavorite = async () => {
-    console.log("LO QUE SE BORRARAÑ ", item.id);
     const favorites = await API.graphql({
       query: customFavorites.deleteFavorites,
       variables: {
@@ -345,7 +335,6 @@ const FavoritePage = ({ navigation, route }) => {
         `lastView_${businessID}`,
         JSON.stringify(currentViewInfo)
       );
-      console.log("ITEMGUARDADO: ", `lastView_${businessID}`);
     } catch (error) {
       console.log("Error al registrar analitica: ", error);
     }

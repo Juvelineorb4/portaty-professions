@@ -32,7 +32,6 @@ const ModalInteractions = ({ businessID, close, open }) => {
 
   const fetchInteractions = async (data) => {
     const { description } = data;
-    console.log(description, starRating, businessID);
     setLoading(true);
     try {
       const rating = await API.graphql({
@@ -47,7 +46,6 @@ const ModalInteractions = ({ businessID, close, open }) => {
         },
         authMode: "AMAZON_COGNITO_USER_POOLS",
       });
-      console.log(rating);
       setLoading(false);
       setListUpdate(true)
       close();

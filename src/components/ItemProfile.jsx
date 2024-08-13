@@ -62,7 +62,6 @@ const ItemProfile = ({ data, identityID, styled, schedule, type }) => {
       })
       .join(" / ");
 
-    console.log(pContent);
 
     setWeekSchedule(pContent);
   };

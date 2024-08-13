@@ -65,7 +65,8 @@ const SearchPost = ({ route, navigation }) => {
   const {
     data: { item, images },
   } = route.params;
-  console.log(images)
+
+  console.log(route.params.data.images)
   const actividad = JSON.parse(item.activity);
   const getPdf = async () => {
     const permissions =
@@ -426,6 +427,7 @@ const SearchPost = ({ route, navigation }) => {
   }, [countryCity, userAuth]);
 
   if (!post || !listRatings || listUpdate) return <SkeletonExample />;
+
   return (
     <View
       style={[

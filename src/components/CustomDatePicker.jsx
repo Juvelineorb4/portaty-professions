@@ -25,7 +25,6 @@ const CustomDatePicker = ({startDate, setStartDate, endDate, setEndDate}) => {
     setShowStartPicker(Platform.OS === "ios");
     setStartDate(currentDate);
     if (currentDate > endDate) {
-      console.log("se cumple");
       setEndDate(currentDate);
       dateStrings(currentDate, currentDate);
       return;
@@ -34,7 +33,6 @@ const CustomDatePicker = ({startDate, setStartDate, endDate, setEndDate}) => {
   };
 
   const onEndDateChange = (event, selectedDate) => {
-    console.log("aqui2", startDate);
     const currentDate = selectedDate || endDate;
     setShowEndPicker(Platform.OS === "ios");
     if (currentDate >= startDate) {
@@ -44,7 +42,6 @@ const CustomDatePicker = ({startDate, setStartDate, endDate, setEndDate}) => {
   };
 
   const dateStrings = (start, end) => {
-    console.log("start", start, "end", end);
     const dayStart = start.getUTCDate();
     const monthStart = start.getUTCMonth() + 1;
     const yearStart = start.getUTCFullYear();

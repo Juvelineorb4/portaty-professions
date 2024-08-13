@@ -35,6 +35,7 @@ const CustomPromotions = ({ route, navigation }) => {
   const [visibleAgain, setVisibleAgain] = useState(false);
   const [dataPromotionAgain, setDataPromotionAgain] = useState(null);
   const [promotions, setPromotions] = useState([]);
+  const [promotionActive, setPromotionActive] = useState(false);
   const [deletePromotionActive, setDeletePromotionActive] = useState(false);
   const [errorDate, setErrorDate] = useState({
     status: false,
@@ -52,7 +53,15 @@ const CustomPromotions = ({ route, navigation }) => {
         },
       });
       setPromotions(response.data.listBusinessPromotions.items);
-      console.log(response.data.listBusinessPromotions.items);
+
+      const active = response.data.listBusinessPromotions.items.filter(
+        (item) => item.status === "PUBLISHED" || item.status === "INREVIEW"
+      );
+      if (active.length === 0) {
+        setPromotionActive(false);
+      } else {
+        setPromotionActive(true);
+      }
       setLoadingPage(true);
     } catch (error) {
       console.log(error);
@@ -79,7 +88,7 @@ const CustomPromotions = ({ route, navigation }) => {
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [loadingPage]);
 
   function urlToBlob(url) {
     return new Promise((resolve, reject) => {
@@ -205,7 +214,7 @@ const CustomPromotions = ({ route, navigation }) => {
             Crea una promocion nueva
           </Text>
 
-          {promotions.length === 0 ? (
+          {!promotionActive ? (
             <View
               style={{
                 flexDirection: "row",
@@ -352,7 +361,11 @@ const CustomPromotions = ({ route, navigation }) => {
                 ]}
                 onPress={() => {
                   promotions.map((item) => {
-                    if (item.status == "PUBLISHED") {
+                    if (
+                      item.status == "PUBLISHED" ||
+                      item.status == "INREVIEW"
+                    ) {
+                      console.log(item);
                       setDataPromotionAgain(item);
                       setDeletePromotionActive(true);
                       setVisibleAgain(true);
@@ -521,6 +534,7 @@ const CustomPromotions = ({ route, navigation }) => {
                         item.status !== "PUBLISHED" &&
                         item.status !== "INREVIEW"
                       ) {
+                        console.log(item)
                         setDataPromotionAgain(item);
                         setVisibleAgain(true);
                       }
@@ -587,10 +601,12 @@ const CustomPromotions = ({ route, navigation }) => {
         <ModalPromotion
           data={dataPromotionAgain}
           close={() => {
-            setLoadingPage(false);
             setVisibleAgain(false);
             setDataPromotionAgain(null);
             setDeletePromotionActive(false);
+          }}
+          reload={() => {
+            setLoadingPage(false);
             setTimeout(() => {
               setLoadingPage(true);
             }, 2000);

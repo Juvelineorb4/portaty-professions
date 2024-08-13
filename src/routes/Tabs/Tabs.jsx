@@ -137,7 +137,7 @@ const TabIcon = ({ isFocused, tabIcon, label, index }) => {
             height: 25,
             resizeMode: "contain",
             // marginTop: isFocused ? -5 : 0,
-            marginBottom: 10
+            marginBottom: 10,
           }}
           source={isFocused ? tabIcon.activeIcon : tabIcon.inActiveIcon}
         />
@@ -156,14 +156,13 @@ const TabIcon = ({ isFocused, tabIcon, label, index }) => {
   );
 };
 const Tabs = () => {
-
   return (
     <Tab.Navigator
       tabBar={(props) => <MyTabBar {...props} />}
       initialRouteName={`Search_Tab`}
       screenOptions={{
         headerShown: false,
-        unmountOnBlur: true
+        unmountOnBlur: true,
       }}
     >
       <Tab.Screen
@@ -176,6 +175,15 @@ const Tabs = () => {
           headerShown: false,
           tabBarLabel: "",
         }}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            e.preventDefault();
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "Home_Tab" }],
+            });
+          },
+        })}
         component={HomeNavigator}
       />
       <Tab.Screen
@@ -187,9 +195,17 @@ const Tabs = () => {
           },
           headerShown: false,
           tabBarLabel: "",
-          unmountOnBlur: true
+          unmountOnBlur: true,
         }}
-        
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            e.preventDefault();
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "Search_Tab" }],
+            });
+          },
+        })}
         component={SearchNavigator}
       />
       <Tab.Screen
@@ -203,7 +219,15 @@ const Tabs = () => {
           tabBarLabel: "",
         }}
         component={ProfileNavigator}
-
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            e.preventDefault();
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "Profile_Tab" }],
+            });
+          },
+        })}
       />
     </Tab.Navigator>
   );

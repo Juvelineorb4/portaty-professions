@@ -19,7 +19,6 @@ const Post = ({ data, image, styled, input }) => {
   const global = require("@/utils/styles/global.js");
   const navigation = useNavigation();
   const [post, setPost] = useState([]);
-  console.log(data)
   const [loading, setLoading] = useState(false);
   const list = data?.images
     ?.map((image) => JSON.parse(image))
