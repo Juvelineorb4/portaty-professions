@@ -19,6 +19,9 @@
       },
       "storage": {
         "s3Professions": {}
+      },
+      "api": {
+        "professionGraphql": {}
       }
     }
   }

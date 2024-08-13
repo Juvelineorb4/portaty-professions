@@ -1,7 +1,7 @@
 import { Pressable, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import Promotions from "@/components/Home/Promotions";
-import { userAuthenticated } from "@/atoms";
+import { userAuthenticated, mapUser } from "@/atoms";
 import { useRecoilValue } from "recoil";
 import { API } from "aws-amplify";
 import styles from "@/utils/styles/Promotions.js";
@@ -14,6 +14,7 @@ const PromotionsHome = ({ login, promotion, promotionID }) => {
   const navigation = useNavigation();
   const global = require("@/utils/styles/global.js");
   const userAuth = useRecoilValue(userAuthenticated);
+  const userLocation = useRecoilValue(mapUser);
   const [stories, setStories] = useState([]);
   const [business, setBusiness] = useState(false);
   const [businessId, setBusinessId] = useState(null);
@@ -44,6 +45,12 @@ const PromotionsHome = ({ login, promotion, promotionID }) => {
     const path = "/listPromotions";
     const params = {
       headers: {},
+      queryStringParameters: {
+        location: JSON.stringify({
+          lat: userLocation?.latitude,
+          lon: userLocation?.longitude,
+        }),
+      },
     };
     try {
       const response = await API.get(api, path, params);
