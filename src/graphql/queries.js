@@ -303,6 +303,11 @@ export const getUsers = /* GraphQL */ `
         nextToken
         __typename
       }
+      lastLocation {
+        lat
+        lon
+        __typename
+      }
       owner
       createdAt
       updatedAt
@@ -685,6 +690,7 @@ export const getBusinessPromotion = /* GraphQL */ `
       status
       isView
       image
+      notifiedUserIDs
       owner
       createdAt
       updatedAt
@@ -713,6 +719,7 @@ export const listBusinessPromotions = /* GraphQL */ `
         status
         isView
         image
+        notifiedUserIDs
         owner
         createdAt
         updatedAt
@@ -748,6 +755,7 @@ export const businessPromotionsByUserID = /* GraphQL */ `
         status
         isView
         image
+        notifiedUserIDs
         owner
         createdAt
         updatedAt
@@ -783,6 +791,7 @@ export const businessPromotionsByBusinessID = /* GraphQL */ `
         status
         isView
         image
+        notifiedUserIDs
         owner
         createdAt
         updatedAt

@@ -147,6 +147,7 @@ type Users
     @hasMany(indexName: "byUserComments", fields: ["id"])
   promotions: [BusinessPromotion]
     @hasMany(indexName: "byUserPromotions", fields: ["id"])
+  lastLocation: Coordinates
   owner: String
     @auth(
       rules: [
@@ -255,6 +256,7 @@ type BusinessPromotion
   status: BusinessPromotionStatus @default(value: "INREVIEW")
   isView: Boolean @default(value: "false")
   image: String
+  notifiedUserIDs: [ID!]
   owner: String
     @auth(
       rules: [{ allow: owner, operations: [read, delete] }, { allow: public }]
@@ -266,6 +268,7 @@ enum BusinessPromotionStatus {
   PUBLISHED
   REFUSED
   DELETED
+  EXPIRED
 }
 type Favorites
   @model

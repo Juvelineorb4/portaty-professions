@@ -388,6 +388,11 @@ export const createUsers = /* GraphQL */ `
         nextToken
         __typename
       }
+      lastLocation {
+        lat
+        lon
+        __typename
+      }
       owner
       createdAt
       updatedAt
@@ -425,6 +430,11 @@ export const updateUsers = /* GraphQL */ `
         nextToken
         __typename
       }
+      lastLocation {
+        lat
+        lon
+        __typename
+      }
       owner
       createdAt
       updatedAt
@@ -460,6 +470,11 @@ export const deleteUsers = /* GraphQL */ `
       }
       promotions {
         nextToken
+        __typename
+      }
+      lastLocation {
+        lat
+        lon
         __typename
       }
       owner
@@ -780,6 +795,7 @@ export const createBusinessPromotion = /* GraphQL */ `
       status
       isView
       image
+      notifiedUserIDs
       owner
       createdAt
       updatedAt
@@ -842,6 +858,7 @@ export const updateBusinessPromotion = /* GraphQL */ `
       status
       isView
       image
+      notifiedUserIDs
       owner
       createdAt
       updatedAt
@@ -904,6 +921,7 @@ export const deleteBusinessPromotion = /* GraphQL */ `
       status
       isView
       image
+      notifiedUserIDs
       owner
       createdAt
       updatedAt
