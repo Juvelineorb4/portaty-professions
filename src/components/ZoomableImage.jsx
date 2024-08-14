@@ -24,7 +24,7 @@ const ZoomableImage = ({ uri, imageHeigth=360 }) => {
       lastScale.value = scale.value;
     },
     onActive: (event) => {
-      scale.value = Math.max(1, lastScale.value * event.scale); // Evita que el zoom sea menor que 1
+      scale.value = Math.max(1, lastScale.value * event.scale);
     },
     onEnd: () => {
       if (scale.value < 1.1) {
@@ -44,8 +44,8 @@ const ZoomableImage = ({ uri, imageHeigth=360 }) => {
     },
     onActive: (event) => {
       if (scale.value > 1) {
-        translateX.value = lastTranslateX.value + event.translationX / 2; // Reduce la velocidad del desplazamiento
-        translateY.value = lastTranslateY.value + event.translationY / 2; // Reduce la velocidad del desplazamiento
+        translateX.value = lastTranslateX.value + event.translationX / 2; 
+        translateY.value = lastTranslateY.value + event.translationY / 2; 
       }
     },
     onEnd: () => {
