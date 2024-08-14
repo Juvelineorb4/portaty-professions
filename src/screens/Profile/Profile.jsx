@@ -54,7 +54,7 @@ const Profile = ({ route, navigation }) => {
   const onShare = async () => {
     try {
       await Share.share({
-        message: `Han compartido contigo un negocio, da click para mirarlo https://www.portaty.com/share/list?id=${user.id}`,
+        message: `Han compartido contigo un negocio, da click para mirarlo https://www.portaty.com/share/list?id=${user["custom:identityID"]}`,
       });
     } catch (error) {
       console.error("Error sharing:", error);
@@ -128,7 +128,6 @@ const Profile = ({ route, navigation }) => {
         },
       });
     } catch (error) {
-      const { message } = new Error(error);
       // status code del mensaje
       console.log("ERROR: ", error.response.status);
       // data del mensaje
@@ -141,7 +140,6 @@ const Profile = ({ route, navigation }) => {
     setIsLoading(false);
   };
   const onConfirmCodeEmail = async () => {
-    console.log(codeInputs);
     setIsLoading(true);
     const data = await Auth.currentAuthenticatedUser();
     const tableID = data?.attributes["custom:userTableID"];
@@ -150,7 +148,6 @@ const Profile = ({ route, navigation }) => {
         "email",
         codeInputs
       );
-      console.log("RESULT: ", result);
       if (result === "SUCCESS") {
         const result = await API.graphql({
           query: mutations.updateUsers,
@@ -367,12 +364,18 @@ const Profile = ({ route, navigation }) => {
                 />
               </View>
             </View>
-            {errorEmail && <Text style={{
-              textAlign: 'center',
-              color: 'red',
-              fontFamily: 'medium'
-            }}>{errorMessage}</Text>}
-            
+            {errorEmail && (
+              <Text
+                style={{
+                  textAlign: "center",
+                  color: "red",
+                  fontFamily: "medium",
+                }}
+              >
+                {errorMessage}
+              </Text>
+            )}
+
             {confirmEmail && (
               <>
                 <View style={[styles.line, global.bgMidGray]} />

@@ -11,7 +11,7 @@ const CustomInteractions = ({ route, navigation }) => {
   const global = require("@/utils/styles/global.js");
   const comments = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
   const [active, setActive] = useState(false);
-  const { business, list } = route.params;
+  const { business, list, author } = route.params;
   const userAuth = useRecoilValue(userAuthenticated);
   const [errorRating, setErrorRating] = useState(false);
 
@@ -25,6 +25,8 @@ const CustomInteractions = ({ route, navigation }) => {
   useEffect(() => {
     if (userAuth) checkList();
   }, []);
+
+  // console.log(list)
   return (
     <ScrollView
       style={[
@@ -110,7 +112,7 @@ const CustomInteractions = ({ route, navigation }) => {
           ))}
         </View>
       </ScrollView>
-      {userAuth && (
+      {userAuth && !author && (
         <CustomButton
           text={
             errorRating
@@ -127,12 +129,11 @@ const CustomInteractions = ({ route, navigation }) => {
           ]}
         />
       )}
-
       <ModalInteractions
-        buttonStyles={[
-          styles.button,
-          errorRating ? global.bgWhite : global.bgYellow,
-        ]}
+        close={() => {
+          setActive(false);
+          navigation.goBack();
+        }}
         open={active}
         businessID={business.businessID ? business.businessID : business.id}
       />

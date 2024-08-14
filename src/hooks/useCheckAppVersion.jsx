@@ -49,7 +49,7 @@ const useCheckAppVersion = () => {
           );
           break;
         case "ios":
-          alert(`Redirección a App Store no configurada.`);
+          Linking.openURL(`https://apps.apple.com/us/app/portaty/id6497407592`);
           break;
         default:
           break;

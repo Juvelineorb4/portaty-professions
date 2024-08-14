@@ -22,9 +22,10 @@ import {
   searchCache,
   kmRadio,
   totalSearch,
-  connectionStatus,
   searchAddressInitial,
   mapUserChange,
+  connectionStatus,
+  searchMap,
 } from "@/atoms";
 import { useRecoilState, useRecoilValue } from "recoil";
 import * as Location from "expo-location";
@@ -50,7 +51,7 @@ const Search = ({ route }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [statusFilter, setStatusFilter] = useState(false);
   const [filterRadio, setFilterRadio] = useRecoilState(kmRadio);
-  const [isLoading, setIsLoading] = useState(false);
+  // const { location } = useLocation();
   const [country, setCountry] = useState(null);
   const [countries, setCountries] = useState([]);
   const [visibleCountries, setVisibleCountries] = useState(false);
@@ -59,8 +60,11 @@ const Search = ({ route }) => {
   const [searchAddress, setSearchAddress] =
     useRecoilState(searchAddressInitial);
   const [city, setCity] = useState("");
-  const [region, setRegion] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [isConnected, setIsConnected] = useRecoilState(connectionStatus);
+
+  /* Mapa */
+  const [searchLocal, setSearchLocal] = useRecoilState(searchMap);
 
   const getAddress = async (coords) => {
     let direcciones = await Location.reverseGeocodeAsync(coords);
@@ -72,14 +76,13 @@ const Search = ({ route }) => {
         direccion.region === null ? "" : direccion.region
       }, ${direccion.postalCode === null ? "" : direccion.postalCode} `;
       setSearchAddress(direccionString);
-      console.log(direccionString);
-      setRegion(direccion.region);
-      setCity(direccion.city);
+      setCity(direccion.region);
     }
   };
 
   const kilometers = [1, 5, 10, 20, 50, 100];
   let number = 26 * moreItems;
+
   const getData = async () => {
     if (!searchActive) setIsLoading(true);
     const api = "api-opense";
@@ -100,19 +103,19 @@ const Search = ({ route }) => {
       const response = await API.get(api, path, params);
       setTotalData(response.total);
       setTotalLimit(response.limit);
-      console.log("data:", response.total, "limit:", response.limit);
       let newRenderItems = [];
       const long = 26;
       for (let i = 0; i < response.items.length; i += long) {
         let cut = response.items.slice(i, i + long);
         newRenderItems.push(cut);
       }
+
       setIsLoading(false);
       setSearchActive(true);
       setSearchCacheActive(newRenderItems);
       return setItems(newRenderItems);
     } catch (error) {
-      return console.log(error);
+      return console.log("ERROR EN BSUQUEDA DEFAULT:  ", error);
     }
   };
 
@@ -124,7 +127,7 @@ const Search = ({ route }) => {
         setIsConnected(state.isConnected);
       } else {
         setIsConnected(state.isConnected);
-        searchActive(false);
+        setSearchActive(false);
       }
     });
   };
@@ -138,26 +141,10 @@ const Search = ({ route }) => {
   };
 
   async function getCountryCode(array) {
-    let geocode = await Location.reverseGeocodeAsync(userLocation);
-    let countryCodes = geocode[0].isoCountryCode;
+    const countryCode = await Cellular.getIsoCountryCodeAsync();
     array.map((item, index) => {
-      if (item.cca2 === countryCodes.toUpperCase()) {
-        let arrayCountries = [...array];
+      if (item.cca2 === countryCode.toUpperCase()) {
         setCountry(item);
-        let country = arrayCountries.filter(
-          (item) => item.cca2 === countryCodes.toUpperCase()
-        );
-
-        if (country.length > 0) {
-          // Eliminar el país del array original
-          arrayCountries = arrayCountries.filter(
-            (item) => item.cca2 !== countryCodes.toUpperCase()
-          );
-
-          // Agregar el país al principio del array
-          arrayCountries.unshift(country[0]);
-        }
-        setCountries(arrayCountries);
       }
     });
   }
@@ -183,13 +170,12 @@ const Search = ({ route }) => {
   /* Refresh */
 
   useEffect(() => {
-    getAddress(userLocation);
     fetch(`https://restcountries.com/v3.1/all?fields=name,flags,idd,cca2`)
       .then((response) => {
         return response.json();
       })
       .then((item) => {
-        console.log(item[0]);
+        setCountries(item);
         getCountryCode(item);
       });
     getConnection();
@@ -233,6 +219,20 @@ const Search = ({ route }) => {
       </View>
     );
   }
+
+  // if (searchActive && isConnected && !isLoading) {
+  //   return (
+  //     <View style={{
+  //       flex: 1
+  //     }}>
+  //       <MapSearch
+  //         markers={searchCacheActive}
+  //         initialLocation={userLocation}
+  //         open={true}
+  //       />
+  //     </View>
+  //   );
+  // }
   if (searchActive && isConnected && !isLoading) {
     return (
       <View style={{ flex: 1, backgroundColor: "#FFFFFF", paddingBottom: 50 }}>
@@ -258,7 +258,7 @@ const Search = ({ route }) => {
               style={{ flexDirection: "row", alignItems: "center" }}
               onPress={() => {
                 setModalVisible(!modalVisible);
-                // if (searchAddress === "") getAddress(userLocation);
+                if (searchAddress === "") getAddress(userLocation);
               }}
             >
               <Image
@@ -321,7 +321,7 @@ const Search = ({ route }) => {
                 >
                   <TouchableOpacity
                     style={[
-                      styles.inputContainer,
+                      styles.inputContainerBot,
                       {
                         height: 50,
                         width: "100%",
@@ -382,7 +382,7 @@ const Search = ({ route }) => {
                         position: "absolute",
                         top: 50,
                         backgroundColor: "#fff",
-                        zIndex: 15,
+                        zIndex: 10,
                         borderRadius: 5,
                       }}
                     >
@@ -391,7 +391,6 @@ const Search = ({ route }) => {
                         onChangeText={(e) => setSearchCountry(e)}
                         placeholder={`Busca tu pais`}
                         defaultValue={searchCountry}
-                        placeholderTextColor={"#1f1f1f80"}
                         style={{
                           margin: 5,
                           borderWidth: 1,
@@ -400,7 +399,6 @@ const Search = ({ route }) => {
                           fontFamily: "medium",
                           fontSize: 12,
                           borderRadius: 5,
-                          height: 40,
                         }}
                       />
                       <View style={[{ flex: 1 }]}>
@@ -473,89 +471,38 @@ const Search = ({ route }) => {
                     city={city}
                   />
                 )}
-                {!visibleCountries && (
-                  <View style={{ flex: 1 }}>
+                <View style={{ flex: 1 }}>
+                  <Text
+                    style={{
+                      fontFamily: "medium",
+                      fontSize: 15,
+                      marginVertical: 20,
+                      lineHeight: 25,
+                    }}
+                  >
+                    {`Te encuentras en: `}{" "}
                     <Text
                       style={{
-                        fontFamily: "medium",
-                        fontSize: 15,
-                        marginVertical: 20,
-                        lineHeight: 25,
+                        fontFamily: "regular",
+                        fontSize: 14,
                       }}
                     >
-                      {`Te encuentras en: `}{" "}
-                      <Text
-                        style={{
-                          fontFamily: "regular",
-                          fontSize: 14,
-                        }}
-                      >
-                        {`${searchAddress}`}
-                        {"  "}
-                      </Text>
-                      <Text
-                        onPress={() => setVisibleMap(true)}
-                        style={{
-                          fontFamily: "bold",
-                          fontSize: 15,
-                          textDecorationLine: "underline",
-                        }}
-                      >
-                        Cambiar
-                      </Text>
+                      {`${searchAddress}`}
+                      {"  "}
                     </Text>
-
-                    {/* <View>
                     <Text
-                      style={{ fontFamily: "regular", fontSize: 13 }}
-                    >{`La distancia de tu radio son: ${filterRadio} km`}</Text>
-                    <View
+                      onPress={() => setVisibleMap(true)}
                       style={{
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        flexWrap: "wrap",
-                        marginVertical: 15,
+                        fontFamily: "bold",
+                        fontSize: 15,
+                        textDecorationLine: "underline",
                       }}
                     >
-                      {kilometers.map((item, index) => (
-                        <TouchableOpacity
-                          key={index}
-                          onPress={() => setFilterRadio(item)}
-                          style={[
-                            filterRadio === item
-                              ? global.bgYellow
-                              : global.bgWhite,
-                            {
-                              padding: 7,
-                              borderRadius: 4,
-                              marginBottom: 7,
-                              borderWidth: 0.7,
-                              borderColor:
-                                filterRadio === item ? "#1f1f1f" : "#1f1f1f",
-                            },
-                          ]}
-                        >
-                          <Text
-                            style={[
-                              { fontFamily: "medium", fontSize: 12 },
-                              filterRadio === item
-                                ? global.black
-                                : global.black,
-                            ]}
-                          >
-                            {item}km
-                          </Text>
-                        </TouchableOpacity>
-                      ))}
-                    </View>
-                    <Text
-                      style={{ fontFamily: "regular", fontSize: 13 }}
-                    >{`La distancia esta reflejada en un radio de kilometros`}</Text>
-                  </View> */}
-                  </View>
-                )}
-                {/* <View style={{}}> */}
-                {!visibleCountries && (
+                      Cambiar
+                    </Text>
+                  </Text>
+                </View>
+                <View style={{}}>
                   <TouchableOpacity
                     style={[
                       global.bgYellow,
@@ -583,8 +530,7 @@ const Search = ({ route }) => {
                       {`Buscar`}
                     </Text>
                   </TouchableOpacity>
-                )}
-                {/* </View> */}
+                </View>
               </View>
             </View>
           </Modal>
@@ -615,9 +561,6 @@ const Search = ({ route }) => {
                   paddingBottom: 20,
                 }}
               >
-                {/* {totalData > totalLimit && (
-                <ActivityIndicator size="large" color="#5E2129" />
-              )} */}
                 {totalData === totalLimit ? (
                   <Text style={{ fontFamily: "regular", fontSize: 14 }}>
                     No hay mas negocios por mostrar
@@ -677,18 +620,6 @@ const Search = ({ route }) => {
         )}
       </View>
     );
-    // } else {
-    //   return (
-    //     <View
-    //       style={[
-    //         { flex: 1, alignItems: "center", justifyContent: "center" },
-    //         global.bgWhite,
-    //       ]}
-    //     >
-    //       <SkeletonSearch />
-    //     </View>
-    //   );
-    // }
   }
 };
 

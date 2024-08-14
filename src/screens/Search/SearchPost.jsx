@@ -25,26 +25,23 @@ import {
   Entypo,
   MaterialIcons,
   Ionicons,
+  Octicons,
 } from "@expo/vector-icons";
-import * as Device from "expo-device";
 import { Auth, API, Analytics } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Favorites";
 import * as customFavorites from "@/graphql/CustomMutations/Favorites";
 import MapView, { Marker } from "react-native-maps";
 import SkeletonExample from "@/components/SkeletonExample";
-// recoil
 import { useRecoilState, useRecoilValue } from "recoil";
 import { updateListFavorites, userAuthenticated, mapUser } from "@/atoms/index";
 import * as FileSystem from "expo-file-system";
 import { StorageAccessFramework } from "expo-file-system";
-// storage
 import AsyncStorage from "@react-native-async-storage/async-storage";
-// location
 import * as Location from "expo-location";
-// functions
 import { registerEvent } from "@/functions/Analytics";
 import ModalReport from "@/components/ModalReport";
-const DEVICE_TYPE = ["UNKNOWN", "PHONE", "TABLET", "DESKTOP", "TV"];
+import ZoomableImage from "@/components/ZoomableImage";
+
 const SearchPost = ({ route, navigation }) => {
   const timerRef = useRef();
   const userAuth = useRecoilValue(userAuthenticated);
@@ -69,6 +66,8 @@ const SearchPost = ({ route, navigation }) => {
   const {
     data: { item, images },
   } = route.params;
+
+  console.log(route.params.data.images);
   const actividad = JSON.parse(item.activity);
   const getPdf = async () => {
     const permissions =
@@ -187,10 +186,10 @@ const SearchPost = ({ route, navigation }) => {
       if (business?.data?.getBusiness.schedule) {
         filterSchedule(schedule?.shedule, schedule?.type);
       }
-      setListUpdate(false)
+      setListUpdate(false);
       return setPost(business?.data?.getBusiness);
     } catch (error) {
-      console.log(error);
+      console.log("ERROR EN fetchData:", error);
     }
   };
   const fetchFavorite = async () => {
@@ -198,7 +197,7 @@ const SearchPost = ({ route, navigation }) => {
       const { attributes } = await Auth.currentAuthenticatedUser();
       const favorite = await API.graphql({
         query: queries.favoritesByBusinessID,
-        authMode: "AWS_IAM",
+        authMode: "AMAZON_COGNITO_USER_POOLS",
         variables: {
           businessID: item.id,
           userID: { eq: attributes["custom:userTableID"] },
@@ -226,7 +225,7 @@ const SearchPost = ({ route, navigation }) => {
         message: `Han compartido contigo un negocio, da click para mirarlo https://www.portaty.com/share/business?id=${item.id}`,
       });
     } catch (error) {
-      console.error("Error sharing:", error);
+      console.log("Error sharing:", error);
     }
   };
   const openCall = () => {
@@ -235,17 +234,11 @@ const SearchPost = ({ route, navigation }) => {
   };
 
   const registerViewBusiness = async (userID = null, businessID) => {
-    const deviceType = Device.deviceType;
-    const osName = Device.osName;
-    const osVersion = Device.osVersion;
-    const brand = Device.brand;
-    const model = Device.modelName;
-    const language = Device.language;
-    // Obtener el identificador único del dispositivo
-    const deviceID = Device.osBuildId || Device.osInternalBuildId;
     try {
       // Obtener información de la última visualización guardada en AsyncStorage
-      const lastViewString = await AsyncStorage.getItem(`lastView_${deviceID}`);
+      const lastViewString = await AsyncStorage.getItem(
+        `lastView_${businessID}`
+      );
       const lastViewInfo = JSON.parse(lastViewString);
 
       // Si hay una última visualización registrada y ocurrió hace menos de 24 horas, no registra la nueva visualización
@@ -263,14 +256,7 @@ const SearchPost = ({ route, navigation }) => {
         country,
         city,
         businessid: businessID,
-        deviceType: DEVICE_TYPE[deviceType],
-        osName,
-        osVersion,
-        brand,
-        model,
-        language,
       };
-
       if (userID) {
         params = {
           userid: userID,
@@ -290,9 +276,10 @@ const SearchPost = ({ route, navigation }) => {
         timestamp: new Date().toISOString(),
       };
       await AsyncStorage.setItem(
-        `lastView_${deviceID}`,
+        `lastView_${businessID}`,
         JSON.stringify(currentViewInfo)
       );
+      console.log("ITEMGUARDADO: ", `lastView_${businessID}`);
     } catch (error) {
       console.log("Error al registrar analitica: ", error);
     }
@@ -354,7 +341,6 @@ const SearchPost = ({ route, navigation }) => {
 
   const fetchRatings = async () => {
     let business = item;
-    console.log(business.id);
     try {
       const fetchAllRatings = async (nextToken, result = []) => {
         const response = await API.graphql({
@@ -380,23 +366,20 @@ const SearchPost = ({ route, navigation }) => {
       };
 
       const allRatings = await fetchAllRatings();
-      console.log(allRatings);
+
       setListRatings(allRatings);
     } catch (error) {
       console.log("eres tu", error);
     }
   };
-
   const getCatalogPDF = async () => {
     try {
       const url = post?.catalogpdf;
-      console.log(post);
       Linking.openURL(url);
     } catch (error) {
       console.log("Error en catalogo: ", error);
     }
   };
-
   const fetchRatings2 = async () => {
     try {
       const api = "api-portaty";
@@ -411,17 +394,17 @@ const SearchPost = ({ route, navigation }) => {
       const response = await API.get(api, path, params);
       setRatingsDetails(response.data);
     } catch (error) {
-      console.error(error.response.data);
+      console.error("Error rating: ", error.response.data);
     }
   };
-
+  // para la carga default
   useEffect(() => {
     if (!save) fetchFavorite();
     fetchData();
     fetchRatings();
     fetchRatings2();
   }, [listUpdate]);
-
+  // para obetener el pais y ciudad
   useEffect(() => {
     const registerCountryCity = async () => {
       const addressArr = await Location.reverseGeocodeAsync(userLocation);
@@ -429,20 +412,23 @@ const SearchPost = ({ route, navigation }) => {
     };
     if (userLocation) registerCountryCity();
   }, [userLocation]);
-
+  // para cuando este pais y ciudad registrar en el evento de vista
   useEffect(() => {
+    // Inicia el temporizador cuando el componente se monta y countryCity y userAuth existen
     if (countryCity) {
       timerRef.current = setTimeout(() => {
         registerViewBusiness(
-          userAuth ? userAuth?.attributes["custom:userTableID"] : null,
+          userAuth?.attributes["custom:userTableID"],
           item.id
         );
       }, 3000);
     }
+    // Limpia el temporizador cuando el componente se desmonta
     return () => clearTimeout(timerRef.current);
-  }, [countryCity]);
+  }, [countryCity, userAuth]);
 
   if (!post || !listRatings || listUpdate) return <SkeletonExample />;
+
   return (
     <View
       style={[
@@ -623,7 +609,7 @@ const SearchPost = ({ route, navigation }) => {
               {ratingsDetails?.ratings_message}
             </Text>
           </View>
-          {/* Pa despues */}
+          {/* Aun no es lo del */}
           {/* <View
             style={{
               flexDirection: "row",
@@ -649,7 +635,7 @@ const SearchPost = ({ route, navigation }) => {
                 // flex: 1,
                 flexDirection: "row",
                 alignItems: "center",
-                justifyContent: "space-between",
+                justifyContent: userAuth ? "space-between" : "center",
                 padding: 20,
                 paddingHorizontal: 100,
               }}
@@ -704,31 +690,34 @@ const SearchPost = ({ route, navigation }) => {
           </View>
         )}
         {/* Reporte */}
-        <TouchableOpacity
-          style={{
-            alignSelf: "flex-end",
-            paddingHorizontal: 20,
-            paddingBottom: 5,
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-          onPress={() => setVisibleReport(true)}
-        >
-          <MaterialIcons name="report" size={16} color="black" />
-          <Text
-            style={[
-              global.black,
-              {
-                fontFamily: "bold",
-                fontSize: 10,
-                // marginLeft: 2,
-                // marginBottom: 3
-              },
-            ]}
+        {userAuth && (
+          <TouchableOpacity
+            style={{
+              alignSelf: "flex-end",
+              paddingHorizontal: 20,
+              paddingBottom: 5,
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+            onPress={() => setVisibleReport(true)}
           >
-            Reportar negocio
-          </Text>
-        </TouchableOpacity>
+            <MaterialIcons name="report" size={16} color="black" />
+            <Text
+              style={[
+                global.black,
+                {
+                  fontFamily: "bold",
+                  fontSize: 10,
+                  // marginLeft: 2,
+                  // marginBottom: 3
+                },
+              ]}
+            >
+              Reportar negocio
+            </Text>
+          </TouchableOpacity>
+        )}
+
         {/* Hasta aqui */}
         <View
           style={[
@@ -801,7 +790,6 @@ const SearchPost = ({ route, navigation }) => {
           onPress={() => {
             navigation.navigate("InteractionsSearch", {
               business: item,
-              list: listRatings,
               list: listRatings,
             });
           }}
@@ -995,7 +983,6 @@ const SearchPost = ({ route, navigation }) => {
             source={require("@/utils/images/arrow_right.png")}
           />
         </TouchableOpacity>
-
         <TouchableOpacity
           style={{
             padding: 20,
@@ -1315,15 +1302,13 @@ const SearchPost = ({ route, navigation }) => {
               style={{ flexDirection: "row", alignItems: "center" }}
               onPress={() => {
                 let isWhatsAppLink =
-                  item?.business?.phone.startsWith("https://wa.me/") ||
-                  item?.business?.phone.startsWith(
-                    "https://api.whatsapp.com/send?text="
-                  );
+                  post?.phone.startsWith("https://wa.me/") ||
+                  post?.phone.startsWith("https://api.whatsapp.com/send?text=");
                 if (isWhatsAppLink) {
-                  const url = `${item?.business?.phone}`;
+                  const url = `${post?.phone}`;
                   Linking.openURL(url);
                 } else {
-                  const phoneRegex = item?.business?.phone.replace("+", "");
+                  const phoneRegex = post?.phone.replace("+", "");
                   const url = `https://wa.me/${phoneRegex}`;
                   Linking.openURL(url);
                 }
@@ -1341,7 +1326,6 @@ const SearchPost = ({ route, navigation }) => {
               >
                 {"Ir al WhatsApp"}
               </Text>
-
               <Feather name="external-link" size={16} color="blue" />
             </Pressable>
           </View>
@@ -1375,37 +1359,7 @@ const SearchPost = ({ route, navigation }) => {
               </Text>
             </View>
           </View>
-          {/* <View style={[styles.line, global.bgMidGray]} />
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              padding: 20,
-            }}
-          >
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <MaterialCommunityIcons name="web" size={24} color="#1f1f1f" />
-              <Text
-                style={[
-                  { fontFamily: "lightItalic", fontSize: 13 },
-                  global.black,
-                ]}
-              >
-                Web
-              </Text>
-            </View>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text
-                style={[
-                  { fontSize: 13, fontFamily: "regular", marginRight: 5 },
-                ]}
-              >
-                Link
-              </Text>
-              <AntDesign name="link" size={16} color="#1f1f1f" />
-            </View>
-          </View> */}
+
           <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
@@ -1547,30 +1501,30 @@ const SearchPost = ({ route, navigation }) => {
                       </Pressable>
                     </View>
                     <View style={{ flex: 1 }}>
-                      <Image
+                      <View
                         style={{
-                          width: "100%",
-                          height: "60%",
-                          resizeMode: "contain",
-                          borderRadius: 5,
-                          borderWidth: 0.7,
-                          borderColor: "#1f1f1f",
+                          backgroundColor: "#fff",
+                          height: 510,
                         }}
-                        source={{
-                          uri: imageView?.url ? imageView?.url : imageView?.uri,
-                        }}
-                      />
+                      >
+                        <ZoomableImage
+                          uri={imageView?.url ? imageView?.url : imageView?.uri}
+                          imageHeigth={510}
+                        />
+                      </View>
+
                       {imageView?.url && (
                         <View style={{ flex: 1, paddingVertical: 15 }}>
                           <View
                             style={{
-                              flex: 1,
+                              // flex: 1,
                               flexDirection: "row",
                               borderColor: "#1f1f1f",
                               borderWidth: 0.7,
                               paddingHorizontal: 10,
                               borderRadius: 8,
                               marginTop: 10,
+                              height: 70,
                             }}
                           >
                             {imageView?.key === 0 ? (
@@ -1582,7 +1536,7 @@ const SearchPost = ({ route, navigation }) => {
                                 }
                                 editable={false}
                                 style={{
-                                  flex: 1,
+                                  // flex: 1,
                                   // width: 100,
                                   fontFamily: "regular",
                                   fontSize: 14,
@@ -1597,7 +1551,7 @@ const SearchPost = ({ route, navigation }) => {
                                 value={imageView?.description}
                                 editable={false}
                                 style={{
-                                  flex: 1,
+                                  // flex: 1,
                                   // width: 100,
                                   fontFamily: "regular",
                                   fontSize: 14,

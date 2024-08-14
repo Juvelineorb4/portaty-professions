@@ -22,8 +22,8 @@ import { debounce } from "lodash";
 const MapFilter = ({ open, close, initialLocation, country, city }) => {
   const global = require("@/utils/styles/global.js");
   const [description, setDescription] = useState("");
-  const [selectedPlace, setSelectedPlace] = useState(null);
   const [labelSelected, setLabelSelected] = useState(null);
+  const [selectedPlace, setSelectedPlace] = useState(null);
   const [filterRadio, setFilterRadio] = useRecoilState(kmRadio);
   const [changeTag, setChangeTag] = useState(filterRadio);
   const [searchActive, setSearchActive] = useState(false);
@@ -31,6 +31,7 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
   const [searchAddress, setSearchAddress] =
     useRecoilState(searchAddressInitial);
   const [mapChange, setMapChange] = useRecoilState(mapUserChange);
+
   const [region, setRegion] = useState({
     latitude: initialLocation?.latitude,
     longitude: initialLocation?.longitude,
@@ -47,9 +48,7 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
       latitude: obj?.latitude,
       longitude: obj?.longitude,
     });
-    console.log(obj?.label);
   };
-
   const onHandlePress = (e) => {
     const {
       nativeEvent: { coordinate },
@@ -89,7 +88,6 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
     );
     setSuggestions(null);
   };
-
   const obtenerCoordenadas = async (address) => {
     const direccionComplete = `${address}, ${city}, ${country}`;
     let coordenadas = await Location.geocodeAsync(direccionComplete);
@@ -118,27 +116,23 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
   };
 
   const search = async () => {
-    console.log("desde search", searchActive);
     setSuggestions(null);
     if (description === "") return;
-
     const api = "api-opense";
     const path = "/location/_search";
     const params = {
       headers: {},
       queryStringParameters: {
-        text: description,
+        text: description, //texto a buscar
         location: JSON.stringify({
           latitude: initialLocation?.latitude,
           longitude: initialLocation?.longitude,
         }),
       },
     };
-
     try {
       const response = await API.get(api, path, params);
       setSuggestions(response.data);
-      console.log(suggestions);
     } catch (error) {
       console.log("Error buscando algo", error);
     }
@@ -158,7 +152,6 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
       debouncedSetSearch(description);
     }
   }, [description]);
-
   return (
     <Modal animationType="none" transparent={true} visible={open}>
       <View style={styles.modalContainer}>
@@ -185,7 +178,7 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
           <View style={{ flex: 1 }}>
             {open && (
               <MapView
-                // provider={PROVIDER_GOOGLE}
+                provider={PROVIDER_GOOGLE}
                 style={{ flex: 1 }}
                 showsUserLocation={open}
                 ref={mapRef}
@@ -211,14 +204,13 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
               style={{
                 position: "absolute",
                 flex: 1,
-                marginHorizontal: 15,
+                marginHorizontal: 5,
                 marginVertical: 13,
-                paddingLeft: 10,
+                padding: 5,
                 borderRadius: 5,
                 borderColor: "#1f1f1f",
                 borderWidth: 0.7,
-                width: 295,
-                height: 50,
+                width: 235,
                 backgroundColor: "#fff",
               }}
             >
@@ -228,8 +220,7 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
                 placeholder={`Introduce una direccion`}
                 style={{
                   fontFamily: "regular",
-                  fontSize: 15,
-                  height: 50
+                  fontSize: 14,
                 }}
               />
               {suggestions && (
@@ -270,8 +261,8 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
                     paddingTop: 0,
                     borderColor: "#1f1f1f",
                     borderWidth: 1,
-                    top: 50,
-                    width: 295,
+                    top: 40,
+                    width: 235,
                     borderBottomRightRadius: 8,
                     borderBottomLeftRadius: 8,
                     // height: 200,
@@ -284,12 +275,12 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
                   {
                     position: "absolute",
                     bottom: -1,
-                    right: -90,
+                    right: -65,
                     justifyContent: "center",
                     alignContent: "center",
                     borderRadius: 5,
-                    height: 50,
-                    width: 85,
+                    height: 40,
+                    width: 60,
                     alignItems: "center",
                     borderColor: "#1f1f1f",
                     borderWidth: 0.7,
@@ -299,7 +290,7 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
                 onPress={() => obtenerCoordenadas(description)}
               >
                 <Text
-                  style={[global.black, { fontFamily: "bold", fontSize: 14 }]}
+                  style={[global.black, { fontFamily: "bold", fontSize: 12 }]}
                 >{`Buscar`}</Text>
               </TouchableOpacity>
             </View>
@@ -401,13 +392,11 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
                   position: "absolute",
                   bottom: 20,
                   right: 20,
-                  height: 70,
                   paddingHorizontal: 10,
                   paddingVertical: 15,
                   borderRadius: 5,
                   width: 100,
                   alignItems: "center",
-                  justifyContent: "center",
                   borderColor: "#1f1f1f",
                   borderWidth: 1,
                 },

@@ -29,6 +29,7 @@ import {
   Octicons,
   Ionicons,
 } from "@expo/vector-icons";
+import * as Location from "expo-location";
 import { Auth, API, Storage } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Favorites";
 import * as customFavorites from "@/graphql/CustomMutations/Favorites";
@@ -43,9 +44,18 @@ import * as FileSystem from "expo-file-system";
 import { StorageAccessFramework } from "expo-file-system";
 import { useRef } from "react";
 import ModalReport from "@/components/ModalReport";
-
+import { registerEvent } from "@/functions/Analytics";
+// recoil
+import { useRecoilValue } from "recoil";
+import { userAuthenticated, mapUser } from "@/atoms/index";
+// storage
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import ZoomableImage from "@/components/ZoomableImage";
 const FavoritePage = ({ navigation, route }) => {
   const global = require("@/utils/styles/global.js");
+  const userAuth = useRecoilValue(userAuthenticated);
+  const userLocation = useRecoilValue(mapUser);
+  const timerRef = useRef();
   const [post, setPost] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visible, setVisible] = useState(false);
@@ -56,6 +66,7 @@ const FavoritePage = ({ navigation, route }) => {
   const [weekSchedule, setWeekSchedule] = useState("");
   const [listRatings, setListRatings] = useState(null);
   const [ratingsDetails, setRatingsDetails] = useState(null);
+  const [countryCity, setCountryCity] = useState(null);
 
   const {
     data: { item, image },
@@ -63,9 +74,6 @@ const FavoritePage = ({ navigation, route }) => {
   let schedule = JSON.parse(item.business?.schedule);
   const filterSchedule = (array, type) => {
     if (array === null || type === null) return;
-    console.log("toy por aqui");
-    console.log(array);
-    console.log(type);
     // return;
     let scheduleG = [];
     let activeDays = array.filter((day) => day.active);
@@ -113,8 +121,6 @@ const FavoritePage = ({ navigation, route }) => {
         } - ${group.hourEnd}`;
       })
       .join(" / ");
-
-    console.log(pContent);
 
     setWeekSchedule(pContent);
   };
@@ -171,7 +177,7 @@ const FavoritePage = ({ navigation, route }) => {
         },
         authMode: "AWS_IAM",
       });
-      setListUpdate(false)
+      setListUpdate(false);
       setPost(business.data.getBusiness);
     } catch (error) {
       console.log("eres tu", error);
@@ -180,7 +186,6 @@ const FavoritePage = ({ navigation, route }) => {
 
   const fetchRatings = async ({ data }) => {
     let business = item;
-    console.log(business.businessID);
     try {
       const fetchAllRatings = async (nextToken, result = []) => {
         const response = await API.graphql({
@@ -206,13 +211,11 @@ const FavoritePage = ({ navigation, route }) => {
       };
 
       const allRatings = await fetchAllRatings();
-      console.log(allRatings);
       setListRatings(allRatings);
     } catch (error) {
       console.log("eres tu", error);
     }
   };
-
   const fetchRatings2 = async () => {
     let business = item;
     try {
@@ -227,11 +230,8 @@ const FavoritePage = ({ navigation, route }) => {
 
       const response = await API.get(api, path, params);
       setRatingsDetails(response.data);
-    } catch (error) {
-      console.error(error.response.data);
-    }
+    } catch (error) {}
   };
-
   const onDeleteFavorite = async () => {
     const favorites = await API.graphql({
       query: customFavorites.deleteFavorites,
@@ -241,6 +241,15 @@ const FavoritePage = ({ navigation, route }) => {
         },
       },
       authMode: "AMAZON_COGNITO_USER_POOLS",
+    });
+    const { country, city } = countryCity;
+    registerEvent("user_remove_business", {
+      userid: userAuth?.attributes["custom:userTableID"],
+      businessid: item.businessID,
+      birthdate: userAuth?.attributes?.birthdate,
+      gender: userAuth?.attributes["custom:gender"],
+      country,
+      city,
     });
     setListUpdate(!listUpdate);
     navigation.goBack();
@@ -262,7 +271,7 @@ const FavoritePage = ({ navigation, route }) => {
         message: `Han compartido contigo un negocio, da click para mirarlo https://www.portaty.com/share/business?id=${item.businessID}`,
       });
     } catch (error) {
-      console.error("Error sharing:", error);
+      console.log("Error sharing:", error);
     }
   };
   const openCall = () => {
@@ -278,6 +287,58 @@ const FavoritePage = ({ navigation, route }) => {
       console.log("Error en catalogo: ", error);
     }
   };
+  const registerViewBusiness = async (userID = null, businessID) => {
+    // Obtener el identificador único del dispositivo
+    try {
+      // Obtener información de la última visualización guardada en AsyncStorage
+      const lastViewString = await AsyncStorage.getItem(
+        `lastView_${businessID}`
+      );
+      const lastViewInfo = JSON.parse(lastViewString);
+
+      // Si hay una última visualización registrada y ocurrió hace menos de 24 horas, no registra la nueva visualización
+      if (
+        lastViewInfo &&
+        new Date() - new Date(lastViewInfo.timestamp) < 24 * 60 * 60 * 1000 &&
+        lastViewInfo.businessID === businessID
+      ) {
+        return;
+      }
+
+      // Registrar la visualización en analytics
+      const { country, city } = countryCity;
+      let params = {
+        country,
+        city,
+        businessid: businessID,
+      };
+
+      if (userID) {
+        params = {
+          userid: userID,
+          birthdate: userAuth?.attributes?.birthdate,
+          gender: userAuth?.attributes["custom:gender"],
+          ...params,
+        };
+      }
+
+      registerEvent(
+        userID ? "user_viewed_business" : "guest_viewed_business",
+        params
+      );
+      // Almacenar la información de la última visualización en AsyncStorage
+      const currentViewInfo = {
+        businessID: businessID,
+        timestamp: new Date().toISOString(),
+      };
+      await AsyncStorage.setItem(
+        `lastView_${businessID}`,
+        JSON.stringify(currentViewInfo)
+      );
+    } catch (error) {
+      console.log("Error al registrar analitica: ", error);
+    }
+  };
 
   useLayoutEffect(() => {
     fetchData();
@@ -285,7 +346,25 @@ const FavoritePage = ({ navigation, route }) => {
     fetchRatings2();
     if (schedule !== null) filterSchedule(schedule?.shedule, schedule?.type);
   }, [listUpdate]);
+  useEffect(() => {
+    const registerCountryCity = async () => {
+      const addressArr = await Location.reverseGeocodeAsync(userLocation);
+      setCountryCity(addressArr[0]);
+    };
+    if (userLocation) registerCountryCity();
+  }, [userLocation]);
 
+  useEffect(() => {
+    if (countryCity) {
+      timerRef.current = setTimeout(() => {
+        registerViewBusiness(
+          userAuth ? userAuth?.attributes["custom:userTableID"] : null,
+          item.businessID
+        );
+      }, 3000);
+    }
+    return () => clearTimeout(timerRef.current);
+  }, [countryCity]);
   if (!item || !listRatings || listUpdate) return <SkeletonExample />;
   return (
     <View
@@ -557,7 +636,7 @@ const FavoritePage = ({ navigation, route }) => {
           style={{
             paddingHorizontal: 20,
             paddingTop: 20,
-            marginBottom: 15
+            marginBottom: 15,
           }}
         >
           <Text style={{ fontSize: 18, fontFamily: "regular" }}>
@@ -710,7 +789,6 @@ const FavoritePage = ({ navigation, route }) => {
             </View>
           </View>
         </TouchableOpacity>
-
         <TouchableOpacity
           style={{
             padding: 20,
@@ -850,6 +928,7 @@ const FavoritePage = ({ navigation, route }) => {
             source={require("@/utils/images/arrow_right.png")}
           />
         </TouchableOpacity>
+
         {/* Catalogo */}
         {item?.catalogpdf !== "" ||
           (item?.catalogpdf && (
@@ -901,6 +980,7 @@ const FavoritePage = ({ navigation, route }) => {
               />
             </TouchableOpacity>
           ))}
+
         <View style={{ marginBottom: 80 }}>
           <Text style={{ fontSize: 22, fontFamily: "regular", padding: 10 }}>
             Datos
@@ -1116,7 +1196,6 @@ const FavoritePage = ({ navigation, route }) => {
               >
                 {"Ir al WhatsApp"}
               </Text>
-
               <Feather name="external-link" size={16} color="blue" />
             </Pressable>
           </View>
@@ -1150,6 +1229,37 @@ const FavoritePage = ({ navigation, route }) => {
               </Text>
             </View>
           </View>
+          {/* <View style={[styles.line, global.bgMidGray]} />
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: 20,
+            }}
+          >
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <MaterialCommunityIcons name="web" size={24} color="#1f1f1f" />
+              <Text
+                style={[
+                  { fontFamily: "lightItalic", fontSize: 13 },
+                  global.black,
+                ]}
+              >
+                Web
+              </Text>
+            </View>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text
+                style={[
+                  { fontSize: 13, fontFamily: "regular", marginRight: 5 },
+                ]}
+              >
+                Link
+              </Text>
+              <AntDesign name="link" size={16} color="#1f1f1f" />
+            </View>
+          </View> */}
           <View style={[styles.line, global.bgMidGray]} />
           <View
             style={{
@@ -1306,19 +1416,18 @@ const FavoritePage = ({ navigation, route }) => {
                     </Pressable>
                   </View>
                   <View style={{ flex: 1 }}>
-                    <Image
+                    <View
                       style={{
-                        width: "100%",
-                        height: "60%",
-                        resizeMode: "contain",
-                        borderRadius: 5,
-                        borderWidth: 0.7,
-                        borderColor: "#1f1f1f",
+                        backgroundColor: "#fff",
+                        height: 510,
                       }}
-                      source={{
-                        uri: imageView?.url ? imageView?.url : imageView?.uri,
-                      }}
-                    />
+                    >
+                      <ZoomableImage
+                        uri={imageView?.url ? imageView?.url : imageView?.uri}
+                        imageHeigth={510}
+                      />
+                    </View>
+
                     {imageView?.url && (
                       <View style={{ flex: 1, paddingVertical: 15 }}>
                         <View

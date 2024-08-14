@@ -89,6 +89,10 @@ export const searchCache = atom({
   key: "searchCacheValue",
   default: [],
 });
+export const searchMap = atom({
+  key: "searchMapValue",
+  default: [],
+});
 export const kmRadio = atom({
   key: "kmRadioValue",
   default: 1,
@@ -101,6 +105,7 @@ export const searchAddressInitial = atom({
   key: "searchAddressInitialValue",
   default: "",
 });
+
 export const profileState = atom({
   key: "profileStateValue",
   default: false,
@@ -133,6 +138,10 @@ export const favoriteSelection = atom({
 export const inputFavoritesSearch = atom({
   key: "inputFavoritesSearchValue",
   default: "",
+});
+export const eyelashSelection = atom({
+  key: "eyelashSelectionValue",
+  default: 0,
 });
 export const urlInitalShare = atom({
   key: "urlInitalShareValue",
@@ -172,31 +181,86 @@ export const textInputSearch = atom({
   default: "",
 });
 
+export const sheduleType = atom({
+  key: "sheduleTypeValue",
+  default: "Abierto durante un horario especifico",
+});
+export const shedulePush = atom({
+  key: "shedulePushValue",
+  default: [
+    {
+      name: "Lunes",
+      active: false,
+      index: 0,
+      hourStart: "08:00",
+      hourEnd: "16:00",
+    },
+    {
+      name: "Martes",
+      active: false,
+      index: 1,
+      hourStart: "08:00",
+      hourEnd: "16:00",
+    },
+    {
+      name: "Miercoles",
+      active: false,
+      index: 2,
+      hourStart: "08:00",
+      hourEnd: "16:00",
+    },
+    {
+      name: "Jueves",
+      active: false,
+      index: 3,
+      hourStart: "08:00",
+      hourEnd: "16:00",
+    },
+    {
+      name: "Viernes",
+      active: false,
+      index: 4,
+      hourStart: "08:00",
+      hourEnd: "16:00",
+    },
+    {
+      name: "Sabado",
+      active: false,
+      index: 5,
+      hourStart: "08:00",
+      hourEnd: "16:00",
+    },
+    {
+      name: "Domingo",
+      active: false,
+      index: 6,
+      hourStart: "08:00",
+      hourEnd: "16:00",
+    },
+  ],
+});
 export const activeModalScreen = atom({
   key: "activeModalScreenValue",
   default: true,
 });
-
-export const notificationToken = atom({
-  key: "notificationTokenValue",
-  default: null,
-});
-
-export const isUserTracking = atom({
-  key: "isUserTrackingValue",
-  default: false,
-});
-
-export const connectionStatus = atom({
-  key: "connectionStatusValue",
-  default: null,
-});
-
 export const stepOneParams = atom({
   key: "stepOneParamsValue",
   default: null,
 });
 export const stepCompleteParams = atom({
   key: "stepCompleteParamsValue",
+  default: null,
+});
+export const notificationToken = atom({
+  key: "notificationTokenValue",
+  default: null,
+});
+export const connectionStatus = atom({
+  key: "connectionStatusValue",
+  default: null,
+});
+
+export const notificationResponse = atom({
+  key: "notificationResponseValue",
   default: null,
 });

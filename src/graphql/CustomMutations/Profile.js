@@ -97,6 +97,7 @@ export const updateBusinessPage = /* GraphQL */ `
       instagram
       facebook
       page
+      activity
       description
     }
   }
@@ -127,6 +128,30 @@ export const createReports = /* GraphQL */ `
       status
       createdAt
       updatedAt
+    }
+  }
+`;
+
+export const deleteBusinessPromotion = /* GraphQL */ `
+  mutation DeleteBusinessPromotion(
+    $input: DeleteBusinessPromotionInput!
+    $condition: ModelBusinessPromotionConditionInput
+  ) {
+    deleteBusinessPromotion(input: $input, condition: $condition) {
+      id
+      userID
+    }
+  }
+`;
+
+export const updateBusinessPromotion = /* GraphQL */ `
+  mutation UpdateBusinessPromotion(
+    $input: UpdateBusinessPromotionInput!
+    $condition: ModelBusinessPromotionConditionInput
+  ) {
+    updateBusinessPromotion(input: $input, condition: $condition) {
+      id
+      status
     }
   }
 `;
