@@ -40,6 +40,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Location from "expo-location";
 import { registerEvent } from "@/functions/Analytics";
 import ModalReport from "@/components/ModalReport";
+import ZoomableImage from "@/components/ZoomableImage";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const SearchPost = ({ route, navigation }) => {
   const timerRef = useRef();
@@ -66,7 +68,7 @@ const SearchPost = ({ route, navigation }) => {
     data: { item, images },
   } = route.params;
 
-  console.log(route.params.data.images)
+  console.log(route.params.data.images);
   const actividad = JSON.parse(item.activity);
   const getPdf = async () => {
     const permissions =
@@ -1302,14 +1304,12 @@ const SearchPost = ({ route, navigation }) => {
               onPress={() => {
                 let isWhatsAppLink =
                   post?.phone.startsWith("https://wa.me/") ||
-                  post?.phone.startsWith(
-                    "https://api.whatsapp.com/send?text="
-                  );
+                  post?.phone.startsWith("https://api.whatsapp.com/send?text=");
                 if (isWhatsAppLink) {
                   const url = `${post?.phone}`;
                   Linking.openURL(url);
                 } else {
-                  const phoneRegex =  post?.phone.replace("+", "");
+                  const phoneRegex = post?.phone.replace("+", "");
                   const url = `https://wa.me/${phoneRegex}`;
                   Linking.openURL(url);
                 }
@@ -1481,95 +1481,98 @@ const SearchPost = ({ route, navigation }) => {
                 setImageView(null);
               }}
             >
-              <View style={styles.modalContainer}>
-                <TouchableWithoutFeedback>
-                  <View style={[styles.modalContent]}>
-                    <View style={styles.modalTop}>
-                      <Pressable
-                        onPress={() => {
-                          setOpen(!open);
-                          setImageView(null);
-                        }}
-                      >
-                        <Image
-                          style={{
-                            width: 35,
-                            height: 35,
-                            resizeMode: "contain",
+              <GestureHandlerRootView style={{ flex: 1 }}>
+                <View style={styles.modalContainer}>
+                  <TouchableWithoutFeedback>
+                    <View style={[styles.modalContent]}>
+                      <View style={styles.modalTop}>
+                        <Pressable
+                          onPress={() => {
+                            setOpen(!open);
+                            setImageView(null);
                           }}
-                          source={require("@/utils/images/arrow_back.png")}
-                        />
-                      </Pressable>
-                    </View>
-                    <View style={{ flex: 1 }}>
-                      <Image
-                        style={{
-                          width: "100%",
-                          height: "60%",
-                          resizeMode: "contain",
-                          borderRadius: 5,
-                          borderWidth: 0.7,
-                          borderColor: "#1f1f1f",
-                        }}
-                        source={{
-                          uri: imageView?.url ? imageView?.url : imageView?.uri,
-                        }}
-                      />
-                      {imageView?.url && (
-                        <View style={{ flex: 1, paddingVertical: 15 }}>
-                          <View
+                        >
+                          <Image
                             style={{
-                              flex: 1,
-                              flexDirection: "row",
-                              borderColor: "#1f1f1f",
-                              borderWidth: 0.7,
-                              paddingHorizontal: 10,
-                              borderRadius: 8,
-                              marginTop: 10,
+                              width: 35,
+                              height: 35,
+                              resizeMode: "contain",
                             }}
-                          >
-                            {imageView?.key === 0 ? (
-                              <TextInput
-                                value={
-                                  imageView?.description !== ""
-                                    ? imageView?.description
-                                    : post?.description
-                                }
-                                editable={false}
-                                style={{
-                                  flex: 1,
-                                  // width: 100,
-                                  fontFamily: "regular",
-                                  fontSize: 14,
-                                  alignItems: "flex-start",
-                                  color: "#000",
-                                }}
-                                multiline={true}
-                                numberOfLines={5}
-                              />
-                            ) : (
-                              <TextInput
-                                value={imageView?.description}
-                                editable={false}
-                                style={{
-                                  flex: 1,
-                                  // width: 100,
-                                  fontFamily: "regular",
-                                  fontSize: 14,
-                                  alignItems: "flex-start",
-                                  color: "#000",
-                                }}
-                                multiline={true}
-                                numberOfLines={5}
-                              />
-                            )}
-                          </View>
+                            source={require("@/utils/images/arrow_back.png")}
+                          />
+                        </Pressable>
+                      </View>
+                      <View style={{ flex: 1 }}>
+                        <View
+                          style={{
+                            backgroundColor: "#fff",
+                            height: 450,
+                          }}
+                        >
+                          <ZoomableImage
+                            uri={
+                              imageView?.url ? imageView?.url : imageView?.uri
+                            }
+                            imageHeigth={450}
+                          />
                         </View>
-                      )}
+
+                        {imageView?.url && (
+                          <View style={{ flex: 1, paddingVertical: 15 }}>
+                            <View
+                              style={{
+                                flex: 1,
+                                flexDirection: "row",
+                                borderColor: "#1f1f1f",
+                                borderWidth: 0.7,
+                                paddingHorizontal: 10,
+                                borderRadius: 8,
+                                marginTop: 10,
+                              }}
+                            >
+                              {imageView?.key === 0 ? (
+                                <TextInput
+                                  value={
+                                    imageView?.description !== ""
+                                      ? imageView?.description
+                                      : post?.description
+                                  }
+                                  editable={false}
+                                  style={{
+                                    flex: 1,
+                                    // width: 100,
+                                    fontFamily: "regular",
+                                    fontSize: 14,
+                                    alignItems: "flex-start",
+                                    color: "#000",
+                                  }}
+                                  multiline={true}
+                                  numberOfLines={5}
+                                />
+                              ) : (
+                                <TextInput
+                                  value={imageView?.description}
+                                  editable={false}
+                                  style={{
+                                    flex: 1,
+                                    // width: 100,
+                                    fontFamily: "regular",
+                                    fontSize: 14,
+                                    alignItems: "flex-start",
+                                    color: "#000",
+                                  }}
+                                  multiline={true}
+                                  numberOfLines={5}
+                                />
+                              )}
+                            </View>
+                          </View>
+                        )}
+                      </View>
                     </View>
-                  </View>
-                </TouchableWithoutFeedback>
-              </View>
+                  </TouchableWithoutFeedback>
+                </View>
+              </GestureHandlerRootView>
             </TouchableWithoutFeedback>
           </Modal>
         </View>

@@ -31,8 +31,8 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 12,
     padding: 20,
-    width: 320,
-    height: 450,
+    width: "100%",
+    height: "87%",
     borderColor: "#1f1f1f",
     borderWidth: 1,
   },
@@ -111,7 +111,12 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     fontSize: 12,
   },
-  stars: { flex: 1, flexDirection: "row", justifyContent: 'center', marginVertical: 15 },
+  stars: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+    marginVertical: 15,
+  },
   star: { color: "#ffb703" },
 });
 
