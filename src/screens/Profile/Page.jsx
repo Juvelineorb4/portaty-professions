@@ -49,6 +49,7 @@ import * as Sharing from "expo-sharing";
 // hooks
 import useOpenFile from "@/hooks/useOpenFile";
 import CustomButton from "@/components/CustomButton";
+import ZoomableImage from "@/components/ZoomableImage";
 
 const Page = ({ route, navigation }) => {
   const mapRef = useRef(null);
@@ -1929,7 +1930,7 @@ const Page = ({ route, navigation }) => {
                   style={[
                     styles.modalContent,
                     {
-                      height: imageView?.url ? 520 : 450,
+                      height: '85%',
                     },
                   ]}
                 >
@@ -1952,23 +1953,21 @@ const Page = ({ route, navigation }) => {
                     </Pressable>
                   </View>
                   <View style={{ flex: 1 }}>
-                    <View>
-                      <Image
-                        style={{
-                          width: "100%",
-                          height: 230,
-                          resizeMode: "contain",
-                          borderRadius: 5,
-                          borderWidth: 0.7,
-                          borderColor: "#1f1f1f",
-                        }}
-                        source={{
-                          uri: imageChange
+                    <View
+                      style={{
+                        backgroundColor: "#fff",
+                        height: 360,
+                        overflow: 'hidden',
+                      }}
+                    >
+                      <ZoomableImage
+                        uri={
+                          imageChange
                             ? imageChange.uri
                             : imageView?.url
                             ? imageView?.url
-                            : imageView?.uri,
-                        }}
+                            : imageView?.uri
+                        }
                       />
                       <MaterialCommunityIcons
                         name="image-edit-outline"

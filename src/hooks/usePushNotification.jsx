@@ -6,6 +6,8 @@ import { useSetRecoilState } from "recoil";
 import { notificationToken, notificationResponse } from "@/atoms/index";
 import { Platform } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { API } from "aws-amplify";
+import * as mutationsNavigation from "@/graphql/CustomMutations/Navigation";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -84,6 +86,7 @@ const usePushNotification = () => {
     registerForPushNotificationsAsync().then((token) => {
       setExpoPushToken(token);
       setToken(token);
+      console.log(token)
     });
 
     // esto es si llega una notificacion y la app esta en primer plano

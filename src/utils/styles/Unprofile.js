@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 12,
     padding: 20,
-    width: 320,
+    width: '100%',
   },
   modalTextSelect: {
     fontFamily: 'light',
