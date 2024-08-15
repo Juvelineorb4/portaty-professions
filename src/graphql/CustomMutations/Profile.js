@@ -143,3 +143,15 @@ export const deleteBusinessPromotion = /* GraphQL */ `
     }
   }
 `;
+
+export const updateBusinessPromotion = /* GraphQL */ `
+  mutation UpdateBusinessPromotion(
+    $input: UpdateBusinessPromotionInput!
+    $condition: ModelBusinessPromotionConditionInput
+  ) {
+    updateBusinessPromotion(input: $input, condition: $condition) {
+      id
+      status
+    }
+  }
+`;

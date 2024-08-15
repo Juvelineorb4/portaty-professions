@@ -6,23 +6,22 @@ import {
   TouchableWithoutFeedback,
   Image,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CustomInput from "./CustomInput";
 import CustomDatePicker from "./CustomDatePicker";
 import { useForm } from "react-hook-form";
 import styles from "@/utils/styles/CustomPromotions.js";
 import { API } from "aws-amplify";
 import * as customProfile from "@/graphql/CustomMutations/Profile";
+import ModalAlert from "./ModalAlert";
 
-const ModalPromotion = ({ data, close, open, deletePromotion }) => {
-  console.log(deletePromotion);
+const ModalPromotion = ({ data, close, open, deletePromotion, reload }) => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
+  const [visible, setVisible] = useState(false)
   const { control } = useForm();
 
   const onHandleAgainPromotion = async () => {
-    console.log(data?.id);
-    // return;
     startDate.setHours(0, 0, 0, 0);
     endDate.setHours(0, 0, 0, 0);
     const apiName = "api-portaty";
@@ -40,10 +39,9 @@ const ModalPromotion = ({ data, close, open, deletePromotion }) => {
       };
       const result = await API.post(apiName, path, myInit);
       console.log(result);
-      close();
+      setVisible(true)
     } catch (error) {
       console.log("ERROR: ", error);
-      close();
     }
   };
 
@@ -53,21 +51,29 @@ const ModalPromotion = ({ data, close, open, deletePromotion }) => {
     endDate.setHours(0, 0, 0, 0);
     try {
       const result = await API.graphql({
-        query: customProfile.deleteBusinessPromotion,
+        query: customProfile.updateBusinessPromotion,
         variables: {
           input: {
             id: data?.id,
+            status: "DELETED",
           },
         },
         authMode: "AMAZON_COGNITO_USER_POOLS",
       });
       console.log(result);
-      close();
+      setVisible(true)
     } catch (error) {
       console.log(error);
-      close();
     }
   };
+
+  useEffect(() => {
+    if (deletePromotion) {
+      setStartDate(new Date(data?.dateInitial));
+      setEndDate(new Date(data?.dateFinal));
+    }
+  }, []);
+
   return (
     <Modal visible={open} onRequestClose={close} transparent>
       <TouchableWithoutFeedback onPress={close}>
@@ -183,6 +189,21 @@ const ModalPromotion = ({ data, close, open, deletePromotion }) => {
           </View>
         </View>
       </TouchableWithoutFeedback>
+      <ModalAlert
+        text={
+          deletePromotion
+            ? "Se elimino tu promocion"
+            : `Se volvio a publicar tu promocion`
+        }
+        icon={require("@/utils/images/successful.png")}
+        close={() => setVisible(false)}
+        navigation={() => {
+          close();
+          reload();
+        }}
+        isLink={true}
+        open={visible}
+      />
     </Modal>
   );
 };

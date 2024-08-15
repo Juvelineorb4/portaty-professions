@@ -18,12 +18,10 @@ const MapSearh = ({ initialLocation, markers }) => {
     markers.map((item, index) => {
       for (let i = 0; i < item.length; i++) {
         let cut = item[i].coordinates;
-        console.log(cut.lat);
         let mark = { latitude: cut.lat, longitude: cut.lon };
         mapsMarkers.push(mark);
       }
     });
-    console.log("aqui tamos", mapsMarkers);
     setCoords(mapsMarkers);
   };
   useEffect(() => {

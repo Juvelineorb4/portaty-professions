@@ -22,7 +22,6 @@ const NavSettings = ({ checkRender }) => {
   useEffect(() => {
     // crear subscripcion
     const unsubscribe = Hub.listen("auth", ({ payload: { event, data } }) => {
-      console.log("EVENT HUB: ", event);
       switch (event) {
         case "signIn":
           userSignIn(data);
@@ -38,7 +37,6 @@ const NavSettings = ({ checkRender }) => {
           checkUser();
           break;
         case "parsingCallbackUrl":
-          console.log("parsingCallbackUrl: ", data);
       }
     });
 

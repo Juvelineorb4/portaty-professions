@@ -8,12 +8,12 @@ import {
   Platform,
   Linking,
   FlatList,
-  Modal,
   Pressable,
   TouchableWithoutFeedback,
   ActivityIndicator,
   RefreshControl,
   Switch,
+  Modal,
 } from "react-native";
 import React, { useState, useEffect, useRef } from "react";
 import styles from "@/utils/styles/Unprofile.js";
@@ -49,6 +49,8 @@ import * as Sharing from "expo-sharing";
 // hooks
 import useOpenFile from "@/hooks/useOpenFile";
 import CustomButton from "@/components/CustomButton";
+import ZoomableImage from "@/components/ZoomableImage";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const Page = ({ route, navigation }) => {
   const mapRef = useRef(null);
@@ -442,8 +444,6 @@ const Page = ({ route, navigation }) => {
 
   const fetchRatings = async ({ data }) => {
     let business = item;
-    console.log(business);
-    return;
     try {
       const fetchAllRatings = async (nextToken, result = []) => {
         const response = await API.graphql({
@@ -470,14 +470,6 @@ const Page = ({ route, navigation }) => {
 
       const allRatings = await fetchAllRatings();
       setListRatings(allRatings);
-      // const ratings = await API.graphql({
-      //   query: queries.businessCommentsByBusinessID,
-      //   variables: {
-      //     businessID: business?.businessID,
-      //   },
-      //   authMode: "AWS_IAM",
-      // });
-      // console.log(ratings.data.businessCommentsByBusinessID.items)
     } catch (error) {
       console.log("eres tu", error);
     }
@@ -1251,7 +1243,6 @@ const Page = ({ route, navigation }) => {
         </TouchableOpacity>
         {/* Catalogo */}
         <View>
-          {console.log(item?.catalogpdf)}
           <TouchableOpacity
             style={[
               {
@@ -1934,117 +1925,200 @@ const Page = ({ route, navigation }) => {
               setDescriptionImage("");
             }}
           >
-            <View style={styles.modalContainer}>
-              <TouchableWithoutFeedback>
-                <View
-                  style={[
-                    styles.modalContent,
-                    {
-                      height: imageView?.url ? 520 : 450,
-                    },
-                  ]}
-                >
-                  <View style={styles.modalTop}>
-                    <Pressable
-                      onPress={() => {
-                        setOpen(!open);
-                        setImageView(null);
-                        setDescriptionImage("");
-                      }}
-                    >
-                      <Image
-                        style={{
-                          width: 35,
-                          height: 35,
-                          resizeMode: "contain",
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <View style={styles.modalContainer}>
+                <TouchableWithoutFeedback>
+                  <View
+                    style={[
+                      styles.modalContent,
+                      {
+                        height: "85%",
+                      },
+                    ]}
+                  >
+                    <View style={styles.modalTop}>
+                      <Pressable
+                        onPress={() => {
+                          setOpen(!open);
+                          setImageView(null);
+                          setDescriptionImage("");
                         }}
-                        source={require("@/utils/images/arrow_back.png")}
-                      />
-                    </Pressable>
-                  </View>
-                  <View style={{ flex: 1 }}>
-                    <View>
-                      <Image
-                        style={{
-                          width: "100%",
-                          height: 230,
-                          resizeMode: "contain",
-                          borderRadius: 5,
-                          borderWidth: 0.7,
-                          borderColor: "#1f1f1f",
-                        }}
-                        source={{
-                          uri: imageChange
-                            ? imageChange.uri
-                            : imageView?.url
-                            ? imageView?.url
-                            : imageView?.uri,
-                        }}
-                      />
-                      <MaterialCommunityIcons
-                        name="image-edit-outline"
-                        size={24}
-                        color="#1f1f1f"
-                        style={{
-                          position: "absolute",
-                          backgroundColor: "#ffb703",
-                          borderRadius: 4,
-                          paddingHorizontal: 10,
-                          paddingVertical: 5,
-                          right: 0,
-                          opacity: 0.85,
-                          borderWidth: 0.7,
-                          borderColor: "#1f1f1f",
-                        }}
-                        onPress={changeTemporalImage}
-                      />
+                      >
+                        <Image
+                          style={{
+                            width: 35,
+                            height: 35,
+                            resizeMode: "contain",
+                          }}
+                          source={require("@/utils/images/arrow_back.png")}
+                        />
+                      </Pressable>
                     </View>
+                    <View style={{ flex: 1 }}>
+                      <View
+                        style={{
+                          backgroundColor: "#fff",
+                          height: 360,
+                        }}
+                      >
+                        <ZoomableImage
+                          uri={
+                            imageChange
+                              ? imageChange.uri
+                              : imageView?.url
+                              ? imageView?.url
+                              : imageView?.uri
+                          }
+                        />
 
-                    {imageView?.url && (
-                      <View style={{ flex: 1, paddingVertical: 15 }}>
-                        {imageView?.key === 0 && (
-                          <Text
+                        <MaterialCommunityIcons
+                          name="image-edit-outline"
+                          size={24}
+                          color="#1f1f1f"
+                          style={{
+                            position: "absolute",
+                            backgroundColor: "#ffb703",
+                            borderRadius: 4,
+                            paddingHorizontal: 10,
+                            paddingVertical: 5,
+                            right: 0,
+                            opacity: 0.85,
+                            borderWidth: 0.7,
+                            borderColor: "#1f1f1f",
+                          }}
+                          onPress={changeTemporalImage}
+                        />
+                      </View>
+
+                      {imageView?.url && (
+                        <View style={{ flex: 1, paddingVertical: 15 }}>
+                          {imageView?.key === 0 && (
+                            <Text
+                              style={{
+                                fontFamily: "light",
+                                fontSize: 12,
+                                textAlign: "center",
+                              }}
+                            >
+                              Tu imagen principal solo la puedes cambiar
+                            </Text>
+                          )}
+                          <View
                             style={{
-                              fontFamily: "light",
-                              fontSize: 12,
-                              textAlign: "center",
+                              flexDirection: "row",
+                              borderColor: "#444",
+                              borderWidth: 0.4,
+                              paddingHorizontal: 10,
+                              borderRadius: 8,
+                              marginTop: 10,
+                              height: 70,
                             }}
                           >
-                            Tu imagen principal solo la puedes cambiar
-                          </Text>
-                        )}
-                        <View
-                          style={{
-                            flex: 1,
-                            flexDirection: "row",
-                            borderColor: "#444",
-                            borderWidth: 0.4,
-                            paddingHorizontal: 10,
-                            borderRadius: 8,
-                            marginTop: 10,
-                          }}
-                        >
-                          <TextInput
-                            defaultValue={imageView?.description}
-                            onChangeText={(e) => {
-                              setActiveMainImage(true);
-                              setDescriptionImage(e);
-                            }}
-                            placeholder={
-                              "Coloca una descripcion para tu imagen"
-                            }
-                            placeholderTextColor={"#333"}
+                            <TextInput
+                              defaultValue={imageView?.description}
+                              onChangeText={(e) => {
+                                setActiveMainImage(true);
+                                setDescriptionImage(e);
+                              }}
+                              placeholder={
+                                "Coloca una descripcion para tu imagen"
+                              }
+                              placeholderTextColor={"#333"}
+                              style={{
+                                // flex: 1,
+                                // width: 100,
+                                height: 100,
+                                fontFamily: "light",
+                                fontSize: 12,
+                                alignItems: "flex-start",
+                              }}
+                              multiline={true}
+                              numberOfLines={5}
+                            />
+                          </View>
+                          <View
                             style={{
-                              flex: 1,
-                              // width: 100,
-                              fontFamily: "light",
-                              fontSize: 12,
-                              alignItems: "flex-start",
+                              flexDirection: "row",
+                              justifyContent: "space-between",
+                              columnGap: 5,
                             }}
-                            multiline={true}
-                            numberOfLines={5}
-                          />
+                          >
+                            <TouchableOpacity
+                              style={[
+                                activeMainImage
+                                  ? global.bgYellow
+                                  : global.bgWhite,
+                                {
+                                  borderRadius: 8,
+                                  flex: 1,
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                  height: 49,
+                                  marginTop: 10,
+                                  flexDirection: "row",
+                                  borderWidth: 0.7,
+                                  borderColor: "#1f1f1f",
+                                },
+                              ]}
+                              onPress={() =>
+                                changeImage(
+                                  imageView,
+                                  descriptionImage,
+                                  imageChange
+                                )
+                              }
+                              disabled={!activeMainImage}
+                            >
+                              <Text
+                                style={[
+                                  global.black,
+                                  {
+                                    fontFamily: "medium",
+                                    fontSize: 14,
+                                    marginRight: 3,
+                                  },
+                                ]}
+                              >
+                                {activeMainImage
+                                  ? `Guardar cambios`
+                                  : `Sin cambios`}
+                              </Text>
+                            </TouchableOpacity>
+                            {imageView?.key !== 0 && (
+                              <TouchableOpacity
+                                style={[
+                                  {
+                                    flex: 1,
+                                    borderRadius: 8,
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    height: 49,
+                                    marginTop: 10,
+                                    backgroundColor: "#c81d11",
+                                    flexDirection: "row",
+                                  },
+                                ]}
+                                onPress={() => deleteImage(imageView)}
+                              >
+                                <Text
+                                  style={[
+                                    global.white,
+                                    { fontFamily: "medium", fontSize: 14 },
+                                  ]}
+                                >
+                                  {`Eliminar`}
+                                </Text>
+                                <MaterialCommunityIcons
+                                  name="delete-outline"
+                                  size={24}
+                                  color="white"
+                                />
+                              </TouchableOpacity>
+                            )}
+                          </View>
                         </View>
+                      )}
+                      {imageView?.base64 && (
                         <View
                           style={{
                             flexDirection: "row",
@@ -2052,17 +2126,45 @@ const Page = ({ route, navigation }) => {
                             columnGap: 5,
                           }}
                         >
+                          <View
+                            style={{
+                              flex: 1,
+                              flexDirection: "row",
+                              borderColor: "#1f1f1f",
+                              borderWidth: 0.7,
+                              paddingHorizontal: 10,
+                              borderRadius: 8,
+                              marginTop: 10,
+                            }}
+                          >
+                            <TextInput
+                              value={descriptionImage}
+                              onChangeText={(e) => setDescriptionImage(e)}
+                              // onBlur={onBlur}
+                              placeholder={
+                                "Coloca una descripcion para tu imagen"
+                              }
+                              placeholderTextColor={"#333"}
+                              style={{
+                                flex: 1,
+                                // width: 100,
+                                fontFamily: "light",
+                                fontSize: 12,
+                                alignItems: "flex-start",
+                              }}
+                              multiline={true}
+                              numberOfLines={5}
+                            />
+                          </View>
                           <TouchableOpacity
                             style={[
-                              activeMainImage
-                                ? global.bgYellow
-                                : global.bgWhite,
+                              global.bgYellow,
                               {
                                 borderRadius: 8,
-                                flex: 1,
+                                // flex: 1,
                                 justifyContent: "center",
                                 alignItems: "center",
-                                height: 49,
+                                height: 70,
                                 marginTop: 10,
                                 flexDirection: "row",
                                 borderWidth: 0.7,
@@ -2070,13 +2172,8 @@ const Page = ({ route, navigation }) => {
                               },
                             ]}
                             onPress={() =>
-                              changeImage(
-                                imageView,
-                                descriptionImage,
-                                imageChange
-                              )
+                              uploadImages(imageView?.base64, descriptionImage)
                             }
-                            disabled={!activeMainImage}
                           >
                             <Text
                               style={[
@@ -2085,127 +2182,23 @@ const Page = ({ route, navigation }) => {
                                   fontFamily: "medium",
                                   fontSize: 14,
                                   marginRight: 3,
+                                  paddingHorizontal: 15,
                                 },
                               ]}
                             >
-                              {activeMainImage
-                                ? `Guardar cambios`
-                                : `Sin cambios`}
+                              {`Agregar`}
                             </Text>
                           </TouchableOpacity>
-                          {imageView?.key !== 0 && (
-                            <TouchableOpacity
-                              style={[
-                                {
-                                  flex: 1,
-                                  borderRadius: 8,
-                                  justifyContent: "center",
-                                  alignItems: "center",
-                                  height: 49,
-                                  marginTop: 10,
-                                  backgroundColor: "#c81d11",
-                                  flexDirection: "row",
-                                },
-                              ]}
-                              onPress={() => deleteImage(imageView)}
-                            >
-                              <Text
-                                style={[
-                                  global.white,
-                                  { fontFamily: "medium", fontSize: 14 },
-                                ]}
-                              >
-                                {`Eliminar`}
-                              </Text>
-                              <MaterialCommunityIcons
-                                name="delete-outline"
-                                size={24}
-                                color="white"
-                              />
-                            </TouchableOpacity>
-                          )}
                         </View>
-                      </View>
-                    )}
-                    {imageView?.base64 && (
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          justifyContent: "space-between",
-                          columnGap: 5,
-                        }}
-                      >
-                        <View
-                          style={{
-                            flex: 1,
-                            flexDirection: "row",
-                            borderColor: "#1f1f1f",
-                            borderWidth: 0.7,
-                            paddingHorizontal: 10,
-                            borderRadius: 8,
-                            marginTop: 10,
-                          }}
-                        >
-                          <TextInput
-                            value={descriptionImage}
-                            onChangeText={(e) => setDescriptionImage(e)}
-                            // onBlur={onBlur}
-                            placeholder={
-                              "Coloca una descripcion para tu imagen"
-                            }
-                            placeholderTextColor={"#333"}
-                            style={{
-                              flex: 1,
-                              // width: 100,
-                              fontFamily: "light",
-                              fontSize: 12,
-                              alignItems: "flex-start",
-                            }}
-                            multiline={true}
-                            numberOfLines={5}
-                          />
-                        </View>
-                        <TouchableOpacity
-                          style={[
-                            global.bgYellow,
-                            {
-                              borderRadius: 8,
-                              // flex: 1,
-                              justifyContent: "center",
-                              alignItems: "center",
-                              height: 70,
-                              marginTop: 10,
-                              flexDirection: "row",
-                              borderWidth: 0.7,
-                              borderColor: "#1f1f1f",
-                            },
-                          ]}
-                          onPress={() =>
-                            uploadImages(imageView?.base64, descriptionImage)
-                          }
-                        >
-                          <Text
-                            style={[
-                              global.black,
-                              {
-                                fontFamily: "medium",
-                                fontSize: 14,
-                                marginRight: 3,
-                                paddingHorizontal: 15,
-                              },
-                            ]}
-                          >
-                            {`Agregar`}
-                          </Text>
-                        </TouchableOpacity>
-                      </View>
-                    )}
+                      )}
+                    </View>
                   </View>
-                </View>
-              </TouchableWithoutFeedback>
-            </View>
+                </TouchableWithoutFeedback>
+              </View>
+            </GestureHandlerRootView>
           </TouchableWithoutFeedback>
         </Modal>
+
         <ModalAlert
           text={`Error al guardar imagenes. Por favor, selecciona un máximo de 4 imágenes`}
           close={() => setVisible(false)}

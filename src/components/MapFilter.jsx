@@ -48,7 +48,6 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
       latitude: obj?.latitude,
       longitude: obj?.longitude,
     });
-    console.log(obj?.label);
   };
   const onHandlePress = (e) => {
     const {
@@ -117,7 +116,6 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
   };
 
   const search = async () => {
-    console.log("desde search", searchActive);
     setSuggestions(null);
     if (description === "") return;
     const api = "api-opense";
@@ -134,9 +132,7 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
     };
     try {
       const response = await API.get(api, path, params);
-      console.log("QUE ENCONTRO: ", response.data);
       setSuggestions(response.data);
-      console.log(suggestions);
     } catch (error) {
       console.log("Error buscando algo", error);
     }

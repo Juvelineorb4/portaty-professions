@@ -130,7 +130,6 @@ const Unprofile = ({ navigation, route }) => {
               };
 
               const response = await API.get(api, path, params);
-              console.log("RESPONSE: ", response);
               if (response?.success) {
                 const data = await Auth.currentAuthenticatedUser();
                 // cambiar atributo para saber si ya solicito o no la eliminacion

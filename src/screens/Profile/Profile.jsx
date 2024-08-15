@@ -104,7 +104,6 @@ const Profile = ({ route, navigation }) => {
         };
 
         const result = await API.post(apiName, path, myInit);
-        console.log("EJELE: ", result);
         if (result?.success) {
           setConfirmEmail(true);
           setEditActive(!editActive);
@@ -141,7 +140,6 @@ const Profile = ({ route, navigation }) => {
     setIsLoading(false);
   };
   const onConfirmCodeEmail = async () => {
-    console.log(codeInputs);
     setIsLoading(true);
     const data = await Auth.currentAuthenticatedUser();
     const tableID = data?.attributes["custom:userTableID"];
@@ -150,7 +148,6 @@ const Profile = ({ route, navigation }) => {
         "email",
         codeInputs
       );
-      console.log("RESULT: ", result);
       if (result === "SUCCESS") {
         const result = await API.graphql({
           query: mutations.updateUsers,
