@@ -410,6 +410,7 @@ const CustomPromotions = ({ route, navigation }) => {
               flexDirection: "row",
               justifyContent: "center",
               alignItems: "center",
+              alignSelf: "center",
               width: 320,
               marginBottom: 10,
             }}
@@ -474,6 +475,7 @@ const CustomPromotions = ({ route, navigation }) => {
                   flexDirection: "row",
                   justifyContent: "center",
                   alignItems: "center",
+                  alignSelf: "center",
                   width: 320,
                 }}
               >
@@ -534,7 +536,7 @@ const CustomPromotions = ({ route, navigation }) => {
                         item.status !== "PUBLISHED" &&
                         item.status !== "INREVIEW"
                       ) {
-                        console.log(item)
+                        console.log(item);
                         setDataPromotionAgain(item);
                         setVisibleAgain(true);
                       }

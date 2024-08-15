@@ -1,4 +1,10 @@
-import { Pressable, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import Promotions from "@/components/Home/Promotions";
 import { userAuthenticated, mapUser } from "@/atoms";
@@ -17,6 +23,7 @@ const PromotionsHome = ({ login, promotion, promotionID }) => {
   const userLocation = useRecoilValue(mapUser);
   const [stories, setStories] = useState([]);
   const [business, setBusiness] = useState(false);
+  const [storiesLoading, setStoriesLoading] = useState(false);
   const [businessId, setBusinessId] = useState(null);
   const fetchBusiness = async () => {
     try {
@@ -139,6 +146,7 @@ const PromotionsHome = ({ login, promotion, promotionID }) => {
             stories,
           };
         });
+        setStoriesLoading(true);
         return setStories(result);
       };
       updateStories();
@@ -153,7 +161,20 @@ const PromotionsHome = ({ login, promotion, promotionID }) => {
     }
   }, [userAuth]);
 
-  if (userAuth)
+  if (!storiesLoading)
+    return (
+      <View
+        style={{
+          backgroundColor: "white",
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <ActivityIndicator size={"large"} color={"#1f1f1f"}></ActivityIndicator>
+      </View>
+    );
+  if (userAuth && storiesLoading)
     return (
       <View style={[global.bgWhite, { flex: 1, padding: 20, marginTop: -20 }]}>
         <Text
@@ -192,6 +213,7 @@ const PromotionsHome = ({ login, promotion, promotionID }) => {
             </TouchableOpacity>
           )}
           <Promotions
+            isAll={storiesLoading}
             data={stories}
             showPromotion={promotionID ? promotionID : ""}
           />
