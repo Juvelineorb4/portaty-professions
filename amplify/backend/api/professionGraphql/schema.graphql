@@ -240,7 +240,7 @@ type BusinessPromotion
   @auth(
     rules: [
       { allow: public }
-      { allow: owner, operations: [create, read, update] }
+      { allow: owner }
       { allow: private, provider: iam, operations: [read] }
       { allow: public, provider: iam, operations: [read] }
     ]
