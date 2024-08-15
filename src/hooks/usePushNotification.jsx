@@ -30,6 +30,9 @@ async function registerForPushNotificationsAsync() {
         const { status } = await Notifications.requestPermissionsAsync();
         finalStatus = status;
       }
+      console.log('status', existingStatus)
+      console.log('status', finalStatus)
+
       if (finalStatus !== "granted") {
         alert("Failed to get push token for push notification!");
         return;
@@ -86,7 +89,7 @@ const usePushNotification = () => {
     registerForPushNotificationsAsync().then((token) => {
       setExpoPushToken(token);
       setToken(token);
-      console.log(token)
+      console.log('token', token)
     });
 
     // esto es si llega una notificacion y la app esta en primer plano
