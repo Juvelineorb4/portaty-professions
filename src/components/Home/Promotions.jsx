@@ -11,7 +11,7 @@ const Promotions = ({ data, showPromotion, isAll }) => {
   const [storiesData, setStoriesData] = useState(data);
   useEffect(() => {
     setStoriesData(data);
-    console.log("Story", storiesData);
+    console.log("Story", showPromotion);
     setTimeout(() => {
       if (showPromotion && ref) onShowPromotion(showPromotion);
     }, 1000);

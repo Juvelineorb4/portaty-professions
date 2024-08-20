@@ -143,6 +143,10 @@ export const eyelashSelection = atom({
   key: "eyelashSelectionValue",
   default: 0,
 });
+export const notificationNavigate = atom({
+  key: "notificationNavigateValue",
+  default: 0,
+});
 export const urlInitalShare = atom({
   key: "urlInitalShareValue",
   default: {},

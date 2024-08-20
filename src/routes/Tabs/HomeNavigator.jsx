@@ -11,6 +11,7 @@ import FavoritePage from "@/screens/Home/FavoritePage";
 import FavoritesHome from "@/screens/Home/FavoritesHome";
 import Home from "@/screens/Home/Home";
 import CustomPromotions from "@/components/CustomPromotions";
+import NotificationsPage from "@/components/NotificationsPage";
 
 const HomeNavigator = ({ route, navigation }) => {
   const Stack = createNativeStackNavigator();
@@ -46,6 +47,14 @@ const HomeNavigator = ({ route, navigation }) => {
       <Stack.Screen
         name="ViewQR"
         component={CustomQR}
+        options={{
+          animation: "slide_from_right",
+          header: (props) => <LeftHeader {...props} />,
+        }}
+      />
+      <Stack.Screen
+        name="NotificationsPage"
+        component={NotificationsPage}
         options={{
           animation: "slide_from_right",
           header: (props) => <LeftHeader {...props} />,

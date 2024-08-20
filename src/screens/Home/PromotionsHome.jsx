@@ -17,6 +17,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
 const PromotionsHome = ({ login, promotion, promotionID }) => {
+  console.log(promotion, promotionID)
   const navigation = useNavigation();
   const global = require("@/utils/styles/global.js");
   const userAuth = useRecoilValue(userAuthenticated);
@@ -112,7 +113,6 @@ const PromotionsHome = ({ login, promotion, promotionID }) => {
                         },
                       ]}
                       onPress={() => {
-                        console.log("Story");
                         navigation.navigate("Search_Tab", {
                           screen: "SearchPost",
                           params: {
@@ -122,7 +122,6 @@ const PromotionsHome = ({ login, promotion, promotionID }) => {
                             },
                           },
                         });
-                        console.log("Story 2");
                       }}
                     >
                       <Text

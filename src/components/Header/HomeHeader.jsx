@@ -4,6 +4,7 @@ import styles from "@/utils/styles/Header.js";
 import { useRecoilState } from "recoil";
 import { eyelashSelection, inputFavoritesSearch } from "@/atoms";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 const HomeHeader = ({ type = "promotions" }) => {
   const global = require("@/utils/styles/global.js");
@@ -14,6 +15,8 @@ const HomeHeader = ({ type = "promotions" }) => {
   const handleKeyPress = (input) => {
     setInputFavorites(input.trim());
   };
+  const navigation = useNavigation()
+
   return (
     <View style={[styles.home, global.bgWhite]}>
       <View
@@ -32,7 +35,9 @@ const HomeHeader = ({ type = "promotions" }) => {
           }}
           source={require("@/utils/images/portaty.png")}
         />
-        <Ionicons name="notifications-sharp" size={36} color="#ffb703" />
+        <TouchableOpacity onPress={() => navigation.push('NotificationsPage')}>
+          <Ionicons name="notifications-sharp" size={36} color="#ffb703" />
+        </TouchableOpacity>
       </View>
       <View
         style={{

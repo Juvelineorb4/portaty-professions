@@ -37,7 +37,7 @@ import ModalUpdate from "@/components/ModalUpdate";
 // Hooks
 import useCheckAppVersion from "@/hooks/useCheckAppVersion";
 import NetInfo from "@react-native-community/netinfo";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import PromotionsHome from "./PromotionsHome";
 
 const FavoritesHome = ({ navigation, route }) => {
@@ -58,6 +58,17 @@ const FavoritesHome = ({ navigation, route }) => {
   const [resultNothing, setResultNothing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isConnected, setIsConnected] = useRecoilState(connectionStatus);
+
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     console.log(route.params);
+  //     // return;
+  //     getConnection();
+  //     console.log("Final");
+
+  //   }, [])
+  // );
+
   const fetchFavorites = async () => {
     setLoading(true);
     if (userAuth === null) {
@@ -183,6 +194,7 @@ const FavoritesHome = ({ navigation, route }) => {
     openAppSettings();
     checkLocationPermission();
     getConnection();
+    return;
     const updateSub = API.graphql({
       query: subscriptions.onUpdateUsers,
       authMode: "AMAZON_COGNITO_USER_POOLS",
@@ -201,7 +213,7 @@ const FavoritesHome = ({ navigation, route }) => {
         updateSub.unsubscribe();
       }
     };
-  }, [route, statusFavorites, inputFavorite, updateFavorite, userAuth]);
+  }, [statusFavorites, inputFavorite, updateFavorite, userAuth]);
 
   if (pageSelection === 0)
     return (

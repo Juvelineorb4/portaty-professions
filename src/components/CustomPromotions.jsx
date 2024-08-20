@@ -596,6 +596,7 @@ const CustomPromotions = ({ route, navigation }) => {
           close={() => setVisible(false)}
           navigation={() => {
             setLoadingPage(false);
+            fetchPromotions();
             setTimeout(() => {
               setLoadingPage(true);
             }, 2000);

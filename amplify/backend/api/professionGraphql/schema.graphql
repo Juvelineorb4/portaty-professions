@@ -147,12 +147,39 @@ type Users
     @hasMany(indexName: "byUserComments", fields: ["id"])
   promotions: [BusinessPromotion]
     @hasMany(indexName: "byUserPromotions", fields: ["id"])
+  notifications: [UserNotification]
+    @hasMany(indexName: "byUserNotifications", fields: ["id"])
   lastLocation: Coordinates
   owner: String
     @auth(
       rules: [
         { allow: owner, operations: [read, delete] }
         { allow: groups, groups: ["admin"], operations: [read] }
+      ]
+    )
+}
+
+type UserNotification
+  @model
+  @auth(
+    rules: [
+      { allow: owner, operations: [read, delete] }
+      { allow: public }
+      { allow: groups, groups: ["admin"] }
+    ]
+  ) {
+  id: ID!
+  userID: ID @index(name: "byUserNotifications")
+  title: String
+  message: String
+  type: String
+  data: String
+  owner: String
+    @auth(
+      rules: [
+        { allow: owner, operations: [read, delete] }
+        { allow: groups, groups: ["admin"] }
+        { allow: public }
       ]
     )
 }
