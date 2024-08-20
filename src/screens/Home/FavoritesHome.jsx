@@ -59,15 +59,7 @@ const FavoritesHome = ({ navigation, route }) => {
   const [loading, setLoading] = useState(false);
   const [isConnected, setIsConnected] = useRecoilState(connectionStatus);
 
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     console.log(route.params);
-  //     // return;
-  //     getConnection();
-  //     console.log("Final");
 
-  //   }, [])
-  // );
 
   const fetchFavorites = async () => {
     setLoading(true);

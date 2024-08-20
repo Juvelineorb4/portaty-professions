@@ -10,8 +10,12 @@ import React, { useEffect, useState } from "react";
 import { API, Auth } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Notification";
 import * as mutation from "@/graphql/CustomMutations/Notification";
-import { useSetRecoilState } from "recoil";
-import { eyelashSelection, notificationNavigate } from "@/atoms";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import {
+  eyelashSelection,
+  isFocusPromotion,
+  notificationNavigate,
+} from "@/atoms";
 import { useNavigation } from "@react-navigation/native";
 
 const NotificationsPage = () => {
@@ -21,6 +25,8 @@ const NotificationsPage = () => {
   const [notificationNothing, setNotificationNothing] = useState(false);
   const [reload, setReload] = useState(false);
   const setPageSelection = useSetRecoilState(eyelashSelection);
+const [isFocus, setIsFocus] = useRecoilState(isFocusPromotion);
+
   const navigation = useNavigation();
 
   const fetchNotifications = async () => {
@@ -118,8 +124,8 @@ const NotificationsPage = () => {
                   alignItems: "center",
                 }}
                 onPress={() => {
-                  console.log(data?.promotionID);
                   setPageSelection(0);
+                  setIsFocus(true);
                   navigation.navigate("Home_Tab", {
                     screen: "FavoritesHome",
                     params: {

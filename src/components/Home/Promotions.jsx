@@ -2,20 +2,23 @@ import { StyleSheet, Text, View } from "react-native";
 import React, { useRef, useState } from "react";
 import InstagramStories from "@birdwingo/react-native-instagram-stories";
 import { useEffect } from "react";
+import { useRecoilState } from "recoil";
+import { isFocusPromotion } from "@/atoms";
 
-const Promotions = ({ data, showPromotion, isAll }) => {
+const Promotions = ({ data, showPromotion, setShowPromotion, isAll }) => {
   const ref = useRef(null);
+  const [isFocus, setIsFocus] = useRecoilState(isFocusPromotion);
+
   const onShowPromotion = (id) => {
     ref.current?.show(id);
   };
   const [storiesData, setStoriesData] = useState(data);
   useEffect(() => {
     setStoriesData(data);
-    console.log("Story", showPromotion);
     setTimeout(() => {
       if (showPromotion && ref) onShowPromotion(showPromotion);
     }, 1000);
-  }, [ref, isAll, data]);
+  }, [ref, isAll, data, showPromotion]);
 
   if (storiesData.length !== 0)
     return (
@@ -53,6 +56,8 @@ const Promotions = ({ data, showPromotion, isAll }) => {
           modalAnimationDuration={500}
           closeIconColor={"#ffffff"}
           storyAvatarSize={45}
+          onShow={setShowPromotion}
+          onHide={() => setIsFocus(false)}
         ></InstagramStories>
       </View>
     );

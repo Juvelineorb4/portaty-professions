@@ -7,17 +7,16 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import Promotions from "@/components/Home/Promotions";
-import { userAuthenticated, mapUser } from "@/atoms";
-import { useRecoilValue } from "recoil";
+import { userAuthenticated, mapUser, isFocusPromotion } from "@/atoms";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { API } from "aws-amplify";
 import styles from "@/utils/styles/Promotions.js";
 import CustomButton from "@/components/CustomButton";
 import * as queries from "@/graphql/CustomQueries/Favorites";
 import { AntDesign } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 const PromotionsHome = ({ login, promotion, promotionID }) => {
-  console.log(promotion, promotionID)
   const navigation = useNavigation();
   const global = require("@/utils/styles/global.js");
   const userAuth = useRecoilValue(userAuthenticated);
@@ -26,6 +25,8 @@ const PromotionsHome = ({ login, promotion, promotionID }) => {
   const [business, setBusiness] = useState(false);
   const [storiesLoading, setStoriesLoading] = useState(false);
   const [businessId, setBusinessId] = useState(null);
+  const [promotionChange, setPromotionChange] = useState("");
+  const [isFocus, setIsFocus] = useRecoilState(isFocusPromotion);
   const fetchBusiness = async () => {
     try {
       const result = await API.graphql({
@@ -160,6 +161,12 @@ const PromotionsHome = ({ login, promotion, promotionID }) => {
     }
   }, [userAuth]);
 
+  useEffect(() => {
+    if (isFocus) {
+      setPromotionChange(promotionID);
+    }
+  }, [isFocus]);
+
   if (!storiesLoading)
     return (
       <View
@@ -214,7 +221,8 @@ const PromotionsHome = ({ login, promotion, promotionID }) => {
           <Promotions
             isAll={storiesLoading}
             data={stories}
-            showPromotion={promotionID ? promotionID : ""}
+            showPromotion={promotionChange}
+            setShowPromotion={() => setPromotionChange("")}
           />
         </View>
       </View>

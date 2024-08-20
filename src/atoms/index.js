@@ -69,6 +69,10 @@ export const userAuthenticated = atom({
   key: "userAuthenticatedValue",
   default: null,
 });
+export const isFocusPromotion = atom({
+  key: "isFocusPromotionValue",
+  default: false,
+});
 export const userTable = atom({
   key: "userTableValue",
   default: null,
@@ -145,7 +149,7 @@ export const eyelashSelection = atom({
 });
 export const notificationNavigate = atom({
   key: "notificationNavigateValue",
-  default: 0,
+  default: false,
 });
 export const urlInitalShare = atom({
   key: "urlInitalShareValue",

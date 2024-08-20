@@ -22,6 +22,7 @@ const HomeNavigator = ({ route, navigation }) => {
         name="FavoritesHome"
         initialParams={route?.params}
         options={{
+          unmountOnBlur: true,
           animation: "slide_from_right",
           header: (props) =>
             selections.length === 0 ? (
@@ -72,6 +73,7 @@ const HomeNavigator = ({ route, navigation }) => {
         name="PromotionsHome"
         component={CustomPromotions}
         options={{
+          unmountOnBlur: true,
           animation: "slide_from_right",
           header: (props) => <LeftHeader {...props} />,
         }}
