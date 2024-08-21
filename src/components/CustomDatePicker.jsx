@@ -9,16 +9,14 @@ import {
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
-const CustomDatePicker = ({startDate, setStartDate, endDate, setEndDate}) => {
+const CustomDatePicker = ({ startDate, setStartDate, endDate, setEndDate }) => {
   const [startDateString, setStartDateString] = useState("Elige fecha inicial");
   const [endDateString, setEndDateString] = useState("Elige fecha final");
   const [showStartPicker, setShowStartPicker] = useState(false);
   const [showEndPicker, setShowEndPicker] = useState(false);
 
-
   const maxDate = new Date();
   maxDate.setDate(maxDate.getDate() + 30);
-
 
   const onStartDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || startDate;
@@ -77,7 +75,7 @@ const CustomDatePicker = ({startDate, setStartDate, endDate, setEndDate}) => {
       >
         Fecha inicial
       </Text>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={{
           borderRadius: 8,
           width: 130,
@@ -100,8 +98,8 @@ const CustomDatePicker = ({startDate, setStartDate, endDate, setEndDate}) => {
         >
           {startDateString}
         </Text>
-      </TouchableOpacity>
-      {showStartPicker && (
+      </TouchableOpacity> */}
+      {Platform.OS === "ios" && (
         <DateTimePicker
           value={startDate}
           mode="date"
@@ -109,6 +107,14 @@ const CustomDatePicker = ({startDate, setStartDate, endDate, setEndDate}) => {
           minimumDate={new Date()}
           maximumDate={maxDate}
           onChange={onStartDateChange}
+          style={{
+            borderRadius: 8,
+            marginLeft: 1,
+            color: "#404040",
+            left: -20,
+            marginBottom: 10,
+            marginTop: 5,
+          }}
         />
       )}
 
@@ -122,7 +128,7 @@ const CustomDatePicker = ({startDate, setStartDate, endDate, setEndDate}) => {
       >
         Fecha final
       </Text>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={{
           borderRadius: 8,
           width: 130,
@@ -145,8 +151,8 @@ const CustomDatePicker = ({startDate, setStartDate, endDate, setEndDate}) => {
         >
           {endDateString}
         </Text>
-      </TouchableOpacity>
-      {showEndPicker && (
+      </TouchableOpacity> */}
+      {Platform.OS === "ios" && (
         <DateTimePicker
           value={endDate}
           mode="date"
@@ -154,6 +160,14 @@ const CustomDatePicker = ({startDate, setStartDate, endDate, setEndDate}) => {
           minimumDate={startDate}
           maximumDate={startDate}
           onChange={onEndDateChange}
+          style={{
+            borderRadius: 8,
+            marginLeft: 1,
+            color: "#404040",
+            left: -20,
+            marginBottom: 10,
+            marginTop: 5,
+          }}
         />
       )}
     </View>

@@ -359,6 +359,20 @@ export const getUsers = /* GraphQL */ `
         }
         nextToken
       }
+      notifications {
+        items {
+          id
+          userID
+          title
+          message
+          type
+          data
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       lastLocation {
         lat
         lon
@@ -395,6 +409,9 @@ export const listUsers = /* GraphQL */ `
           nextToken
         }
         promotions {
+          nextToken
+        }
+        notifications {
           nextToken
         }
         lastLocation {
@@ -445,10 +462,84 @@ export const userByEmail = /* GraphQL */ `
         promotions {
           nextToken
         }
+        notifications {
+          nextToken
+        }
         lastLocation {
           lat
           lon
         }
+        owner
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getUserNotification = /* GraphQL */ `
+  query GetUserNotification($id: ID!) {
+    getUserNotification(id: $id) {
+      id
+      userID
+      title
+      message
+      type
+      data
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listUserNotifications = /* GraphQL */ `
+  query ListUserNotifications(
+    $filter: ModelUserNotificationFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listUserNotifications(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userID
+        title
+        message
+        type
+        data
+        owner
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const userNotificationsByUserID = /* GraphQL */ `
+  query UserNotificationsByUserID(
+    $userID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelUserNotificationFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    userNotificationsByUserID(
+      userID: $userID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userID
+        title
+        message
+        type
+        data
         owner
         createdAt
         updatedAt
@@ -481,6 +572,9 @@ export const getBusiness = /* GraphQL */ `
           nextToken
         }
         promotions {
+          nextToken
+        }
+        notifications {
           nextToken
         }
         lastLocation {
@@ -720,6 +814,9 @@ export const getBusinessComment = /* GraphQL */ `
         promotions {
           nextToken
         }
+        notifications {
+          nextToken
+        }
         lastLocation {
           lat
           lon
@@ -885,6 +982,9 @@ export const getBusinessPromotion = /* GraphQL */ `
         promotions {
           nextToken
         }
+        notifications {
+          nextToken
+        }
         lastLocation {
           lat
           lon
@@ -952,6 +1052,17 @@ export const getBusinessPromotion = /* GraphQL */ `
       isView
       image
       notifiedUserIDs
+      viewedUserIDs {
+        items {
+          id
+          userID
+          promotionID
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       owner
       createdAt
       updatedAt
@@ -1018,6 +1129,9 @@ export const listBusinessPromotions = /* GraphQL */ `
         isView
         image
         notifiedUserIDs
+        viewedUserIDs {
+          nextToken
+        }
         owner
         createdAt
         updatedAt
@@ -1090,6 +1204,9 @@ export const businessPromotionsByUserID = /* GraphQL */ `
         isView
         image
         notifiedUserIDs
+        viewedUserIDs {
+          nextToken
+        }
         owner
         createdAt
         updatedAt
@@ -1162,6 +1279,67 @@ export const businessPromotionsByBusinessID = /* GraphQL */ `
         isView
         image
         notifiedUserIDs
+        viewedUserIDs {
+          nextToken
+        }
+        owner
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getPromotionViews = /* GraphQL */ `
+  query GetPromotionViews($id: ID!) {
+    getPromotionViews(id: $id) {
+      id
+      userID
+      promotionID
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listPromotionViews = /* GraphQL */ `
+  query ListPromotionViews(
+    $filter: ModelPromotionViewsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPromotionViews(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        userID
+        promotionID
+        owner
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const promotionViewsByPromotionID = /* GraphQL */ `
+  query PromotionViewsByPromotionID(
+    $promotionID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelPromotionViewsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    promotionViewsByPromotionID(
+      promotionID: $promotionID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userID
+        promotionID
         owner
         createdAt
         updatedAt
@@ -1246,6 +1424,9 @@ export const getFavorites = /* GraphQL */ `
           nextToken
         }
         promotions {
+          nextToken
+        }
+        notifications {
           nextToken
         }
         lastLocation {

@@ -609,7 +609,11 @@ const CustomPromotions = ({ route, navigation }) => {
           icon={require("@/utils/images/successful.png")}
           close={() => setVisible(false)}
           navigation={() => {
-            navigation.goBack();
+            setLoadingPage(false);
+            fetchPromotions();
+            setTimeout(() => {
+              setLoadingPage(true);
+            }, 2000);
           }}
           isLink={true}
           open={visible}

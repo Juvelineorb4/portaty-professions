@@ -147,12 +147,39 @@ type Users
     @hasMany(indexName: "byUserComments", fields: ["id"])
   promotions: [BusinessPromotion]
     @hasMany(indexName: "byUserPromotions", fields: ["id"])
+  notifications: [UserNotification]
+    @hasMany(indexName: "byUserNotifications", fields: ["id"])
   lastLocation: Coordinates
   owner: String
     @auth(
       rules: [
         { allow: owner, operations: [read, delete] }
         { allow: groups, groups: ["admin"], operations: [read] }
+      ]
+    )
+}
+
+type UserNotification
+  @model
+  @auth(
+    rules: [
+      { allow: owner, operations: [read, delete] }
+      { allow: public }
+      { allow: groups, groups: ["admin"] }
+    ]
+  ) {
+  id: ID!
+  userID: ID @index(name: "byUserNotifications")
+  title: String
+  message: String
+  type: String
+  data: String
+  owner: String
+    @auth(
+      rules: [
+        { allow: owner, operations: [read, delete] }
+        { allow: groups, groups: ["admin"] }
+        { allow: public }
       ]
     )
 }
@@ -257,6 +284,27 @@ type BusinessPromotion
   isView: Boolean @default(value: "false")
   image: String
   notifiedUserIDs: [ID!]
+  viewedUserIDs: [PromotionViews!]
+    @hasMany(indexName: "byPromotionViews", fields: ["id"])
+  owner: String
+    @auth(
+      rules: [{ allow: owner, operations: [read, delete] }, { allow: public }]
+    )
+}
+
+type PromotionViews
+  @model
+  @auth(
+    rules: [
+      { allow: public }
+      { allow: owner }
+      { allow: private, provider: iam, operations: [read] }
+      { allow: public, provider: iam, operations: [read] }
+    ]
+  ) {
+  id: ID
+  userID: ID
+  promotionID: ID @index(name: "byPromotionViews")
   owner: String
     @auth(
       rules: [{ allow: owner, operations: [read, delete] }, { allow: public }]

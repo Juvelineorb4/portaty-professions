@@ -37,7 +37,7 @@ import ModalUpdate from "@/components/ModalUpdate";
 // Hooks
 import useCheckAppVersion from "@/hooks/useCheckAppVersion";
 import NetInfo from "@react-native-community/netinfo";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import PromotionsHome from "./PromotionsHome";
 
 const FavoritesHome = ({ navigation, route }) => {
@@ -201,7 +201,7 @@ const FavoritesHome = ({ navigation, route }) => {
         updateSub.unsubscribe();
       }
     };
-  }, [route, statusFavorites, inputFavorite, updateFavorite, userAuth]);
+  }, [statusFavorites, inputFavorite, updateFavorite, userAuth]);
 
   if (pageSelection === 0)
     return (

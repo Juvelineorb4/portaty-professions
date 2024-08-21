@@ -168,6 +168,7 @@ const Tabs = () => {
       <Tab.Screen
         name="Home_Tab"
         options={{
+          unmountOnBlur: true,
           tabBarIcon: {
             activeIcon: require("@/utils/images/favorites.png"),
             inActiveIcon: require("@/utils/images/favorites.png"),

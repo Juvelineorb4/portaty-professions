@@ -362,6 +362,20 @@ export const onCreateUsers = /* GraphQL */ `
         }
         nextToken
       }
+      notifications {
+        items {
+          id
+          userID
+          title
+          message
+          type
+          data
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       lastLocation {
         lat
         lon
@@ -451,6 +465,20 @@ export const onUpdateUsers = /* GraphQL */ `
           isView
           image
           notifiedUserIDs
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      notifications {
+        items {
+          id
+          userID
+          title
+          message
+          type
+          data
           owner
           createdAt
           updatedAt
@@ -552,10 +580,78 @@ export const onDeleteUsers = /* GraphQL */ `
         }
         nextToken
       }
+      notifications {
+        items {
+          id
+          userID
+          title
+          message
+          type
+          data
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       lastLocation {
         lat
         lon
       }
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateUserNotification = /* GraphQL */ `
+  subscription OnCreateUserNotification(
+    $filter: ModelSubscriptionUserNotificationFilterInput
+    $owner: String
+  ) {
+    onCreateUserNotification(filter: $filter, owner: $owner) {
+      id
+      userID
+      title
+      message
+      type
+      data
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateUserNotification = /* GraphQL */ `
+  subscription OnUpdateUserNotification(
+    $filter: ModelSubscriptionUserNotificationFilterInput
+    $owner: String
+  ) {
+    onUpdateUserNotification(filter: $filter, owner: $owner) {
+      id
+      userID
+      title
+      message
+      type
+      data
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteUserNotification = /* GraphQL */ `
+  subscription OnDeleteUserNotification(
+    $filter: ModelSubscriptionUserNotificationFilterInput
+    $owner: String
+  ) {
+    onDeleteUserNotification(filter: $filter, owner: $owner) {
+      id
+      userID
+      title
+      message
+      type
+      data
       owner
       createdAt
       updatedAt
@@ -589,6 +685,9 @@ export const onCreateBusiness = /* GraphQL */ `
           nextToken
         }
         promotions {
+          nextToken
+        }
+        notifications {
           nextToken
         }
         lastLocation {
@@ -699,6 +798,9 @@ export const onUpdateBusiness = /* GraphQL */ `
         promotions {
           nextToken
         }
+        notifications {
+          nextToken
+        }
         lastLocation {
           lat
           lon
@@ -805,6 +907,9 @@ export const onDeleteBusiness = /* GraphQL */ `
           nextToken
         }
         promotions {
+          nextToken
+        }
+        notifications {
           nextToken
         }
         lastLocation {
@@ -915,6 +1020,9 @@ export const onCreateBusinessComment = /* GraphQL */ `
         promotions {
           nextToken
         }
+        notifications {
+          nextToken
+        }
         lastLocation {
           lat
           lon
@@ -959,6 +1067,9 @@ export const onUpdateBusinessComment = /* GraphQL */ `
           nextToken
         }
         promotions {
+          nextToken
+        }
+        notifications {
           nextToken
         }
         lastLocation {
@@ -1007,6 +1118,9 @@ export const onDeleteBusinessComment = /* GraphQL */ `
         promotions {
           nextToken
         }
+        notifications {
+          nextToken
+        }
         lastLocation {
           lat
           lon
@@ -1053,6 +1167,9 @@ export const onCreateBusinessPromotion = /* GraphQL */ `
         promotions {
           nextToken
         }
+        notifications {
+          nextToken
+        }
         lastLocation {
           lat
           lon
@@ -1120,6 +1237,17 @@ export const onCreateBusinessPromotion = /* GraphQL */ `
       isView
       image
       notifiedUserIDs
+      viewedUserIDs {
+        items {
+          id
+          userID
+          promotionID
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       owner
       createdAt
       updatedAt
@@ -1155,6 +1283,9 @@ export const onUpdateBusinessPromotion = /* GraphQL */ `
         promotions {
           nextToken
         }
+        notifications {
+          nextToken
+        }
         lastLocation {
           lat
           lon
@@ -1222,6 +1353,17 @@ export const onUpdateBusinessPromotion = /* GraphQL */ `
       isView
       image
       notifiedUserIDs
+      viewedUserIDs {
+        items {
+          id
+          userID
+          promotionID
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       owner
       createdAt
       updatedAt
@@ -1257,6 +1399,9 @@ export const onDeleteBusinessPromotion = /* GraphQL */ `
         promotions {
           nextToken
         }
+        notifications {
+          nextToken
+        }
         lastLocation {
           lat
           lon
@@ -1324,6 +1469,62 @@ export const onDeleteBusinessPromotion = /* GraphQL */ `
       isView
       image
       notifiedUserIDs
+      viewedUserIDs {
+        items {
+          id
+          userID
+          promotionID
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreatePromotionViews = /* GraphQL */ `
+  subscription OnCreatePromotionViews(
+    $filter: ModelSubscriptionPromotionViewsFilterInput
+    $owner: String
+  ) {
+    onCreatePromotionViews(filter: $filter, owner: $owner) {
+      id
+      userID
+      promotionID
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdatePromotionViews = /* GraphQL */ `
+  subscription OnUpdatePromotionViews(
+    $filter: ModelSubscriptionPromotionViewsFilterInput
+    $owner: String
+  ) {
+    onUpdatePromotionViews(filter: $filter, owner: $owner) {
+      id
+      userID
+      promotionID
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeletePromotionViews = /* GraphQL */ `
+  subscription OnDeletePromotionViews(
+    $filter: ModelSubscriptionPromotionViewsFilterInput
+    $owner: String
+  ) {
+    onDeletePromotionViews(filter: $filter, owner: $owner) {
+      id
+      userID
+      promotionID
       owner
       createdAt
       updatedAt
@@ -1409,6 +1610,9 @@ export const onCreateFavorites = /* GraphQL */ `
           nextToken
         }
         promotions {
+          nextToken
+        }
+        notifications {
           nextToken
         }
         lastLocation {
@@ -1507,6 +1711,9 @@ export const onUpdateFavorites = /* GraphQL */ `
         promotions {
           nextToken
         }
+        notifications {
+          nextToken
+        }
         lastLocation {
           lat
           lon
@@ -1601,6 +1808,9 @@ export const onDeleteFavorites = /* GraphQL */ `
           nextToken
         }
         promotions {
+          nextToken
+        }
+        notifications {
           nextToken
         }
         lastLocation {
