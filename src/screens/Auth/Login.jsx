@@ -39,7 +39,6 @@ const Login = ({ navigation, route }) => {
   const [error, setError] = useState("");
   const [numberError, setNumberError] = useState(0);
   const token = useRecoilValue(notificationToken);
-
   const onHandleLogin = async (data) => {
     const { email, password } = data;
     setErrorActive("");
@@ -145,6 +144,7 @@ const Login = ({ navigation, route }) => {
                 source={require("@/utils/images/welcome2.png")}
               />
             </View>
+
             <CustomInput
               control={control}
               name={`email`}
@@ -193,7 +193,7 @@ const Login = ({ navigation, route }) => {
         </ScrollView>
       </TouchableWithoutFeedback>
       <View style={styles.panel}>
-        <View style={{ height: 65, marginBottom: 5 }}>
+        <View style={{ height: 65 }}>
           <CustomButton
             text={
               isLoading ? (

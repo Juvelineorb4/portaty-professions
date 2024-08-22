@@ -139,6 +139,15 @@ export const getBusiness = /* GraphQL */ `
     }
   }
 `;
+export const getBusiness2 = /* GraphQL */ `
+  query GetBusiness($id: ID!) {
+    getBusiness(id: $id) {
+      id
+      catalogpdf
+      __typename
+    }
+  }
+`;
 export const getBusinessFavorites = /* GraphQL */ `
   query GetBusiness($id: ID!) {
     getBusiness(id: $id) {
@@ -235,6 +244,38 @@ export const listBusinessbyUserID = /* GraphQL */ `
         owner
       }
       nextToken
+    }
+  }
+`;
+
+export const listBusinessPromotions = /* GraphQL */ `
+  query ListBusinessPromotions(
+    $filter: ModelBusinessPromotionFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listBusinessPromotions(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userID
+        businessID
+        title
+        dateInitial
+        dateFinal
+        status
+        isView
+        image
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
     }
   }
 `;

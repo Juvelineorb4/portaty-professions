@@ -9,23 +9,28 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   content: {
+
+
   },
   panel: {
-    // marginTop: -100,
+    marginTop: 10,
   },
   title: {
     fontFamily: 'medium',
+    marginTop: 0,
     marginHorizontal: 10,
-    marginBottom: 0,
+    marginBottom: '0%',
+    // margin: '10% 10px 0%',
     textAlign: 'center',
     fontSize: 32,
     color: '#1f1f1f',
   },
   name: {
     fontFamily: 'light',
-    marginTop: 0,
+    marginTop: "5%",
     marginHorizontal: 10,
-    marginBottom: '10%',
+    marginBottom: 0,
+    // margin: '0 10px 10%',
     textAlign: 'center',
     fontSize: 32,
     color: '#1f1f1f',
@@ -36,17 +41,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#fff',
-    paddingTop: 11,
-    paddingRight: 10,
-    paddingLeft: 5,
-    paddingBottom: 10,
+    padding: '11px 10px 11px 0px',
     borderRadius: 8,
-    marginTop: 3,
-    marginHorizontal: 0,
-    marginBottom: 10,
+    margin: '3px 0px 10px',
     borderWidth: 1,
     borderColor: '#1f1f1f',
     height: 55,
+    marginBottom: 10
   },
   labelInput: {
     fontFamily: 'bold',
@@ -117,16 +118,17 @@ const styles = StyleSheet.create({
     fontFamily: 'bold',
     color: '#1f1f1f',
     fontSize: 15,
+    marginBottom: 10
   },
   options: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    paddingBottom: 35,
-    paddingTop: 5,
+    padding: '5px 0 35px',
   },
   security: {
     position: 'relative',
-    right: 27,
+    right: 40,
+    alignSelf: 'center'
   },
 });
 

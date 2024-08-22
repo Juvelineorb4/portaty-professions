@@ -10,7 +10,14 @@ import {
 import React from "react";
 import styles from "@/utils/styles/ModalAlert.js";
 
-const ModalAlert = ({ text, icon, close, open }) => {
+const ModalAlert = ({
+  text,
+  icon,
+  close,
+  open,
+  navigation,
+  isLink = false,
+}) => {
   const global = require("@/utils/styles/global.js");
   return (
     <Modal
@@ -40,29 +47,31 @@ const ModalAlert = ({ text, icon, close, open }) => {
                     </Text>
                   </View>
                 </View>
-                
               </View>
               <Pressable
-                  onPress={close}
-                  style={[
-                    global.bgYellow,
-                    {
-                      height: 30,
-                      flex: 0.3,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      borderRadius: 8,
-                      // alignItems: "center",
-                      // alignSelf: "flex-end",
-                      borderColor: '#1f1f1f',
-                      borderWidth: 0.7
-                    },
-                  ]}
-                >
-                  <Text style={[global.black, { fontFamily: "bold" }]}>
-                    Aceptar
-                  </Text>
-                </Pressable>
+                onPress={() => {
+                  close();
+                  if (isLink) navigation();
+                }}
+                style={[
+                  global.bgYellow,
+                  {
+                    height: 30,
+                    flex: 0.3,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRadius: 8,
+                    // alignItems: "center",
+                    // alignSelf: "flex-end",
+                    borderColor: "#1f1f1f",
+                    borderWidth: 0.7,
+                  },
+                ]}
+              >
+                <Text style={[global.black, { fontFamily: "bold" }]}>
+                  Aceptar
+                </Text>
+              </Pressable>
             </View>
           </TouchableWithoutFeedback>
         </View>

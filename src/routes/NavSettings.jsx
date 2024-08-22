@@ -5,13 +5,18 @@ import * as Linking from "expo-linking";
 import { useNavigation } from "@react-navigation/native";
 // recoil
 import { useSetRecoilState, useRecoilValue } from "recoil";
-import { notificationResponse, urlInitalShare } from "@/atoms";
+import {
+  urlInitalShare,
+  notificationResponse,
+  eyelashSelection,
+} from "@/atoms";
 import useDeepLinkInital from "@/hooks/useDeepLinkInital";
+
 const NavSettings = ({ checkRender }) => {
   const setUrlInitialShare = useSetRecoilState(urlInitalShare);
-
   const { userSignIn, userSignOut, checkUser } = useUserManagement();
   const notificationRes = useRecoilValue(notificationResponse);
+  const setPageSelection = useSetRecoilState(eyelashSelection);
   const navigation = useNavigation();
   useDeepLinkInital(checkRender);
   useEffect(() => {
@@ -31,6 +36,7 @@ const NavSettings = ({ checkRender }) => {
         case "updateUserAttributes":
           checkUser();
           break;
+        case "parsingCallbackUrl":
       }
     });
 
@@ -73,7 +79,6 @@ const NavSettings = ({ checkRender }) => {
 
   // useEffect para cuando se le de click a una notificacion
   useEffect(() => {
-    console.log("NOTIFICACION DE ENTRADA: ", notificationRes);
     // switch (notificationRes?.data?.data?.type) {
     //   case "promotion":
     //     setPageSelection(0);
@@ -81,9 +86,7 @@ const NavSettings = ({ checkRender }) => {
     //       promotion: true,
     //       promotionID: notificationRes?.data?.data?.promotionID,
     //     });
-    //     console.log(notificationRes?.data);
     //     break;
-
     //   default:
     //     console.log("NO EXISTE ");
     //     break;

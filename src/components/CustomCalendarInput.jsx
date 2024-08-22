@@ -14,19 +14,17 @@ const CustomCalendarInput = ({
   text,
   placeholderTextColor = {},
   errorPost = false,
+  picker = false,
 }) => {
   const validarFechaNacimiento = (fecha) => {
-    if (fecha === "") return true;
-
-    const today = new Date();
     if (!fecha) return false; // Si no se proporciona una fecha, no es válida
+    const today = new Date();
     const [day, month, year] = fecha.split("/");
     const inputDate = new Date(`${year}-${month}-${day}`);
     messageError = "";
-    // Expresión regular para el formato dd/mm/aaaa
     const regex = /^(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$/;
     if (!regex.test(fecha)) messageError = "Formato dd/mm/aaaa no valido. ";
-    // Si el día no está dentro del rango de 1 a 31
+
     // Validar el número de días para el mes
     const daysInMonth = new Date(parseInt(year), parseInt(month), 0).getDate();
     if (parseInt(day) > daysInMonth) {
@@ -42,6 +40,8 @@ const CustomCalendarInput = ({
     if (parseInt(year) < 1900 || parseInt(year) > 2099) {
       messageError += "Año no valido. ";
     }
+
+    if (picker) return;
 
     // Validar si es mayor de edad (18 años)
     const edadMinima = 18;
@@ -73,6 +73,7 @@ const CustomCalendarInput = ({
       control={control}
       name={name}
       rules={{
+        required: rules.required,
         validate: validarFechaNacimiento,
       }}
       render={({

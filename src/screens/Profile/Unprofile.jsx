@@ -38,11 +38,16 @@ const Unprofile = ({ navigation, route }) => {
   const [visibleLocation, setVisibleLocation] = useState(false);
   const [createBussiness, setCreateBussiness] = useState(true);
   const [error, setError] = useState("");
+<<<<<<< HEAD
   const [loading, setLoading] = useState(false);
   const [buttonDelete, setButtonDelete] = useState(false);
+=======
+>>>>>>> e6cc6c81037f664cdf7aa3b36182f97ac8427ba1
   const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [buttonDelete, setButtonDelete] = useState(false);
   const locationStatus = useRecoilValue(locationPermission);
-  console.log("unprofile mi pana", route);
+
   const onRefresh = () => {
     setRefreshing(true);
     User();
@@ -130,7 +135,6 @@ const Unprofile = ({ navigation, route }) => {
               };
 
               const response = await API.get(api, path, params);
-              console.log("RESPONSE: ", response);
               if (response?.success) {
                 const data = await Auth.currentAuthenticatedUser();
                 // cambiar atributo para saber si ya solicito o no la eliminacion
@@ -150,12 +154,14 @@ const Unprofile = ({ navigation, route }) => {
       ]
     );
   };
+<<<<<<< HEAD
 
+=======
+>>>>>>> e6cc6c81037f664cdf7aa3b36182f97ac8427ba1
   useLayoutEffect(() => {
     User();
   }, [userAuth, status, refreshing, isFocused]);
 
-  // if (!userAuth?.attributes) return <SkeletonUnprofile />;
   if (loading)
     return (
       <View
@@ -201,7 +207,6 @@ const Unprofile = ({ navigation, route }) => {
         <CustomButton
           text={`Iniciar sesion`}
           handlePress={() => {
-            console.log(route);
             navigation.navigate("Login_Welcome", { item: route.name });
           }}
           textStyles={[styles.textSearch, global.black]}
@@ -209,7 +214,6 @@ const Unprofile = ({ navigation, route }) => {
         />
       </View>
     );
-
   return (
     <ScrollView
       style={[styles.container, global.bgWhite]}
