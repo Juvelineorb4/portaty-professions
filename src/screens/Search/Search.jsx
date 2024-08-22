@@ -143,8 +143,14 @@ const Search = ({ route }) => {
   async function getCountryCode(array) {
     const countryCode = await Cellular.getIsoCountryCodeAsync();
     array.map((item, index) => {
-      if (item.cca2 === countryCode.toUpperCase()) {
-        setCountry(item);
+      if (countryCode === "--" || countryCode === null) {
+        if (item.cca2 === "VE") {
+          setCountry(item);
+        }
+      } else {
+        if (item.cca2 === countryCode.toUpperCase()) {
+          setCountry(item);
+        }
       }
     });
   }
@@ -321,7 +327,6 @@ const Search = ({ route }) => {
                 >
                   <TouchableOpacity
                     style={[
-                      styles.inputContainerBot,
                       {
                         height: 50,
                         width: "100%",
@@ -377,10 +382,9 @@ const Search = ({ route }) => {
                   {visibleCountries && (
                     <View
                       style={{
-                        flex: 1,
                         height: 320,
-                        position: "absolute",
-                        top: 50,
+                        // position: "absolute",
+                        // top: 50,
                         backgroundColor: "#fff",
                         zIndex: 10,
                         borderRadius: 5,
@@ -399,6 +403,7 @@ const Search = ({ route }) => {
                           fontFamily: "medium",
                           fontSize: 12,
                           borderRadius: 5,
+                          height: 40,
                         }}
                       />
                       <View style={[{ flex: 1 }]}>
@@ -503,33 +508,35 @@ const Search = ({ route }) => {
                   </Text>
                 </View>
                 <View style={{}}>
-                  <TouchableOpacity
-                    style={[
-                      global.bgYellow,
-                      {
-                        borderRadius: 8,
-                        justifyContent: "center",
-                        alignItems: "center",
-                        height: 49,
-                        // marginTop: 60,
-                        borderWidth: 0.7,
-                        borderColor: "#1f1f1f",
-                      },
-                    ]}
-                    onPress={() => {
-                      setModalVisible(!modalVisible);
-                      if (userLocation) getFilterData();
-                    }}
-                  >
-                    <Text
+                  {!visibleCountries && (
+                    <TouchableOpacity
                       style={[
-                        global.black,
-                        { fontFamily: "bold", fontSize: 14 },
+                        global.bgYellow,
+                        {
+                          borderRadius: 8,
+                          justifyContent: "center",
+                          alignItems: "center",
+                          height: 49,
+                          // marginTop: 60,
+                          borderWidth: 0.7,
+                          borderColor: "#1f1f1f",
+                        },
                       ]}
+                      onPress={() => {
+                        setModalVisible(!modalVisible);
+                        if (userLocation) getFilterData();
+                      }}
                     >
-                      {`Buscar`}
-                    </Text>
-                  </TouchableOpacity>
+                      <Text
+                        style={[
+                          global.black,
+                          { fontFamily: "bold", fontSize: 14 },
+                        ]}
+                      >
+                        {`Buscar`}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
                 </View>
               </View>
             </View>

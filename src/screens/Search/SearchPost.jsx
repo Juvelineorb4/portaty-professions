@@ -110,6 +110,8 @@ const SearchPost = ({ route, navigation }) => {
   const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 20 });
 
   const onCreateFavorite = async () => {
+    console.log("tu queres", userAuth?.attributes["custom:userTableID"]);
+    console.log("tu que", save);
     try {
       const favorites = await API.graphql({
         query: customFavorites.createFavorites,
@@ -122,6 +124,7 @@ const SearchPost = ({ route, navigation }) => {
         },
         authMode: "AMAZON_COGNITO_USER_POOLS",
       });
+
       setSave(favorites?.data?.createFavorites?.id);
       setNumberFavorite(post?.favorites?.items?.length + 1);
       // registramos el evento
@@ -142,6 +145,8 @@ const SearchPost = ({ route, navigation }) => {
   };
 
   const onDeleteFavorite = async () => {
+    console.log("tu que", save);
+
     const favorites = await API.graphql({
       query: customFavorites.deleteFavorites,
       variables: {
@@ -189,11 +194,7 @@ const SearchPost = ({ route, navigation }) => {
       setListUpdate(false);
       return setPost(business?.data?.getBusiness);
     } catch (error) {
-<<<<<<< HEAD
-      console.log("ERROR fetchData: ", error);
-=======
       console.log("ERROR EN fetchData:", error);
->>>>>>> e6cc6c81037f664cdf7aa3b36182f97ac8427ba1
     }
   };
   const fetchFavorite = async () => {
@@ -346,10 +347,6 @@ const SearchPost = ({ route, navigation }) => {
 
   const fetchRatings = async () => {
     let business = item;
-<<<<<<< HEAD
-    console.log("SI TENGO EL BUSINESS: ", business.id);
-=======
->>>>>>> e6cc6c81037f664cdf7aa3b36182f97ac8427ba1
     try {
       const fetchAllRatings = async (nextToken, result = []) => {
         const response = await API.graphql({
@@ -390,10 +387,6 @@ const SearchPost = ({ route, navigation }) => {
   const getCatalogPDF = async () => {
     try {
       const url = post?.catalogpdf;
-<<<<<<< HEAD
-      console.log("POST: ", post);
-=======
->>>>>>> e6cc6c81037f664cdf7aa3b36182f97ac8427ba1
       Linking.openURL(url);
     } catch (error) {
       console.log("Error en catalogo: ", error);
@@ -413,11 +406,7 @@ const SearchPost = ({ route, navigation }) => {
       const response = await API.get(api, path, params);
       setRatingsDetails(response.data);
     } catch (error) {
-<<<<<<< HEAD
-      console.error("OCURRIO UN ERROR EN RATING: ", error.response.data);
-=======
       console.error("Error rating: ", error.response.data);
->>>>>>> e6cc6c81037f664cdf7aa3b36182f97ac8427ba1
     }
   };
   // para la carga default

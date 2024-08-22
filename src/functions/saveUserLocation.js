@@ -1,6 +1,6 @@
 import { API, Auth } from 'aws-amplify'
 import { updateUsers } from '@/graphql/CustomMutations/functions/Users'
-export const saverUserLocation = async (userAuth, location) => {
+export const saveUserLocation = async (userAuth, location) => {
     try {
         await API.graphql({
             query: updateUsers,

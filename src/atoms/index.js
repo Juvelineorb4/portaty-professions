@@ -272,3 +272,8 @@ export const notificationResponse = atom({
   key: "notificationResponseValue",
   default: null,
 });
+
+export const isUserTracking = atom({
+  key: "isUserTrackingValue",
+  default: false,
+});

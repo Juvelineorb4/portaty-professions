@@ -35,8 +35,8 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
   const [region, setRegion] = useState({
     latitude: initialLocation?.latitude,
     longitude: initialLocation?.longitude,
-    latitudeDelta: 0.018,
-    longitudeDelta: 0.018,
+    latitudeDelta: 0.008,
+    longitudeDelta: 0.008,
   });
   const [searchTerm, setSearchTerm] = useState("");
   let mapRef = useRef(null);
@@ -60,8 +60,8 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
     setRegion({
       latitude: coordinate.latitude,
       longitude: coordinate.longitude,
-      latitudeDelta: 0.018,
-      longitudeDelta: 0.018,
+      latitudeDelta: 0.008,
+      longitudeDelta: 0.008,
     });
   };
 
@@ -120,7 +120,7 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
     if (description === "") return;
     const api = "api-opense";
     const path = "/location/_search";
-    const params = {
+    const params = {  
       headers: {},
       queryStringParameters: {
         text: description, //texto a buscar
@@ -178,7 +178,7 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
           <View style={{ flex: 1 }}>
             {open && (
               <MapView
-                provider={PROVIDER_GOOGLE}
+                // provider={PROVIDER_GOOGLE}
                 style={{ flex: 1 }}
                 showsUserLocation={open}
                 ref={mapRef}
@@ -221,7 +221,9 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
                 style={{
                   fontFamily: "regular",
                   fontSize: 14,
+                  height: 40,
                 }}
+                placeholderTextColor={"#1f1f1f"}
               />
               {suggestions && (
                 <FlatList
@@ -279,7 +281,7 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
                     justifyContent: "center",
                     alignContent: "center",
                     borderRadius: 5,
-                    height: 40,
+                    height: 52,
                     width: 60,
                     alignItems: "center",
                     borderColor: "#1f1f1f",
@@ -290,7 +292,10 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
                 onPress={() => obtenerCoordenadas(description)}
               >
                 <Text
-                  style={[global.black, { fontFamily: "bold", fontSize: 12 }]}
+                  style={[
+                    global.black,
+                    { fontFamily: "bold", fontSize: 12,  },
+                  ]}
                 >{`Buscar`}</Text>
               </TouchableOpacity>
             </View>
@@ -308,6 +313,7 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
                 // flex: 1,
                 alignItems: "stretch",
                 justifyContent: "center",
+                height: 50
               }}
             >
               <Slider

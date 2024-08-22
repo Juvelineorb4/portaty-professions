@@ -4,7 +4,7 @@ import * as Location from "expo-location";
 import { useRecoilState, useSetRecoilState, useRecoilValue } from "recoil";
 import { locationPermission, mapUser, userAuthenticated } from "@/atoms";
 // funciones
-import { saverUserLocation } from "@/functions/saveUserLocation";
+import { saveUserLocation } from "@/functions/saveUserLocation";
 
 const useLocation = () => {
   const userAuth = useRecoilValue(userAuthenticated);
@@ -54,7 +54,7 @@ const useLocation = () => {
 
   useEffect(() => {
     if (location && userAuth) {
-      saverUserLocation(userAuth, {
+      saveUserLocation(userAuth, {
         lat: location.latitude,
         lon: location.longitude,
       });

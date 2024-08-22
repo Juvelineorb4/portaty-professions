@@ -86,6 +86,9 @@ const MapMarketBusiness = ({
     let {
       nativeEvent: { coordinate },
     } = e;
+    setMarketLocation(coordinate);
+    setSelectMapBusiness(coordinate);
+    setSelectMap(true);
   };
   const obtenerDireccion = async (coords) => {
     let direcciones = await Location.reverseGeocodeAsync(coords);
@@ -150,7 +153,6 @@ const MapMarketBusiness = ({
     const {
       nativeEvent: { coordinate },
     } = e;
-    setMarketLocation(coordinate);
     setRegion({
       latitude: coordinate.latitude,
       longitude: coordinate.longitude,
@@ -363,9 +365,10 @@ const MapMarketBusiness = ({
                           region={region}
                           // onPress={() => doublePress()}
                           onPress={(e) => {
-                            onHandlePress(e);
+                            // onHandlePress(e);
                             onChange(e.nativeEvent.coordinate);
                           }}
+                          onDoublePress={onHandleMarketMove}
                         >
                           <Marker
                             key={1}
