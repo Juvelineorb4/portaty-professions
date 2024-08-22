@@ -189,7 +189,11 @@ const SearchPost = ({ route, navigation }) => {
       setListUpdate(false);
       return setPost(business?.data?.getBusiness);
     } catch (error) {
+<<<<<<< HEAD
+      console.log("ERROR fetchData: ", error);
+=======
       console.log("ERROR EN fetchData:", error);
+>>>>>>> e6cc6c81037f664cdf7aa3b36182f97ac8427ba1
     }
   };
   const fetchFavorite = async () => {
@@ -206,6 +210,7 @@ const SearchPost = ({ route, navigation }) => {
       if (favorite?.data?.favoritesByBusinessID?.items?.length !== 0)
         setSave(favorite?.data?.favoritesByBusinessID?.items[0]?.id);
     } catch (error) {
+      console.log("ERROR fetchFavorite: ", error);
       console.log("ERROR fetchFavorite: ", error);
     }
   };
@@ -341,6 +346,10 @@ const SearchPost = ({ route, navigation }) => {
 
   const fetchRatings = async () => {
     let business = item;
+<<<<<<< HEAD
+    console.log("SI TENGO EL BUSINESS: ", business.id);
+=======
+>>>>>>> e6cc6c81037f664cdf7aa3b36182f97ac8427ba1
     try {
       const fetchAllRatings = async (nextToken, result = []) => {
         const response = await API.graphql({
@@ -351,6 +360,10 @@ const SearchPost = ({ route, navigation }) => {
             nextToken,
           },
         });
+        console.log(
+          "RESULT FETCH ALL: ",
+          response.data.businessCommentsByBusinessID
+        );
         console.log(
           "RESULT FETCH ALL: ",
           response.data.businessCommentsByBusinessID
@@ -377,6 +390,10 @@ const SearchPost = ({ route, navigation }) => {
   const getCatalogPDF = async () => {
     try {
       const url = post?.catalogpdf;
+<<<<<<< HEAD
+      console.log("POST: ", post);
+=======
+>>>>>>> e6cc6c81037f664cdf7aa3b36182f97ac8427ba1
       Linking.openURL(url);
     } catch (error) {
       console.log("Error en catalogo: ", error);
@@ -396,7 +413,11 @@ const SearchPost = ({ route, navigation }) => {
       const response = await API.get(api, path, params);
       setRatingsDetails(response.data);
     } catch (error) {
+<<<<<<< HEAD
+      console.error("OCURRIO UN ERROR EN RATING: ", error.response.data);
+=======
       console.error("Error rating: ", error.response.data);
+>>>>>>> e6cc6c81037f664cdf7aa3b36182f97ac8427ba1
     }
   };
   // para la carga default
@@ -635,6 +656,7 @@ const SearchPost = ({ route, navigation }) => {
             <View
               style={{
                 // flex: 1,
+                flexDirection: userAuth ? "row" : "column",
                 flexDirection: userAuth ? "row" : "column",
                 alignItems: "center",
                 justifyContent: userAuth ? "space-between" : "center",
