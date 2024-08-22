@@ -9,6 +9,10 @@ export const getDeviceNotificationToken = /* GraphQL */ `
       notificationToken
       createdAt
       updatedAt
+<<<<<<< HEAD
+      __typename
+=======
+>>>>>>> e6cc6c81037f664cdf7aa3b36182f97ac8427ba1
     }
   }
 `;
@@ -29,8 +33,15 @@ export const listDeviceNotificationTokens = /* GraphQL */ `
         notificationToken
         createdAt
         updatedAt
+<<<<<<< HEAD
+        __typename
       }
       nextToken
+      __typename
+=======
+      }
+      nextToken
+>>>>>>> e6cc6c81037f664cdf7aa3b36182f97ac8427ba1
     }
   }
 `;

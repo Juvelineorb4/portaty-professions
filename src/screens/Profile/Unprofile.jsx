@@ -38,6 +38,11 @@ const Unprofile = ({ navigation, route }) => {
   const [visibleLocation, setVisibleLocation] = useState(false);
   const [createBussiness, setCreateBussiness] = useState(true);
   const [error, setError] = useState("");
+<<<<<<< HEAD
+  const [loading, setLoading] = useState(false);
+  const [buttonDelete, setButtonDelete] = useState(false);
+=======
+>>>>>>> e6cc6c81037f664cdf7aa3b36182f97ac8427ba1
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [buttonDelete, setButtonDelete] = useState(false);
@@ -149,6 +154,10 @@ const Unprofile = ({ navigation, route }) => {
       ]
     );
   };
+<<<<<<< HEAD
+
+=======
+>>>>>>> e6cc6c81037f664cdf7aa3b36182f97ac8427ba1
   useLayoutEffect(() => {
     User();
   }, [userAuth, status, refreshing, isFocused]);

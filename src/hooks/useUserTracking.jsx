@@ -1,3 +1,5 @@
+// SOLO PARA IOS
+
 import React, { useEffect } from "react";
 import { requestTrackingPermissionsAsync } from "expo-tracking-transparency";
 import { isUserTracking } from "@/atoms";

@@ -11,6 +11,10 @@ export const onCreateDeviceNotificationToken = /* GraphQL */ `
       notificationToken
       createdAt
       updatedAt
+<<<<<<< HEAD
+      __typename
+=======
+>>>>>>> e6cc6c81037f664cdf7aa3b36182f97ac8427ba1
     }
   }
 `;
@@ -24,6 +28,10 @@ export const onUpdateDeviceNotificationToken = /* GraphQL */ `
       notificationToken
       createdAt
       updatedAt
+<<<<<<< HEAD
+      __typename
+=======
+>>>>>>> e6cc6c81037f664cdf7aa3b36182f97ac8427ba1
     }
   }
 `;
@@ -37,6 +45,10 @@ export const onDeleteDeviceNotificationToken = /* GraphQL */ `
       notificationToken
       createdAt
       updatedAt
+<<<<<<< HEAD
+      __typename
+=======
+>>>>>>> e6cc6c81037f664cdf7aa3b36182f97ac8427ba1
     }
   }
 `;
