@@ -79,19 +79,18 @@ const NavSettings = ({ checkRender }) => {
 
   // useEffect para cuando se le de click a una notificacion
   useEffect(() => {
-    switch (notificationRes?.data?.type) {
-      case "promotion":
-        setPageSelection(0);
-        navigation.navigate("Home_Tab", {
-          promotion: true,
-          promotionID: notificationRes?.data?.data?.promotionID,
-        });
-        break;
-
-      default:
-        console.log("NO EXISTE ");
-        break;
-    }
+    // switch (notificationRes?.data?.data?.type) {
+    //   case "promotion":
+    //     setPageSelection(0);
+    //     navigation.navigate("Home_Tab", {
+    //       promotion: true,
+    //       promotionID: notificationRes?.data?.data?.promotionID,
+    //     });
+    //     break;
+    //   default:
+    //     console.log("NO EXISTE ");
+    //     break;
+    // }
   }, [notificationRes]);
 };
 

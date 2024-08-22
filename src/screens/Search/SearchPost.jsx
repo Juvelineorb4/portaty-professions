@@ -206,7 +206,7 @@ const SearchPost = ({ route, navigation }) => {
       if (favorite?.data?.favoritesByBusinessID?.items?.length !== 0)
         setSave(favorite?.data?.favoritesByBusinessID?.items[0]?.id);
     } catch (error) {
-      console.log(error);
+      console.log("ERROR fetchFavorite: ", error);
     }
   };
   const onOpenMap = (lat, lng, name) => {
@@ -351,7 +351,10 @@ const SearchPost = ({ route, navigation }) => {
             nextToken,
           },
         });
-
+        console.log(
+          "RESULT FETCH ALL: ",
+          response.data.businessCommentsByBusinessID
+        );
         const items = response.data.businessCommentsByBusinessID.items;
         result.push(...items);
 
@@ -366,7 +369,6 @@ const SearchPost = ({ route, navigation }) => {
       };
 
       const allRatings = await fetchAllRatings();
-
       setListRatings(allRatings);
     } catch (error) {
       console.log("eres tu", error);
@@ -633,7 +635,7 @@ const SearchPost = ({ route, navigation }) => {
             <View
               style={{
                 // flex: 1,
-                flexDirection: "row",
+                flexDirection: userAuth ? "row" : "column",
                 alignItems: "center",
                 justifyContent: userAuth ? "space-between" : "center",
                 padding: 20,
@@ -651,7 +653,12 @@ const SearchPost = ({ route, navigation }) => {
                     ? numberFavorite
                     : post?.favorites?.items?.length}
                 </Text>
-                <Text style={{ fontSize: 20, fontFamily: "light" }}>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontFamily: "light",
+                  }}
+                >
                   Favoritos
                 </Text>
               </View>

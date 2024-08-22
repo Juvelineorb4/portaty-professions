@@ -1,14 +1,20 @@
-import { Pressable, Text, TouchableOpacity, View } from "react-native";
+import {
+  Pressable,
+  Text,
+  TouchableOpacity,
+  View,
+  ActivityIndicator,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import Promotions from "@/components/Home/Promotions";
-import { userAuthenticated, mapUser } from "@/atoms";
-import { useRecoilValue } from "recoil";
+import { userAuthenticated, mapUser, isFocusPromotion } from "@/atoms";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { API } from "aws-amplify";
 import styles from "@/utils/styles/Promotions.js";
 import CustomButton from "@/components/CustomButton";
 import * as queries from "@/graphql/CustomQueries/Favorites";
 import { AntDesign } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 const PromotionsHome = ({ login, promotion, promotionID }) => {
   const navigation = useNavigation();
@@ -18,6 +24,10 @@ const PromotionsHome = ({ login, promotion, promotionID }) => {
   const [stories, setStories] = useState([]);
   const [business, setBusiness] = useState(false);
   const [businessId, setBusinessId] = useState(null);
+  const [promotionChange, setPromotionChange] = useState("");
+  const [isFocus, setIsFocus] = useRecoilState(isFocusPromotion);
+  const [storiesLoading, setStoriesLoading] = useState(false);
+
   const fetchBusiness = async () => {
     try {
       const result = await API.graphql({
@@ -139,6 +149,7 @@ const PromotionsHome = ({ login, promotion, promotionID }) => {
             stories,
           };
         });
+        setStoriesLoading(true);
         return setStories(result);
       };
       updateStories();
@@ -153,7 +164,27 @@ const PromotionsHome = ({ login, promotion, promotionID }) => {
     }
   }, [userAuth]);
 
-  if (userAuth)
+  useEffect(() => {
+    if (isFocus) {
+      setPromotionChange(promotionID);
+    }
+  }, [isFocus]);
+
+  if (!storiesLoading)
+    return (
+      <View
+        style={{
+          backgroundColor: "white",
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <ActivityIndicator size={"large"} color={"#1f1f1f"}></ActivityIndicator>
+      </View>
+    );
+
+  if (userAuth && storiesLoading)
     return (
       <View style={[global.bgWhite, { flex: 1, padding: 20, marginTop: -20 }]}>
         <Text
@@ -192,8 +223,10 @@ const PromotionsHome = ({ login, promotion, promotionID }) => {
             </TouchableOpacity>
           )}
           <Promotions
+            isAll={storiesLoading}
             data={stories}
-            showPromotion={promotionID ? promotionID : ""}
+            showPromotion={promotionChange}
+            setShowPromotion={() => setPromotionChange("")}
           />
         </View>
       </View>

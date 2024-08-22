@@ -33,7 +33,7 @@ const ModalReport = ({ businessID, close, open }) => {
       const response = await API.get(api, path, params);
       setComplaints(response);
     } catch (error) {
-      console.log(error)
+      console.log("ERRORES: ", error);
     }
   };
   const onReportBusiness = async () => {
@@ -56,9 +56,9 @@ const ModalReport = ({ businessID, close, open }) => {
   };
 
   useEffect(() => {
-    ComplaintsData()
-  }, [])
-  
+    ComplaintsData();
+  }, []);
+
   return (
     <Modal
       animationType="none"

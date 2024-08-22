@@ -12,6 +12,10 @@ export const createDeviceNotificationToken = /* GraphQL */ `
       notificationToken
       createdAt
       updatedAt
+<<<<<<< HEAD
+      __typename
+=======
+>>>>>>> e6cc6c81037f664cdf7aa3b36182f97ac8427ba1
     }
   }
 `;
@@ -26,6 +30,10 @@ export const updateDeviceNotificationToken = /* GraphQL */ `
       notificationToken
       createdAt
       updatedAt
+<<<<<<< HEAD
+      __typename
+=======
+>>>>>>> e6cc6c81037f664cdf7aa3b36182f97ac8427ba1
     }
   }
 `;
@@ -40,6 +48,10 @@ export const deleteDeviceNotificationToken = /* GraphQL */ `
       notificationToken
       createdAt
       updatedAt
+<<<<<<< HEAD
+      __typename
+=======
+>>>>>>> e6cc6c81037f664cdf7aa3b36182f97ac8427ba1
     }
   }
 `;
@@ -160,6 +172,9 @@ export const deleteBusinessComment = /* GraphQL */ `
           nextToken
         }
         promotions {
+          nextToken
+        }
+        notifications {
           nextToken
         }
         lastLocation {
@@ -462,6 +477,20 @@ export const createUsers = /* GraphQL */ `
         }
         nextToken
       }
+      notifications {
+        items {
+          id
+          userID
+          title
+          message
+          type
+          data
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       lastLocation {
         lat
         lon
@@ -551,6 +580,20 @@ export const updateUsers = /* GraphQL */ `
           isView
           image
           notifiedUserIDs
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      notifications {
+        items {
+          id
+          userID
+          title
+          message
+          type
+          data
           owner
           createdAt
           updatedAt
@@ -652,10 +695,78 @@ export const deleteUsers = /* GraphQL */ `
         }
         nextToken
       }
+      notifications {
+        items {
+          id
+          userID
+          title
+          message
+          type
+          data
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       lastLocation {
         lat
         lon
       }
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createUserNotification = /* GraphQL */ `
+  mutation CreateUserNotification(
+    $input: CreateUserNotificationInput!
+    $condition: ModelUserNotificationConditionInput
+  ) {
+    createUserNotification(input: $input, condition: $condition) {
+      id
+      userID
+      title
+      message
+      type
+      data
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateUserNotification = /* GraphQL */ `
+  mutation UpdateUserNotification(
+    $input: UpdateUserNotificationInput!
+    $condition: ModelUserNotificationConditionInput
+  ) {
+    updateUserNotification(input: $input, condition: $condition) {
+      id
+      userID
+      title
+      message
+      type
+      data
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteUserNotification = /* GraphQL */ `
+  mutation DeleteUserNotification(
+    $input: DeleteUserNotificationInput!
+    $condition: ModelUserNotificationConditionInput
+  ) {
+    deleteUserNotification(input: $input, condition: $condition) {
+      id
+      userID
+      title
+      message
+      type
+      data
       owner
       createdAt
       updatedAt
@@ -689,6 +800,9 @@ export const createBusiness = /* GraphQL */ `
           nextToken
         }
         promotions {
+          nextToken
+        }
+        notifications {
           nextToken
         }
         lastLocation {
@@ -799,6 +913,9 @@ export const updateBusiness = /* GraphQL */ `
         promotions {
           nextToken
         }
+        notifications {
+          nextToken
+        }
         lastLocation {
           lat
           lon
@@ -905,6 +1022,9 @@ export const deleteBusiness = /* GraphQL */ `
           nextToken
         }
         promotions {
+          nextToken
+        }
+        notifications {
           nextToken
         }
         lastLocation {
@@ -1015,6 +1135,9 @@ export const createBusinessComment = /* GraphQL */ `
         promotions {
           nextToken
         }
+        notifications {
+          nextToken
+        }
         lastLocation {
           lat
           lon
@@ -1059,6 +1182,9 @@ export const updateBusinessComment = /* GraphQL */ `
           nextToken
         }
         promotions {
+          nextToken
+        }
+        notifications {
           nextToken
         }
         lastLocation {
@@ -1107,6 +1233,9 @@ export const createBusinessPromotion = /* GraphQL */ `
         promotions {
           nextToken
         }
+        notifications {
+          nextToken
+        }
         lastLocation {
           lat
           lon
@@ -1174,6 +1303,17 @@ export const createBusinessPromotion = /* GraphQL */ `
       isView
       image
       notifiedUserIDs
+      viewedUserIDs {
+        items {
+          id
+          userID
+          promotionID
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       owner
       createdAt
       updatedAt
@@ -1209,6 +1349,9 @@ export const updateBusinessPromotion = /* GraphQL */ `
         promotions {
           nextToken
         }
+        notifications {
+          nextToken
+        }
         lastLocation {
           lat
           lon
@@ -1276,6 +1419,17 @@ export const updateBusinessPromotion = /* GraphQL */ `
       isView
       image
       notifiedUserIDs
+      viewedUserIDs {
+        items {
+          id
+          userID
+          promotionID
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       owner
       createdAt
       updatedAt
@@ -1311,6 +1465,9 @@ export const deleteBusinessPromotion = /* GraphQL */ `
         promotions {
           nextToken
         }
+        notifications {
+          nextToken
+        }
         lastLocation {
           lat
           lon
@@ -1378,6 +1535,62 @@ export const deleteBusinessPromotion = /* GraphQL */ `
       isView
       image
       notifiedUserIDs
+      viewedUserIDs {
+        items {
+          id
+          userID
+          promotionID
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createPromotionViews = /* GraphQL */ `
+  mutation CreatePromotionViews(
+    $input: CreatePromotionViewsInput!
+    $condition: ModelPromotionViewsConditionInput
+  ) {
+    createPromotionViews(input: $input, condition: $condition) {
+      id
+      userID
+      promotionID
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updatePromotionViews = /* GraphQL */ `
+  mutation UpdatePromotionViews(
+    $input: UpdatePromotionViewsInput!
+    $condition: ModelPromotionViewsConditionInput
+  ) {
+    updatePromotionViews(input: $input, condition: $condition) {
+      id
+      userID
+      promotionID
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deletePromotionViews = /* GraphQL */ `
+  mutation DeletePromotionViews(
+    $input: DeletePromotionViewsInput!
+    $condition: ModelPromotionViewsConditionInput
+  ) {
+    deletePromotionViews(input: $input, condition: $condition) {
+      id
+      userID
+      promotionID
       owner
       createdAt
       updatedAt
@@ -1463,6 +1676,9 @@ export const createFavorites = /* GraphQL */ `
           nextToken
         }
         promotions {
+          nextToken
+        }
+        notifications {
           nextToken
         }
         lastLocation {
@@ -1561,6 +1777,9 @@ export const updateFavorites = /* GraphQL */ `
         promotions {
           nextToken
         }
+        notifications {
+          nextToken
+        }
         lastLocation {
           lat
           lon
@@ -1655,6 +1874,9 @@ export const deleteFavorites = /* GraphQL */ `
           nextToken
         }
         promotions {
+          nextToken
+        }
+        notifications {
           nextToken
         }
         lastLocation {

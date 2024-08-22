@@ -9,7 +9,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API } from "aws-amplify";
 import * as mutationsNavigation from "@/graphql/CustomMutations/Navigation";
 
-
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -65,7 +64,7 @@ async function registerForPushNotificationsAsync() {
         },
         authMode: "AWS_IAM",
       });
-      // Guardar el indicador en AsyncStorage 
+      // Guardar el indicador en AsyncStorage
       await AsyncStorage.setItem("hasRegistered", "registered");
     }
 
@@ -87,7 +86,7 @@ const usePushNotification = () => {
     registerForPushNotificationsAsync().then((token) => {
       setExpoPushToken(token);
       setToken(token);
-      console.log(token)
+      console.log(token);
     });
 
     // esto es si llega una notificacion y la app esta en primer plano

@@ -13,7 +13,6 @@ import { userAuthenticated, mapUser } from "@/atoms";
 import SharePage from "@/screens/Search/SharePage";
 import linking from "./linking";
 import LeftHeaderShare from "@/components/Header/LeftHeaderShare";
-
 import ShareNavigator from "./ShareNavigator";
 import SplashScreen from "@/components/SplashScreen";
 import { Text, View, Image } from "react-native";
@@ -21,9 +20,11 @@ import Loading from "@/components/Loading";
 // hooks
 import useLocation from "@/hooks/useLocation";
 import usePushNotification from "@/hooks/usePushNotification";
+import useUserTracking from "@/hooks/useUserTracking";
 const Navigation = () => {
   usePushNotification();
   useLocation();
+  useUserTracking();
   const Stack = createNativeStackNavigator();
   const global = require("@/utils/styles/global.js");
   const [checkRender, setCheckRender] = useState(true);

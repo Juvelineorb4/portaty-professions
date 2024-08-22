@@ -17,7 +17,7 @@ const CustomInteractions = ({ route, navigation }) => {
 
   const checkList = () => {
     list.map((item, index) => {
-      if (userAuth.attributes["custom:userTableID"] === item.userID)
+      if (userAuth?.attributes["custom:userTableID"] === item.userID)
         setErrorRating(true);
     });
   };
