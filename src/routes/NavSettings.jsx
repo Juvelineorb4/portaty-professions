@@ -4,13 +4,14 @@ import { useUserManagement } from "@/hooks";
 import * as Linking from "expo-linking";
 import { useNavigation } from "@react-navigation/native";
 // recoil
-import { useSetRecoilState } from "recoil";
-import { urlInitalShare } from "@/atoms";
+import { useSetRecoilState, useRecoilValue } from "recoil";
+import { notificationResponse, urlInitalShare } from "@/atoms";
 import useDeepLinkInital from "@/hooks/useDeepLinkInital";
 const NavSettings = ({ checkRender }) => {
   const setUrlInitialShare = useSetRecoilState(urlInitalShare);
 
   const { userSignIn, userSignOut, checkUser } = useUserManagement();
+  const notificationRes = useRecoilValue(notificationResponse);
   const navigation = useNavigation();
   useDeepLinkInital(checkRender);
   useEffect(() => {
@@ -69,6 +70,25 @@ const NavSettings = ({ checkRender }) => {
       unsubscribe;
     };
   }, []);
+
+  // useEffect para cuando se le de click a una notificacion
+  useEffect(() => {
+    console.log("NOTIFICACION DE ENTRADA: ", notificationRes);
+    // switch (notificationRes?.data?.data?.type) {
+    //   case "promotion":
+    //     setPageSelection(0);
+    //     navigation.navigate("Home_Tab", {
+    //       promotion: true,
+    //       promotionID: notificationRes?.data?.data?.promotionID,
+    //     });
+    //     console.log(notificationRes?.data);
+    //     break;
+
+    //   default:
+    //     console.log("NO EXISTE ");
+    //     break;
+    // }
+  }, [notificationRes]);
 };
 
 export default NavSettings;

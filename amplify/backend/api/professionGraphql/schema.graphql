@@ -11,6 +11,7 @@ type DeviceNotificationToken
   deviceID: String
   notificationToken: String
 }
+
 type NotificationHistory
   @model
   @auth(
@@ -76,6 +77,7 @@ type Users
   @auth(
     rules: [
       { allow: owner }
+      { allow: public, operations: [read] }
       { allow: public, provider: iam, operations: [read] }
       { allow: private, provider: iam, operations: [read] }
       { allow: groups, groups: ["admin"], operations: [read] }
@@ -85,6 +87,7 @@ type Users
   cognitoID: ID
     @auth(
       rules: [
+        { allow: public, operations: [read] }
         { allow: owner, operations: [read, delete] }
         { allow: groups, groups: ["admin"], operations: [read] }
         { allow: groups, groups: ["admin"], operations: [read] }
@@ -142,11 +145,41 @@ type Users
   business: [Business] @hasMany(indexName: "byUsersBusiness", fields: ["id"])
   comments: [BusinessComment]
     @hasMany(indexName: "byUserComments", fields: ["id"])
+  promotions: [BusinessPromotion]
+    @hasMany(indexName: "byUserPromotions", fields: ["id"])
+  notifications: [UserNotification]
+    @hasMany(indexName: "byUserNotifications", fields: ["id"])
+  lastLocation: Coordinates
   owner: String
     @auth(
       rules: [
         { allow: owner, operations: [read, delete] }
         { allow: groups, groups: ["admin"], operations: [read] }
+      ]
+    )
+}
+
+type UserNotification
+  @model
+  @auth(
+    rules: [
+      { allow: owner, operations: [read, delete] }
+      { allow: public }
+      { allow: groups, groups: ["admin"] }
+    ]
+  ) {
+  id: ID!
+  userID: ID @index(name: "byUserNotifications")
+  title: String
+  message: String
+  type: String
+  data: String
+  owner: String
+    @auth(
+      rules: [
+        { allow: owner, operations: [read, delete] }
+        { allow: groups, groups: ["admin"] }
+        { allow: public }
       ]
     )
 }
@@ -201,6 +234,8 @@ type Business
   schedule: String
   comments: [BusinessComment]
     @hasMany(indexName: "byBusinessComments", fields: ["id"])
+  promotions: [BusinessPromotion]
+    @hasMany(indexName: "byBusinessPromotions", fields: ["id"])
   catalogpdf: String @default(value: "")
 }
 enum BusinessStatus {
@@ -227,6 +262,62 @@ type BusinessComment
   description: String
 }
 
+type BusinessPromotion
+  @model
+  @auth(
+    rules: [
+      { allow: public }
+      { allow: owner }
+      { allow: private, provider: iam, operations: [read] }
+      { allow: public, provider: iam, operations: [read] }
+    ]
+  ) {
+  id: ID
+  userID: ID @index(name: "byUserPromotions")
+  user: Users @belongsTo(fields: ["userID"])
+  businessID: ID @index(name: "byBusinessPromotions")
+  business: Business @belongsTo(fields: ["businessID"])
+  title: String
+  dateInitial: String
+  dateFinal: String
+  status: BusinessPromotionStatus @default(value: "INREVIEW")
+  isView: Boolean @default(value: "false")
+  image: String
+  notifiedUserIDs: [ID!]
+  viewedUsers: [PromotionViews!]
+    @hasMany(indexName: "byPromotionViews", fields: ["id"])
+  owner: String
+    @auth(
+      rules: [{ allow: owner, operations: [read, delete] }, { allow: public }]
+    )
+}
+
+type PromotionViews
+  @model
+  @auth(
+    rules: [
+      { allow: public }
+      { allow: owner }
+      { allow: private, provider: iam, operations: [read] }
+      { allow: public, provider: iam, operations: [read] }
+    ]
+  ) {
+  id: ID
+  userID: ID
+  promotionID: ID @index(name: "byPromotionViews")
+  owner: String
+    @auth(
+      rules: [{ allow: owner, operations: [read, delete] }, { allow: public }]
+    )
+}
+
+enum BusinessPromotionStatus {
+  INREVIEW
+  PUBLISHED
+  REFUSED
+  DELETED
+  EXPIRED
+}
 type Favorites
   @model
   @auth(

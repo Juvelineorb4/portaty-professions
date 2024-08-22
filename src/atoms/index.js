@@ -200,3 +200,8 @@ export const stepCompleteParams = atom({
   key: "stepCompleteParamsValue",
   default: null,
 });
+
+export const notificationResponse = atom({
+  key: "notificationResponseValue",
+  default: null,
+});

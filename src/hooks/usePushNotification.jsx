@@ -3,11 +3,12 @@ import * as Device from "expo-device";
 import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
 import { useSetRecoilState } from "recoil";
-import { notificationToken } from "@/atoms/index";
+import { notificationToken, notificationResponse } from "@/atoms/index";
 import { Platform } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API } from "aws-amplify";
 import * as mutationsNavigation from "@/graphql/CustomMutations/Navigation";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -16,28 +17,7 @@ Notifications.setNotificationHandler({
   }),
 });
 
-// async function sendPushNotification(expoPushToken) {
-//   const message = {
-//     to: expoPushToken,
-//     sound: "default",
-//     title: "Esto es pa divertirnos",
-//     body: "PA DIVERTIRNOS PA DIVERTIRNOS",
-//     data: { someData: "goes here" },
-//   };
-
-//   await fetch("https://exp.host/--/api/v2/push/send", {
-//     method: "POST",
-//     headers: {
-//       Accept: "application/json",
-//       "Accept-encoding": "gzip, deflate",
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify(message),
-//   });
-// }
-
 async function registerForPushNotificationsAsync() {
-  // Obtener el identificador único del dispositivo
   try {
     const deviceID = Device.osBuildId || Device.osInternalBuildId;
     let token;
@@ -49,6 +29,9 @@ async function registerForPushNotificationsAsync() {
         const { status } = await Notifications.requestPermissionsAsync();
         finalStatus = status;
       }
+      console.log("status", existingStatus);
+      console.log("status", finalStatus);
+
       if (finalStatus !== "granted") {
         alert("Failed to get push token for push notification!");
         return;
@@ -70,9 +53,8 @@ async function registerForPushNotificationsAsync() {
         lightColor: "#FF231F7C",
       });
     }
-    // Verificar si ya se realizó la operación previamente
+
     const hasRegistered = await AsyncStorage.getItem("hasRegistered");
-    console.log("hasRegistered", hasRegistered);
     if (hasRegistered !== "registered") {
       await API.graphql({
         query: mutationsNavigation.createDeviceNotificationToken,
@@ -84,7 +66,6 @@ async function registerForPushNotificationsAsync() {
         },
         authMode: "AWS_IAM",
       });
-      // Guardar el indicador en AsyncStorage
       await AsyncStorage.setItem("hasRegistered", "registered");
     }
 
@@ -98,14 +79,24 @@ const usePushNotification = () => {
   const [expoPushToken, setExpoPushToken] = useState(null);
   const [notification, setNotification] = useState(false);
   const setToken = useSetRecoilState(notificationToken);
+  const setNotificationResponse = useSetRecoilState(notificationResponse);
   const notificationListener = useRef();
   const responseListener = useRef();
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then((token) => {
-      setExpoPushToken(token);
-      setToken(token);
-    });
+    const checkAndRequestPermissions = async () => {
+      const { status } = await Notifications.getPermissionsAsync();
+      if (status !== "granted") {
+        await Notifications.requestPermissionsAsync();
+      }
+      registerForPushNotificationsAsync().then((token) => {
+        setExpoPushToken(token);
+        setToken(token);
+        console.log("token", token);
+      });
+    };
+
+    checkAndRequestPermissions();
 
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
@@ -113,7 +104,9 @@ const usePushNotification = () => {
       });
 
     responseListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {});
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        setNotificationResponse(response.notification.request.content);
+      });
 
     return () => {
       Notifications.removeNotificationSubscription(

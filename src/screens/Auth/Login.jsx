@@ -39,7 +39,6 @@ const Login = ({ navigation, route }) => {
   const [error, setError] = useState("");
   const [numberError, setNumberError] = useState(0);
   const token = useRecoilValue(notificationToken);
-  console.log(route);
 
   const onHandleLogin = async (data) => {
     const { email, password } = data;

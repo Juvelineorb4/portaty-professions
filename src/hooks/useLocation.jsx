@@ -1,29 +1,34 @@
 import React, { useState, useEffect } from "react";
 import * as Location from "expo-location";
 // recoil
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { locationPermission, mapUser } from "@/atoms";
+import { useRecoilState, useSetRecoilState, useRecoilValue } from "recoil";
+import { locationPermission, mapUser, userAuthenticated } from "@/atoms";
+// funciones
+import { saverUserLocation } from "@/functions/saveUserLocation";
+
 const useLocation = () => {
+  const userAuth = useRecoilValue(userAuthenticated);
   const [location, setLocation] = useState(null);
   const setUserLocation = useSetRecoilState(mapUser);
   const [locationStatus, setLocationStatus] =
     useRecoilState(locationPermission);
+
   useEffect(() => {
     let subscription;
 
     const startLocationUpdates = async () => {
       try {
         const { status } = await Location.requestForegroundPermissionsAsync();
+
         if (status !== "granted") {
           setLocationStatus(status);
           return;
         }
-
         setLocationStatus(status);
-
         subscription = await Location.watchPositionAsync(
           {
             accuracy: Location.Accuracy.High,
+            distanceInterval: 100, // Actualiza cada 100 metros
             mayShowUserSettingsDialog: true,
           },
           (locationResult) => {
@@ -46,6 +51,15 @@ const useLocation = () => {
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (location && userAuth) {
+      saverUserLocation(userAuth, {
+        lat: location.latitude,
+        lon: location.longitude,
+      });
+    }
+  }, [location]);
 
   return { location };
 };
