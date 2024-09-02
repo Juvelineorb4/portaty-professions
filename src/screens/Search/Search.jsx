@@ -37,6 +37,7 @@ import { Entypo } from "@expo/vector-icons";
 import MapFilter from "@/components/MapFilter";
 import NetInfo from "@react-native-community/netinfo";
 import CustomButton from "@/components/CustomButton";
+import ListSearch from "@/components/Search/ListSearch";
 
 const Search = ({ route }) => {
   const global = require("@/utils/styles/global.js");
@@ -86,7 +87,7 @@ const Search = ({ route }) => {
   const getData = async () => {
     if (!searchActive) setIsLoading(true);
     const api = "api-opense";
-    const path = "/search/default";
+    const path = "/search/businessBySectors";
     const params = {
       headers: {},
       queryStringParameters: {
@@ -101,19 +102,13 @@ const Search = ({ route }) => {
     };
     try {
       const response = await API.get(api, path, params);
-      setTotalData(response.total);
-      setTotalLimit(response.limit);
-      let newRenderItems = [];
-      const long = 26;
-      for (let i = 0; i < response.items.length; i += long) {
-        let cut = response.items.slice(i, i + long);
-        newRenderItems.push(cut);
-      }
-
+      console.log(response);
+      setTotalData(response.total_items);
+      setTotalLimit(response.total_items);
       setIsLoading(false);
       setSearchActive(true);
-      setSearchCacheActive(newRenderItems);
-      return setItems(newRenderItems);
+      setSearchCacheActive(response.items);
+      return setItems(response.items);
     } catch (error) {
       return console.log("ERROR EN BSUQUEDA DEFAULT:  ", error);
     }
@@ -226,19 +221,6 @@ const Search = ({ route }) => {
     );
   }
 
-  // if (searchActive && isConnected && !isLoading) {
-  //   return (
-  //     <View style={{
-  //       flex: 1
-  //     }}>
-  //       <MapSearch
-  //         markers={searchCacheActive}
-  //         initialLocation={userLocation}
-  //         open={true}
-  //       />
-  //     </View>
-  //   );
-  // }
   if (searchActive && isConnected && !isLoading) {
     return (
       <View style={{ flex: 1, backgroundColor: "#FFFFFF", paddingBottom: 50 }}>
@@ -555,7 +537,7 @@ const Search = ({ route }) => {
           <FlatList
             data={searchCacheActive}
             renderItem={({ item, index }) => (
-              <GridSearch renderItems={item} more={index} />
+              <ListSearch renderItems={item} more={index} />
             )}
             keyExtractor={(item, index) => index}
             ListFooterComponent={() => (
@@ -590,7 +572,7 @@ const Search = ({ route }) => {
             <FlatList
               data={items}
               renderItem={({ item, index }) => (
-                <GridSearch renderItems={item} more={index} />
+                <ListSearch renderItems={item} more={index} />
               )}
               keyExtractor={(item, index) => index}
               ListFooterComponent={() => (

@@ -262,8 +262,8 @@ const Page = ({ route, navigation }) => {
     setOpen(!open);
     setLoading(true);
     const { identityId } = await Auth.currentUserCredentials();
-    const apiName = "api-professions-gateway"; // replace this with your api name.
-    const path = "/thumbnailgenerator"; //replace this with the path you have configured on your API
+    const apiName = "api-professions-gateway";
+    const path = "/thumbnailgenerator";
     const myInit = {
       body: {
         identityid: identityId,
@@ -273,8 +273,8 @@ const Page = ({ route, navigation }) => {
         key: storageImages.length,
         description: description,
         image: imageB64,
-      }, // replace this with attributes you need
-      headers: {}, // OPTIONAL
+      },
+      headers: {},
     };
 
     const result = await API.post(apiName, path, myInit);
