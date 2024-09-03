@@ -89,6 +89,10 @@ export const searchStatus = atom({
   key: "searchStatusValue",
   default: false,
 });
+export const searchStatusActivity = atom({
+  key: "searchStatusActivityValue",
+  default: false,
+});
 export const searchCache = atom({
   key: "searchCacheValue",
   default: [],
@@ -183,12 +187,18 @@ export const activeSearch = atom({
   key: "activeSearchValue",
   default: true,
 });
-
+export const activeSearchActivity = atom({
+  key: "activeSearchActivityValue",
+  default: true,
+});
 export const textInputSearch = atom({
   key: "textInputSearchValue",
   default: "",
 });
-
+export const textInputSearchActivity = atom({
+  key: "textInputSearchActivityValue",
+  default: "",
+});
 export const sheduleType = atom({
   key: "sheduleTypeValue",
   default: "Abierto durante un horario especifico",

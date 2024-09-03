@@ -39,14 +39,14 @@ import NetInfo from "@react-native-community/netinfo";
 import CustomButton from "@/components/CustomButton";
 import ListSearch from "@/components/Search/ListSearch";
 
-const Search = ({ route, navigation }) => {
-  console.log(!searchActive && !route.params?.refresh);
+const SearchActivity = ({ route, navigation }) => {
   const global = require("@/utils/styles/global.js");
   const userLocation = useRecoilValue(mapUser);
   const userChangeLocation = useRecoilValue(mapUserChange);
   const [moreItems, setMoreItems] = useState(1);
   const [items, setItems] = useState([]);
-  const [searchActive, setSearchActive] = useRecoilState(searchStatus);
+  const [searchActiveActivity, setSearchActiveActivity] =
+    useRecoilState(searchStatus);
   const [searchCacheActive, setSearchCacheActive] = useRecoilState(searchCache);
   const [totalData, setTotalData] = useRecoilState(totalSearch);
   const [totalLimit, setTotalLimit] = useState(1);
@@ -86,9 +86,9 @@ const Search = ({ route, navigation }) => {
   let number = 26 * moreItems;
 
   const getData = async () => {
-    if (!searchActive || route.params?.refresh) setIsLoading(true);
+    setIsLoading(true);
     const api = "api-opense";
-    const path = "/search/businessBySectors";
+    const path = "/search/businessByActivities";
     const params = {
       headers: {},
       queryStringParameters: {
@@ -97,17 +97,18 @@ const Search = ({ route, navigation }) => {
           lon: userLocation?.longitude,
         }),
         km: filterRadio,
+        sector: route.params?.area,
         from: 0,
         limit: number,
       },
     };
     try {
       const response = await API.get(api, path, params);
-      console.log(response);
+      console.log(response, "HEY");
       setTotalData(response.total_items);
       setTotalLimit(response.total_items);
       setIsLoading(false);
-      setSearchActive(true);
+      setSearchActiveActivity(true);
       setSearchCacheActive(response.items);
       return setItems(response.items);
     } catch (error) {
@@ -123,7 +124,7 @@ const Search = ({ route, navigation }) => {
         setIsConnected(state.isConnected);
       } else {
         setIsConnected(state.isConnected);
-        setSearchActive(false);
+        setSearchActiveActivity(false);
       }
     });
   };
@@ -181,7 +182,7 @@ const Search = ({ route, navigation }) => {
         getCountryCode(item);
       });
     getConnection();
-  }, [userLocation, moreItems, refreshing, route]);
+  }, [userLocation, moreItems, refreshing]);
 
   if (isLoading) {
     return (
@@ -191,7 +192,7 @@ const Search = ({ route, navigation }) => {
           global.bgWhite,
         ]}
       >
-        <SkeletonSearch />
+        <ActivityIndicator size={"large"} color={"#1f1f1f"} />
       </View>
     );
   }
@@ -222,7 +223,7 @@ const Search = ({ route, navigation }) => {
     );
   }
 
-  if (searchActive && isConnected && !isLoading) {
+  if (searchActiveActivity && isConnected && !isLoading) {
     return (
       <View style={{ flex: 1, backgroundColor: "#FFFFFF", paddingBottom: 50 }}>
         <View>
@@ -534,11 +535,11 @@ const Search = ({ route, navigation }) => {
           >
             <ActivityIndicator size="large" color="#ffb703" />
           </View>
-        ) : searchActive ? (
+        ) : searchActiveActivity ? (
           <FlatList
             data={searchCacheActive}
             renderItem={({ item, index }) => (
-              <ListSearch renderItems={item} more={index} type={`area`} />
+              <ListSearch renderItems={item} more={index} type={"activity"} />
             )}
             keyExtractor={(item, index) => index}
             ListFooterComponent={() => (
@@ -573,7 +574,7 @@ const Search = ({ route, navigation }) => {
             <FlatList
               data={items}
               renderItem={({ item, index }) => (
-                <ListSearch renderItems={item} more={index} type={`area`} />
+                <ListSearch renderItems={item} more={index} type={"activity"} />
               )}
               keyExtractor={(item, index) => index}
               ListFooterComponent={() => (
@@ -587,8 +588,8 @@ const Search = ({ route, navigation }) => {
                   }}
                 >
                   {/* {totalData > totalLimit && (
-                    <ActivityIndicator size="large" color="#5E2129" />
-                  )} */}
+                      <ActivityIndicator size="large" color="#5E2129" />
+                    )} */}
                   {totalData === totalLimit ? (
                     <Text style={{ fontFamily: "regular", fontSize: 14 }}>
                       No hay mas negocios por mostrar
@@ -613,4 +614,4 @@ const Search = ({ route, navigation }) => {
   }
 };
 
-export default Search;
+export default SearchActivity;

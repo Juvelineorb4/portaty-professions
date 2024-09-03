@@ -1,10 +1,15 @@
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import LeftGrid from "./LeftGrid";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
+import { useNavigation } from "@react-navigation/native";
+import { activeSearchActivity } from "@/atoms";
+import { useRecoilState } from "recoil";
 
-const ListSearch = ({ renderItems, more, input }) => {
-  console.log(renderItems.results.length);
+const ListSearch = ({ renderItems, more, input, type }) => {
+  const navigation = useNavigation();
+  const [activeOutActivity, setActiveOutActivity] =
+    useRecoilState(activeSearchActivity);
   if (renderItems.length !== 0)
     return (
       <View style={{ flex: 1, paddingHorizontal: 20, marginBottom: 20 }}>
@@ -14,7 +19,7 @@ const ListSearch = ({ renderItems, more, input }) => {
             marginVertical: 5,
           }}
         >
-          {renderItems?.sector_name}
+          {renderItems?.name}
         </Text>
         <View
           style={{
@@ -32,8 +37,8 @@ const ListSearch = ({ renderItems, more, input }) => {
               : 6
           )}
         />
-        {renderItems.results.length >= 5 && (
-          <View
+        {renderItems.results.length >= 1 && (
+          <TouchableOpacity
             style={{
               alignSelf: "flex-end",
               borderWidth: 1,
@@ -43,6 +48,18 @@ const ListSearch = ({ renderItems, more, input }) => {
               flexDirection: "row",
               alignItems: "center",
               marginTop: 10,
+            }}
+            onPress={() => {
+              if (type === "area")
+                navigation.navigate("SearchActivity", {
+                  area: renderItems?.name,
+                });
+              if (type === "activity") {
+                setActiveOutActivity(false);
+                navigation.navigate("SearchOutActivity", {
+                  input: renderItems?.name,
+                });
+              }
             }}
           >
             <Text
@@ -55,7 +72,7 @@ const ListSearch = ({ renderItems, more, input }) => {
               Ver más
             </Text>
             <EvilIcons name="arrow-right" size={20} color="#1f1f1f" />
-          </View>
+          </TouchableOpacity>
         )}
       </View>
     );

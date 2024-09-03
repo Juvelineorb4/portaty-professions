@@ -8,7 +8,7 @@ import {
   Pressable,
   Modal,
   TouchableOpacity,
-  RefreshControl
+  RefreshControl,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import GridSearch from "@/components/Search/GridSearch";
@@ -24,6 +24,7 @@ import * as queries from "@/graphql/CustomQueries/Favorites";
 const SearchOut = ({ route }) => {
   const global = require("@/utils/styles/global.js");
   const { input } = route.params;
+  console.log(route.params, "toy en el input");
   const [moreItems, setMoreItems] = useState(1);
   const [items, setItems] = useState([]);
   const [totalData, setTotalData] = useState(2);
@@ -109,8 +110,8 @@ const SearchOut = ({ route }) => {
               alignItems: "center",
             }}
           >
-            <Text style={{ fontFamily: "regular", fontSize: 14 }}>
-              Tienes {totalData} de {input.trim()} cerca de ti
+            <Text style={{ fontFamily: "regular", fontSize: 12, width: 200 }}>
+              Hay {totalData} negocios de {input.trim()} cerca de ti
             </Text>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Image
@@ -218,7 +219,11 @@ const SearchOut = ({ route }) => {
             <FlatList
               data={items}
               renderItem={({ item, index }) => (
-                <GridSearch renderItems={item} more={index} input={inputSearch} />
+                <GridSearch
+                  renderItems={item}
+                  more={index}
+                  input={inputSearch}
+                />
               )}
               keyExtractor={(item, index) => index}
               ListFooterComponent={() => (
