@@ -107,9 +107,7 @@ const Post = ({ data, image, styled, input }) => {
                     fontSize: 12,
                   }}
                 >
-                  {roundNumber(data.distance) < "1.0"
-                    ? `${roundNumber(data.distance) * 1000} m`
-                    : `${data.distance.toFixed(1)} km`}
+                  {data.distance}
                 </Text>
               </View>
             </View>
@@ -240,15 +238,14 @@ const Post = ({ data, image, styled, input }) => {
                       <Text style={{ fontFamily: "light", fontSize: 13 }}>
                         Distancia de ti:
                       </Text>
+                      {console.log(data.distance)}
                       <Text
                         style={{
                           fontFamily: "regular",
                           fontSize: 14,
                         }}
                       >
-                        {roundNumber(data.distance) < "1.0"
-                          ? `${roundNumber(data.distance) * 1000} m`
-                          : `${roundNumber(data.distance)} km`}
+                        {data.distance}
                       </Text>
                     </View>
                     <View
