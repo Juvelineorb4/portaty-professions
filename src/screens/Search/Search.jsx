@@ -40,7 +40,6 @@ import CustomButton from "@/components/CustomButton";
 import ListSearch from "@/components/Search/ListSearch";
 
 const Search = ({ route, navigation }) => {
-  console.log(!searchActive && !route.params?.refresh);
   const global = require("@/utils/styles/global.js");
   const userLocation = useRecoilValue(mapUser);
   const userChangeLocation = useRecoilValue(mapUserChange);
@@ -103,7 +102,6 @@ const Search = ({ route, navigation }) => {
     };
     try {
       const response = await API.get(api, path, params);
-      console.log(response);
       setTotalData(response.total_items);
       setTotalLimit(response.total_items);
       setIsLoading(false);
@@ -507,6 +505,7 @@ const Search = ({ route, navigation }) => {
                       ]}
                       onPress={() => {
                         setModalVisible(!modalVisible);
+                        console.log(userLocation);
                         if (userLocation) getFilterData();
                       }}
                     >

@@ -40,7 +40,7 @@ const SearchOut = ({ route }) => {
 
   const getData = async () => {
     const api = "api-opense";
-    const path = "/search/input";
+    const path = "/search/businessByInput";
     const params = {
       headers: {}, // OPTIONAL
       queryStringParameters: {

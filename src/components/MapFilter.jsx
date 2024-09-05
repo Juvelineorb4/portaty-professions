@@ -14,7 +14,7 @@ import MapView, { Marker, PROVIDER_GOOGLE, Circle } from "react-native-maps";
 import * as Location from "expo-location";
 import styles from "@/utils/styles/MapMarket.js";
 import { useRecoilState } from "recoil";
-import { kmRadio, mapUserChange, searchAddressInitial } from "@/atoms";
+import { kmRadio, mapUser, searchAddressInitial } from "@/atoms";
 import Slider from "@react-native-community/slider";
 import { API } from "aws-amplify";
 import { debounce } from "lodash";
@@ -30,7 +30,7 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
   const [suggestions, setSuggestions] = useState(null);
   const [searchAddress, setSearchAddress] =
     useRecoilState(searchAddressInitial);
-  const [mapChange, setMapChange] = useRecoilState(mapUserChange);
+  const [mapChange, setMapChange] = useRecoilState(mapUser);
 
   const [region, setRegion] = useState({
     latitude: initialLocation?.latitude,
@@ -120,7 +120,7 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
     if (description === "") return;
     const api = "api-opense";
     const path = "/location/_search";
-    const params = {  
+    const params = {
       headers: {},
       queryStringParameters: {
         text: description, //texto a buscar
@@ -292,10 +292,7 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
                 onPress={() => obtenerCoordenadas(description)}
               >
                 <Text
-                  style={[
-                    global.black,
-                    { fontFamily: "bold", fontSize: 12,  },
-                  ]}
+                  style={[global.black, { fontFamily: "bold", fontSize: 12 }]}
                 >{`Buscar`}</Text>
               </TouchableOpacity>
             </View>
@@ -313,7 +310,7 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
                 // flex: 1,
                 alignItems: "stretch",
                 justifyContent: "center",
-                height: 50
+                height: 50,
               }}
             >
               <Slider

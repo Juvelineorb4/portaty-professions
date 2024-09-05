@@ -238,7 +238,6 @@ const Post = ({ data, image, styled, input }) => {
                       <Text style={{ fontFamily: "light", fontSize: 13 }}>
                         Distancia de ti:
                       </Text>
-                      {console.log(data.distance)}
                       <Text
                         style={{
                           fontFamily: "regular",
