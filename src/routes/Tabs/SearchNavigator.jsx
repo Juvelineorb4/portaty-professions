@@ -12,23 +12,41 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Other from "@/screens/Search/Other";
 import CustomQR from "@/components/CustomQR";
 import { useRecoilState } from "recoil";
-import { activeSearch, textInputSearch } from "@/atoms";
+import {
+  activeSearch,
+  activeSearchActivity,
+  textInputSearch,
+  textInputSearchActivity,
+} from "@/atoms";
 import CustomInteractions from "@/components/CustomInteractions";
+import SearchActivity from "@/screens/Search/SearchActivity";
 
 const SearchNavigator = ({ navigation }) => {
   const [active, setActive] = useState(false);
   const [activeOut, setActiveOut] = useRecoilState(activeSearch);
   const [inputSearch, setInputSearch] = useRecoilState(textInputSearch);
+
+  const [activeActivity, setActiveActivity] = useState(false);
+  const [activeOutActivity, setActiveOutActivity] =
+    useRecoilState(activeSearchActivity);
+  const [inputSearchActivity, setInputSearchActivity] = useRecoilState(
+    textInputSearchActivity
+  );
+
   const Stack = createNativeStackNavigator();
   const global = require("@/utils/styles/global.js");
   // Guardar los resultados de la búsqueda
   const cacheResults = async (resultado) => {
     try {
-      const terminosGuardados = JSON.parse(await AsyncStorage.getItem('@terminos_busqueda')) || [];
+      const terminosGuardados =
+        JSON.parse(await AsyncStorage.getItem("@terminos_busqueda")) || [];
       terminosGuardados.push(resultado);
-      await AsyncStorage.setItem('@terminos_busqueda', JSON.stringify(terminosGuardados));
+      await AsyncStorage.setItem(
+        "@terminos_busqueda",
+        JSON.stringify(terminosGuardados)
+      );
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
   return (
@@ -79,13 +97,97 @@ const SearchNavigator = ({ navigation }) => {
                     style={styles.input}
                     onPressIn={() => setActive(true)}
                     onChangeText={(e) => setInputSearch(e)}
-                    placeholderTextColor='#1f1f1f'
+                    placeholderTextColor="#1f1f1f"
                     value={inputSearch}
                     returnKeyType="search"
                     onSubmitEditing={() => {
                       setActiveOut(false);
                       cacheResults(inputSearch.trim());
                       navigation.navigate("SearchOut", { input: inputSearch });
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
+
+              <View style={[styles.lineSearch, global.mainBgColor]} />
+            </View>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="SearchActivity"
+        component={activeActivity ? SearchIn : SearchActivity}
+        options={{
+          animation: "slide_from_right",
+          header: (props) => (
+            <View style={[styles.home, global.bgWhite]}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  paddingRight: 40,
+                }}
+              >
+                {activeActivity ? (
+                  <TouchableOpacity
+                    activeOpacity={1}
+                    onPress={() => setActiveActivity(false)}
+                  >
+                    <Image
+                      style={{
+                        width: 40,
+                        height: 30,
+                        resizeMode: "cover",
+                      }}
+                      source={require("@/utils/images/arrow_back.png")}
+                    />
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    activeOpacity={1}
+                    onPress={() =>
+                      navigation.navigate("Search", {
+                        refresh: true,
+                      })
+                    }
+                  >
+                    <Image
+                      style={{
+                        width: 40,
+                        height: 30,
+                        resizeMode: "cover",
+                      }}
+                      source={require("@/utils/images/arrow_back.png")}
+                    />
+                  </TouchableOpacity>
+                )}
+                <TouchableOpacity
+                  style={[styles.content, global.bgWhite]}
+                  activeOpacity={1}
+                  onPress={() => setActiveActivity(true)}
+                >
+                  <Image
+                    style={{
+                      width: 22,
+                      height: 22,
+                      resizeMode: "cover",
+                    }}
+                    source={require("@/utils/images/search_white.png")}
+                  />
+                  <TextInput
+                    placeholder={"Buscar"}
+                    style={styles.input}
+                    onPressIn={() => setActiveActivity(true)}
+                    onChangeText={(e) => setInputSearchActivity(e)}
+                    placeholderTextColor="#1f1f1f"
+                    value={inputSearchActivity}
+                    returnKeyType="search"
+                    onSubmitEditing={() => {
+                      setActiveOut(false);
+                      cacheResults(inputSearchActivity.trim());
+                      navigation.navigate("SearchOutActivity", {
+                        input: inputSearchActivity,
+                      });
                     }}
                   />
                 </TouchableOpacity>
@@ -145,12 +247,79 @@ const SearchNavigator = ({ navigation }) => {
                     onPressIn={() => setActiveOut(true)}
                     onChangeText={(e) => setInputSearch(e)}
                     value={inputSearch}
-                    placeholderTextColor='#1f1f1f'
+                    placeholderTextColor="#1f1f1f"
                     returnKeyType="search"
                     onSubmitEditing={() => {
                       setActiveOut(false);
                       cacheResults(inputSearch.trim());
                       navigation.navigate("SearchOut", { input: inputSearch });
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
+
+              <View style={[styles.lineSearch, global.mainBgColor]} />
+            </View>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="SearchOutActivity"
+        component={activeOutActivity ? SearchIn : SearchOut}
+        options={{
+          animation: "slide_from_right",
+          header: (props) => (
+            <View style={[styles.home, global.bgWhite]}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  paddingRight: 40,
+                }}
+              >
+                <TouchableOpacity
+                  activeOpacity={1}
+                  onPress={() => {
+                    navigation.navigate("SearchActivity");
+                    setActiveActivity(false);
+                  }}
+                >
+                  <Image
+                    style={{
+                      width: 40,
+                      height: 30,
+                      resizeMode: "cover",
+                    }}
+                    source={require("@/utils/images/arrow_back.png")}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.content, global.bgWhite]}
+                  activeOpacity={1}
+                  onPress={() => setActiveOutActivity(true)}
+                >
+                  <Image
+                    style={{
+                      width: 30,
+                      height: 30,
+                      resizeMode: "cover",
+                    }}
+                    source={require("@/utils/images/search.png")}
+                  />
+                  <TextInput
+                    placeholder={"Buscar"}
+                    style={styles.input}
+                    onPressIn={() => setActiveOutActivity(true)}
+                    onChangeText={(e) => setInputSearchActivity(e)}
+                    value={inputSearchActivity}
+                    placeholderTextColor="#1f1f1f"
+                    returnKeyType="search"
+                    onSubmitEditing={() => {
+                      setActiveOut(false);
+                      cacheResults(inputSearchActivity.trim());
+                      navigation.navigate("SearchOutActivity", {
+                        input: inputSearchActivity,
+                      });
                     }}
                   />
                 </TouchableOpacity>

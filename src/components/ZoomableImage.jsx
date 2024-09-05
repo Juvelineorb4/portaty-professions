@@ -11,7 +11,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
-const ZoomableImage = ({ uri, imageHeigth=360 }) => {
+const ZoomableImage = ({ uri, imageHeigth = 360, keyboard = false }) => {
   const scale = useSharedValue(1);
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
@@ -24,7 +24,7 @@ const ZoomableImage = ({ uri, imageHeigth=360 }) => {
       lastScale.value = scale.value;
     },
     onActive: (event) => {
-      scale.value = Math.max(1, lastScale.value * event.scale); 
+      scale.value = Math.max(1, lastScale.value * event.scale);
     },
     onEnd: () => {
       if (scale.value < 1.1) {
@@ -44,8 +44,8 @@ const ZoomableImage = ({ uri, imageHeigth=360 }) => {
     },
     onActive: (event) => {
       if (scale.value > 1) {
-        translateX.value = lastTranslateX.value + event.translationX / 2; 
-        translateY.value = lastTranslateY.value + event.translationY / 2; 
+        translateX.value = lastTranslateX.value + event.translationX / 2;
+        translateY.value = lastTranslateY.value + event.translationY / 2;
       }
     },
     onEnd: () => {
@@ -68,7 +68,9 @@ const ZoomableImage = ({ uri, imageHeigth=360 }) => {
 
   return (
     <PanGestureHandler onGestureEvent={panHandler}>
-      <Animated.View style={styles.container}>
+      <Animated.View
+        style={[{ width: keyboard ? "90%" : "100%" }, styles.container]}
+      >
         <PinchGestureHandler onGestureEvent={pinchHandler}>
           <Animated.Image
             style={[
@@ -89,6 +91,7 @@ const ZoomableImage = ({ uri, imageHeigth=360 }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignSelf: "center",
     justifyContent: "center",
     alignItems: "center",
     overflow: "hidden",

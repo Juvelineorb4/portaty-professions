@@ -37,16 +37,16 @@ import { Entypo } from "@expo/vector-icons";
 import MapFilter from "@/components/MapFilter";
 import NetInfo from "@react-native-community/netinfo";
 import CustomButton from "@/components/CustomButton";
-import MapSearch from "@/components/Search/MapSearch";
 import ListSearch from "@/components/Search/ListSearch";
 
-const Search = ({ route, navigation }) => {
+const SearchActivity = ({ route, navigation }) => {
   const global = require("@/utils/styles/global.js");
   const userLocation = useRecoilValue(mapUser);
   const userChangeLocation = useRecoilValue(mapUserChange);
   const [moreItems, setMoreItems] = useState(1);
   const [items, setItems] = useState([]);
-  const [searchActive, setSearchActive] = useRecoilState(searchStatus);
+  const [searchActiveActivity, setSearchActiveActivity] =
+    useRecoilState(searchStatus);
   const [searchCacheActive, setSearchCacheActive] = useRecoilState(searchCache);
   const [totalData, setTotalData] = useRecoilState(totalSearch);
   const [totalLimit, setTotalLimit] = useState(1);
@@ -86,9 +86,9 @@ const Search = ({ route, navigation }) => {
   let number = 26 * moreItems;
 
   const getData = async () => {
-    if (!searchActive || route.params?.refresh) setIsLoading(true);
+    setIsLoading(true);
     const api = "api-opense";
-    const path = "/search/businessBySectors";
+    const path = "/search/businessByActivities";
     const params = {
       headers: {},
       queryStringParameters: {
@@ -97,16 +97,18 @@ const Search = ({ route, navigation }) => {
           lon: userLocation?.longitude,
         }),
         km: filterRadio,
+        sector: route.params?.area,
         from: 0,
         limit: number,
       },
     };
     try {
       const response = await API.get(api, path, params);
+      console.log(response, "HEY");
       setTotalData(response.total_items);
       setTotalLimit(response.total_items);
       setIsLoading(false);
-      setSearchActive(true);
+      setSearchActiveActivity(true);
       setSearchCacheActive(response.items);
       return setItems(response.items);
     } catch (error) {
@@ -122,7 +124,7 @@ const Search = ({ route, navigation }) => {
         setIsConnected(state.isConnected);
       } else {
         setIsConnected(state.isConnected);
-        setSearchActive(false);
+        setSearchActiveActivity(false);
       }
     });
   };
@@ -138,8 +140,14 @@ const Search = ({ route, navigation }) => {
   async function getCountryCode(array) {
     const countryCode = await Cellular.getIsoCountryCodeAsync();
     array.map((item, index) => {
-      if (item.cca2 === countryCode.toUpperCase()) {
-        setCountry(item);
+      if (countryCode === "--" || countryCode === null) {
+        if (item.cca2 === "VE") {
+          setCountry(item);
+        }
+      } else {
+        if (item.cca2 === countryCode.toUpperCase()) {
+          setCountry(item);
+        }
       }
     });
   }
@@ -174,7 +182,7 @@ const Search = ({ route, navigation }) => {
         getCountryCode(item);
       });
     getConnection();
-  }, [userLocation, moreItems, refreshing, route]);
+  }, [userLocation, moreItems, refreshing]);
 
   if (isLoading) {
     return (
@@ -184,7 +192,7 @@ const Search = ({ route, navigation }) => {
           global.bgWhite,
         ]}
       >
-        <SkeletonSearch />
+        <ActivityIndicator size={"large"} color={"#1f1f1f"} />
       </View>
     );
   }
@@ -215,7 +223,7 @@ const Search = ({ route, navigation }) => {
     );
   }
 
-  if (searchActive && isConnected && !isLoading) {
+  if (searchActiveActivity && isConnected && !isLoading) {
     return (
       <View style={{ flex: 1, backgroundColor: "#FFFFFF", paddingBottom: 50 }}>
         <View>
@@ -228,13 +236,8 @@ const Search = ({ route, navigation }) => {
               alignItems: "center",
             }}
           >
-            <Text
-              style={{
-                fontSize: 14,
-                fontFamily: "regular",
-              }}
-            >
-              Tienes {totalData} negocios cerca de ti
+            <Text style={{ fontFamily: "regular", fontSize: 12, width: 200 }}>
+              Hay {totalData} negocios cerca de ti
             </Text>
             <TouchableOpacity
               style={{ flexDirection: "row", alignItems: "center" }}
@@ -303,7 +306,6 @@ const Search = ({ route, navigation }) => {
                 >
                   <TouchableOpacity
                     style={[
-                      styles.inputContainerBot,
                       {
                         height: 50,
                         width: "100%",
@@ -359,10 +361,9 @@ const Search = ({ route, navigation }) => {
                   {visibleCountries && (
                     <View
                       style={{
-                        flex: 1,
                         height: 320,
-                        position: "absolute",
-                        top: 50,
+                        // position: "absolute",
+                        // top: 50,
                         backgroundColor: "#fff",
                         zIndex: 10,
                         borderRadius: 5,
@@ -381,6 +382,7 @@ const Search = ({ route, navigation }) => {
                           fontFamily: "medium",
                           fontSize: 12,
                           borderRadius: 5,
+                          height: 40,
                         }}
                       />
                       <View style={[{ flex: 1 }]}>
@@ -485,33 +487,35 @@ const Search = ({ route, navigation }) => {
                   </Text>
                 </View>
                 <View style={{}}>
-                  <TouchableOpacity
-                    style={[
-                      global.bgYellow,
-                      {
-                        borderRadius: 8,
-                        justifyContent: "center",
-                        alignItems: "center",
-                        height: 49,
-                        // marginTop: 60,
-                        borderWidth: 0.7,
-                        borderColor: "#1f1f1f",
-                      },
-                    ]}
-                    onPress={() => {
-                      setModalVisible(!modalVisible);
-                      if (userLocation) getFilterData();
-                    }}
-                  >
-                    <Text
+                  {!visibleCountries && (
+                    <TouchableOpacity
                       style={[
-                        global.black,
-                        { fontFamily: "bold", fontSize: 14 },
+                        global.bgYellow,
+                        {
+                          borderRadius: 8,
+                          justifyContent: "center",
+                          alignItems: "center",
+                          height: 49,
+                          // marginTop: 60,
+                          borderWidth: 0.7,
+                          borderColor: "#1f1f1f",
+                        },
                       ]}
+                      onPress={() => {
+                        setModalVisible(!modalVisible);
+                        if (userLocation) getFilterData();
+                      }}
                     >
-                      {`Buscar`}
-                    </Text>
-                  </TouchableOpacity>
+                      <Text
+                        style={[
+                          global.black,
+                          { fontFamily: "bold", fontSize: 14 },
+                        ]}
+                      >
+                        {`Buscar`}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
                 </View>
               </View>
             </View>
@@ -526,11 +530,11 @@ const Search = ({ route, navigation }) => {
           >
             <ActivityIndicator size="large" color="#ffb703" />
           </View>
-        ) : searchActive ? (
+        ) : searchActiveActivity ? (
           <FlatList
             data={searchCacheActive}
             renderItem={({ item, index }) => (
-              <ListSearch renderItems={item} more={index} type={`area`} />
+              <ListSearch renderItems={item} more={index} type={"activity"} />
             )}
             keyExtractor={(item, index) => index}
             ListFooterComponent={() => (
@@ -565,7 +569,7 @@ const Search = ({ route, navigation }) => {
             <FlatList
               data={items}
               renderItem={({ item, index }) => (
-                <ListSearch renderItems={item} more={index} type={`area`} />
+                <ListSearch renderItems={item} more={index} type={"activity"} />
               )}
               keyExtractor={(item, index) => index}
               ListFooterComponent={() => (
@@ -579,8 +583,8 @@ const Search = ({ route, navigation }) => {
                   }}
                 >
                   {/* {totalData > totalLimit && (
-                    <ActivityIndicator size="large" color="#5E2129" />
-                  )} */}
+                        <ActivityIndicator size="large" color="#5E2129" />
+                      )} */}
                   {totalData === totalLimit ? (
                     <Text style={{ fontFamily: "regular", fontSize: 14 }}>
                       No hay mas negocios por mostrar
@@ -605,4 +609,4 @@ const Search = ({ route, navigation }) => {
   }
 };
 
-export default Search;
+export default SearchActivity;

@@ -8,7 +8,7 @@ import {
   Pressable,
   Modal,
   TouchableOpacity,
-  RefreshControl
+  RefreshControl,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import GridSearch from "@/components/Search/GridSearch";
@@ -39,7 +39,7 @@ const SearchOut = ({ route }) => {
 
   const getData = async () => {
     const api = "api-opense";
-    const path = "/search/input";
+    const path = "/search/businessByInput";
     const params = {
       headers: {}, // OPTIONAL
       queryStringParameters: {
@@ -218,7 +218,11 @@ const SearchOut = ({ route }) => {
             <FlatList
               data={items}
               renderItem={({ item, index }) => (
-                <GridSearch renderItems={item} more={index} input={inputSearch} />
+                <GridSearch
+                  renderItems={item}
+                  more={index}
+                  input={inputSearch}
+                />
               )}
               keyExtractor={(item, index) => index}
               ListFooterComponent={() => (
