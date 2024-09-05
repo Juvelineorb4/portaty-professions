@@ -37,7 +37,7 @@ const ListSearch = ({ renderItems, more, input, type }) => {
               : 6
           )}
         />
-        {renderItems.results.length >= 1 && (
+        {renderItems.results.length > 5 && (
           <TouchableOpacity
             style={{
               alignSelf: "flex-end",
