@@ -43,6 +43,7 @@ import ListSearch from "@/components/Search/ListSearch";
 const Search = ({ route, navigation }) => {
   const global = require("@/utils/styles/global.js");
   const userLocation = useRecoilValue(mapUser);
+  const [userLocationChange, setUserLocationChange] = useRecoilState(mapUser);
   const userChangeLocation = useRecoilValue(mapUserChange);
   const [moreItems, setMoreItems] = useState(1);
   const [items, setItems] = useState([]);
@@ -110,7 +111,7 @@ const Search = ({ route, navigation }) => {
       setSearchCacheActive(response.items);
       return setItems(response.items);
     } catch (error) {
-      return console.log("ERROR EN BSUQUEDA DEFAULT:  ", error);
+      return console.log("ERROR EN BSUQUEDA DEFAULT: aqui ", error);
     }
   };
 
@@ -136,12 +137,17 @@ const Search = ({ route, navigation }) => {
   };
 
   async function getCountryCode(array) {
-    const countryCode = await Cellular.getIsoCountryCodeAsync();
-    array.map((item, index) => {
-      if (item.cca2 === countryCode.toUpperCase()) {
-        setCountry(item);
-      }
-    });
+    let reverseGeocode = await Location.reverseGeocodeAsync(userLocation);
+    if (reverseGeocode.length > 0) {
+      const countryCode = reverseGeocode[0].isoCountryCode.toUpperCase();
+      array.map((item, index) => {
+        if (item.cca2 === countryCode) {
+          setCountry(item);
+        }
+      });
+    } else {
+      console.log("Ocurrio un error");
+    }
   }
 
   const filteredCountries = countries.filter((item) =>
@@ -175,6 +181,20 @@ const Search = ({ route, navigation }) => {
       });
     getConnection();
   }, [userLocation, moreItems, refreshing, route]);
+
+  const getUserLocation = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      setErrorMsg("Permission to access location was denied");
+      return;
+    }
+    let location = await Location.getCurrentPositionAsync({
+      coords: { latitude, longitude },
+    });
+    let { latitude, longitude } = location.coords;
+    getAddress({ latitude, longitude });
+    setUserLocationChange({ latitude, longitude });
+  };
 
   if (isLoading) {
     return (
@@ -295,7 +315,7 @@ const Search = ({ route, navigation }) => {
                     fontSize: 15,
                     marginBottom: 15,
                   }}
-                >{`Selecciona el pais de ubicacion`}</Text>
+                >{`Tu país de ubicación:`}</Text>
                 <View
                   style={{
                     position: "relative",
@@ -316,7 +336,8 @@ const Search = ({ route, navigation }) => {
                         justifyContent: "space-between",
                       },
                     ]}
-                    onPress={() => setVisibleCountries(!visibleCountries)}
+                    activeOpacity={1}
+                    // onPress={() => setVisibleCountries(!visibleCountries)}
                   >
                     <View
                       style={{
@@ -349,12 +370,12 @@ const Search = ({ route, navigation }) => {
                         {country?.name?.common}
                       </Text>
                     </View>
-                    <Entypo
+                    {/* <Entypo
                       name="chevron-down"
                       size={24}
                       color="black"
                       style={{ marginRight: 5 }}
-                    />
+                    /> */}
                   </TouchableOpacity>
                   {visibleCountries && (
                     <View
@@ -483,6 +504,17 @@ const Search = ({ route, navigation }) => {
                       Cambiar
                     </Text>
                   </Text>
+                  <TouchableOpacity onPress={() => getUserLocation()}>
+                    <Text
+                      style={{
+                        fontFamily: "bold",
+                        fontSize: 15,
+                        textDecorationLine: "underline",
+                      }}
+                    >
+                      Seleccionar mi ubicacion
+                    </Text>
+                  </TouchableOpacity>
                 </View>
                 <View style={{}}>
                   <TouchableOpacity
