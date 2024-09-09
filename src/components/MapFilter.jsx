@@ -31,7 +31,6 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
   const [searchAddress, setSearchAddress] =
     useRecoilState(searchAddressInitial);
   const [mapChange, setMapChange] = useRecoilState(mapUser);
-
   const [region, setRegion] = useState({
     latitude: initialLocation?.latitude,
     longitude: initialLocation?.longitude,
@@ -49,11 +48,31 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
       longitude: obj?.longitude,
     });
   };
+  const getAddressReverse = async (coords) => {
+    let reverseGeocode = await Location.reverseGeocodeAsync(coords);
+    if (reverseGeocode.length > 0) {
+      let address = reverseGeocode[0];
+      let addressString = [
+        address.street,
+        address.city,
+        address.region,
+        address.country,
+      ]
+        .filter(Boolean)
+        .join(", ");
+      setSearchAddress(addressString);
+    } else {
+      setSearchAddress("Ocurrio un error, intenta de nuevo");
+    }
+  };
   const onHandlePress = (e) => {
     const {
       nativeEvent: { coordinate },
     } = e;
-
+    setMapChange({
+      latitude: coordinate?.latitude,
+      longitude: coordinate?.longitude,
+    });
     if (mapRef.current) {
       const newRegion = mapRef.current.__lastRegion;
     }
@@ -144,7 +163,6 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
 
   useEffect(() => {
     const debouncedSetSearch = debounce((e) => {
-      console.log(e);
       search(e);
     }, 1000);
 
@@ -197,6 +215,16 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
                   strokeColor={"#1a66ff"}
                   fillColor={"rgba(26, 102, 255, 0.3)"}
                 />
+                <Marker
+                  coordinate={{
+                    latitude: region.latitude,
+                    longitude: region.longitude,
+                  }}
+                >
+                  <View style={styles.marker}>
+                    <View style={styles.innerMarker} />
+                  </View>
+                </Marker>
               </MapView>
             )}
 
@@ -406,7 +434,11 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
                 global.bgYellow,
               ]}
               onPress={() => {
-                getAddress(labelSelected);
+                if (labelSelected) {
+                  getAddress(labelSelected);
+                } else {
+                  getAddressReverse(mapChange);
+                }
                 close();
               }}
             >
