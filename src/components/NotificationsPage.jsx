@@ -10,22 +10,26 @@ import React, { useEffect, useState } from "react";
 import { API, Auth } from "aws-amplify";
 import * as queries from "@/graphql/CustomQueries/Notification";
 import * as mutation from "@/graphql/CustomMutations/Notification";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   eyelashSelection,
   isFocusPromotion,
   notificationNavigate,
+  userAuthenticated,
 } from "@/atoms";
 import { useNavigation } from "@react-navigation/native";
+import CustomButton from "./CustomButton";
+import styles from "@/utils/styles/Promotions.js";
 
 const NotificationsPage = () => {
   const global = require("@/utils/styles/global.js");
   const [notificationAll, setNotificationAll] = useState(null);
+  const userAuth = useRecoilValue(userAuthenticated);
   const [notificationDelete, setNotificationDelete] = useState(false);
   const [notificationNothing, setNotificationNothing] = useState(false);
   const [reload, setReload] = useState(false);
   const setPageSelection = useSetRecoilState(eyelashSelection);
-const [isFocus, setIsFocus] = useRecoilState(isFocusPromotion);
+  const [isFocus, setIsFocus] = useRecoilState(isFocusPromotion);
 
   const navigation = useNavigation();
 
@@ -72,6 +76,36 @@ const [isFocus, setIsFocus] = useRecoilState(isFocusPromotion);
   useEffect(() => {
     fetchNotifications();
   }, [reload]);
+
+  if (!userAuth)
+    return (
+      <View
+        style={[
+          {
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+            paddingHorizontal: 20,
+            paddingBottom: 80,
+          },
+          global.bgWhite,
+        ]}
+      >
+        <Text
+          style={{ fontSize: 16, fontFamily: "light", textAlign: "center" }}
+        >
+          Ingresa a tu cuenta para ver todas las promociones
+        </Text>
+        <CustomButton
+          text={`Iniciar sesion`}
+          handlePress={() => {
+            navigation.navigate("Login_Welcome");
+          }}
+          textStyles={[styles.textSearch, global.black]}
+          buttonStyles={[styles.search, global.bgYellow]}
+        />
+      </View>
+    );
 
   if (notificationAll !== null)
     return (

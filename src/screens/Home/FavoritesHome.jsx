@@ -59,8 +59,6 @@ const FavoritesHome = ({ navigation, route }) => {
   const [loading, setLoading] = useState(false);
   const [isConnected, setIsConnected] = useRecoilState(connectionStatus);
 
-
-
   const fetchFavorites = async () => {
     setLoading(true);
     if (userAuth === null) {
