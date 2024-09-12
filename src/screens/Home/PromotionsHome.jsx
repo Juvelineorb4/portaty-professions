@@ -170,6 +170,36 @@ const PromotionsHome = ({ login, promotion, promotionID }) => {
     }
   }, [isFocus]);
 
+  if (!userAuth)
+    return (
+      <View
+        style={[
+          {
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+            paddingHorizontal: 20,
+            paddingBottom: 80,
+          },
+          global.bgWhite,
+        ]}
+      >
+        <Text
+          style={{ fontSize: 16, fontFamily: "light", textAlign: "center" }}
+        >
+          Ingresa a tu cuenta para ver todas las promociones
+        </Text>
+        <CustomButton
+          text={`Iniciar sesion`}
+          handlePress={() => {
+            navigation.navigate("Login_Welcome");
+          }}
+          textStyles={[styles.textSearch, global.black]}
+          buttonStyles={[styles.search, global.bgYellow]}
+        />
+      </View>
+    );
+
   if (!storiesLoading)
     return (
       <View
