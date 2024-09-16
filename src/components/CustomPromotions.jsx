@@ -222,121 +222,134 @@ const CustomPromotions = ({ route, navigation }) => {
           </View>
 
           {!promotionActive ? (
-            <View
-              style={{
-                flexDirection: "row",
-                alignSelf: "center",
-                columnGap: 20,
-              }}
-            >
-              <Pressable onPress={() => pickImage()}>
-                <View
-                  style={{
-                    borderColor: "#1f1f1f",
-                    borderStyle: "dashed",
-                    borderWidth: 1.3,
-                    height: 245,
-                    width: 150,
-                    borderRadius: 5,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  {image ? (
-                    <Image
-                      style={{
-                        width: 148,
-                        height: 243,
-                        borderRadius: 5,
-                      }}
-                      source={{ uri: image }}
-                    />
-                  ) : (
-                    <Image
-                      style={{
-                        width: 50,
-                        height: 50,
-                        resizeMode: "contain",
-                      }}
-                      source={require("@/utils/images/cameraadd.png")}
-                    />
-                  )}
-                </View>
-              </Pressable>
-
-              <View>
-                <CustomDatePicker
-                  startDate={startDate}
-                  setStartDate={(e) => setStartDate(e)}
-                  endDate={endDate}
-                  setEndDate={(e) => setEndDate(e)}
-                />
-                <CustomInput
-                  control={control}
-                  name={`description`}
-                  placeholder={`Tu descripcion`}
-                  styled={{
-                    text: styles.textInput,
-                    label: [styles.labelInput],
-                    error: styles.errorInput,
-                    input: [styles.inputContainer],
-                    placeholder: styles.placeholder,
-                  }}
-                  rules={{
-                    required: `Requerido`,
-                  }}
-                  text={`Descripcion`}
-                />
-                {errorDate.status && (
-                  <Text
+            <View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignSelf: "center",
+                  columnGap: 20,
+                }}
+              >
+                <Pressable onPress={() => pickImage()}>
+                  <View
                     style={{
-                      color: "red",
-                      fontFamily: "regular",
-                      fontSize: 11,
-                      width: 120,
-                      marginVertical: 5,
-                    }}
-                  >
-                    {errorDate.message}
-                  </Text>
-                )}
-                <Pressable
-                  style={[
-                    global.bgYellow,
-                    {
-                      borderWidth: 1,
-                      width: 100,
-                      height: 40,
-                      borderRadius: 8,
-                      alignSelf: "center",
+                      borderColor: "#1f1f1f",
+                      borderStyle: "dashed",
+                      borderWidth: 1.3,
+                      height: 245,
+                      width: 150,
+                      borderRadius: 5,
                       justifyContent: "center",
                       alignItems: "center",
-                      flexDirection: "row",
-                      justifyContent: "space-around",
-                      paddingHorizontal: 10,
-                      marginTop: 15,
-                    },
-                  ]}
-                  disabled={loading}
-                  onPress={handleSubmit(onHandleSendPromotion)}
-                >
-                  {loading ? (
-                    <ActivityIndicator size={`small`} color={`#1f1f1f`} />
-                  ) : (
+                    }}
+                  >
+                    {image ? (
+                      <Image
+                        style={{
+                          width: 148,
+                          height: 243,
+                          borderRadius: 5,
+                        }}
+                        source={{ uri: image }}
+                      />
+                    ) : (
+                      <Image
+                        style={{
+                          width: 50,
+                          height: 50,
+                          resizeMode: "contain",
+                        }}
+                        source={require("@/utils/images/cameraadd.png")}
+                      />
+                    )}
+                  </View>
+                </Pressable>
+
+                <View>
+                  <CustomDatePicker
+                    startDate={startDate}
+                    setStartDate={(e) => setStartDate(e)}
+                    endDate={endDate}
+                    setEndDate={(e) => setEndDate(e)}
+                  />
+                  <CustomInput
+                    control={control}
+                    name={`description`}
+                    placeholder={`Tu descripcion`}
+                    styled={{
+                      text: styles.textInput,
+                      label: [styles.labelInput],
+                      error: styles.errorInput,
+                      input: [styles.inputContainer],
+                      placeholder: styles.placeholder,
+                    }}
+                    rules={{
+                      required: `Requerido`,
+                    }}
+                    text={`Descripcion`}
+                  />
+                  {errorDate.status && (
                     <Text
-                      style={[
-                        {
-                          fontFamily: "bold",
-                          fontSize: 12,
-                          color: "#1f1f1f",
-                        },
-                      ]}
+                      style={{
+                        color: "red",
+                        fontFamily: "regular",
+                        fontSize: 11,
+                        width: 120,
+                        marginVertical: 5,
+                      }}
                     >
-                      Publicar
+                      {errorDate.message}
                     </Text>
                   )}
-                </Pressable>
+                  <Pressable
+                    style={[
+                      global.bgYellow,
+                      {
+                        borderWidth: 1,
+                        width: 100,
+                        height: 40,
+                        borderRadius: 8,
+                        alignSelf: "center",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        flexDirection: "row",
+                        justifyContent: "space-around",
+                        paddingHorizontal: 10,
+                        marginTop: 15,
+                      },
+                    ]}
+                    disabled={loading}
+                    onPress={handleSubmit(onHandleSendPromotion)}
+                  >
+                    {loading ? (
+                      <ActivityIndicator size={`small`} color={`#1f1f1f`} />
+                    ) : (
+                      <Text
+                        style={[
+                          {
+                            fontFamily: "bold",
+                            fontSize: 12,
+                            color: "#1f1f1f",
+                          },
+                        ]}
+                      >
+                        Publicar
+                      </Text>
+                    )}
+                  </Pressable>
+                </View>
               </View>
+              <Text
+                style={{
+                  fontFamily: "regular",
+                  fontSize: 14,
+                  textAlign: "center",
+                  marginTop: 10,
+                  color: "#1f1f1f",
+                }}
+              >
+                Recuerda que siempre tendras una promocion por día gratis
+              </Text>
             </View>
           ) : (
             <View
