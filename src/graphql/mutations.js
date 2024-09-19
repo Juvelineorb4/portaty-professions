@@ -1291,6 +1291,17 @@ export const createBusinessPromotion = /* GraphQL */ `
       isView
       image
       notifiedUserIDs
+      viewedUsers {
+        items {
+          id
+          userID
+          promotionID
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       owner
       createdAt
       updatedAt
@@ -1396,6 +1407,17 @@ export const updateBusinessPromotion = /* GraphQL */ `
       isView
       image
       notifiedUserIDs
+      viewedUsers {
+        items {
+          id
+          userID
+          promotionID
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       owner
       createdAt
       updatedAt
@@ -1501,6 +1523,62 @@ export const deleteBusinessPromotion = /* GraphQL */ `
       isView
       image
       notifiedUserIDs
+      viewedUsers {
+        items {
+          id
+          userID
+          promotionID
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createPromotionViews = /* GraphQL */ `
+  mutation CreatePromotionViews(
+    $input: CreatePromotionViewsInput!
+    $condition: ModelPromotionViewsConditionInput
+  ) {
+    createPromotionViews(input: $input, condition: $condition) {
+      id
+      userID
+      promotionID
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updatePromotionViews = /* GraphQL */ `
+  mutation UpdatePromotionViews(
+    $input: UpdatePromotionViewsInput!
+    $condition: ModelPromotionViewsConditionInput
+  ) {
+    updatePromotionViews(input: $input, condition: $condition) {
+      id
+      userID
+      promotionID
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deletePromotionViews = /* GraphQL */ `
+  mutation DeletePromotionViews(
+    $input: DeletePromotionViewsInput!
+    $condition: ModelPromotionViewsConditionInput
+  ) {
+    deletePromotionViews(input: $input, condition: $condition) {
+      id
+      userID
+      promotionID
       owner
       createdAt
       updatedAt

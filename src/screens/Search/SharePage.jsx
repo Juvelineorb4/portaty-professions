@@ -90,9 +90,7 @@ const SharePage = ({ route, navigation }) => {
             encoding: FileSystem.EncodingType.Base64,
           });
         })
-        .catch((e) => {
-          console.log(e);
-        });
+        .catch((e) => {});
     } catch (error) {
       console.log("Error en pdf: ", error.message);
     }
@@ -1124,7 +1122,7 @@ const SharePage = ({ route, navigation }) => {
                             marginTop: 10,
                           }}
                         >
-                           {imageView?.key === 0 ? (
+                          {imageView?.key === 0 ? (
                             <TextInput
                               value={
                                 imageView?.description !== ""

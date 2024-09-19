@@ -10,6 +10,7 @@ import {
   Image,
   ActivityIndicator,
   TextInput,
+  FlatList,
 } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE, Callout } from "react-native-maps";
 import * as Location from "expo-location";
@@ -25,6 +26,8 @@ import { useRecoilState } from "recoil";
 // hook form
 import { Controller } from "react-hook-form";
 import { createRef } from "react";
+import { API } from "aws-amplify";
+import { debounce } from "lodash";
 
 const MAP_SETTINGS = [
   {
@@ -55,6 +58,7 @@ const MapMarketBusiness = ({
   const [activeButton, setActiveButton] = useState(true);
   const [loadingSearch, setLoadingSearch] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [labelSelected, setLabelSelected] = useState(null);
   const [selectMap, setSelectMap] = useState(false);
   const [direction, setDirection] = useRecoilState(directionBusiness);
   const [directionOn, setDirectionOn] = useRecoilState(directionBusinessOn);
@@ -69,6 +73,7 @@ const MapMarketBusiness = ({
     useRecoilState(selectLocation);
   const [selectionEmptyLocation, setSelectionEmptyLocation] =
     useRecoilState(emptyLocation);
+  const [suggestions, setSuggestions] = useState(null);
   let mapRef = useRef();
 
   const onHandleMapMarket = async () => {
@@ -92,6 +97,54 @@ const MapMarketBusiness = ({
       setDirection(direccionString);
       setDirectionOn(direcciones);
     }
+  };
+
+  const searchSuggestions = async () => {
+    setSuggestions(null);
+    if (description === "") return;
+    const api = "api-opense";
+    const path = "/location/_search";
+    const params = {
+      headers: {},
+      queryStringParameters: {
+        text: description, //texto a buscar
+        location: JSON.stringify({
+          latitude: initialLocation?.latitude,
+          longitude: initialLocation?.longitude,
+        }),
+      },
+    };
+    try {
+      const response = await API.get(api, path, params);
+      setSuggestions(response.data);
+    } catch (error) {
+      console.log("Error buscando algo", error);
+    }
+  };
+  const autocompleteCoords = (label, latitude, longitude) => {
+    setLabelSelected({
+      label: label,
+      latitude: latitude,
+      longitude: longitude,
+    });
+    setDirection(label);
+
+    setRegion({
+      latitude: latitude,
+      longitude: longitude,
+      latitudeDelta: 0.018,
+      longitudeDelta: 0.018,
+    });
+    mapRef.current.animateToRegion(
+      {
+        latitude: latitude,
+        longitude: longitude,
+        latitudeDelta: 0.018,
+        longitudeDelta: 0.018,
+      },
+      7000
+    );
+    setSuggestions(null);
   };
 
   const obtenerCoordenadas = async (address) => {
@@ -167,6 +220,16 @@ const MapMarketBusiness = ({
       });
     }
   }, [modalVisible]);
+
+  useEffect(() => {
+    const debouncedSetSearch = debounce((e) => {
+      searchSuggestions(e);
+    }, 1000);
+
+    if (description !== "") {
+      debouncedSetSearch(description);
+    }
+  }, [description]);
 
   const showTitleMarket = () => {
     markerRef?.current?.showCallout();
@@ -322,7 +385,7 @@ const MapMarketBusiness = ({
                         // borderWidth: 0.7,
                         flexDirection: "row",
                         paddingBottom: 10,
-                        paddingRight: 5
+                        paddingRight: 5,
                       }}
                     >
                       <View
@@ -331,7 +394,7 @@ const MapMarketBusiness = ({
                           borderRadius: 5,
                           borderColor: "#1f1f1f",
                           borderWidth: 0.7,
-                          width: 235,
+                          width: 295,
                           backgroundColor: "#fff",
                         }}
                         pointerEvents="box-none"
@@ -340,7 +403,6 @@ const MapMarketBusiness = ({
                           value={description}
                           onChangeText={(e) => {
                             setDescription(e);
-                            setActiveButton(false);
                           }}
                           placeholder={`Introduce una direccion`}
                           style={{
@@ -348,9 +410,56 @@ const MapMarketBusiness = ({
                             fontSize: 14,
                           }}
                         />
+                        {suggestions && (
+                          <FlatList
+                            data={suggestions}
+                            showsVerticalScrollIndicator={true}
+                            keyExtractor={(item) => item?.Label}
+                            renderItem={({ item }) => (
+                              <TouchableOpacity
+                                style={{
+                                  paddingVertical: 8,
+                                  borderBottomColor: "#1f1f1f",
+                                  borderBottomWidth: 1,
+                                }}
+                                onPress={() =>
+                                  autocompleteCoords(
+                                    item?.Label,
+                                    item?.Point[1],
+                                    item?.Point[0]
+                                  )
+                                }
+                              >
+                                <Text
+                                  style={{
+                                    fontFamily: "light",
+                                    fontSize: 12,
+                                  }}
+                                >
+                                  {item?.Label}
+                                </Text>
+                              </TouchableOpacity>
+                            )}
+                            style={{
+                              flex: 1,
+                              position: "absolute",
+                              backgroundColor: "white",
+                              padding: 10,
+                              paddingTop: 0,
+                              borderColor: "#1f1f1f",
+                              borderWidth: 1,
+                              top: 40,
+                              width: 295,
+                              borderBottomRightRadius: 8,
+                              borderBottomLeftRadius: 8,
+                              // height: 200,
+                              zIndex: 100,
+                            }}
+                          />
+                        )}
                       </View>
 
-                      <TouchableOpacity
+                      {/* <TouchableOpacity
                         style={[
                           {
                             justifyContent: "center",
@@ -391,7 +500,7 @@ const MapMarketBusiness = ({
                             ]}
                           >{`Buscar`}</Text>
                         )}
-                      </TouchableOpacity>
+                      </TouchableOpacity> */}
                     </View>
 
                     <TouchableOpacity

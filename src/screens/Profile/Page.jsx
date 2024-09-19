@@ -341,9 +341,7 @@ const Page = ({ route, navigation }) => {
       setLoadingExtras(5);
       setImageChange(null);
       setActiveMainImage(false);
-    } catch (error) {
-      console.log("ERROR EN API: ", error.message);
-    }
+    } catch (error) {}
   };
 
   const deleteImage = async (image) => {
@@ -473,9 +471,7 @@ const Page = ({ route, navigation }) => {
 
       const allRatings = await fetchAllRatings();
       setListRatings(allRatings);
-    } catch (error) {
-      console.log("eres tu", error);
-    }
+    } catch (error) {}
   };
   const fetchRatings2 = async () => {
     let business = item;
@@ -491,13 +487,10 @@ const Page = ({ route, navigation }) => {
 
       const response = await API.get(api, path, params);
       setRatingsDetails(response.data);
-    } catch (error) {
-      console.log("ERROR A BUSCAR RATINGS: ", error.response.data);
-    }
+    } catch (error) {}
   };
 
   const uploadCatalogPDF = async () => {
-    console.log("QUERIEDNO SUBIRF");
     try {
       let result = await DocumentPicker.getDocumentAsync({
         copyToCacheDirectory: true,
@@ -505,7 +498,6 @@ const Page = ({ route, navigation }) => {
       });
 
       if (result?.assets !== null && result?.canceled !== true) {
-        console.log(result);
         const response = await fetch(result?.assets[0]?.uri);
         const blob = await response.blob();
         const pdf = await Storage.put(

@@ -95,7 +95,6 @@ const StepFive = ({ navigation, route }) => {
 
   const StepRegister = async (data) => {
     if (loading) {
-      console.log("no podeis mas de uno");
       return;
     }
     const today = new Date().toISOString();

@@ -68,7 +68,6 @@ const SearchPost = ({ route, navigation }) => {
     data: { item, images },
   } = route.params;
 
-  console.log(route.params.data.images);
   const actividad = JSON.parse(item.activity);
   const getPdf = async () => {
     const permissions =
@@ -182,9 +181,9 @@ const SearchPost = ({ route, navigation }) => {
       } else {
         setShowAgg(true);
       }
-
-      let schedule = JSON.parse(business?.data?.getBusiness.schedule);
-      if (business?.data?.getBusiness.schedule) {
+      console.log(business);
+      if (business?.data?.getBusiness?.schedule) {
+        let schedule = JSON.parse(business?.data?.getBusiness?.schedule);
         filterSchedule(schedule?.shedule, schedule?.type);
       }
       setListUpdate(false);
@@ -280,7 +279,6 @@ const SearchPost = ({ route, navigation }) => {
         `lastView_${businessID}`,
         JSON.stringify(currentViewInfo)
       );
-      console.log("ITEMGUARDADO: ", `lastView_${businessID}`);
     } catch (error) {
       console.log("Error al registrar analitica: ", error);
     }
@@ -1506,66 +1504,59 @@ const SearchPost = ({ route, navigation }) => {
                         <View
                           style={{
                             backgroundColor: "#fff",
-                            height: 450,
+                            height: 380,
                           }}
                         >
                           <ZoomableImage
                             uri={
                               imageView?.url ? imageView?.url : imageView?.uri
                             }
-                            imageHeigth={450}
+                            imageHeigth={380}
                           />
                         </View>
 
                         {imageView?.url && (
-                          <View style={{ flex: 1, paddingVertical: 15 }}>
-                            <View
+                          <View style={{ height: 180 }}>
+                            <ScrollView
                               style={{
                                 flex: 1,
-                                flexDirection: "row",
                                 borderColor: "#1f1f1f",
                                 borderWidth: 0.7,
-                                paddingHorizontal: 10,
-                                borderRadius: 8,
-                                marginTop: 10,
+                                padding: 10,
+                                borderRadius: 4,
+                                marginTop: 5,
                               }}
                             >
                               {imageView?.key === 0 ? (
-                                <TextInput
-                                  value={
-                                    imageView?.description !== ""
-                                      ? imageView?.description
-                                      : post?.description
-                                  }
-                                  editable={false}
+                                <Text
                                   style={{
                                     flex: 1,
-                                    // width: 100,
                                     fontFamily: "regular",
-                                    fontSize: 14,
+                                    fontSize: 12,
                                     alignItems: "flex-start",
                                     color: "#000",
+                                    lineHeight: 12,
                                   }}
-                                  multiline={true}
-                                  numberOfLines={5}
-                                />
+                                >
+                                  {imageView?.description !== ""
+                                    ? imageView?.description
+                                    : post?.description}
+                                </Text>
                               ) : (
-                                <TextInput
-                                  value={imageView?.description}
-                                  editable={false}
+                                <Text
                                   style={{
                                     flex: 1,
-                                    // width: 100,
                                     fontFamily: "regular",
-                                    fontSize: 14,
+                                    fontSize: 12,
                                     alignItems: "flex-start",
                                     color: "#000",
+                                    lineHeight: 12,
                                   }}
-                                  multiline={true}
-                                  numberOfLines={5}
-                                />
+                                >
+                                  {imageView?.description}
+                                </Text>
                               )}
-                            </View>
+                            </ScrollView>
                           </View>
                         )}
                       </View>

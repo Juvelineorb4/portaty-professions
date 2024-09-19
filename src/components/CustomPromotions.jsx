@@ -379,7 +379,6 @@ const CustomPromotions = ({ route, navigation }) => {
                       item.status == "PUBLISHED" ||
                       item.status == "INREVIEW"
                     ) {
-                      console.log(item);
                       setDataPromotionAgain(item);
                       setDeletePromotionActive(true);
                       setVisibleAgain(true);
@@ -550,7 +549,6 @@ const CustomPromotions = ({ route, navigation }) => {
                         item.status !== "PUBLISHED" &&
                         item.status !== "INREVIEW"
                       ) {
-                        console.log(item);
                         setDataPromotionAgain(item);
                         setVisibleAgain(true);
                       }

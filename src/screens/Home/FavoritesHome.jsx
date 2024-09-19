@@ -137,12 +137,7 @@ const FavoritesHome = ({ navigation, route }) => {
     try {
       const granted = await Location.getForegroundPermissionsAsync();
       if (granted) {
-        console.log("Permiso de ubicación concedido");
-
-        // Realiza acciones según el permiso concedido
       } else {
-        console.log("Permiso de ubicación denegado");
-        // Realiza acciones según el permiso denegado
         const { status } = await Location.requestForegroundPermissionsAsync();
       }
     } catch (error) {

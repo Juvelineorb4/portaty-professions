@@ -11,7 +11,6 @@ type DeviceNotificationToken
   deviceID: String
   notificationToken: String
 }
-
 type NotificationHistory
   @model
   @auth(
@@ -90,13 +89,13 @@ type Users
         { allow: public, operations: [read] }
         { allow: owner, operations: [read, delete] }
         { allow: groups, groups: ["admin"], operations: [read] }
-        { allow: groups, groups: ["admin"], operations: [read] }
       ]
     )
   name: String
     @auth(
       rules: [
         { allow: owner }
+        { allow: public, operations: [read] }
         { allow: private, provider: iam, operations: [read] }
         { allow: public, provider: iam, operations: [read] }
         { allow: groups, groups: ["admin"], operations: [read] }
@@ -106,6 +105,7 @@ type Users
     @auth(
       rules: [
         { allow: owner }
+        { allow: public, operations: [read] }
         { allow: private, provider: iam, operations: [read] }
         { allow: public, provider: iam, operations: [read] }
         { allow: groups, groups: ["admin"], operations: [read] }
@@ -115,6 +115,7 @@ type Users
     @auth(
       rules: [
         { allow: owner }
+        { allow: public, operations: [read] }
         { allow: groups, groups: ["admin"], operations: [read] }
       ]
     )
@@ -123,6 +124,7 @@ type Users
     @auth(
       rules: [
         { allow: owner }
+        { allow: public, operations: [read] }
         { allow: private, provider: iam, operations: [read] }
         { allow: groups, groups: ["admin"], operations: [read] }
       ]
@@ -130,6 +132,7 @@ type Users
   gender: String
     @auth(
       rules: [
+        { allow: public, operations: [read] }
         { allow: owner, operations: [read, delete] }
         { allow: groups, groups: ["admin"], operations: [read] }
       ]
@@ -137,6 +140,7 @@ type Users
   notificationToken: [String]
     @auth(
       rules: [
+        { allow: public, operations: [read] }
         { allow: owner, operations: [read, delete] }
         { allow: groups, groups: ["admin"], operations: [read] }
       ]
@@ -153,6 +157,7 @@ type Users
   owner: String
     @auth(
       rules: [
+        { allow: public, operations: [read] }
         { allow: owner, operations: [read, delete] }
         { allow: groups, groups: ["admin"], operations: [read] }
       ]
@@ -261,7 +266,6 @@ type BusinessComment
   stars: Int!
   description: String
 }
-
 type BusinessPromotion
   @model
   @auth(
@@ -284,6 +288,27 @@ type BusinessPromotion
   isView: Boolean @default(value: "false")
   image: String
   notifiedUserIDs: [ID!]
+  viewedUsers: [PromotionViews!]
+    @hasMany(indexName: "byPromotionViews", fields: ["id"])
+  owner: String
+    @auth(
+      rules: [{ allow: owner, operations: [read, delete] }, { allow: public }]
+    )
+}
+
+type PromotionViews
+  @model
+  @auth(
+    rules: [
+      { allow: public }
+      { allow: owner }
+      { allow: private, provider: iam, operations: [read] }
+      { allow: public, provider: iam, operations: [read] }
+    ]
+  ) {
+  id: ID
+  userID: ID
+  promotionID: ID @index(name: "byPromotionViews")
   owner: String
     @auth(
       rules: [{ allow: owner, operations: [read, delete] }, { allow: public }]
@@ -297,11 +322,13 @@ enum BusinessPromotionStatus {
   DELETED
   EXPIRED
 }
+
 type Favorites
   @model
   @auth(
     rules: [
       { allow: owner }
+      { allow: public, operations: [read] }
       { allow: public, provider: iam, operations: [read] }
       { allow: private, provider: iam, operations: [read] }
       { allow: groups, groups: ["sp"], operations: [read] }
@@ -311,6 +338,7 @@ type Favorites
     @auth(
       rules: [
         { allow: owner }
+        { allow: public, operations: [read] }
         { allow: public, provider: iam, operations: [read] }
         { allow: private, provider: iam, operations: [read] }
         { allow: groups, groups: ["sp"], operations: [read] }
@@ -325,6 +353,7 @@ type Favorites
     @auth(
       rules: [
         { allow: owner }
+        { allow: public, operations: [read] }
         { allow: public, provider: iam, operations: [read] }
         { allow: private, provider: iam, operations: [read] }
         { allow: groups, groups: ["sp"], operations: [read] }

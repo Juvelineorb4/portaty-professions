@@ -1052,6 +1052,17 @@ export const getBusinessPromotion = /* GraphQL */ `
       isView
       image
       notifiedUserIDs
+      viewedUsers {
+        items {
+          id
+          userID
+          promotionID
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       owner
       createdAt
       updatedAt
@@ -1118,6 +1129,9 @@ export const listBusinessPromotions = /* GraphQL */ `
         isView
         image
         notifiedUserIDs
+        viewedUsers {
+          nextToken
+        }
         owner
         createdAt
         updatedAt
@@ -1190,6 +1204,9 @@ export const businessPromotionsByUserID = /* GraphQL */ `
         isView
         image
         notifiedUserIDs
+        viewedUsers {
+          nextToken
+        }
         owner
         createdAt
         updatedAt
@@ -1262,6 +1279,67 @@ export const businessPromotionsByBusinessID = /* GraphQL */ `
         isView
         image
         notifiedUserIDs
+        viewedUsers {
+          nextToken
+        }
+        owner
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getPromotionViews = /* GraphQL */ `
+  query GetPromotionViews($id: ID!) {
+    getPromotionViews(id: $id) {
+      id
+      userID
+      promotionID
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listPromotionViews = /* GraphQL */ `
+  query ListPromotionViews(
+    $filter: ModelPromotionViewsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPromotionViews(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        userID
+        promotionID
+        owner
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const promotionViewsByPromotionID = /* GraphQL */ `
+  query PromotionViewsByPromotionID(
+    $promotionID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelPromotionViewsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    promotionViewsByPromotionID(
+      promotionID: $promotionID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userID
+        promotionID
         owner
         createdAt
         updatedAt

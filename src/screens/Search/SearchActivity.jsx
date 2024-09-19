@@ -104,7 +104,6 @@ const SearchActivity = ({ route, navigation }) => {
     };
     try {
       const response = await API.get(api, path, params);
-      console.log(response, "HEY");
       setTotalData(response.total_items);
       setTotalLimit(response.total_items);
       setIsLoading(false);

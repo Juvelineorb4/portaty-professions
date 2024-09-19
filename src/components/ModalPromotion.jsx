@@ -18,7 +18,7 @@ import ModalAlert from "./ModalAlert";
 const ModalPromotion = ({ data, close, open, deletePromotion, reload }) => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  const [visible, setVisible] = useState(false)
+  const [visible, setVisible] = useState(false);
   const { control } = useForm();
 
   const onHandleAgainPromotion = async () => {
@@ -38,15 +38,13 @@ const ModalPromotion = ({ data, close, open, deletePromotion, reload }) => {
         headers: {},
       };
       const result = await API.post(apiName, path, myInit);
-      console.log(result);
-      setVisible(true)
+      setVisible(true);
     } catch (error) {
       console.log("ERROR: ", error);
     }
   };
 
   const onHandleDeletePromotion = async () => {
-    console.log(data?.id);
     startDate.setHours(0, 0, 0, 0);
     endDate.setHours(0, 0, 0, 0);
     try {
@@ -60,8 +58,7 @@ const ModalPromotion = ({ data, close, open, deletePromotion, reload }) => {
         },
         authMode: "AMAZON_COGNITO_USER_POOLS",
       });
-      console.log(result);
-      setVisible(true)
+      setVisible(true);
     } catch (error) {
       console.log(error);
     }

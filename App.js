@@ -7,7 +7,13 @@ import {
 } from "react-native-safe-area-context";
 import { RecoilRoot } from "recoil";
 import { useFonts } from "expo-font";
-import { Platform, SafeAreaView as SafeAreaIOS, View, Text, StyleSheet } from "react-native";
+import {
+  Platform,
+  SafeAreaView as SafeAreaIOS,
+  View,
+  Text,
+  StyleSheet,
+} from "react-native";
 import Navigation from "@/routes/Navigation";
 import { Amplify, AWSKinesisFirehoseProvider, Analytics } from "aws-amplify";
 import awsconfig from "./src/aws-exports.js";
@@ -15,20 +21,20 @@ import { StatusBar } from "expo-status-bar";
 import * as Constants from "expo-constants";
 import * as SplashScreen from "expo-splash-screen";
 import { api } from "@/utils/constants/api.jsx";
-import * as WebBrowser from 'expo-web-browser';
+import * as WebBrowser from "expo-web-browser";
 const ENDPOINT =
   Constants?.AppOwnership?.Expo === "expo"
-    ? api?.stage_endpoint?.dev
-    : api?.stage_endpoint?.prod;
+    ? api?.stage_endpoint?.prod
+    : api?.stage_endpoint?.dev;
 
 const REDIRECT_SIGNIN =
   Constants?.AppOwnership?.Expo === "expo"
-    ? api?.rediret_signin?.dev
-    : api?.rediret_signin?.prod;
+    ? api?.rediret_signin?.prod
+    : api?.rediret_signin?.dev;
 const REDIRECT_SIGNOUT =
   Constants?.AppOwnership?.Expo === "expo"
-    ? api?.rediret_signout?.dev
-    : api?.rediret_signout?.prod;
+    ? api?.rediret_signout?.prod
+    : api?.rediret_signout?.dev;
 console.log("ENDPOINT: ", ENDPOINT);
 
 async function urlOpener(url, redirectUrl) {
@@ -37,7 +43,7 @@ async function urlOpener(url, redirectUrl) {
     redirectUrl
   );
 
-  if (type === 'success' && Platform.OS === 'ios') {
+  if (type === "success" && Platform.OS === "ios") {
     WebBrowser.dismissBrowser();
     return Linking.openURL(newUrl);
   }
@@ -69,8 +75,8 @@ Amplify.configure({
     ...awsconfig.oauth,
     redirectSignIn: REDIRECT_SIGNIN,
     redirectSignOut: REDIRECT_SIGNOUT,
-    urlOpener
-  }
+    urlOpener,
+  },
 });
 
 Analytics.addPluggable(new AWSKinesisFirehoseProvider());

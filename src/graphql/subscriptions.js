@@ -1237,6 +1237,17 @@ export const onCreateBusinessPromotion = /* GraphQL */ `
       isView
       image
       notifiedUserIDs
+      viewedUsers {
+        items {
+          id
+          userID
+          promotionID
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       owner
       createdAt
       updatedAt
@@ -1342,6 +1353,17 @@ export const onUpdateBusinessPromotion = /* GraphQL */ `
       isView
       image
       notifiedUserIDs
+      viewedUsers {
+        items {
+          id
+          userID
+          promotionID
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       owner
       createdAt
       updatedAt
@@ -1447,6 +1469,62 @@ export const onDeleteBusinessPromotion = /* GraphQL */ `
       isView
       image
       notifiedUserIDs
+      viewedUsers {
+        items {
+          id
+          userID
+          promotionID
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreatePromotionViews = /* GraphQL */ `
+  subscription OnCreatePromotionViews(
+    $filter: ModelSubscriptionPromotionViewsFilterInput
+    $owner: String
+  ) {
+    onCreatePromotionViews(filter: $filter, owner: $owner) {
+      id
+      userID
+      promotionID
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdatePromotionViews = /* GraphQL */ `
+  subscription OnUpdatePromotionViews(
+    $filter: ModelSubscriptionPromotionViewsFilterInput
+    $owner: String
+  ) {
+    onUpdatePromotionViews(filter: $filter, owner: $owner) {
+      id
+      userID
+      promotionID
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeletePromotionViews = /* GraphQL */ `
+  subscription OnDeletePromotionViews(
+    $filter: ModelSubscriptionPromotionViewsFilterInput
+    $owner: String
+  ) {
+    onDeletePromotionViews(filter: $filter, owner: $owner) {
+      id
+      userID
+      promotionID
       owner
       createdAt
       updatedAt

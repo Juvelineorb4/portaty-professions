@@ -65,7 +65,6 @@ const NotificationsPage = () => {
             },
           },
         });
-        console.log(response.data.deleteUserNotification);
       });
       setReload(!reload);
     } catch (error) {
