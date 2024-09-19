@@ -1522,65 +1522,56 @@ const SearchPost = ({ route, navigation }) => {
                       <View
                         style={{
                           backgroundColor: "#fff",
-                          height: 510,
+                          height: 380,
                         }}
                       >
                         <ZoomableImage
                           uri={imageView?.url ? imageView?.url : imageView?.uri}
-                          imageHeigth={510}
+                          imageHeigth={380}
                         />
                       </View>
 
                       {imageView?.url && (
                         <View style={{ flex: 1, paddingVertical: 15 }}>
-                          <View
+                          <ScrollView
                             style={{
-                              // flex: 1,
-                              flexDirection: "row",
+                              flex: 1,
                               borderColor: "#1f1f1f",
                               borderWidth: 0.7,
-                              paddingHorizontal: 10,
+                              padding: 10,
                               borderRadius: 8,
                               marginTop: 10,
                               height: 70,
                             }}
                           >
                             {imageView?.key === 0 ? (
-                              <TextInput
-                                value={
-                                  imageView?.description !== ""
-                                    ? imageView?.description
-                                    : post?.description
-                                }
-                                editable={false}
+                              <Text
                                 style={{
-                                  // flex: 1,
-                                  // width: 100,
                                   fontFamily: "regular",
-                                  fontSize: 14,
+                                  fontSize: 12,
                                   alignItems: "flex-start",
                                   color: "#000",
+                                  lineHeight: 12,
                                 }}
-                                multiline={true}
-                                numberOfLines={5}
-                              />
+                              >
+                                {imageView?.description !== ""
+                                  ? imageView?.description
+                                  : post?.description}
+                              </Text>
                             ) : (
-                              <TextInput
-                                value={imageView?.description}
-                                editable={false}
+                              <Text
                                 style={{
-                                  // flex: 1,
-                                  // width: 100,
                                   fontFamily: "regular",
-                                  fontSize: 14,
+                                  fontSize: 12,
                                   alignItems: "flex-start",
                                   color: "#000",
+                                  lineHeight: 12,
                                 }}
-                                multiline={true}
-                                numberOfLines={5}
-                              />
+                              >
+                                {imageView?.description}
+                              </Text>
                             )}
-                          </View>
+                          </ScrollView>
                         </View>
                       )}
                     </View>

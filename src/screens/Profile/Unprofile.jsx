@@ -269,7 +269,7 @@ const Unprofile = ({ navigation, route }) => {
             return;
           }
           if (disabled) return;
-          if (business.length === 1) {
+          if (business.length === 2) {
             setError(
               "Ya has conseguido el maximo de negocios registrados permitidos"
             );

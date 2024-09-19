@@ -480,7 +480,7 @@ const MapMarketBusiness = ({
                             }}
                           />
                         )}
-                        <TouchableOpacity
+                        {/* <TouchableOpacity
                           style={[
                             {
                               position: "absolute",
@@ -523,7 +523,7 @@ const MapMarketBusiness = ({
                               ]}
                             >{`Buscar`}</Text>
                           )}
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                       </View>
 
                       <TouchableOpacity

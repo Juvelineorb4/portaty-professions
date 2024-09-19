@@ -238,7 +238,7 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
                 borderRadius: 5,
                 borderColor: "#1f1f1f",
                 borderWidth: 0.7,
-                width: 235,
+                width: 295,
                 backgroundColor: "#fff",
               }}
             >
@@ -292,7 +292,7 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
                     borderColor: "#1f1f1f",
                     borderWidth: 1,
                     top: 40,
-                    width: 235,
+                    width: 295,
                     borderBottomRightRadius: 8,
                     borderBottomLeftRadius: 8,
                     // height: 200,
@@ -300,7 +300,7 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
                   }}
                 />
               )}
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={[
                   {
                     position: "absolute",
@@ -322,7 +322,7 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
                 <Text
                   style={[global.black, { fontFamily: "bold", fontSize: 12 }]}
                 >{`Buscar`}</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
             <View
               style={{
