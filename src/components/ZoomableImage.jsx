@@ -11,7 +11,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
-const ZoomableImage = ({ uri, imageHeigth = 360, keyboard = false }) => {
+const ZoomableImage = ({ uri, imageHeigth = 280, keyboard = false }) => {
   const scale = useSharedValue(1);
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
@@ -69,7 +69,7 @@ const ZoomableImage = ({ uri, imageHeigth = 360, keyboard = false }) => {
   return (
     <PanGestureHandler onGestureEvent={panHandler}>
       <Animated.View
-        style={[{ width: keyboard ? "90%" : "100%" }, styles.container]}
+        style={[{ width: keyboard ? "100%" : "100%" }, styles.container]}
       >
         <PinchGestureHandler onGestureEvent={pinchHandler}>
           <Animated.Image

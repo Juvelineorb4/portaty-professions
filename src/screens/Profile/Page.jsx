@@ -1995,7 +1995,7 @@ const Page = ({ route, navigation }) => {
                         <View
                           style={{
                             backgroundColor: "#fff",
-                            height: 360,
+                            height: 260,
                           }}
                         >
                           <ZoomableImage
