@@ -1,11 +1,10 @@
 import { api } from "@/utils/constants/api";
-import * as Constants from "expo-constants";
 import { Analytics } from "aws-amplify";
 import * as Device from "expo-device";
-const kinesisStreamName =
-    Constants?.AppOwnership?.Expo === "expo"
-        ? api.kinesis_firehose.dev
-        : api.kinesis_firehose.prod;
+import { STAGE_DEV } from "@/utils/constants/stage.jsx";
+const kinesisStreamName = STAGE_DEV
+    ? api.kinesis_firehose.dev
+    : api.kinesis_firehose.prod;
 const DEVICE_TYPE = ["UNKNOWN", "PHONE", "TABLET", "DESKTOP", "TV"];
 export const registerEvent = (eventname, params) => {
     const deviceType = Device.deviceType;
@@ -22,10 +21,20 @@ export const registerEvent = (eventname, params) => {
     }
     Analytics.record(
         {
-            data: { ...params, eventname, deviceType: DEVICE_TYPE[deviceType], osName, osVersion, brand, model, language, deviceID },
+            data: {
+                ...params,
+                eventname,
+                deviceType: DEVICE_TYPE[deviceType],
+                osName,
+                osVersion,
+                brand,
+                model,
+                language,
+                deviceID,
+            },
             streamName: kinesisStreamName,
         },
         "AWSKinesisFirehose"
     );
-    console.log("EVENTO EJECUTADO: ", eventname)
+    console.log("EVENTO EJECUTADO: ", eventname);
 };

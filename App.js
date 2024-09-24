@@ -18,24 +18,24 @@ import Navigation from "@/routes/Navigation";
 import { Amplify, AWSKinesisFirehoseProvider, Analytics } from "aws-amplify";
 import awsconfig from "./src/aws-exports.js";
 import { StatusBar } from "expo-status-bar";
-import * as Constants from "expo-constants";
+import { STAGE_DEV } from "@/utils/constants/stage.jsx";
 import * as SplashScreen from "expo-splash-screen";
 import { api } from "@/utils/constants/api.jsx";
 import * as WebBrowser from "expo-web-browser";
 const ENDPOINT =
-  Constants?.AppOwnership?.Expo === "expo"
+  STAGE_DEV
     ? api?.stage_endpoint?.dev
     : api?.stage_endpoint?.prod;
 
 const REDIRECT_SIGNIN =
-  Constants?.AppOwnership?.Expo === "expo"
+  STAGE_DEV
     ? api?.rediret_signin?.dev
     : api?.rediret_signin?.prod;
 const REDIRECT_SIGNOUT =
-  Constants?.AppOwnership?.Expo === "expo"
+  STAGE_DEV
     ? api?.rediret_signout?.dev
     : api?.rediret_signout?.prod;
-console.log("ENDPOINT: ", ENDPOINT);
+
 
 async function urlOpener(url, redirectUrl) {
   const { type, url: newUrl } = await WebBrowser.openAuthSessionAsync(

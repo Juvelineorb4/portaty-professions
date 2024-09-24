@@ -4,7 +4,7 @@
     "name": "Portaty",
     "slug": "portaty-professions",
     "owner": "portaty",
-    "version": "2.0.1-beta",
+    "version": "2.0.4",
     "orientation": "portrait",
     "icon": "./src/utils/images/portaty.png",
     "userInterfaceStyle": "light",
@@ -30,7 +30,8 @@
         "NSLocationAlwaysAndWhenInUseUsageDescription": "Portaty puede requerir acceso constante a tu ubicación para enviarte notificaciones de servicios cerca de ti, incluso cuando la app no está en uso.",
         "NSPhotoLibraryUsageDescription": "Portaty necesita acceder a tu biblioteca de fotos para que puedas seleccionar imágenes al crear o actualizar tu perfil.",
         "NSDocumentsFolderUsageDescription": "Portaty accede a tus documentos para permitirte compartir archivos importantes con tus contactos dentro de la aplicación.",
-        "NSUserTrackingUsageDescription": "Portaty utiliza este identificador para ofrecerte una experiencia personalizada, mostrando anuncios y recomendaciones relevantes según tus intereses. Tu privacidad es nuestra prioridad, y solo usaremos esta información para mejorar tu experiencia en la aplicación."
+        "NSUserTrackingUsageDescription": "Portaty utiliza este identificador para ofrecerte una experiencia personalizada, mostrando anuncios y recomendaciones relevantes según tus intereses. Tu privacidad es nuestra prioridad, y solo usaremos esta información para mejorar tu experiencia en la aplicación.",
+        "UIBackgroundModes": ["location"]
       },
       "associatedDomains": ["applinks:https://www.portaty.com"],
       "bundleIdentifier": "com.teamportaty.appdev",
@@ -84,7 +85,8 @@
         "android.permission.FOREGROUND_SERVICE",
         "android.permission.READ_EXTERNAL_STORAGE",
         "android.permission.WRITE_EXTERNAL_STORAGE",
-        "android.permission.ACCESS_MEDIA_LOCATION"
+        "android.permission.ACCESS_MEDIA_LOCATION",
+        "android.permission.ACCESS_BACKGROUND_LOCATION"
       ],
       "package": "com.teamportaty.appdev",
       "adaptiveIcon": {

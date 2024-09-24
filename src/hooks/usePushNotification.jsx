@@ -18,7 +18,6 @@ Notifications.setNotificationHandler({
 });
 
 async function registerForPushNotificationsAsync() {
-  // Obtener el identificador único del dispositivo
   try {
     const deviceID = Device.osBuildId || Device.osInternalBuildId;
     let token;
@@ -30,6 +29,9 @@ async function registerForPushNotificationsAsync() {
         const { status } = await Notifications.requestPermissionsAsync();
         finalStatus = status;
       }
+      console.log("status", existingStatus);
+      console.log("status", finalStatus);
+
       if (finalStatus !== "granted") {
         alert("Failed to get push token for push notification!");
         return;
@@ -51,7 +53,7 @@ async function registerForPushNotificationsAsync() {
         lightColor: "#FF231F7C",
       });
     }
-    // Verificar si ya se realizó la operación previamente
+
     const hasRegistered = await AsyncStorage.getItem("hasRegistered");
     if (hasRegistered !== "registered") {
       await API.graphql({
@@ -64,7 +66,6 @@ async function registerForPushNotificationsAsync() {
         },
         authMode: "AWS_IAM",
       });
-      // Guardar el indicador en AsyncStorage
       await AsyncStorage.setItem("hasRegistered", "registered");
     }
 
@@ -83,19 +84,25 @@ const usePushNotification = () => {
   const responseListener = useRef();
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then((token) => {
-      setExpoPushToken(token);
-      setToken(token);
-      console.log(token);
-    });
+    const checkAndRequestPermissions = async () => {
+      const { status } = await Notifications.getPermissionsAsync();
+      if (status !== "granted") {
+        await Notifications.requestPermissionsAsync();
+      }
+      registerForPushNotificationsAsync().then((token) => {
+        setExpoPushToken(token);
+        setToken(token);
+        console.log("token", token);
+      });
+    };
 
-    // esto es si llega una notificacion y la app esta en primer plano
+    checkAndRequestPermissions();
+
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
         setNotification(notification);
       });
 
-    // Capturar la notificacion que el usuario le da click
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
         setNotificationResponse(response.notification.request.content);

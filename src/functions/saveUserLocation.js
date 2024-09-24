@@ -1,6 +1,7 @@
 import { API, Auth } from 'aws-amplify'
 import { updateUsers } from '@/graphql/CustomMutations/functions/Users'
-export const saveUserLocation = async (userAuth, location) => {
+export const saveUserLocation = async (location) => {
+    const userAuth = await Auth.currentAuthenticatedUser();
     try {
         await API.graphql({
             query: updateUsers,
@@ -15,7 +16,8 @@ export const saveUserLocation = async (userAuth, location) => {
         await Auth.updateUserAttributes(userAuth, {
             "custom:lastLocation": JSON.stringify(location),
         });
+        console.log("ULTIMA UBICACION GUARDADAA")
     } catch (error) {
-        console.log("Error al guardar location ", error)
+        console.log("ERROR AL GUARDAD LA ULTIMA UBICACION ", error)
     }
 }

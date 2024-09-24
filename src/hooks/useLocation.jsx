@@ -4,7 +4,7 @@ import * as Location from "expo-location";
 import { useRecoilState, useSetRecoilState, useRecoilValue } from "recoil";
 import { locationPermission, mapUser, userAuthenticated } from "@/atoms";
 // funciones
-import { saveUserLocation } from "@/functions/saveUserLocation";
+import { saverUserLocation } from "@/functions/saveUserLocation";
 
 const useLocation = () => {
   const userAuth = useRecoilValue(userAuthenticated);
@@ -37,6 +37,7 @@ const useLocation = () => {
             setUserLocation({ latitude, longitude });
           }
         );
+        console.log("YA SE OBTUVO LA LOCATION DEL USUAARIOOOOOOOOOOOOOoo");
       } catch (err) {
         // setError("Error al obtener la ubicación");
       }
@@ -51,15 +52,6 @@ const useLocation = () => {
       }
     };
   }, []);
-
-  useEffect(() => {
-    if (location && userAuth) {
-      saveUserLocation(userAuth, {
-        lat: location.latitude,
-        lon: location.longitude,
-      });
-    }
-  }, [location]);
 
   return { location };
 };
