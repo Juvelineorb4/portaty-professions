@@ -17,7 +17,9 @@
       "fallbackToCacheTimeout": 0,
       "url": "https://u.expo.dev/b378d102-5cf7-49fc-93f0-b5df7f83d8ad"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "runtimeVersion": "exposdk:51.0.0",
       "supportsTablet": true,
@@ -31,11 +33,15 @@
         "NSPhotoLibraryUsageDescription": "Portaty necesita acceder a tu biblioteca de fotos para que puedas seleccionar imágenes al crear o actualizar tu perfil.",
         "NSDocumentsFolderUsageDescription": "Portaty accede a tus documentos para permitirte compartir archivos importantes con tus contactos dentro de la aplicación.",
         "NSUserTrackingUsageDescription": "Portaty utiliza este identificador para ofrecerte una experiencia personalizada, mostrando anuncios y recomendaciones relevantes según tus intereses. Tu privacidad es nuestra prioridad, y solo usaremos esta información para mejorar tu experiencia en la aplicación.",
-        "UIBackgroundModes": ["location"]
+        "UIBackgroundModes": [
+          "location"
+        ]
       },
-      "associatedDomains": ["applinks:https://www.portaty.com"],
+      "associatedDomains": [
+        "applinks:https://www.portaty.com"
+      ],
       "bundleIdentifier": "com.teamportaty.appdev",
-      "buildNumber": "28"
+      "buildNumber": "29"
     },
     "android": {
       "runtimeVersion": "exposdk:51.0.0",
@@ -70,7 +76,10 @@
               "path": "/"
             }
           ],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
       ],
       "permissions": [
@@ -101,7 +110,11 @@
     },
     "packagerOpts": {
       "config": "metro.config.js",
-      "sourceExts": ["js", "jsx", "css"]
+      "sourceExts": [
+        "js",
+        "jsx",
+        "css"
+      ]
     },
     "plugins": [
       [
