@@ -41,7 +41,7 @@
         "applinks:https://www.portaty.com"
       ],
       "bundleIdentifier": "com.teamportaty.appdev",
-      "buildNumber": "29"
+      "buildNumber": "30"
     },
     "android": {
       "runtimeVersion": "exposdk:51.0.0",
