@@ -2045,7 +2045,7 @@ const Page = ({ route, navigation }) => {
                                 Tu imagen principal solo la puedes cambiar
                               </Text>
                             )}
-                            <View
+                            {/* <View
                               style={{
                                 flexDirection: "row",
                                 borderColor: "#444",
@@ -2077,7 +2077,7 @@ const Page = ({ route, navigation }) => {
                                 multiline={true}
                                 numberOfLines={5}
                               />
-                            </View>
+                            </View> */}
                             <View
                               style={{
                                 flexDirection: "row",
@@ -2168,7 +2168,7 @@ const Page = ({ route, navigation }) => {
                               columnGap: 5,
                             }}
                           >
-                            <View
+                            {/* <View
                               style={{
                                 flex: 1,
                                 flexDirection: "row",
@@ -2182,14 +2182,14 @@ const Page = ({ route, navigation }) => {
                               <TextInput
                                 value={descriptionImage}
                                 onChangeText={(e) => setDescriptionImage(e)}
-                                // onBlur={onBlur}
+                                onBlur={onBlur}
                                 placeholder={
                                   "Coloca una descripcion para tu imagen"
                                 }
                                 placeholderTextColor={"#333"}
                                 style={{
                                   flex: 1,
-                                  // width: 100,
+                                  width: 100,
                                   fontFamily: "light",
                                   fontSize: 12,
                                   alignItems: "flex-start",
@@ -2197,7 +2197,7 @@ const Page = ({ route, navigation }) => {
                                 multiline={true}
                                 numberOfLines={5}
                               />
-                            </View>
+                            </View> */}
                             <TouchableOpacity
                               style={[
                                 global.bgYellow,
