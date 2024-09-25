@@ -9,7 +9,7 @@ import React, { useEffect, useState } from "react";
 import Promotions from "@/components/Home/Promotions";
 import { userAuthenticated, mapUser, isFocusPromotion } from "@/atoms";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { API } from "aws-amplify";
+import { API, Auth } from "aws-amplify";
 import styles from "@/utils/styles/Promotions.js";
 import CustomButton from "@/components/CustomButton";
 import * as queries from "@/graphql/CustomQueries/Favorites";
@@ -49,6 +49,7 @@ const PromotionsHome = ({ login, promotion, promotionID }) => {
   };
 
   const fetchPromotions = async () => {
+    const userAuth = await Auth.currentAuthenticatedUser();
     const api = "api-portaty";
     const path = "/listPromotions";
     const params = {
@@ -57,6 +58,7 @@ const PromotionsHome = ({ login, promotion, promotionID }) => {
         location: JSON.stringify({
           lat: userLocation?.latitude,
           lon: userLocation?.longitude,
+          userID: userAuth?.attributes["custom:userTableID"],
         }),
       },
     };
