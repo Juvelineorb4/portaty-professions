@@ -1956,20 +1956,23 @@ const Page = ({ route, navigation }) => {
                 style={{ flex: 1, backgroundColor: "rgba(52, 52, 52, 0.5)" }}
               >
                 <View
-                  style={
-                    keyboardVisible
-                      ? styles.modalContainerKeyboard
-                      : styles.modalContainer
-                  }
+                  // style={
+                  //   keyboardVisible
+                  //     ? styles.modalContainerKeyboard
+                  //     : styles.modalContainer
+                  // }
+                  style={styles.modalContainer}
                 >
                   <TouchableWithoutFeedback>
                     <View
                       style={[
-                        keyboardVisible
-                          ? styles.modalContentKeyboard
-                          : styles.modalContent,
+                        // keyboardVisible
+                        //   ? styles.modalContentKeyboard
+                        //   : styles.modalContent,
+                        styles.modalContent,
                         {
-                          height: keyboardVisible ? "100%" : "100%",
+                          // height: keyboardVisible ? "100%" : "100%",
+                          height: "100%",
                         },
                       ]}
                     >
@@ -1999,7 +2002,7 @@ const Page = ({ route, navigation }) => {
                           }}
                         >
                           <ZoomableImage
-                            keyboard={keyboardVisible}
+                            // keyboard={keyboardVisible}
                             uri={
                               imageChange
                                 ? imageChange.uri
@@ -2019,7 +2022,8 @@ const Page = ({ route, navigation }) => {
                               borderRadius: 4,
                               paddingHorizontal: 10,
                               paddingVertical: 5,
-                              right: keyboardVisible ? 15 : 0,
+                              // right: keyboardVisible ? 15 : 0,
+                              right: 0,
                               opacity: 0.85,
                               borderWidth: 0.7,
                               borderColor: "#1f1f1f",
