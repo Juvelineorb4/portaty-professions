@@ -12,6 +12,7 @@ import {
   Modal,
   TouchableWithoutFeedback,
   Pressable,
+  Alert,
 } from "react-native";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import CustomSelect from "@/components/CustomSelect";
@@ -233,26 +234,43 @@ const FavoritePage = ({ navigation, route }) => {
     } catch (error) {}
   };
   const onDeleteFavorite = async () => {
-    const favorites = await API.graphql({
-      query: customFavorites.deleteFavorites,
-      variables: {
-        input: {
-          id: item.id,
+    Alert.alert(
+      "Eliminar de favoritos",
+      "¿Estás seguro de que quieres continuar?",
+      [
+        {
+          text: "Cancelar",
+          onPress: () => console.log("Cancelado"),
+          style: "cancel",
         },
-      },
-      authMode: "AMAZON_COGNITO_USER_POOLS",
-    });
-    const { country, city } = countryCity;
-    registerEvent("user_remove_business", {
-      userid: userAuth?.attributes["custom:userTableID"],
-      businessid: item.businessID,
-      birthdate: userAuth?.attributes?.birthdate,
-      gender: userAuth?.attributes["custom:gender"],
-      country,
-      city,
-    });
-    setListUpdate(!listUpdate);
-    navigation.goBack();
+        {
+          text: "Aceptar",
+          onPress: async () => {
+            const favorites = await API.graphql({
+              query: customFavorites.deleteFavorites,
+              variables: {
+                input: {
+                  id: item.id,
+                },
+              },
+              authMode: "AMAZON_COGNITO_USER_POOLS",
+            });
+            const { country, city } = countryCity;
+            registerEvent("user_remove_business", {
+              userid: userAuth?.attributes["custom:userTableID"],
+              businessid: item.businessID,
+              birthdate: userAuth?.attributes?.birthdate,
+              gender: userAuth?.attributes["custom:gender"],
+              country,
+              city,
+            });
+            setListUpdate(!listUpdate);
+            navigation.goBack();
+          },
+        },
+      ],
+      { cancelable: false }
+    );
   };
 
   const onOpenMap = (lat, lng, name) => {
