@@ -58,8 +58,8 @@ const PromotionsHome = ({ login, promotion, promotionID }) => {
         location: JSON.stringify({
           lat: userLocation?.latitude,
           lon: userLocation?.longitude,
-          userID: userAuth?.attributes["custom:userTableID"],
         }),
+        userID: userAuth?.attributes["custom:userTableID"],
       },
     };
     try {
