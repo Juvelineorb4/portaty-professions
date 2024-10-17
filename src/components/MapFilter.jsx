@@ -19,7 +19,14 @@ import Slider from "@react-native-community/slider";
 import { API } from "aws-amplify";
 import { debounce } from "lodash";
 
-const MapFilter = ({ open, close, initialLocation, country, city }) => {
+const MapFilter = ({
+  open,
+  close,
+  initialLocation,
+  country,
+  city,
+  loading,
+}) => {
   const global = require("@/utils/styles/global.js");
   const [description, setDescription] = useState("");
   const [labelSelected, setLabelSelected] = useState(null);
@@ -42,13 +49,18 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
   const timerIdRef = useRef(null);
 
   const getAddress = async (obj) => {
+    loading(true);
+
     setSearchAddress(obj?.label);
     setMapChange({
       latitude: obj?.latitude,
       longitude: obj?.longitude,
     });
+    loading(false);
   };
   const getAddressReverse = async (coords) => {
+    loading(true);
+
     let reverseGeocode = await Location.reverseGeocodeAsync(coords);
     if (reverseGeocode.length > 0) {
       let address = reverseGeocode[0];
@@ -64,6 +76,7 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
     } else {
       setSearchAddress("Ocurrio un error, intenta de nuevo");
     }
+    loading(false);
   };
   const onHandlePress = (e) => {
     const {
@@ -437,7 +450,6 @@ const MapFilter = ({ open, close, initialLocation, country, city }) => {
                 } else {
                   getAddressReverse(mapChange);
                 }
-
                 close();
               }}
             >

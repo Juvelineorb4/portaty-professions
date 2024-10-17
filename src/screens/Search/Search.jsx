@@ -47,6 +47,7 @@ const Search = ({ route, navigation }) => {
   const userChangeLocation = useRecoilValue(mapUserChange);
   const [moreItems, setMoreItems] = useState(1);
   const [items, setItems] = useState([]);
+  const [loadingAddress, setLoadingAddress] = useState(false);
   const [searchActive, setSearchActive] = useRecoilState(searchStatus);
   const [searchCacheActive, setSearchCacheActive] = useRecoilState(searchCache);
   const [totalData, setTotalData] = useRecoilState(totalSearch);
@@ -183,9 +184,11 @@ const Search = ({ route, navigation }) => {
   }, [userLocation, moreItems, refreshing, route]);
 
   const getUserLocation = async () => {
+    setLoadingAddress(true);
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
       setErrorMsg("Permission to access location was denied");
+      setLoadingAddress(false);
       return;
     }
     let location = await Location.getCurrentPositionAsync({
@@ -194,6 +197,7 @@ const Search = ({ route, navigation }) => {
     let { latitude, longitude } = location.coords;
     getAddress({ latitude, longitude });
     setUserLocationChange({ latitude, longitude });
+    setLoadingAddress(false);
   };
 
   if (isLoading) {
@@ -464,6 +468,7 @@ const Search = ({ route, navigation }) => {
                     close={() => setVisibleMap(!visibleMap)}
                     country={country?.name?.common}
                     city={city}
+                    loading={(e) => setLoadingAddress(e)}
                   />
                 ) : (
                   <MapFilter
@@ -472,6 +477,7 @@ const Search = ({ route, navigation }) => {
                     close={() => setVisibleMap(!visibleMap)}
                     country={country?.name?.common}
                     city={city}
+                    loading={(e) => setLoadingAddress(e)}
                   />
                 )}
                 <View style={{ flex: 1 }}>
@@ -484,15 +490,25 @@ const Search = ({ route, navigation }) => {
                     }}
                   >
                     {`Te encuentras en: `}{" "}
-                    <Text
-                      style={{
-                        fontFamily: "regular",
-                        fontSize: 14,
-                      }}
-                    >
-                      {`${searchAddress}`}
-                      {"  "}
-                    </Text>
+                    {loadingAddress ? (
+                      <View
+                        style={{
+                          paddingHorizontal: 5,
+                        }}
+                      >
+                        <ActivityIndicator color={"#ffb703"} />
+                      </View>
+                    ) : (
+                      <Text
+                        style={{
+                          fontFamily: "regular",
+                          fontSize: 14,
+                        }}
+                      >
+                        {`${searchAddress}`}
+                        {"  "}
+                      </Text>
+                    )}
                     <Text
                       onPress={() => setVisibleMap(true)}
                       style={{

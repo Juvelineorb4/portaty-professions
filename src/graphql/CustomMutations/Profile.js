@@ -155,3 +155,39 @@ export const updateBusinessPromotion = /* GraphQL */ `
     }
   }
 `;
+
+export const createDate = /* GraphQL */ `
+  mutation CreateDate(
+    $input: CreateDateInput!
+    $condition: ModelDateConditionInput
+  ) {
+    createDate(input: $input, condition: $condition) {
+      id
+      userID
+      businessID
+      date
+      notificationMethod
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+
+export const createClaimRequest = /* GraphQL */ `
+  mutation CreateClaimRequest(
+    $input: CreateClaimRequestInput!
+    $condition: ModelClaimRequestConditionInput
+  ) {
+    createClaimRequest(input: $input, condition: $condition) {
+      id
+      businessID
+      userID
+      status
+      adminResponse
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;

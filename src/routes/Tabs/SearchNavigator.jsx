@@ -20,6 +20,7 @@ import {
 } from "@/atoms";
 import CustomInteractions from "@/components/CustomInteractions";
 import SearchActivity from "@/screens/Search/SearchActivity";
+import DatePage from "@/screens/Search/DatePage";
 
 const SearchNavigator = ({ navigation }) => {
   const [active, setActive] = useState(false);
@@ -333,6 +334,14 @@ const SearchNavigator = ({ navigation }) => {
       <Stack.Screen
         name="SearchPost"
         component={SearchPost}
+        options={{
+          animation: "slide_from_right",
+          header: (props) => <LeftHeader {...props} />,
+        }}
+      />
+      <Stack.Screen
+        name="DatePage"
+        component={DatePage}
         options={{
           animation: "slide_from_right",
           header: (props) => <LeftHeader {...props} />,

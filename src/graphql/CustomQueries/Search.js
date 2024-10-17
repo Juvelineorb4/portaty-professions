@@ -86,6 +86,8 @@ export const getBusiness = /* GraphQL */ `
       description
       schedule
       facebook
+      status
+      statusOwner
       page
       catalogpdf
       coordinates {

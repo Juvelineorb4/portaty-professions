@@ -305,6 +305,7 @@ export const getUsers = /* GraphQL */ `
           id
           userID
           status
+          statusOwner
           identityID
           name
           image
@@ -377,6 +378,32 @@ export const getUsers = /* GraphQL */ `
         lat
         lon
       }
+      dates {
+        items {
+          id
+          userID
+          businessID
+          date
+          notificationMethod
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      claimRequests {
+        items {
+          id
+          businessID
+          userID
+          status
+          adminResponse
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       owner
       createdAt
       updatedAt
@@ -417,6 +444,12 @@ export const listUsers = /* GraphQL */ `
         lastLocation {
           lat
           lon
+        }
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
         }
         owner
         createdAt
@@ -468,6 +501,12 @@ export const userByEmail = /* GraphQL */ `
         lastLocation {
           lat
           lon
+        }
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
         }
         owner
         createdAt
@@ -581,11 +620,18 @@ export const getBusiness = /* GraphQL */ `
           lat
           lon
         }
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
         owner
         createdAt
         updatedAt
       }
       status
+      statusOwner
       identityID
       name
       image
@@ -650,6 +696,32 @@ export const getBusiness = /* GraphQL */ `
         nextToken
       }
       catalogpdf
+      dates {
+        items {
+          id
+          userID
+          businessID
+          date
+          notificationMethod
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      claimRequests {
+        items {
+          id
+          businessID
+          userID
+          status
+          adminResponse
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       createdAt
       updatedAt
       owner
@@ -680,6 +752,7 @@ export const listBusinesses = /* GraphQL */ `
           updatedAt
         }
         status
+        statusOwner
         identityID
         name
         image
@@ -710,6 +783,12 @@ export const listBusinesses = /* GraphQL */ `
           nextToken
         }
         catalogpdf
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
         createdAt
         updatedAt
         owner
@@ -750,6 +829,7 @@ export const listBusinessbyUserID = /* GraphQL */ `
           updatedAt
         }
         status
+        statusOwner
         identityID
         name
         image
@@ -780,6 +860,12 @@ export const listBusinessbyUserID = /* GraphQL */ `
           nextToken
         }
         catalogpdf
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
         createdAt
         updatedAt
         owner
@@ -820,6 +906,12 @@ export const getBusinessComment = /* GraphQL */ `
         lastLocation {
           lat
           lon
+        }
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
         }
         owner
         createdAt
@@ -989,6 +1081,12 @@ export const getBusinessPromotion = /* GraphQL */ `
           lat
           lon
         }
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
         owner
         createdAt
         updatedAt
@@ -1011,6 +1109,7 @@ export const getBusinessPromotion = /* GraphQL */ `
           updatedAt
         }
         status
+        statusOwner
         identityID
         name
         image
@@ -1041,6 +1140,12 @@ export const getBusinessPromotion = /* GraphQL */ `
           nextToken
         }
         catalogpdf
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
         createdAt
         updatedAt
         owner
@@ -1101,6 +1206,7 @@ export const listBusinessPromotions = /* GraphQL */ `
           id
           userID
           status
+          statusOwner
           identityID
           name
           image
@@ -1176,6 +1282,7 @@ export const businessPromotionsByUserID = /* GraphQL */ `
           id
           userID
           status
+          statusOwner
           identityID
           name
           image
@@ -1251,6 +1358,7 @@ export const businessPromotionsByBusinessID = /* GraphQL */ `
           id
           userID
           status
+          statusOwner
           identityID
           name
           image
@@ -1370,6 +1478,7 @@ export const getFavorites = /* GraphQL */ `
           updatedAt
         }
         status
+        statusOwner
         identityID
         name
         image
@@ -1400,6 +1509,12 @@ export const getFavorites = /* GraphQL */ `
           nextToken
         }
         catalogpdf
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
         createdAt
         updatedAt
         owner
@@ -1433,6 +1548,12 @@ export const getFavorites = /* GraphQL */ `
           lat
           lon
         }
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
         owner
         createdAt
         updatedAt
@@ -1458,6 +1579,7 @@ export const listFavorites = /* GraphQL */ `
           id
           userID
           status
+          statusOwner
           identityID
           name
           image
@@ -1526,6 +1648,7 @@ export const favoritesByBusinessID = /* GraphQL */ `
           id
           userID
           status
+          statusOwner
           identityID
           name
           image
@@ -1592,6 +1715,7 @@ export const listFavoritesbyUserID = /* GraphQL */ `
           id
           userID
           status
+          statusOwner
           identityID
           name
           image
@@ -1740,6 +1864,618 @@ export const listLogs = /* GraphQL */ `
         name
         createdAt
         updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getDate = /* GraphQL */ `
+  query GetDate($id: ID!) {
+    getDate(id: $id) {
+      id
+      userID
+      user {
+        id
+        cognitoID
+        name
+        lastName
+        email
+        identityID
+        gender
+        notificationToken
+        favorites {
+          nextToken
+        }
+        business {
+          nextToken
+        }
+        comments {
+          nextToken
+        }
+        promotions {
+          nextToken
+        }
+        notifications {
+          nextToken
+        }
+        lastLocation {
+          lat
+          lon
+        }
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
+        owner
+        createdAt
+        updatedAt
+      }
+      businessID
+      business {
+        id
+        userID
+        user {
+          id
+          cognitoID
+          name
+          lastName
+          email
+          identityID
+          gender
+          notificationToken
+          owner
+          createdAt
+          updatedAt
+        }
+        status
+        statusOwner
+        identityID
+        name
+        image
+        images
+        thumbnail
+        email
+        phone
+        whatsapp
+        instagram
+        facebook
+        page
+        coordinates {
+          lat
+          lon
+        }
+        activity
+        tags
+        favorites {
+          nextToken
+        }
+        description
+        prefer
+        schedule
+        comments {
+          nextToken
+        }
+        promotions {
+          nextToken
+        }
+        catalogpdf
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      date
+      notificationMethod
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listDates = /* GraphQL */ `
+  query ListDates(
+    $filter: ModelDateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listDates(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        userID
+        user {
+          id
+          cognitoID
+          name
+          lastName
+          email
+          identityID
+          gender
+          notificationToken
+          owner
+          createdAt
+          updatedAt
+        }
+        businessID
+        business {
+          id
+          userID
+          status
+          statusOwner
+          identityID
+          name
+          image
+          images
+          thumbnail
+          email
+          phone
+          whatsapp
+          instagram
+          facebook
+          page
+          activity
+          tags
+          description
+          prefer
+          schedule
+          catalogpdf
+          createdAt
+          updatedAt
+          owner
+        }
+        date
+        notificationMethod
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const listDatesByUser = /* GraphQL */ `
+  query ListDatesByUser(
+    $userID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelDateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listDatesByUser(
+      userID: $userID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userID
+        user {
+          id
+          cognitoID
+          name
+          lastName
+          email
+          identityID
+          gender
+          notificationToken
+          owner
+          createdAt
+          updatedAt
+        }
+        businessID
+        business {
+          id
+          userID
+          status
+          statusOwner
+          identityID
+          name
+          image
+          images
+          thumbnail
+          email
+          phone
+          whatsapp
+          instagram
+          facebook
+          page
+          activity
+          tags
+          description
+          prefer
+          schedule
+          catalogpdf
+          createdAt
+          updatedAt
+          owner
+        }
+        date
+        notificationMethod
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const listDatesByBusiness = /* GraphQL */ `
+  query ListDatesByBusiness(
+    $businessID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelDateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listDatesByBusiness(
+      businessID: $businessID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userID
+        user {
+          id
+          cognitoID
+          name
+          lastName
+          email
+          identityID
+          gender
+          notificationToken
+          owner
+          createdAt
+          updatedAt
+        }
+        businessID
+        business {
+          id
+          userID
+          status
+          statusOwner
+          identityID
+          name
+          image
+          images
+          thumbnail
+          email
+          phone
+          whatsapp
+          instagram
+          facebook
+          page
+          activity
+          tags
+          description
+          prefer
+          schedule
+          catalogpdf
+          createdAt
+          updatedAt
+          owner
+        }
+        date
+        notificationMethod
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const getClaimRequest = /* GraphQL */ `
+  query GetClaimRequest($id: ID!) {
+    getClaimRequest(id: $id) {
+      id
+      businessID
+      business {
+        id
+        userID
+        user {
+          id
+          cognitoID
+          name
+          lastName
+          email
+          identityID
+          gender
+          notificationToken
+          owner
+          createdAt
+          updatedAt
+        }
+        status
+        statusOwner
+        identityID
+        name
+        image
+        images
+        thumbnail
+        email
+        phone
+        whatsapp
+        instagram
+        facebook
+        page
+        coordinates {
+          lat
+          lon
+        }
+        activity
+        tags
+        favorites {
+          nextToken
+        }
+        description
+        prefer
+        schedule
+        comments {
+          nextToken
+        }
+        promotions {
+          nextToken
+        }
+        catalogpdf
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      userID
+      user {
+        id
+        cognitoID
+        name
+        lastName
+        email
+        identityID
+        gender
+        notificationToken
+        favorites {
+          nextToken
+        }
+        business {
+          nextToken
+        }
+        comments {
+          nextToken
+        }
+        promotions {
+          nextToken
+        }
+        notifications {
+          nextToken
+        }
+        lastLocation {
+          lat
+          lon
+        }
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
+        owner
+        createdAt
+        updatedAt
+      }
+      status
+      adminResponse
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listClaimRequests = /* GraphQL */ `
+  query ListClaimRequests(
+    $filter: ModelClaimRequestFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listClaimRequests(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        businessID
+        business {
+          id
+          userID
+          status
+          statusOwner
+          identityID
+          name
+          image
+          images
+          thumbnail
+          email
+          phone
+          whatsapp
+          instagram
+          facebook
+          page
+          activity
+          tags
+          description
+          prefer
+          schedule
+          catalogpdf
+          createdAt
+          updatedAt
+          owner
+        }
+        userID
+        user {
+          id
+          cognitoID
+          name
+          lastName
+          email
+          identityID
+          gender
+          notificationToken
+          owner
+          createdAt
+          updatedAt
+        }
+        status
+        adminResponse
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const listClaimsByBusiness = /* GraphQL */ `
+  query ListClaimsByBusiness(
+    $businessID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelClaimRequestFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listClaimsByBusiness(
+      businessID: $businessID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        businessID
+        business {
+          id
+          userID
+          status
+          statusOwner
+          identityID
+          name
+          image
+          images
+          thumbnail
+          email
+          phone
+          whatsapp
+          instagram
+          facebook
+          page
+          activity
+          tags
+          description
+          prefer
+          schedule
+          catalogpdf
+          createdAt
+          updatedAt
+          owner
+        }
+        userID
+        user {
+          id
+          cognitoID
+          name
+          lastName
+          email
+          identityID
+          gender
+          notificationToken
+          owner
+          createdAt
+          updatedAt
+        }
+        status
+        adminResponse
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const listClaimsByUser = /* GraphQL */ `
+  query ListClaimsByUser(
+    $userID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelClaimRequestFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listClaimsByUser(
+      userID: $userID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        businessID
+        business {
+          id
+          userID
+          status
+          statusOwner
+          identityID
+          name
+          image
+          images
+          thumbnail
+          email
+          phone
+          whatsapp
+          instagram
+          facebook
+          page
+          activity
+          tags
+          description
+          prefer
+          schedule
+          catalogpdf
+          createdAt
+          updatedAt
+          owner
+        }
+        userID
+        user {
+          id
+          cognitoID
+          name
+          lastName
+          email
+          identityID
+          gender
+          notificationToken
+          owner
+          createdAt
+          updatedAt
+        }
+        status
+        adminResponse
+        createdAt
+        updatedAt
+        owner
       }
       nextToken
     }

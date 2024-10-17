@@ -169,6 +169,12 @@ export const deleteBusinessComment = /* GraphQL */ `
           lat
           lon
         }
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
         owner
         createdAt
         updatedAt
@@ -411,6 +417,7 @@ export const createUsers = /* GraphQL */ `
           id
           userID
           status
+          statusOwner
           identityID
           name
           image
@@ -482,6 +489,32 @@ export const createUsers = /* GraphQL */ `
       lastLocation {
         lat
         lon
+      }
+      dates {
+        items {
+          id
+          userID
+          businessID
+          date
+          notificationMethod
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      claimRequests {
+        items {
+          id
+          businessID
+          userID
+          status
+          adminResponse
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
       }
       owner
       createdAt
@@ -520,6 +553,7 @@ export const updateUsers = /* GraphQL */ `
           id
           userID
           status
+          statusOwner
           identityID
           name
           image
@@ -591,6 +625,32 @@ export const updateUsers = /* GraphQL */ `
       lastLocation {
         lat
         lon
+      }
+      dates {
+        items {
+          id
+          userID
+          businessID
+          date
+          notificationMethod
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      claimRequests {
+        items {
+          id
+          businessID
+          userID
+          status
+          adminResponse
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
       }
       owner
       createdAt
@@ -629,6 +689,7 @@ export const deleteUsers = /* GraphQL */ `
           id
           userID
           status
+          statusOwner
           identityID
           name
           image
@@ -700,6 +761,32 @@ export const deleteUsers = /* GraphQL */ `
       lastLocation {
         lat
         lon
+      }
+      dates {
+        items {
+          id
+          userID
+          businessID
+          date
+          notificationMethod
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      claimRequests {
+        items {
+          id
+          businessID
+          userID
+          status
+          adminResponse
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
       }
       owner
       createdAt
@@ -797,11 +884,18 @@ export const createBusiness = /* GraphQL */ `
           lat
           lon
         }
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
         owner
         createdAt
         updatedAt
       }
       status
+      statusOwner
       identityID
       name
       image
@@ -866,6 +960,32 @@ export const createBusiness = /* GraphQL */ `
         nextToken
       }
       catalogpdf
+      dates {
+        items {
+          id
+          userID
+          businessID
+          date
+          notificationMethod
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      claimRequests {
+        items {
+          id
+          businessID
+          userID
+          status
+          adminResponse
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       createdAt
       updatedAt
       owner
@@ -908,11 +1028,18 @@ export const updateBusiness = /* GraphQL */ `
           lat
           lon
         }
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
         owner
         createdAt
         updatedAt
       }
       status
+      statusOwner
       identityID
       name
       image
@@ -977,6 +1104,32 @@ export const updateBusiness = /* GraphQL */ `
         nextToken
       }
       catalogpdf
+      dates {
+        items {
+          id
+          userID
+          businessID
+          date
+          notificationMethod
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      claimRequests {
+        items {
+          id
+          businessID
+          userID
+          status
+          adminResponse
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       createdAt
       updatedAt
       owner
@@ -1019,11 +1172,18 @@ export const deleteBusiness = /* GraphQL */ `
           lat
           lon
         }
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
         owner
         createdAt
         updatedAt
       }
       status
+      statusOwner
       identityID
       name
       image
@@ -1088,6 +1248,32 @@ export const deleteBusiness = /* GraphQL */ `
         nextToken
       }
       catalogpdf
+      dates {
+        items {
+          id
+          userID
+          businessID
+          date
+          notificationMethod
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      claimRequests {
+        items {
+          id
+          businessID
+          userID
+          status
+          adminResponse
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       createdAt
       updatedAt
       owner
@@ -1129,6 +1315,12 @@ export const createBusinessComment = /* GraphQL */ `
         lastLocation {
           lat
           lon
+        }
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
         }
         owner
         createdAt
@@ -1179,6 +1371,12 @@ export const updateBusinessComment = /* GraphQL */ `
           lat
           lon
         }
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
         owner
         createdAt
         updatedAt
@@ -1228,6 +1426,12 @@ export const createBusinessPromotion = /* GraphQL */ `
           lat
           lon
         }
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
         owner
         createdAt
         updatedAt
@@ -1250,6 +1454,7 @@ export const createBusinessPromotion = /* GraphQL */ `
           updatedAt
         }
         status
+        statusOwner
         identityID
         name
         image
@@ -1280,6 +1485,12 @@ export const createBusinessPromotion = /* GraphQL */ `
           nextToken
         }
         catalogpdf
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
         createdAt
         updatedAt
         owner
@@ -1344,6 +1555,12 @@ export const updateBusinessPromotion = /* GraphQL */ `
           lat
           lon
         }
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
         owner
         createdAt
         updatedAt
@@ -1366,6 +1583,7 @@ export const updateBusinessPromotion = /* GraphQL */ `
           updatedAt
         }
         status
+        statusOwner
         identityID
         name
         image
@@ -1396,6 +1614,12 @@ export const updateBusinessPromotion = /* GraphQL */ `
           nextToken
         }
         catalogpdf
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
         createdAt
         updatedAt
         owner
@@ -1460,6 +1684,12 @@ export const deleteBusinessPromotion = /* GraphQL */ `
           lat
           lon
         }
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
         owner
         createdAt
         updatedAt
@@ -1482,6 +1712,7 @@ export const deleteBusinessPromotion = /* GraphQL */ `
           updatedAt
         }
         status
+        statusOwner
         identityID
         name
         image
@@ -1512,6 +1743,12 @@ export const deleteBusinessPromotion = /* GraphQL */ `
           nextToken
         }
         catalogpdf
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
         createdAt
         updatedAt
         owner
@@ -1610,6 +1847,7 @@ export const createFavorites = /* GraphQL */ `
           updatedAt
         }
         status
+        statusOwner
         identityID
         name
         image
@@ -1640,6 +1878,12 @@ export const createFavorites = /* GraphQL */ `
           nextToken
         }
         catalogpdf
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
         createdAt
         updatedAt
         owner
@@ -1672,6 +1916,12 @@ export const createFavorites = /* GraphQL */ `
         lastLocation {
           lat
           lon
+        }
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
         }
         owner
         createdAt
@@ -1709,6 +1959,7 @@ export const updateFavorites = /* GraphQL */ `
           updatedAt
         }
         status
+        statusOwner
         identityID
         name
         image
@@ -1739,6 +1990,12 @@ export const updateFavorites = /* GraphQL */ `
           nextToken
         }
         catalogpdf
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
         createdAt
         updatedAt
         owner
@@ -1771,6 +2028,12 @@ export const updateFavorites = /* GraphQL */ `
         lastLocation {
           lat
           lon
+        }
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
         }
         owner
         createdAt
@@ -1808,6 +2071,7 @@ export const deleteFavorites = /* GraphQL */ `
           updatedAt
         }
         status
+        statusOwner
         identityID
         name
         image
@@ -1838,6 +2102,12 @@ export const deleteFavorites = /* GraphQL */ `
           nextToken
         }
         catalogpdf
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
         createdAt
         updatedAt
         owner
@@ -1870,6 +2140,12 @@ export const deleteFavorites = /* GraphQL */ `
         lastLocation {
           lat
           lon
+        }
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
         }
         owner
         createdAt
@@ -2014,6 +2290,684 @@ export const deleteLogs = /* GraphQL */ `
       name
       createdAt
       updatedAt
+    }
+  }
+`;
+export const createDate = /* GraphQL */ `
+  mutation CreateDate(
+    $input: CreateDateInput!
+    $condition: ModelDateConditionInput
+  ) {
+    createDate(input: $input, condition: $condition) {
+      id
+      userID
+      user {
+        id
+        cognitoID
+        name
+        lastName
+        email
+        identityID
+        gender
+        notificationToken
+        favorites {
+          nextToken
+        }
+        business {
+          nextToken
+        }
+        comments {
+          nextToken
+        }
+        promotions {
+          nextToken
+        }
+        notifications {
+          nextToken
+        }
+        lastLocation {
+          lat
+          lon
+        }
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
+        owner
+        createdAt
+        updatedAt
+      }
+      businessID
+      business {
+        id
+        userID
+        user {
+          id
+          cognitoID
+          name
+          lastName
+          email
+          identityID
+          gender
+          notificationToken
+          owner
+          createdAt
+          updatedAt
+        }
+        status
+        statusOwner
+        identityID
+        name
+        image
+        images
+        thumbnail
+        email
+        phone
+        whatsapp
+        instagram
+        facebook
+        page
+        coordinates {
+          lat
+          lon
+        }
+        activity
+        tags
+        favorites {
+          nextToken
+        }
+        description
+        prefer
+        schedule
+        comments {
+          nextToken
+        }
+        promotions {
+          nextToken
+        }
+        catalogpdf
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      date
+      notificationMethod
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updateDate = /* GraphQL */ `
+  mutation UpdateDate(
+    $input: UpdateDateInput!
+    $condition: ModelDateConditionInput
+  ) {
+    updateDate(input: $input, condition: $condition) {
+      id
+      userID
+      user {
+        id
+        cognitoID
+        name
+        lastName
+        email
+        identityID
+        gender
+        notificationToken
+        favorites {
+          nextToken
+        }
+        business {
+          nextToken
+        }
+        comments {
+          nextToken
+        }
+        promotions {
+          nextToken
+        }
+        notifications {
+          nextToken
+        }
+        lastLocation {
+          lat
+          lon
+        }
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
+        owner
+        createdAt
+        updatedAt
+      }
+      businessID
+      business {
+        id
+        userID
+        user {
+          id
+          cognitoID
+          name
+          lastName
+          email
+          identityID
+          gender
+          notificationToken
+          owner
+          createdAt
+          updatedAt
+        }
+        status
+        statusOwner
+        identityID
+        name
+        image
+        images
+        thumbnail
+        email
+        phone
+        whatsapp
+        instagram
+        facebook
+        page
+        coordinates {
+          lat
+          lon
+        }
+        activity
+        tags
+        favorites {
+          nextToken
+        }
+        description
+        prefer
+        schedule
+        comments {
+          nextToken
+        }
+        promotions {
+          nextToken
+        }
+        catalogpdf
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      date
+      notificationMethod
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteDate = /* GraphQL */ `
+  mutation DeleteDate(
+    $input: DeleteDateInput!
+    $condition: ModelDateConditionInput
+  ) {
+    deleteDate(input: $input, condition: $condition) {
+      id
+      userID
+      user {
+        id
+        cognitoID
+        name
+        lastName
+        email
+        identityID
+        gender
+        notificationToken
+        favorites {
+          nextToken
+        }
+        business {
+          nextToken
+        }
+        comments {
+          nextToken
+        }
+        promotions {
+          nextToken
+        }
+        notifications {
+          nextToken
+        }
+        lastLocation {
+          lat
+          lon
+        }
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
+        owner
+        createdAt
+        updatedAt
+      }
+      businessID
+      business {
+        id
+        userID
+        user {
+          id
+          cognitoID
+          name
+          lastName
+          email
+          identityID
+          gender
+          notificationToken
+          owner
+          createdAt
+          updatedAt
+        }
+        status
+        statusOwner
+        identityID
+        name
+        image
+        images
+        thumbnail
+        email
+        phone
+        whatsapp
+        instagram
+        facebook
+        page
+        coordinates {
+          lat
+          lon
+        }
+        activity
+        tags
+        favorites {
+          nextToken
+        }
+        description
+        prefer
+        schedule
+        comments {
+          nextToken
+        }
+        promotions {
+          nextToken
+        }
+        catalogpdf
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      date
+      notificationMethod
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const createClaimRequest = /* GraphQL */ `
+  mutation CreateClaimRequest(
+    $input: CreateClaimRequestInput!
+    $condition: ModelClaimRequestConditionInput
+  ) {
+    createClaimRequest(input: $input, condition: $condition) {
+      id
+      businessID
+      business {
+        id
+        userID
+        user {
+          id
+          cognitoID
+          name
+          lastName
+          email
+          identityID
+          gender
+          notificationToken
+          owner
+          createdAt
+          updatedAt
+        }
+        status
+        statusOwner
+        identityID
+        name
+        image
+        images
+        thumbnail
+        email
+        phone
+        whatsapp
+        instagram
+        facebook
+        page
+        coordinates {
+          lat
+          lon
+        }
+        activity
+        tags
+        favorites {
+          nextToken
+        }
+        description
+        prefer
+        schedule
+        comments {
+          nextToken
+        }
+        promotions {
+          nextToken
+        }
+        catalogpdf
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      userID
+      user {
+        id
+        cognitoID
+        name
+        lastName
+        email
+        identityID
+        gender
+        notificationToken
+        favorites {
+          nextToken
+        }
+        business {
+          nextToken
+        }
+        comments {
+          nextToken
+        }
+        promotions {
+          nextToken
+        }
+        notifications {
+          nextToken
+        }
+        lastLocation {
+          lat
+          lon
+        }
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
+        owner
+        createdAt
+        updatedAt
+      }
+      status
+      adminResponse
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updateClaimRequest = /* GraphQL */ `
+  mutation UpdateClaimRequest(
+    $input: UpdateClaimRequestInput!
+    $condition: ModelClaimRequestConditionInput
+  ) {
+    updateClaimRequest(input: $input, condition: $condition) {
+      id
+      businessID
+      business {
+        id
+        userID
+        user {
+          id
+          cognitoID
+          name
+          lastName
+          email
+          identityID
+          gender
+          notificationToken
+          owner
+          createdAt
+          updatedAt
+        }
+        status
+        statusOwner
+        identityID
+        name
+        image
+        images
+        thumbnail
+        email
+        phone
+        whatsapp
+        instagram
+        facebook
+        page
+        coordinates {
+          lat
+          lon
+        }
+        activity
+        tags
+        favorites {
+          nextToken
+        }
+        description
+        prefer
+        schedule
+        comments {
+          nextToken
+        }
+        promotions {
+          nextToken
+        }
+        catalogpdf
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      userID
+      user {
+        id
+        cognitoID
+        name
+        lastName
+        email
+        identityID
+        gender
+        notificationToken
+        favorites {
+          nextToken
+        }
+        business {
+          nextToken
+        }
+        comments {
+          nextToken
+        }
+        promotions {
+          nextToken
+        }
+        notifications {
+          nextToken
+        }
+        lastLocation {
+          lat
+          lon
+        }
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
+        owner
+        createdAt
+        updatedAt
+      }
+      status
+      adminResponse
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteClaimRequest = /* GraphQL */ `
+  mutation DeleteClaimRequest(
+    $input: DeleteClaimRequestInput!
+    $condition: ModelClaimRequestConditionInput
+  ) {
+    deleteClaimRequest(input: $input, condition: $condition) {
+      id
+      businessID
+      business {
+        id
+        userID
+        user {
+          id
+          cognitoID
+          name
+          lastName
+          email
+          identityID
+          gender
+          notificationToken
+          owner
+          createdAt
+          updatedAt
+        }
+        status
+        statusOwner
+        identityID
+        name
+        image
+        images
+        thumbnail
+        email
+        phone
+        whatsapp
+        instagram
+        facebook
+        page
+        coordinates {
+          lat
+          lon
+        }
+        activity
+        tags
+        favorites {
+          nextToken
+        }
+        description
+        prefer
+        schedule
+        comments {
+          nextToken
+        }
+        promotions {
+          nextToken
+        }
+        catalogpdf
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      userID
+      user {
+        id
+        cognitoID
+        name
+        lastName
+        email
+        identityID
+        gender
+        notificationToken
+        favorites {
+          nextToken
+        }
+        business {
+          nextToken
+        }
+        comments {
+          nextToken
+        }
+        promotions {
+          nextToken
+        }
+        notifications {
+          nextToken
+        }
+        lastLocation {
+          lat
+          lon
+        }
+        dates {
+          nextToken
+        }
+        claimRequests {
+          nextToken
+        }
+        owner
+        createdAt
+        updatedAt
+      }
+      status
+      adminResponse
+      createdAt
+      updatedAt
+      owner
     }
   }
 `;

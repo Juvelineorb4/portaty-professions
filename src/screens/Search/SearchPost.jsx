@@ -13,6 +13,7 @@ import {
   Modal,
   Pressable,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import React, { useState, useEffect, useRef } from "react";
 import * as customSearch from "@/graphql/CustomQueries/Search";
@@ -42,6 +43,8 @@ import { registerEvent } from "@/functions/Analytics";
 import ModalReport from "@/components/ModalReport";
 import ZoomableImage from "@/components/ZoomableImage";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import * as customProfile from "@/graphql/CustomMutations/Profile";
+import ModalAlert from "@/components/ModalAlert";
 
 const SearchPost = ({ route, navigation }) => {
   const timerRef = useRef();
@@ -54,6 +57,7 @@ const SearchPost = ({ route, navigation }) => {
   const [dimensionsImages, setDimensionsImages] = useState(0);
   const [showAgg, setShowAgg] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [visibleAlert, setVisibleAlert] = useState(false);
   const [visibleReport, setVisibleReport] = useState(false);
   const [imageView, setImageView] = useState(null);
   const [listUpdate, setListUpdate] = useRecoilState(updateListFavorites);
@@ -396,6 +400,44 @@ const SearchPost = ({ route, navigation }) => {
       console.error("Error rating: ", error.response.data);
     }
   };
+
+  const createClaim = async () => {
+    Alert.alert(
+      "¿Quieres enviar un reclamo por este negocio?",
+      "Envianos una solicitud de reclamo para ponernos en contacto contigo",
+      [
+        {
+          text: "Cancelar",
+          onPress: () => console.log("Cancelado"),
+          style: "cancel",
+        },
+        {
+          text: "Aceptar",
+          onPress: async () => {
+            try {
+              const claimBusiness = await API.graphql({
+                query: customProfile.createClaimRequest,
+                variables: {
+                  input: {
+                    businessID: item?.id,
+                    userID: userAuth.attributes["custom:userTableID"],
+                    status: "PENDING",
+                  },
+                },
+                authMode: "AMAZON_COGNITO_USER_POOLS",
+              });
+              setVisibleAlert(true);
+              console.log(claimBusiness);
+            } catch (error) {
+              console.log(error);
+            }
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
   // para la carga default
   useEffect(() => {
     if (!save) fetchFavorite();
@@ -581,6 +623,40 @@ const SearchPost = ({ route, navigation }) => {
               alignItems: "center",
             }}
           >
+            {/* Reclamar */}
+            {
+              <TouchableOpacity
+                style={{
+                  alignSelf: "center",
+                  justifyContent: "center",
+                  backgroundColor: "#ffb703",
+                  padding: 20,
+                  paddingBottom: 5,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  borderColor: "#1f1f1f",
+                  borderWidth: 1,
+                  borderRadius: 6,
+                  marginVertical: 15,
+                }}
+                onPress={() => createClaim()}
+              >
+                <Text
+                  style={[
+                    global.black,
+                    {
+                      fontFamily: "bold",
+                      fontSize: 10,
+                      // marginLeft: 2,
+                      marginBottom: 12,
+                    },
+                  ]}
+                >
+                  ¿Es tu negocio? ¡Presiona aqui para reclamarlo!?
+                </Text>
+              </TouchableOpacity>
+            }
+            {/*  */}
             <View
               style={{
                 flexDirection: "row",
@@ -688,6 +764,7 @@ const SearchPost = ({ route, navigation }) => {
             </View>
           </View>
         )}
+
         {/* Reporte */}
         {userAuth && (
           <TouchableOpacity
@@ -716,7 +793,6 @@ const SearchPost = ({ route, navigation }) => {
             </Text>
           </TouchableOpacity>
         )}
-
         {/* Hasta aqui */}
         <View
           style={[
@@ -730,7 +806,6 @@ const SearchPost = ({ route, navigation }) => {
             },
           ]}
         />
-
         <View
           style={{
             padding: 20,
@@ -779,7 +854,6 @@ const SearchPost = ({ route, navigation }) => {
             </View>
           )}
         </View>
-
         {/* Interactions */}
         <TouchableOpacity
           style={{
@@ -886,7 +960,6 @@ const SearchPost = ({ route, navigation }) => {
             </View>
           </View>
         </TouchableOpacity>
-
         <TouchableOpacity
           style={{
             padding: 20,
@@ -936,7 +1009,7 @@ const SearchPost = ({ route, navigation }) => {
             </MapView>
           </View>
         </TouchableOpacity>
-
+        {/* Agendar cita */}
         <TouchableOpacity
           style={{
             padding: 20,
@@ -944,6 +1017,60 @@ const SearchPost = ({ route, navigation }) => {
             justifyContent: "space-between",
             alignItems: "center",
             marginTop: -50,
+          }}
+          onPress={() =>
+            navigation.navigate("DatePage", {
+              businessId: item.id,
+            })
+          }
+        >
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View
+              style={[
+                {
+                  width: 58,
+                  height: 58,
+                  borderRadius: 10,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderColor: "#1f1f1f",
+                  borderWidth: 0.7,
+                },
+                global.bgYellow,
+              ]}
+            >
+              <Ionicons
+                name="calendar-clear-outline"
+                size={24}
+                color="#1f1f1f"
+              />
+            </View>
+            <View style={{ marginLeft: 10 }}>
+              <Text style={{ fontFamily: "medium", fontSize: 16 }}>
+                Agendar una cita
+              </Text>
+              <Text style={{ fontFamily: "light", fontSize: 12, width: 150 }}>
+                Comunicate con el negocio para agendar una cita
+              </Text>
+            </View>
+          </View>
+          <Image
+            style={{
+              width: 40,
+              height: 40,
+              resizeMode: "cover",
+            }}
+            source={require("@/utils/images/arrow_right.png")}
+          />
+        </TouchableOpacity>
+        {/*  */}
+        <TouchableOpacity
+          style={{
+            padding: 20,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginTop: -25,
           }}
           onPress={onShare}
         >
@@ -1571,6 +1698,14 @@ const SearchPost = ({ route, navigation }) => {
           businessID={item.id}
           close={() => setVisibleReport(false)}
           open={visibleReport}
+        />
+        <ModalAlert
+          text={`Solicitud enviada con exito. Pronto nos pondremos en contacto contigo`}
+          icon={require("@/utils/images/successful.png")}
+          close={() => setVisibleAlert(false)}
+          isLink={true}
+          navigation={() => console.log("Listo")}
+          open={visibleAlert}
         />
       </ScrollView>
     </View>

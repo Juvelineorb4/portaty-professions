@@ -11,6 +11,7 @@ type DeviceNotificationToken
   deviceID: String
   notificationToken: String
 }
+
 type NotificationHistory
   @model
   @auth(
@@ -89,13 +90,14 @@ type Users
         { allow: public, operations: [read] }
         { allow: owner, operations: [read, delete] }
         { allow: groups, groups: ["admin"], operations: [read] }
+        { allow: groups, groups: ["admin"], operations: [read] }
       ]
     )
   name: String
     @auth(
       rules: [
-        { allow: owner }
         { allow: public, operations: [read] }
+        { allow: owner }
         { allow: private, provider: iam, operations: [read] }
         { allow: public, provider: iam, operations: [read] }
         { allow: groups, groups: ["admin"], operations: [read] }
@@ -104,8 +106,8 @@ type Users
   lastName: String
     @auth(
       rules: [
-        { allow: owner }
         { allow: public, operations: [read] }
+        { allow: owner }
         { allow: private, provider: iam, operations: [read] }
         { allow: public, provider: iam, operations: [read] }
         { allow: groups, groups: ["admin"], operations: [read] }
@@ -114,8 +116,8 @@ type Users
   email: String
     @auth(
       rules: [
-        { allow: owner }
         { allow: public, operations: [read] }
+        { allow: owner }
         { allow: groups, groups: ["admin"], operations: [read] }
       ]
     )
@@ -123,8 +125,8 @@ type Users
   identityID: ID
     @auth(
       rules: [
-        { allow: owner }
         { allow: public, operations: [read] }
+        { allow: owner }
         { allow: private, provider: iam, operations: [read] }
         { allow: groups, groups: ["admin"], operations: [read] }
       ]
@@ -154,6 +156,9 @@ type Users
   notifications: [UserNotification]
     @hasMany(indexName: "byUserNotifications", fields: ["id"])
   lastLocation: Coordinates
+  dates: [Date] @hasMany(indexName: "byUserDates", fields: ["id"])
+  claimRequests: [ClaimRequest]
+    @hasMany(indexName: "byUserClaims", fields: ["id"]) # Relación con las solicitudes de reclamo
   owner: String
     @auth(
       rules: [
@@ -218,6 +223,7 @@ type Business
   userID: ID @index(name: "byUsersBusiness", queryField: "listBusinessbyUserID")
   user: Users @belongsTo(fields: ["userID"])
   status: BusinessStatus @default(value: "ENABLED")
+  statusOwner: BusinessStatusOwner @default(value: "OWNER")
   identityID: String
   name: String
   image: String
@@ -242,12 +248,21 @@ type Business
   promotions: [BusinessPromotion]
     @hasMany(indexName: "byBusinessPromotions", fields: ["id"])
   catalogpdf: String @default(value: "")
+  dates: [Date] @hasMany(indexName: "byBusinessDates", fields: ["id"])
+  claimRequests: [ClaimRequest]
+    @hasMany(indexName: "byBusinessClaims", fields: ["id"]) # Relación con las solicitudes de reclamo
 }
 enum BusinessStatus {
   ENABLED
   DISABLED
   SUSPENDED
   DELETED
+}
+
+enum BusinessStatusOwner {
+  NOT_ASSIGNED
+  ASSIGNED
+  OWNER
 }
 
 type BusinessComment
@@ -266,6 +281,7 @@ type BusinessComment
   stars: Int!
   description: String
 }
+
 type BusinessPromotion
   @model
   @auth(
@@ -322,13 +338,12 @@ enum BusinessPromotionStatus {
   DELETED
   EXPIRED
 }
-
 type Favorites
   @model
   @auth(
     rules: [
-      { allow: owner }
       { allow: public, operations: [read] }
+      { allow: owner }
       { allow: public, provider: iam, operations: [read] }
       { allow: private, provider: iam, operations: [read] }
       { allow: groups, groups: ["sp"], operations: [read] }
@@ -436,4 +451,52 @@ enum TypeLogs {
 type Coordinates {
   lat: Float!
   lon: Float!
+}
+# PAra solicitar ocntactar con un negocio
+type Date
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["admin"], operations: [read] }
+    ]
+  ) {
+  id: ID!
+  userID: ID! @index(name: "byUserDates", queryField: "listDatesByUser")
+  user: Users @belongsTo(fields: ["userID"])
+  businessID: ID!
+    @index(name: "byBusinessDates", queryField: "listDatesByBusiness")
+  business: Business @belongsTo(fields: ["businessID"])
+  date: AWSDateTime
+  notificationMethod: [NotificationMethod!]
+}
+
+enum NotificationMethod {
+  EMAIL
+  WHATSAPP
+  PUSH_NOTIFICATION
+}
+# reclamos de negocios gestionado por el administrador
+type ClaimRequest
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["admin"], operations: [read, update, delete] }
+    ]
+  ) {
+  id: ID!
+  businessID: ID!
+    @index(name: "byBusinessClaims", queryField: "listClaimsByBusiness")
+  business: Business @belongsTo(fields: ["businessID"])
+  userID: ID! @index(name: "byUserClaims", queryField: "listClaimsByUser")
+  user: Users @belongsTo(fields: ["userID"])
+  status: ClaimStatus @default(value: "PENDING")
+  adminResponse: String
+}
+# status de reclamo
+enum ClaimStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
 }
