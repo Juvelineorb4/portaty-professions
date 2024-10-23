@@ -45,6 +45,7 @@ import ZoomableImage from "@/components/ZoomableImage";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import * as customProfile from "@/graphql/CustomMutations/Profile";
 import ModalAlert from "@/components/ModalAlert";
+import { getBusiness, listBusinessbyUserID } from "@/graphql/queries";
 
 const SearchPost = ({ route, navigation }) => {
   const timerRef = useRef();
@@ -67,10 +68,25 @@ const SearchPost = ({ route, navigation }) => {
   const [typeSchedule, setTypeSchedule] = useState("");
   const [listRatings, setListRatings] = useState(null);
   const [ratingsDetails, setRatingsDetails] = useState(null);
-
+  const [haveBusiness, setHaveBusiness] = useState(false);
   const {
     data: { item, images },
   } = route.params;
+
+  const myBusiness = async () => {
+    const response = await API.graphql({
+      query: listBusinessbyUserID,
+      variables: {
+        userID: userAuth?.attributes["custom:userTableID"],
+      },
+      authMode: "AMAZON_COGNITO_USER_POOLS",
+    });
+    if (response.data.listBusinessbyUserID.items.length !== 0) {
+      setHaveBusiness(true);
+    } else {
+      setHaveBusiness(false);
+    }
+  };
 
   const actividad = JSON.parse(item.activity);
   const getPdf = async () => {
@@ -185,7 +201,6 @@ const SearchPost = ({ route, navigation }) => {
       } else {
         setShowAgg(true);
       }
-      console.log(business);
       if (business?.data?.getBusiness?.schedule) {
         let schedule = JSON.parse(business?.data?.getBusiness?.schedule);
         filterSchedule(schedule?.shedule, schedule?.type);
@@ -427,7 +442,6 @@ const SearchPost = ({ route, navigation }) => {
                 authMode: "AMAZON_COGNITO_USER_POOLS",
               });
               setVisibleAlert(true);
-              console.log(claimBusiness);
             } catch (error) {
               console.log(error);
             }
@@ -467,6 +481,10 @@ const SearchPost = ({ route, navigation }) => {
     // Limpia el temporizador cuando el componente se desmonta
     return () => clearTimeout(timerRef.current);
   }, [countryCity, userAuth]);
+
+  useEffect(() => {
+    myBusiness();
+  }, []);
 
   if (!post || !listRatings || listUpdate) return <SkeletonExample />;
 
@@ -624,7 +642,7 @@ const SearchPost = ({ route, navigation }) => {
             }}
           >
             {/* Reclamar */}
-            {
+            {post.statusOwner === "NOT_ASSIGNED" && !haveBusiness && (
               <TouchableOpacity
                 style={{
                   alignSelf: "center",
@@ -655,7 +673,7 @@ const SearchPost = ({ route, navigation }) => {
                   ¿Es tu negocio? ¡Presiona aqui para reclamarlo!?
                 </Text>
               </TouchableOpacity>
-            }
+            )}
             {/*  */}
             <View
               style={{
