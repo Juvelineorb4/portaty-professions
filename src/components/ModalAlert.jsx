@@ -1,5 +1,6 @@
 import {
   Image,
+  Linking,
   Modal,
   Pressable,
   Text,
@@ -17,6 +18,8 @@ const ModalAlert = ({
   open,
   navigation,
   isLink = false,
+  whatsApp = false,
+  whatsAppLink = "",
 }) => {
   const global = require("@/utils/styles/global.js");
   return (
@@ -51,7 +54,16 @@ const ModalAlert = ({
               <Pressable
                 onPress={() => {
                   close();
-                  if (isLink) navigation();
+                  if (isLink && !whatsApp) {
+                    navigation();
+                  } else {
+                    const phoneRegex = whatsAppLink.replace("+", "");
+                    const message = encodeURIComponent(
+                      "Hola, agende una cita contigo con Portaty. Estoy interesado en tus servicios y productos"
+                    );
+                    const url = `https://wa.me/${phoneRegex}?text=${message}`;
+                    Linking.openURL(url);
+                  }
                 }}
                 style={[
                   global.bgYellow,
@@ -69,7 +81,7 @@ const ModalAlert = ({
                 ]}
               >
                 <Text style={[global.black, { fontFamily: "bold" }]}>
-                  Aceptar
+                  {whatsApp ? "Ir al WhastApp" : "Aceptar"}
                 </Text>
               </Pressable>
             </View>

@@ -87,6 +87,7 @@ const usePushNotification = () => {
     registerForPushNotificationsAsync().then((token) => {
       setExpoPushToken(token);
       setToken(token);
+      console.log(token);
     });
 
     // esto es si llega una notificacion y la app esta en primer plano

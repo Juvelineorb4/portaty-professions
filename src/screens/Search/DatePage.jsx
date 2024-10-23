@@ -7,19 +7,20 @@ import ModalAlert from "@/components/ModalAlert";
 import { API, Auth } from "aws-amplify";
 import * as customProfile from "@/graphql/CustomMutations/Profile";
 import { useRecoilValue } from "recoil";
-import { userAuthenticated } from "@/atoms";
+import { notificationToken, userAuthenticated } from "@/atoms";
 
 const DatePage = ({ navigation, route }) => {
-  const { businessId } = route.params;
+  const { businessId, businessEmail, businessPhone } = route.params;
   const global = require("@/utils/styles/global.js");
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isWhatsApp, setIsWhatsApp] = useState(false);
   const userAuth = useRecoilValue(userAuthenticated);
-  console.log(userAuth.attributes["custom:userTableID"]);
   const [selections, setSelections] = useState(["EMAIL"]);
+  const token = useRecoilValue(notificationToken);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -65,16 +66,21 @@ const DatePage = ({ navigation, route }) => {
     setLoading(true);
     const date = formatAWSDateTime(selectedDate);
     console.log(selections);
+    console.log(userAuth);
     try {
       const result = await API.graphql({
         query: customProfile.createDate,
-        authMode: "AMAZON_COGNITO_USER_POOLS",
+        authMode: userAuth ? "AMAZON_COGNITO_USER_POOLS" : "AWS_IAM",
         variables: {
           input: {
-            userID: userAuth.attributes["custom:userTableID"],
+            userID:
+              userAuth !== null
+                ? userAuth?.attributes["custom:userTableID"]
+                : null,
             businessID: businessId,
             date: date,
             notificationMethod: selections,
+            userToken: token,
           },
         },
       });
@@ -233,50 +239,57 @@ const DatePage = ({ navigation, route }) => {
             marginBottom: 3,
           }}
         >
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginVertical: 10,
-            }}
-          >
-            <Checkbox
-              value={selections.includes("EMAIL")}
-              onValueChange={() => toggleCheckbox("EMAIL")}
-              color={selections.includes("EMAIL") ? "#ffb703" : undefined}
-            />
-            <Text
+          {businessEmail && (
+            <View
               style={{
-                fontFamily: "medium",
-                fontSize: 12,
-                marginLeft: 5,
+                flexDirection: "row",
+                alignItems: "center",
+                marginVertical: 10,
               }}
             >
-              Correo
-            </Text>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginVertical: 10,
-            }}
-          >
-            <Checkbox
-              value={selections.includes("WHATSAPP")}
-              onValueChange={() => toggleCheckbox("WHATSAPP")}
-              color={selections.includes("WHATSAPP") ? "#ffb703" : undefined}
-            />
-            <Text
+              <Checkbox
+                value={selections.includes("EMAIL")}
+                onValueChange={() => toggleCheckbox("EMAIL")}
+                color={selections.includes("EMAIL") ? "#ffb703" : undefined}
+              />
+              <Text
+                style={{
+                  fontFamily: "medium",
+                  fontSize: 12,
+                  marginLeft: 5,
+                }}
+              >
+                Correo
+              </Text>
+            </View>
+          )}
+          {businessPhone && (
+            <View
               style={{
-                fontFamily: "medium",
-                fontSize: 12,
-                marginLeft: 5,
+                flexDirection: "row",
+                alignItems: "center",
+                marginVertical: 10,
               }}
             >
-              WhatsApp
-            </Text>
-          </View>
+              <Checkbox
+                value={selections.includes("WHATSAPP")}
+                onValueChange={() => {
+                  toggleCheckbox("WHATSAPP");
+                  setIsWhatsApp(!isWhatsApp);
+                }}
+                color={selections.includes("WHATSAPP") ? "#ffb703" : undefined}
+              />
+              <Text
+                style={{
+                  fontFamily: "medium",
+                  fontSize: 12,
+                  marginLeft: 5,
+                }}
+              >
+                WhatsApp
+              </Text>
+            </View>
+          )}
           <View
             style={{
               flexDirection: "row",
@@ -336,6 +349,8 @@ const DatePage = ({ navigation, route }) => {
         isLink={true}
         navigation={() => navigation.goBack()}
         open={visible}
+        whatsApp={isWhatsApp}
+        whatsAppLink={isWhatsApp ? businessPhone : ""}
       />
     </ScrollView>
   );

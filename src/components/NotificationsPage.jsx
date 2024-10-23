@@ -20,6 +20,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import CustomButton from "./CustomButton";
 import styles from "@/utils/styles/Promotions.js";
+import Fontisto from "@expo/vector-icons/Fontisto";
 
 const NotificationsPage = () => {
   const global = require("@/utils/styles/global.js");
@@ -43,6 +44,8 @@ const NotificationsPage = () => {
           id: user.attributes["custom:userTableID"],
         },
       });
+      console.log("aqui", response.data.listUserNotifications.items[0].type);
+
       setNotificationAll(response.data.listUserNotifications.items);
       if (response.data.listUserNotifications.items.length !== 0)
         setNotificationDelete(true);
@@ -159,6 +162,7 @@ const NotificationsPage = () => {
                 onPress={() => {
                   setPageSelection(0);
                   setIsFocus(true);
+                  if (item.type === "date") return;
                   navigation.navigate("Home_Tab", {
                     screen: "FavoritesHome",
                     params: {
@@ -190,14 +194,18 @@ const NotificationsPage = () => {
                       width: "20%",
                     }}
                   >
-                    <Image
-                      style={{
-                        width: 50,
-                        height: 85,
-                        resizeMode: "contain",
-                      }}
-                      source={{ uri: data?.image }}
-                    />
+                    {item.type === "date" ? (
+                      <Fontisto name="date" size={32} color="black" />
+                    ) : (
+                      <Image
+                        style={{
+                          width: 50,
+                          height: 85,
+                          resizeMode: "contain",
+                        }}
+                        source={{ uri: data?.image }}
+                      />
+                    )}
                   </View>
                   <View
                     style={{

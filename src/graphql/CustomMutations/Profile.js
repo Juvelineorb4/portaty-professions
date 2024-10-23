@@ -165,6 +165,7 @@ export const createDate = /* GraphQL */ `
       id
       userID
       businessID
+      userToken
       date
       notificationMethod
       createdAt

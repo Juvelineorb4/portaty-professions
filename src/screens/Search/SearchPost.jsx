@@ -82,7 +82,8 @@ const SearchPost = ({ route, navigation }) => {
       authMode: "AMAZON_COGNITO_USER_POOLS",
     });
     if (response.data.listBusinessbyUserID.items.length !== 0) {
-      setHaveBusiness(true);
+      if (response.data.listBusinessbyUserID.items[0].id === item.id)
+        setHaveBusiness(true);
     } else {
       setHaveBusiness(false);
     }
@@ -1028,59 +1029,64 @@ const SearchPost = ({ route, navigation }) => {
           </View>
         </TouchableOpacity>
         {/* Agendar cita */}
-        <TouchableOpacity
-          style={{
-            padding: 20,
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginTop: -50,
-          }}
-          onPress={() =>
-            navigation.navigate("DatePage", {
-              businessId: item.id,
-            })
-          }
-        >
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <View
-              style={[
-                {
-                  width: 58,
-                  height: 58,
-                  borderRadius: 10,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderColor: "#1f1f1f",
-                  borderWidth: 0.7,
-                },
-                global.bgYellow,
-              ]}
-            >
-              <Ionicons
-                name="calendar-clear-outline"
-                size={24}
-                color="#1f1f1f"
-              />
-            </View>
-            <View style={{ marginLeft: 10 }}>
-              <Text style={{ fontFamily: "medium", fontSize: 16 }}>
-                Agendar una cita
-              </Text>
-              <Text style={{ fontFamily: "light", fontSize: 12, width: 150 }}>
-                Comunicate con el negocio para agendar una cita
-              </Text>
-            </View>
-          </View>
-          <Image
+        {console.log(haveBusiness)}
+        {!haveBusiness && (
+          <TouchableOpacity
             style={{
-              width: 40,
-              height: 40,
-              resizeMode: "cover",
+              padding: 20,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginTop: -50,
             }}
-            source={require("@/utils/images/arrow_right.png")}
-          />
-        </TouchableOpacity>
+            onPress={() =>
+              navigation.navigate("DatePage", {
+                businessId: item.id,
+                businessEmail: post?.email,
+                businessPhone: post?.phone,
+              })
+            }
+          >
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <View
+                style={[
+                  {
+                    width: 58,
+                    height: 58,
+                    borderRadius: 10,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderColor: "#1f1f1f",
+                    borderWidth: 0.7,
+                  },
+                  global.bgYellow,
+                ]}
+              >
+                <Ionicons
+                  name="calendar-clear-outline"
+                  size={24}
+                  color="#1f1f1f"
+                />
+              </View>
+              <View style={{ marginLeft: 10 }}>
+                <Text style={{ fontFamily: "medium", fontSize: 16 }}>
+                  Agendar una cita
+                </Text>
+                <Text style={{ fontFamily: "light", fontSize: 12, width: 150 }}>
+                  Comunicate con el negocio para agendar una cita
+                </Text>
+              </View>
+            </View>
+            <Image
+              style={{
+                width: 40,
+                height: 40,
+                resizeMode: "cover",
+              }}
+              source={require("@/utils/images/arrow_right.png")}
+            />
+          </TouchableOpacity>
+        )}
         {/*  */}
         <TouchableOpacity
           style={{
